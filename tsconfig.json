@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "incremental": false,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": [
+      "node",
+      "jest"
+    ],
+    "lib": [
+      "es6"
+    ],
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": [
+    "index.ts",
+    "node_modules",
+    "dist",
+    "test",
+    "env",
+    "coverage"
+  ]
+}

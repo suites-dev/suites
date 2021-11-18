@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "baseUrl": "./",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "sourceMap": false
+  },
+  "exclude": [
+    "node_modules",
+    "test",
+    "dist",
+    "**/*test.ts",
+    "index.ts",
+    "index.js",
+    "index.d.ts",
+    "commitlint.config.js"
+  ]
+}

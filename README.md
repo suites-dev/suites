@@ -1,12 +1,12 @@
 [![ISC license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-[![npm version](http://img.shields.io/npm/v/@nestjs-testing/jest.svg?style=flat)](https://npmjs.org/package/@nestjs-testing/jest "View this project on npm")
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/nestjs-testing/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/nestjs-testing)
-[![ci](https://github.com/omermorad/nestjs-testing/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/nestjs-testing/actions)
+[![npm version](http://img.shields.io/npm/v/nestjs-jester.svg?style=flat)](https://npmjs.org/package/nestjs-jester "View this project on npm")
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/nestjs-jester/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/nestjs-testing)
+[![ci](https://github.com/omermorad/nestjs-jester/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/nestjs-testing/actions)
 
 <p align="center">
-  <img width="450" src="https://raw.githubusercontent.com/omermorad/nestjs-testing/master/logo.jpg" alt="Logo" />
+  <img width="450" src="https://raw.githubusercontent.com/omermorad/nestjs-jester/master/logo.png" alt="Logo" />
 
-  <h1 align="center">NestJS Testing Jest</h1>
+  <h1 align="center">NestJS Jester</h1>
 
   <h3 align="center">
     Library for Writing Unit Tests Easily with Auto Mocking Capabilities
@@ -23,25 +23,32 @@
 
 With NPM:
 ```bash
-npm i -D @nestjs-testing/jest jest-mock-extended
+npm i -D nestjs-jester jest-mock-extended
 ```
 
 Or with Yarn:
 ```bash
-yarn add -D @nestjs-testing/jest jest-mock-extended
+yarn add -D nestjs-jester jest-mock-extended
 ```
 
 ## Motivation
-A lot of times you find yourself “preparing” some dummy data for your tests that
-has to make sense for a specific test case(s) and is manipulated often.
-Some developers are preparing JSON files, others create a long verbose object in
-the test file itself, but the outcome always contains some fake data inside
-(or even a snapshot from an external API).
+
+
+Unit tests exercise very small parts of the application **in complete isolation**.
+**"Complete isolation" means that, when unit testing, you don’t typically
+connect your application with external dependencies such as databases, the filesystem,
+or HTTP services**. That allows unit tests to be fast and more stable since they won’t
+fail due to problems with those external services. (Thank you, Testim.io - [jump to source](https://www.testim.io/blog/unit-testing-best-practices/))
+
+This package will help you isolate the dependencies by a simple reflection mechanism
+(provided by NestJS), and when used in conjunction with the library called `jest-mock-extended`,
+all dependencies will become of the given service (or unit/provider) will be overridden and
+become mocks (or deep mocks if you want it to)
 
 ## Example and Usage
 
 ```typescript
-import { DeepMock, Spec } from '@nestjs-testing/jest';
+import { DeepMock, Spec } from 'nestjs-jester';
 
 describe('Some Unit Test', () => {
   let someService: SomeService;
@@ -92,4 +99,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Acknowledgements
 
-[jest-mock-extended](https://github.com/marak/Faker.js)
+[jest-mock-extended](https://github.com/marchaos/jest-mock-extended)

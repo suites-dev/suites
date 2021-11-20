@@ -4,9 +4,9 @@
 [![ci](https://github.com/omermorad/nestjs-jester/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/nestjs-testing/actions)
 
 <p align="center">
-  <img width="450" src="https://raw.githubusercontent.com/omermorad/nestjs-jester/master/logo.png" alt="Logo" />
+  <img height="450" src="https://raw.githubusercontent.com/omermorad/nestjs-jester/master/logo.png" alt="Logo" />
 
-  <h1 align="center">NestJS Jester</h1>
+  <h1 align="center">NestJS Jester 🤡</h1>
 
   <h3 align="center">
     Library for Writing Unit Tests Easily with Auto Mocking Capabilities
@@ -15,6 +15,10 @@
   <h4 align="center">
     Create unit test simply and easily with 100% isolation of class dependencies
   </h4>
+
+  <h5 align="center">
+    * This library is supporting Jest only
+  </h5>
 </p>
 
 ## Installation
@@ -31,8 +35,7 @@ Or with Yarn:
 yarn add -D nestjs-jester jest-mock-extended
 ```
 
-## Motivation
-
+## Motivation 💪
 
 Unit tests exercise very small parts of the application **in complete isolation**.
 **"Complete isolation" means that, when unit testing, you don’t typically
@@ -40,32 +43,57 @@ connect your application with external dependencies such as databases, the files
 or HTTP services**. That allows unit tests to be fast and more stable since they won’t
 fail due to problems with those external services. (Thank you, Testim.io - [jump to source](https://www.testim.io/blog/unit-testing-best-practices/))
 
-This package will help you isolate the dependencies by a simple reflection mechanism
-(provided by NestJS), and when used in conjunction with the library called `jest-mock-extended`,
-all dependencies will become of the given service (or unit/provider) will be overridden and
-become mocks (or deep mocks if you want it to)
+This package will help you isolate the dependencies of an `Injectable` class, by using a simple
+reflection mechanism (using NestJS `Refelector`). When used in conjunction with the library
+called `jest-mock-extended`, all the class dependencies will be overridden automatically and
+become mocks (or deep mocks if you want it to).
 
-## Example and Usage
+## Example and Usage 💁‍
+
+<details><summary><code>📄 Original Class</code></summary><p>
 
 ```typescript
-import { DeepMock, Spec } from 'nestjs-jester';
+@Injectable()
+export class SomeService {
+  public constructor(
+    private readonly logger: Logger,
+    private readonly catsService: CatsService,
+    private readonly httpService: HttpService
+  ) {}
+  
+  public async doSomethingNice() {
+    const { data } = await this.httpService.get<{ users: any }>('https://example.com/json.json');
+    this.logger.log(data);
+    
+    return data.users;
+  }
+}
+```
+</p></details>
+
+```typescript
+import { DeepMockOf, MockOf, Spec } from 'nestjs-jester';
 
 describe('Some Unit Test', () => {
   let someService: SomeService;
+  let logger: MockOf<Logger>;
+  let httpService: MockOf<HttpService>;
 
   const errorMock = new Error('Some Error');
 
   beforeAll(() => {
     const { unit, unitRef } = Spec.createUnit<SomeService>(SomeService)
-      .mock(PayoutDao)
+      .mock(logger)
       .using({
-        createPayout: () => Promise.resolve({ id: 2 }),
+        log: (msg) => console.log(msg),
       })
-      .mock(ClientService)
+      .deepMock(HttpService)
       .using({
-        getAccountId: () => Promise.resolve({ token: '' }),
+        get: async () => Promise.resolve({ something: [] }),
       })
-      .compile();
+      // All the rest of the dependencies will be mocked
+      // Pass true if you want to deep mock all of the rest
+      .compile(); 
 
     someService = unit;
 
@@ -74,13 +102,11 @@ describe('Some Unit Test', () => {
 
   describe('when something happens', () => {
     test('then check something', async () => {
-      service.createTransfer.mockImplementationOnce(() => {
-        throw errorMock;
-      });
+      service.doSomethingNice();
 
       payoutService.performActionForTest();
 
-      expect(queryRunnerMock.startTransaction).toHaveBeenCalled();
+      expect(logger.log).toHaveBeenCalled();
       expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalled();
       expect(queryRunnerMock.release).toHaveBeenCalled();
     });
@@ -88,15 +114,15 @@ describe('Some Unit Test', () => {
 });
 ```
 
-### More about `jest-mock-extended` package
+## More about `jest-mock-extended` package 📦
 `jest-mock-extended` is a library which enables type safe mocking for Jest with TypeScript.
 It provides a complete Typescript type safety for interfaces, argument types and return types
 and has the ability to mock any interface or object.
 
-## License
+## License 📜
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-## Acknowledgements
+## Acknowledgements 📙
 
 [jest-mock-extended](https://github.com/marchaos/jest-mock-extended)

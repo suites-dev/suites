@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { mockDeep } from 'jest-mock-extended';
 import { Reflector } from '@nestjs/core';
-import { DependenciesBuilder } from './dependencies-builder';
+import { UnitBuilder } from './unit-builder';
 import { MainTestClass, TestClassOne, TestClassTwo } from '../../test/spec-assets';
 import { UnitTestingClass } from './types';
 
@@ -12,7 +12,7 @@ describe('DependenciesBuilder Unit Test', () => {
     const createMockFn = jest.fn();
 
     const createBuilder = () =>
-      new DependenciesBuilder<MainTestClass>(reflectorMock, createMockFn as typeof mockDeep, MainTestClass);
+      new UnitBuilder<MainTestClass>(reflectorMock, createMockFn as typeof mockDeep, MainTestClass);
 
     describe('scenario: do not specifically mock any of the dependencies', () => {
       let instance: UnitTestingClass<MainTestClass>;

@@ -29,6 +29,17 @@
     "prettier"
   ],
   "rules": {
+    "prettier/prettier": [
+      2,
+      {
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "printWidth": 120,
+        "tabWidth": 2,
+        "semi": true,
+        "endOfLine": "auto"
+      }
+    ],
     "no-useless-constructor": "off",
     "react/forbid-prop-types": 0,
     "no-unused-expressions": 0,

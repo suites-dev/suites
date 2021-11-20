@@ -20,8 +20,8 @@
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig.build.json",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "test": "npm run lint && jest --config jest.config.json --runInBand --verbose",
-    "test:ci": "npm run lint && jest --config jest.config.json --runInBand --coverage --collectCoverage=true --reporters=jest-junit",
+    "test": "jest --verbose",
+    "test:ci": "jest --coverage --collectCoverage=true --reporters=jest-junit",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint 'src/**/*.ts' --fix"
   },
@@ -37,8 +37,8 @@
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@nestjs/common": "^7.6.1",
-    "@nestjs/core": "^7.6.1",
+    "@nestjs/common": "^7.x",
+    "@nestjs/core": "^7.x",
     "@types/jest": "^27.0.2",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
@@ -52,11 +52,13 @@
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
     "jest": "^27.3.1",
+    "jest-junit": "^13.0.0",
     "jest-mock-extended": "^2.0.4",
     "lint-staged": "^11.2.6",
     "prettier": "^2.4.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
+    "rxjs": "^7.4.0",
     "ts-jest": "^27.0.7",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
@@ -68,18 +70,6 @@
     "@nestjs/common": "^7.x || ^8.x",
     "@nestjs/core": "^7.x || ^8.x",
     "jest-mock-extended": "^2.x"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --ext .ts --fix"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged",
-      "pre-push": "npm test"
-    }
   },
   "config": {
     "commitizen": {

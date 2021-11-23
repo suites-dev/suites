@@ -114,6 +114,8 @@ describe('Some Unit Test', () => {
 });
 ```
 
+**Still need further example? [Jump to full sample](https://github.com/omermorad/nestjs-jester/tree/master/sample) 📄**
+
 ## More about `jest-mock-extended` package 📦
 `jest-mock-extended` is a library which enables type safe mocking for Jest with TypeScript.
 It provides a complete Typescript type safety for interfaces, argument types and return types

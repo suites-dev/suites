@@ -9,6 +9,8 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
+  "coveragePathIgnorePatterns": ["/node_modules/", "spec-assets.ts"],
+  "testPathIgnorePatterns": ["/node_modules/", "sample"],
   "coverageDirectory": "./coverage",
   "coverageReporters": [
     "text",

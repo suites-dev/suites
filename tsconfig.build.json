@@ -8,6 +8,7 @@
     "sourceMap": false
   },
   "exclude": [
+    "sample",
     "node_modules",
     "test",
     "dist",

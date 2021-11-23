@@ -2,7 +2,7 @@ import { DeepPartial } from 'ts-essentials';
 import { Reflector } from '@nestjs/core';
 import { PARAMTYPES_METADATA } from '@nestjs/common/constants';
 import { Type } from '@nestjs/common/interfaces';
-import { DeepMockOf, MockOf, MockFunction, Override, UnitTestingClass } from './types';
+import { DeepMockOf, MockOf, MockFunction, Override, TestingUnit } from './types';
 import { MockResolver } from './mock-resolver';
 
 export interface UnitBuilder<TClass = any> {
@@ -31,13 +31,13 @@ export interface UnitBuilder<TClass = any> {
    *
    * @param deep {boolean} - deep mock the rest of the dependencies
    * @default false
-   * @return UnitTestingClass
+   * @return TestingUnit
    */
-  compile(deep?: boolean): UnitTestingClass<TClass>;
+  compile(deep?: boolean): TestingUnit<TClass>;
 }
 
 export class UnitBuilder<TClass = any> {
-  private readonly deps: Type[];
+  private readonly unitDeps: Type[];
   private readonly overloadsMap = new Map<Type, DeepPartial<unknown>>();
   private readonly depNamesToMocks = new Map<Type, DeepMockOf<any> | MockOf<any>>();
 
@@ -46,14 +46,13 @@ export class UnitBuilder<TClass = any> {
     private readonly mockFn: MockFunction,
     private readonly targetClass: Type<TClass>
   ) {
-    this.deps = this.reflector.get(PARAMTYPES_METADATA, this.targetClass);
+    this.unitDeps = this.reflector.get(PARAMTYPES_METADATA, this.targetClass);
   }
 
   public mock<T = any>(dependency: Type<T>): Override<T> {
     return {
-      using: (partial: DeepPartial<T>): UnitBuilder<TClass> => {
-        this.depNamesToMocks.set(dependency, this.mockFn<T>(partial));
-
+      using: (mockImplementation: DeepPartial<T>): UnitBuilder<TClass> => {
+        this.overloadsMap.set(dependency, this.mockFn<T>(mockImplementation));
         return this;
       },
     };
@@ -61,15 +60,14 @@ export class UnitBuilder<TClass = any> {
 
   public mockDeep<T = any>(dependency: Type<T>): Override<T> {
     return {
-      using: (partial: DeepPartial<T>): UnitBuilder<TClass> => {
-        this.depNamesToMocks.set(dependency, this.mockFn<T>(partial, { deep: true }));
-
+      using: (mockImplementation: DeepPartial<T>): UnitBuilder<TClass> => {
+        this.overloadsMap.set(dependency, this.mockFn<T>(mockImplementation, { deep: true }));
         return this;
       },
     };
   }
 
-  public compile(deep = false): UnitTestingClass<TClass> {
+  public compile(deep = false): TestingUnit<TClass> {
     this.mockUnMockedDependencies(deep);
 
     const values = Array.from(this.depNamesToMocks.values());
@@ -81,11 +79,13 @@ export class UnitBuilder<TClass = any> {
   }
 
   private mockUnMockedDependencies(deep = false) {
-    this.deps.forEach((dependency: Type<any>) => {
-      if (!this.overloadsMap.get(dependency)) {
-        const mock = this.mockFn<typeof dependency>(undefined, { deep });
-        this.depNamesToMocks.set(dependency, mock);
-      }
+    this.unitDeps.forEach((dependency: Type<any>) => {
+      const overriddenDep = this.overloadsMap.get(dependency);
+      const mock = overriddenDep
+        ? overriddenDep
+        : this.mockFn<typeof dependency>(undefined, { deep });
+
+      this.depNamesToMocks.set(dependency, mock);
     });
   }
 }

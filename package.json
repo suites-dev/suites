@@ -20,8 +20,8 @@
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig.build.json",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "test": "npm run lint && jest --config jest.config.json --runInBand --verbose",
-    "test:ci": "npm run lint && jest --config jest.config.json --runInBand --coverage --collectCoverage=true --reporters=jest-junit",
+    "test": "jest --verbose",
+    "test:ci": "jest --coverage --collectCoverage=true --reporters=jest-junit",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint 'src/**/*.ts' --fix"
   },

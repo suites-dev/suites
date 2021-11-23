@@ -1,6 +1,6 @@
 {
-  "name": "@nestjs-testing/jest",
-  "version": "0.0.0-beta.2",
+  "name": "nestjs-jester",
+  "version": "0.0.0-beta.3",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
@@ -20,8 +20,8 @@
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig.build.json",
     "watch": "tsc -p tsconfig.build.json --watch",
-    "test": "jest --verbose",
-    "test:ci": "jest --coverage --collectCoverage=true --reporters=jest-junit",
+    "test": "jest --verbose --collectCoverage=false",
+    "test:ci": "jest --coverage --collectCoverage=true",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint 'src/**/*.ts' --fix"
   },
@@ -32,33 +32,36 @@
     "README.md"
   ],
   "dependencies": {
-    "ts-essentials": "^9.0.0"
+    "ts-essentials": "^7.0.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@nestjs/common": "^7.x",
-    "@nestjs/core": "^7.x",
+    "@nestjs/common": "^7.6.1",
+    "@nestjs/core": "^7.6.1",
     "@types/jest": "^27.0.2",
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/node": "^14.17.34",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "commitizen": "^4.2.2",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "7.14.0",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^7.2.0",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-jest": "^25.2.4",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^3.4.1",
     "husky": "^7.0.4",
     "jest": "^27.3.1",
-    "jest-junit": "^13.0.0",
     "jest-mock-extended": "^2.0.4",
     "lint-staged": "^11.2.6",
+    "lodash.clonedeep": "^4.5.0",
     "prettier": "^2.4.1",
+    "prettier-eslint": "^13.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
-    "rxjs": "^7.4.0",
+    "rxjs": "^6.0.0",
     "ts-jest": "^27.0.7",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
@@ -69,7 +72,20 @@
   "peerDependencies": {
     "@nestjs/common": "^7.x || ^8.x",
     "@nestjs/core": "^7.x || ^8.x",
-    "jest-mock-extended": "^2.x"
+    "jest-mock-extended": "^2.x",
+    "ts-essentials": "^7.x"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --ext .ts --fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
   },
   "config": {
     "commitizen": {

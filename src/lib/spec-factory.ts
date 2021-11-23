@@ -1,12 +1,17 @@
-import { mockDeep } from 'jest-mock-extended';
+import { mock } from 'jest-mock-extended';
 import { Reflector } from '@nestjs/core';
 import { Type } from '@nestjs/common/interfaces';
-import { DependenciesBuilder } from './dependencies-builder';
+import { UnitBuilder } from './unit-builder';
 
 export class Spec {
   private static readonly reflector = new Reflector();
 
-  public static createUnit<TClass = any>(targetClass: Type<TClass>): DependenciesBuilder<TClass> {
-    return new DependenciesBuilder<TClass>(this.reflector, mockDeep, targetClass);
+  /**
+   * Create new unit builder
+   * @param targetClass
+   * @return UnitBuilder
+   */
+  public static createUnit<TClass = any>(targetClass: Type<TClass>): UnitBuilder<TClass> {
+    return new UnitBuilder<TClass>(this.reflector, mock, targetClass);
   }
 }

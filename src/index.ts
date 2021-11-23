@@ -1,3 +1,3 @@
 export * from './lib/spec-factory';
-export * from './lib/dependencies-builder';
+export * from './lib/unit-builder';
 export * from './lib/types';

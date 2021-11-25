@@ -1,6 +1,6 @@
 {
   "name": "nestjs-jester",
-  "version": "0.0.0-beta.3",
+  "version": "0.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
@@ -14,6 +14,9 @@
     {
       "name": "Omer Morad",
       "email": "omer.moradd@gmail.com"
+    },
+    {
+      "name": "Yarin Assaraf"
     }
   ],
   "scripts": {

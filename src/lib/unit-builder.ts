@@ -1,8 +1,6 @@
+import 'reflect-metadata';
 import { DeepPartial } from 'ts-essentials';
-import { Reflector } from '@nestjs/core';
-import { PARAMTYPES_METADATA } from '@nestjs/common/constants';
-import { Type } from '@nestjs/common/interfaces';
-import { DeepMockOf, MockOf, MockFunction, Override, TestingUnit } from './types';
+import { DeepMockOf, MockOf, MockFunction, Override, TestingUnit, Type } from './types';
 import { MockResolver } from './mock-resolver';
 
 export interface UnitBuilder<TClass = any> {
@@ -42,11 +40,11 @@ export class UnitBuilder<TClass = any> {
   private readonly depNamesToMocks = new Map<Type, DeepMockOf<any> | MockOf<any>>();
 
   public constructor(
-    private readonly reflector: Reflector,
+    private readonly reflector: typeof Reflect,
     private readonly mockFn: MockFunction,
     private readonly targetClass: Type<TClass>
   ) {
-    this.unitDeps = this.reflector.get(PARAMTYPES_METADATA, this.targetClass);
+    this.unitDeps = this.reflector.getMetadata('design:paramtypes', this.targetClass);
   }
 
   public mock<T = any>(dependency: Type<T>): Override<T> {

@@ -1,5 +1,4 @@
-import { Type } from '@nestjs/common/interfaces';
-import { DeepMockOf, MockOf } from './types';
+import { DeepMockOf, MockOf, Type } from './types';
 
 export class MockResolver {
   public constructor(

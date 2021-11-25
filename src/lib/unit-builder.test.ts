@@ -1,5 +1,4 @@
 import assert from 'assert';
-import { Reflector } from '@nestjs/core';
 import { UnitBuilder } from './unit-builder';
 import { MainTestClass, TestClassOne, TestClassTwo } from '../../test/spec-assets';
 import { TestingUnit } from './types';
@@ -7,7 +6,11 @@ import { TestingUnit } from './types';
 describe('Unit Builder Unit Test', () => {
   describe('given a DependenciesBuilder', () => {
     const TESTED_CLASS_DEPENDENCIES = [TestClassOne, TestClassTwo];
-    const reflectorMock = { get: () => TESTED_CLASS_DEPENDENCIES } as unknown as Reflector;
+
+    const reflectorMock = {
+      getMetadata: () => TESTED_CLASS_DEPENDENCIES,
+    } as unknown as typeof Reflect;
+
     const createMockFn = jest.fn().mockImplementation((partial) => partial || 'MOCKED');
 
     const createBuilder = () =>

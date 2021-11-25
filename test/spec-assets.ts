@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { Spec } from '../src';
+export const Reflectable = (): ClassDecorator => {
+  return () => undefined;
+};
 
-@Injectable()
+@Reflectable()
 export class TestClassOne {
   async foo(flag: boolean): Promise<string> {
     if (flag) {
@@ -12,21 +13,21 @@ export class TestClassOne {
   }
 }
 
-@Injectable()
+@Reflectable()
 export class TestClassTwo {
   async bar(): Promise<string> {
     return Promise.resolve('bar');
   }
 }
 
-@Injectable()
+@Reflectable()
 export class TestClassThree {
   baz(): string {
     return 'baz';
   }
 }
 
-@Injectable()
+@Reflectable()
 export class MainTestClass {
   constructor(
     private readonly testClassOne: TestClassOne,

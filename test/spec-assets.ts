@@ -1,6 +1,5 @@
-export const Reflectable = (): ClassDecorator => {
-  return () => undefined;
-};
+import 'reflect-metadata';
+import { Reflectable } from '../src';
 
 @Reflectable()
 export class TestClassOne {

@@ -1,6 +1,6 @@
 [![ISC license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 [![npm version](http://img.shields.io/npm/v/nestjs-jester.svg?style=flat)](https://npmjs.org/package/nestjs-jester "View this project on npm")
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/nestjs-jester/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/nestjs-testing)
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/nestjs-jester/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/nestjs-jester)
 [![ci](https://github.com/omermorad/nestjs-jester/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/nestjs-testing/actions)
 
 <p align="center">
@@ -37,16 +37,16 @@ yarn add -D nestjs-jester jest-mock-extended
 
 ## Motivation 💪
 
-Unit tests exercise very small parts of the application **in complete isolation**.
+Unit tests exercise very small parts of the application **in complete isolation**. \
 **"Complete isolation" means that, when unit testing, you don’t typically
 connect your application with external dependencies such as databases, the filesystem,
 or HTTP services**. That allows unit tests to be fast and more stable since they won’t
 fail due to problems with those external services. (Thank you, Testim.io - [jump to source](https://www.testim.io/blog/unit-testing-best-practices/))
 
-This package will help you isolate the dependencies of an `Injectable` class, by using a simple
-reflection mechanism (using NestJS `Refelector`). When used in conjunction with the library
-called `jest-mock-extended`, all the class dependencies will be overridden automatically and
-become mocks (or deep mocks if you want it to).
+This package helps isolate the dependencies of an `Injectable` class, by using a simple
+reflection mechanism (with NestJS `Refelector`). When used in conjunction with
+`jest-mock-extended` library, all the class (`Injectable`) dependencies will be overridden
+automatically and become mocks (or deep mocks if you want it to).
 
 ## Example and Usage 💁‍
 
@@ -58,14 +58,19 @@ export class SomeService {
   public constructor(
     private readonly logger: Logger,
     private readonly catsService: CatsService,
-    private readonly httpService: HttpService
+    private readonly userService: UserService,
+    private readonly featureFlagService: FeatureFlagService,
   ) {}
   
   public async doSomethingNice() {
-    const { data } = await this.httpService.get<{ users: any }>('https://example.com/json.json');
-    this.logger.log(data);
+    if (this.featureFlagService.isFeatureOn()) {
+      const users = await this.userService.getUsers('https://example.com/json.json');
+      this.logger.log(users);
+
+      return users;
+    }
     
-    return data.users;
+    return null;
   }
 }
 ```
@@ -74,41 +79,35 @@ export class SomeService {
 ```typescript
 import { DeepMockOf, MockOf, Spec } from 'nestjs-jester';
 
-describe('Some Unit Test', () => {
+describe('SomeService Unit Test', () => {
   let someService: SomeService;
   let logger: MockOf<Logger>;
-  let httpService: MockOf<HttpService>;
+  let userService: MockOf<UserService>;
 
-  const errorMock = new Error('Some Error');
+  const USERS_DATA = [{ name: 'user', email: 'user@user.com' }];
 
   beforeAll(() => {
     const { unit, unitRef } = Spec.createUnit<SomeService>(SomeService)
-      .mock(logger)
+      .mock(FeatureFlagService)
       .using({
-        log: (msg) => console.log(msg),
-      })
-      .deepMock(HttpService)
-      .using({
-        get: async () => Promise.resolve({ something: [] }),
+        isFeatureOn: () => Promise.resolve(true),
       })
       // All the rest of the dependencies will be mocked
       // Pass true if you want to deep mock all of the rest
-      .compile(); 
+      .compile();
 
     someService = unit;
-
-    dependecy = unitRef.get(SomeService);
+    userService = unitRef.get(UserService);
   });
 
-  describe('when something happens', () => {
+  describe('When something happens', () => {
+    beforeAll(() => (userService.getUsers.mockResolvedValueOnce(USERS_DATA));
+    
     test('then check something', async () => {
-      service.doSomethingNice();
+      const result = await service.doSomethingNice();
 
-      payoutService.performActionForTest();
-
-      expect(logger.log).toHaveBeenCalled();
-      expect(queryRunnerMock.rollbackTransaction).toHaveBeenCalled();
-      expect(queryRunnerMock.release).toHaveBeenCalled();
+      expect(logger.log).toHaveBeenCalledWith(USERS_DATA);
+      expect(result).toEqual(USERS_DATA);
     });
   });
 });

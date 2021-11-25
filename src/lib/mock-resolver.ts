@@ -2,7 +2,9 @@ import { Type } from '@nestjs/common/interfaces';
 import { DeepMockOf, MockOf } from './types';
 
 export class MockResolver {
-  public constructor(private readonly depNamesToMocks: Map<Type, DeepMockOf<unknown>>) {}
+  public constructor(
+    private readonly depNamesToMocks: Map<Type, DeepMockOf<unknown> | MockOf<unknown>>
+  ) {}
 
   public get<TClass>(type: Type<TClass>): MockOf<TClass>;
   public get<TClass>(type: Type<TClass>): DeepMockOf<TClass>;

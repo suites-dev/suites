@@ -34,10 +34,6 @@ export class MainTestClass {
     private readonly testClassThree: TestClassThree
   ) {}
 
-  value() {
-    return this.testClassThree.baz();
-  }
-
   async test(): Promise<string> {
     const value = await this.testClassOne.foo(true);
     const value2 = await this.testClassTwo.bar();
@@ -46,17 +42,3 @@ export class MainTestClass {
     return `${value}-${value2}-${value3}`;
   }
 }
-
-export const UnitBuilder = Spec.createUnit<MainTestClass>(MainTestClass)
-  .mock(TestClassOne)
-  .using({
-    async foo(): Promise<string> {
-      return 'foo-from-test';
-    },
-  })
-  .mockDeep(TestClassThree)
-  .using({
-    baz(): string {
-      return 'baz-from-test';
-    },
-  });

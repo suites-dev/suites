@@ -10,6 +10,13 @@
     "jest",
     "nestjs-auto-mock"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omermorad/nestjs-jester.git"
+  },
+  "bugs": {
+    "url": "https://github.com/omermorad/nestjs-jester/issues"
+  },
   "contributors": [
     {
       "name": "Omer Morad",
@@ -86,13 +93,6 @@
     "*.ts": [
       "eslint --ext .ts --fix"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged",
-      "pre-push": "npm test"
-    }
   },
   "config": {
     "commitizen": {

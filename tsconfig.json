@@ -20,7 +20,8 @@
       "jest"
     ],
     "lib": [
-      "es6"
+      "es6",
+      "es2015.reflect"
     ],
     "allowSyntheticDefaultImports": true
   },

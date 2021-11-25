@@ -1,15 +1,15 @@
 [![ISC license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-[![npm version](http://img.shields.io/npm/v/nestjs-jester.svg?style=flat)](https://npmjs.org/package/nestjs-jester "View this project on npm")
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/nestjs-jester/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/nestjs-jester)
-[![ci](https://github.com/omermorad/nestjs-jester/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/nestjs-testing/actions)
+[![npm version](http://img.shields.io/npm/v/jest-unit.svg?style=flat)](https://npmjs.org/package/jest-unit "View this project on npm")
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/jest-unit/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/jest-unit)
+[![ci](https://github.com/omermorad/jest-unit/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/jest-unit/actions)
 
 <p align="center">
-  <img height="450" src="https://raw.githubusercontent.com/omermorad/nestjs-jester/master/logo.png" alt="Logo" />
+  <img height="450" src="https://raw.githubusercontent.com/omermorad/jest-unit/master/logo.png" alt="Logo" />
 
-  <h1 align="center">NestJS Jester 🤡</h1>
+  <h1 align="center">Jest Unit 🤡</h1>
 
   <h3 align="center">
-    Library for Writing Unit Tests Easily with Auto Mocking Capabilities
+    Library for Writing Unit Tests Easily with Auto Mocking Capabilities for TypeScript
   </h3>
 
   <h4 align="center">
@@ -27,33 +27,64 @@
 
 With NPM:
 ```bash
-npm i -D nestjs-jester jest-mock-extended
+npm i -D jest-unit jest-mock-extended
 ```
 
 Or with Yarn:
 ```bash
-yarn add -D nestjs-jester jest-mock-extended
+yarn add -D jest-unit jest-mock-extended
 ```
 
-## Motivation 💪
+## Who can use this library? 🤩
+**TL;DR**
 
-Unit tests exercise very small parts of the application **in complete isolation**. \
-**"Complete isolation" means that, when unit testing, you don’t typically
-connect your application with external dependencies such as databases, the filesystem,
-or HTTP services**. That allows unit tests to be fast and more stable since they won’t
-fail due to problems with those external services. (Thank you, Testim.io - [jump to source](https://www.testim.io/blog/unit-testing-best-practices/))
+If you are using this pattern in your framework (it doesn't matter which one):
 
-This package helps isolate the dependencies of an `Injectable` class, by using a simple
-reflection mechanism (with NestJS `Refelector`). When used in conjunction with
-`jest-mock-extended` library, all the class (`Injectable`) dependencies will be overridden
+```typescript
+export class AwesomeClass {
+  public constructor(private readonly dependecy1: SomeOtherClass) {}
+}
+```
+
+You can use Jest Unit :)
+
+### Tell me more 🤔
+If you are using any TypeScript framework: Angular, React+TypeScript, NestJS, TypeDI or even if
+you are framework free.
+
+Jest Unit is framework agnostic, so it's basically serves everyone! if you
+are using any implementation of dependency inversion (dependency injection on most cases)
+this library is for you.
+
+The only assumption/requirement is that you are taking your class dependencies via
+the class constructor (like in the example above).
+
+## What is this library? ❓
+
+This package helps isolate the dependencies of any given class, by using a simple
+reflection mechanism on the class constructor params metadata. When used in conjunction with
+`jest-mock-extended` library, all the class dependencies (constructor params) will be overridden
 automatically and become mocks (or deep mocks if you want it to).
 
 ## Example and Usage 💁‍
 
+<details>
+    <summary>What is this <code>@Reflectable()</code> decorator?</summary>
+    <p>
+In order to reflect the constructor class params it needs to be decorated with any
+class decorator. no matter what its original functionality.
+If you are not using any kind of decorator, you can just use the default decorator that
+does, literally, nothing; his purpose is to emit class metadata.
+
+</p>
+</details>
+
+<hr>
+
 <details><summary><code>📄 Original Class</code></summary><p>
 
 ```typescript
-@Injectable()
+@Reflectable()
 export class SomeService {
   public constructor(
     private readonly logger: Logger,
@@ -77,7 +108,7 @@ export class SomeService {
 </p></details>
 
 ```typescript
-import { DeepMockOf, MockOf, Spec } from 'nestjs-jester';
+import { DeepMockOf, MockOf, Spec } from 'jest-unit';
 
 describe('SomeService Unit Test', () => {
   let someService: SomeService;
@@ -113,7 +144,16 @@ describe('SomeService Unit Test', () => {
 });
 ```
 
-**Still need further example? [Jump to full sample](https://github.com/omermorad/nestjs-jester/tree/master/sample) 📄**
+**Still need further example? [Jump to full sample](https://github.com/omermorad/jest-unit/tree/master/sample) 📄**
+
+
+## Motivation 💪
+
+Unit tests exercise very small parts of the application **in complete isolation**. \
+**"Complete isolation" means that, when unit testing, you don’t typically
+connect your application with external dependencies such as databases, the filesystem,
+or HTTP services**. That allows unit tests to be fast and more stable since they won’t
+fail due to problems with those external services. (Thank you, Testim.io - [jump to source](https://www.testim.io/blog/unit-testing-best-practices/))
 
 ## More about `jest-mock-extended` package 📦
 `jest-mock-extended` is a library which enables type safe mocking for Jest with TypeScript.

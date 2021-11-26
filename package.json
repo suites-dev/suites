@@ -1,11 +1,12 @@
 {
   "name": "jest-unit",
-  "version": "0.0.1-beta",
+  "version": "0.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
     "mock",
     "jest",
+    "auto-mock",
     "reflection"
   ],
   "repository": {
@@ -21,7 +22,8 @@
       "email": "omer.moradd@gmail.com"
     },
     {
-      "name": "Yarin Assaraf"
+      "name": "Yarin Assaraf",
+      "email": "yarinasaraf@gmail.com"
     }
   ],
   "scripts": {

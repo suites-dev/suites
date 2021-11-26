@@ -16,7 +16,7 @@
     Create unit test simply and easily with 100% isolation of class dependencies
   </h4>
 
-  <img src="https://raw.githubusercontent.com/omermorad/jest-unit/master/icons.png" alt="Icons" />
+  <img align="center" width="400" src="https://raw.githubusercontent.com/omermorad/jest-unit/master/icons.png" alt="Icons" />
 </p>
 
 ## Installation

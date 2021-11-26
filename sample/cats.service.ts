@@ -1,8 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
 import { CatsApiService } from './cats-api.service';
 import { RandomNameService } from './random-name.service';
+import { Logger } from './logger';
+import { Reflectable } from '../src/lib/reflectable.decorator';
 
-@Injectable()
+@Reflectable()
 export class CatsService {
   public constructor(
     private readonly randomNameService: RandomNameService,

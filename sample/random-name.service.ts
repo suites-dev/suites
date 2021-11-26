@@ -1,12 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
-import * as Faker from 'faker';
-import FakerStatic = Faker.FakerStatic;
+import { Reflectable } from '../test/spec-assets';
 
-@Injectable()
+@Reflectable()
 export class RandomNameService {
-  public constructor(@Inject('Faker') private readonly faker: FakerStatic) {}
-
   public getRandomName(): string {
-    return this.faker.animal.cat();
+    return 'some-random-name';
   }
 }

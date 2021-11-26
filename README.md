@@ -4,7 +4,7 @@
 [![ci](https://github.com/omermorad/jest-unit/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/jest-unit/actions)
 
 <p align="center">
-  <img height="450" src="https://raw.githubusercontent.com/omermorad/jest-unit/master/logo.png" alt="Logo" />
+  <img width="400" src="https://raw.githubusercontent.com/omermorad/jest-unit/master/logo.png" alt="Logo" />
 
   <h1 align="center">Jest Unit 🤡</h1>
 
@@ -15,10 +15,6 @@
   <h4 align="center">
     Create unit test simply and easily with 100% isolation of class dependencies
   </h4>
-
-  <h5 align="center">
-    * This library is supporting Jest only
-  </h5>
 </p>
 
 ## Installation
@@ -59,7 +55,7 @@ this library is for you.
 The only assumption/requirement is that you are taking your class dependencies via
 the class constructor (like in the example above).
 
-## What is this library? ❓
+## What is this library❓
 
 This package helps isolate the dependencies of any given class, by using a simple
 reflection mechanism on the class constructor params metadata. When used in conjunction with

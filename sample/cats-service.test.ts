@@ -1,8 +1,8 @@
 import { CatsService } from './cats.service';
 import { DeepMockOf, MockOf, Spec } from '../src';
-import { Logger } from '@nestjs/common';
 import { RandomNameService } from './random-name.service';
 import { CatsApiService, ExternalApiCatResponse } from './cats-api.service';
+import { Logger } from './logger';
 
 describe('Cats Service Unit Test', () => {
   let catsService: CatsService;

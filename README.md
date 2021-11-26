@@ -9,12 +9,14 @@
   <h1 align="center">Jest Unit 🤡</h1>
 
   <h3 align="center">
-    Library for Writing Unit Tests Easily with Auto Mocking Capabilities for TypeScript
+    Library for Writing Unit Tests Easily with Auto Mocking Capabilities for TypeScript & Jest
   </h3>
 
   <h4 align="center">
     Create unit test simply and easily with 100% isolation of class dependencies
   </h4>
+
+  <img width="400" src="https://raw.githubusercontent.com/omermorad/jest-unit/master/icons.png" alt="Icons" />
 </p>
 
 ## Installation
@@ -45,8 +47,8 @@ export class AwesomeClass {
 You can use Jest Unit :)
 
 ### Tell me more 🤔
-If you are using any TypeScript framework: Angular, React+TypeScript, NestJS, TypeDI or even if
-you are framework free.
+If you are using any TypeScript framework: Angular, React+TypeScript, NestJS, TypeDI, TsED
+or even if you are framework free, jest unit is for you.
 
 Jest Unit is framework agnostic, so it's basically serves everyone! if you
 are using any implementation of dependency inversion (dependency injection on most cases)
@@ -63,45 +65,6 @@ reflection mechanism on the class constructor params metadata. When used in conj
 automatically and become mocks (or deep mocks if you want it to).
 
 ## Example and Usage 💁‍
-
-<details>
-    <summary>What is this <code>@Reflectable()</code> decorator?</summary>
-    <p>
-In order to reflect the constructor class params it needs to be decorated with any
-class decorator. no matter what its original functionality.
-If you are not using any kind of decorator, you can just use the default decorator that
-does, literally, nothing; his purpose is to emit class metadata.
-
-</p>
-</details>
-
-<hr>
-
-<details><summary><code>📄 Original Class</code></summary><p>
-
-```typescript
-@Reflectable()
-export class SomeService {
-  public constructor(
-    private readonly logger: Logger,
-    private readonly catsService: CatsService,
-    private readonly userService: UserService,
-    private readonly featureFlagService: FeatureFlagService,
-  ) {}
-  
-  public async doSomethingNice() {
-    if (this.featureFlagService.isFeatureOn()) {
-      const users = await this.userService.getUsers('https://example.com/json.json');
-      this.logger.log(users);
-
-      return users;
-    }
-    
-    return null;
-  }
-}
-```
-</p></details>
 
 ```typescript
 import { DeepMockOf, MockOf, Spec } from 'jest-unit';
@@ -139,6 +102,49 @@ describe('SomeService Unit Test', () => {
   });
 });
 ```
+
+<details><summary><code>📄 Show me the source</code></summary><p>
+
+```typescript
+@Reflectable()
+export class SomeService {
+  public constructor(
+    private readonly logger: Logger,
+    private readonly catsService: CatsService,
+    private readonly userService: UserService,
+    private readonly featureFlagService: FeatureFlagService,
+  ) {}
+  
+  public async doSomethingNice() {
+    if (this.featureFlagService.isFeatureOn()) {
+      const users = await this.userService.getUsers('https://example.com/json.json');
+      this.logger.log(users);
+
+      return users;
+    }
+    
+    return null;
+  }
+}
+```
+</p></details>
+
+<hr />
+
+<details>
+    <summary>What is this <code>@Reflectable()</code> decorator?</summary>
+    <p>
+In order to reflect the constructor class params it needs to be decorated with any
+class decorator, no matter what its original functionality.
+If you are not using any kind of decorator, you can just use the default decorator that
+does, literally, nothing; his purpose is to emit class metadata; so no w
+
+But, for example, if you do use `@Injecatable()` (NestJS or Angular), `@Service()` (TypeDI),
+`@Component()` or any kind of decorator, you don't need to decorate your class with
+the `@Reflectable()` decorator.
+
+</p>
+</details>
 
 **Still need further example? [Jump to full sample](https://github.com/omermorad/jest-unit/tree/master/sample) 📄**
 

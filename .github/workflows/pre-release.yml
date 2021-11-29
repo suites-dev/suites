@@ -1,0 +1,33 @@
+name: Release Candidate
+on: [workflow_dispatch]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    name: Release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "omer.moradd@gmail.com"
+          git config --global user.name "ci@$GITHUB_ACTOR"
+
+      - name: Lerna Init
+        run: lerna bootstrap
+
+      - name: Build
+        run: yarn build
+
+      - name: Prerelease
+        run: |
+          lerna version --conventional-commits --conventional-prerelease --yes --preid rc
+          lerna publish from-package --yes --dist-tag rc

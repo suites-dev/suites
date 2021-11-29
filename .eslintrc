@@ -1,0 +1,67 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "prettier"
+//    "prettier/@typescript-eslint"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts"
+      ]
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".ts"
+        ]
+      },
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    },
+    "import/extensions": 0
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "no-useless-constructor": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "printWidth": 120,
+        "trailingComma": "es5"
+      }
+    ],
+    "no-unused-expressions": 0,
+    "one-var": 0,
+    "no-underscore-dangle": [
+      0,
+      {
+        "allow": []
+      }
+    ],
+    "global-require": 0,
+    "new-cap": "off",
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "import/extensions": 0,
+    "@typescript-eslint/camelcase": 0,
+    "camelcase": "off",
+    "consistent-return": 0,
+    "import/prefer-default-export": 0,
+    "lines-between-class-members": "off"
+  },
+  "env": {
+    "node": true,
+    "jest": true
+  }
+}

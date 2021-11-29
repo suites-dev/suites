@@ -1,0 +1,11 @@
+deprecated
+packages/**/index.js
+packages/**/index.d.ts
+packages/**/dist/**/*
+node_modules/*
+coverage/*
+dist
+dist/*
+jest.config.base.js
+commitlint.config.js
+jest.config.js

@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": false,
+    "isolatedModules": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "sourceMap": true,
+    "incremental": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "types": [
+      "node",
+      "jest",
+      "jest-gherkin",
+    ],
+    "allowJs": true,
+    "lib": [
+      "es6"
+    ],
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "sample"
+  ],
+  "references": [
+    {
+      "path": "packages/core"
+    },
+    {
+      "path": "packages/common"
+    },
+    {
+      "path": "packages/jest"
+    },
+    {
+      "path": "packages/sinon"
+    }
+  ]
+}

@@ -3,34 +3,46 @@
     "module": "commonjs",
     "declaration": true,
     "removeComments": false,
+    "isolatedModules": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2017",
+    "target": "es5",
     "sourceMap": true,
-    "baseUrl": "./",
-    "outDir": "./dist",
     "incremental": false,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "types": [
       "node",
-      "jest"
+      "jest",
+      "jest-gherkin",
     ],
+    "allowJs": true,
     "lib": [
-      "es6",
-      "es2015.reflect"
+      "es6"
     ],
+    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true
   },
   "exclude": [
-    "index.ts",
     "node_modules",
     "dist",
-    "test",
-    "env",
-    "coverage"
+    "sample"
+  ],
+  "references": [
+    {
+      "path": "packages/core"
+    },
+    {
+      "path": "packages/common"
+    },
+    {
+      "path": "packages/jest"
+    },
+    {
+      "path": "packages/sinon"
+    }
   ]
 }

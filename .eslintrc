@@ -1,7 +1,9 @@
 {
+  "root": true,
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "prettier"
+//    "prettier/@typescript-eslint"
   ],
   "parserOptions": {
     "ecmaVersion": 8
@@ -29,19 +31,15 @@
     "prettier"
   ],
   "rules": {
+    "no-useless-constructor": "off",
     "prettier/prettier": [
-      2,
+      "error",
       {
-        "trailingComma": "es5",
         "singleQuote": true,
-        "printWidth": 100,
-        "tabWidth": 2,
-        "semi": true,
-        "endOfLine": "auto"
+        "printWidth": 120,
+        "trailingComma": "es5"
       }
     ],
-    "no-useless-constructor": "off",
-    "react/forbid-prop-types": 0,
     "no-unused-expressions": 0,
     "one-var": 0,
     "no-underscore-dangle": [
@@ -63,6 +61,7 @@
     "lines-between-class-members": "off"
   },
   "env": {
+    "node": true,
     "jest": true
   }
 }

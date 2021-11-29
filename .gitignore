@@ -1,6 +1,6 @@
 # compiled output
-/dist
-/node_modules
+dist
+node_modules
 
 # Logs
 logs
@@ -14,7 +14,8 @@ lerna-debug.log*
 .DS_Store
 
 # Tests
-/coverage
+coverage
+/sample/coverage
 /.nyc_output
 
 # IDEs and editors
@@ -36,3 +37,5 @@ lerna-debug.log*
 .npmrc
 junit.xml
 .gitconfig
+.circleci
+!.husky

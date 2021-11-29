@@ -1,0 +1,53 @@
+{
+  "name": "@aromajs/jest",
+  "version": "0.0.0",
+  "license": "MIT",
+  "description": "AromaJS Jest Package",
+  "main": "dist/aromajs-jest.cjs.js",
+  "module": "dist/aromajs-jest.esm.js",
+  "types": "dist/index.d.ts",
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omermorad/aromajs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/omermorad/aromajs/issues"
+  },
+  "readme": "https://github.com/omermorad/aromajs/tree/master/packages/jest/README.md",
+  "scripts": {
+    "prebuild": "yarn rimraf dist",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "lint": "eslint '{src,test}/**/*.ts'",
+    "lint:fix": "eslint '{src,test}/**/*.ts' --fix"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "dependencies": {
+    "@aromajs/core": "0.0.0",
+    "jest-mock-extended": "^2.0.4"
+  },
+  "devDependencies": {
+    "@aromajs/common": "0.0.0",
+    "@types/jest": "^27.0.3",
+    "jest": "27.0.6",
+    "reflect-metadata": "^0.1.13"
+  },
+  "peerDependencies": {
+    "@types/jest": "^27.x",
+    "jest": "^27.x",
+    "reflect-metadata": "^0.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

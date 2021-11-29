@@ -1,0 +1,50 @@
+{
+  "name": "@aromajs/sinon",
+  "version": "0.0.0",
+  "license": "MIT",
+  "description": "AromaJS Sinon Package",
+  "main": "dist/aromajs-sinon.cjs.js",
+  "module": "dist/aromajs-sinon.esm.js",
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omermorad/aromajs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/omermorad/aromajs/issues"
+  },
+  "readme": "https://github.com/omermorad/aromajs/tree/master/packages/sinon/README.md",
+  "scripts": {
+    "prebuild": "npx rimraf dist",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "jest --runInBand --verbose",
+    "lint": "eslint '{src,test}/**/*.ts'",
+    "lint:fix": "eslint '{src,test}/**/*.ts' --fix"
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "dependencies": {
+    "@aromajs/core": "0.0.0"
+  },
+  "devDependencies": {
+    "@types/sinon": "^10.0.6",
+    "reflect-metadata": "^0.1.13",
+    "sinon": "^12.0.0"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "^0.1.13",
+    "sinon": "^12.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

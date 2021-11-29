@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.build.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "./src",
+    "target": "es5"
+  },
+  "exclude": [
+    "index.ts",
+    "node_modules",
+    "test",
+    "src/**/*.test.ts"
+  ],
+  "include": ["src/"]
+}

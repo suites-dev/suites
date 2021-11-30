@@ -7,5 +7,5 @@ module.exports = {
   name: packageJson.name,
   displayName: packageJson.name,
   collectCoverageFrom: ['src/**/*.ts', 'test/**/*.ts'],
-  coveragePathIgnorePatterns: ['index.ts', 'test-classes.ts'],
+  coveragePathIgnorePatterns: ['index.ts', 'spec-assets.ts'],
 };

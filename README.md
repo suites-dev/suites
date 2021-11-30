@@ -1,8 +1,8 @@
 [![ISC license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/aromajs/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/aromajs)
 [![ci](https://github.com/omermorad/aromajs/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/aromajs/actions)
-[![npm version](https://img.shields.io/npm/v/@aromajs/sinon?color=%23995f44&label=@aromajs/sinon&logo=AromaJS%20Sinon)](https://npmjs.org/package/@aromajs/jest "View this project on npm")
-[![npm version](https://img.shields.io/npm/v/@aromajs/jest?color=%23aa709f&label=%40aromajs%2Fjest&logo=AromaJS%20Jest)](https://npmjs.org/package/@aromajs/sinon "View this project on npm")
+[![npm version](https://img.shields.io/npm/v/@aromajs/sinon?color=%23995f44&label=@aromajs/sinon&logo=AromaJS%20Sinon)](https://npmjs.org/package/@aromajs/sinon "View this project on npm")
+[![npm version](https://img.shields.io/npm/v/@aromajs/jest?color=%23aa709f&label=%40aromajs%2Fjest&logo=AromaJS%20Jest)](https://npmjs.org/package/@aromajs/jest "View this project on npm")
 
 
 <p align="center">

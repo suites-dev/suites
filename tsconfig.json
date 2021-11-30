@@ -6,7 +6,7 @@
     "isolatedModules": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "target": "es6",
     "sourceMap": true,
     "incremental": false,
     "noImplicitAny": false,
@@ -17,7 +17,7 @@
     "types": [
       "node",
       "jest",
-      "jest-gherkin",
+      "sinon"
     ],
     "allowJs": true,
     "lib": [
@@ -30,19 +30,5 @@
     "node_modules",
     "dist",
     "sample"
-  ],
-  "references": [
-    {
-      "path": "packages/core"
-    },
-    {
-      "path": "packages/common"
-    },
-    {
-      "path": "packages/jest"
-    },
-    {
-      "path": "packages/sinon"
-    }
   ]
 }

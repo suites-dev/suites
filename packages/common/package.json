@@ -2,7 +2,7 @@
   "name": "@aromajs/common",
   "version": "0.0.0",
   "license": "MIT",
-  "description": "Mockingbird Logger Package",
+  "description": "AromaJS Common Package",
   "main": "dist/aromajs-common.cjs.js",
   "module": "dist/aromajs-common.esm.js",
   "contributors": [

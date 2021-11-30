@@ -1,6 +1,6 @@
 {
   "name": "@aromajs/common",
-  "version": "0.0.1-rc.0",
+  "version": "0.0.1-rc.1",
   "license": "MIT",
   "description": "AromaJS Common Package",
   "main": "dist/aromajs-common.cjs.js",

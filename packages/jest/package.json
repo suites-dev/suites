@@ -1,6 +1,6 @@
 {
   "name": "@aromajs/jest",
-  "version": "0.0.1-rc.0",
+  "version": "0.0.1-rc.1",
   "license": "MIT",
   "description": "AromaJS Jest Package",
   "main": "dist/aromajs-jest.cjs.js",
@@ -32,8 +32,8 @@
     "CHANGELOG.md"
   ],
   "dependencies": {
-    "@aromajs/common": "^0.0.1-rc.0",
-    "@aromajs/core": "^0.0.1-rc.0",
+    "@aromajs/common": "^0.0.1-rc.1",
+    "@aromajs/core": "^0.0.1-rc.1",
     "jest-mock-extended": "^2.0.4"
   },
   "devDependencies": {

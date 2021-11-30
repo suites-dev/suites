@@ -5,7 +5,6 @@
   "description": "AromaJS Jest Package",
   "main": "dist/aromajs-jest.cjs.js",
   "module": "dist/aromajs-jest.esm.js",
-  "types": "dist/index.d.ts",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -33,18 +32,17 @@
     "CHANGELOG.md"
   ],
   "dependencies": {
+    "@aromajs/common": "0.0.0",
     "@aromajs/core": "0.0.0",
     "jest-mock-extended": "^2.0.4"
   },
   "devDependencies": {
-    "@aromajs/common": "0.0.0",
     "@types/jest": "^27.0.3",
     "jest": "27.0.6",
     "reflect-metadata": "^0.1.13"
   },
   "peerDependencies": {
-    "@types/jest": "^27.x",
-    "jest": "^27.x",
+    "@types/jest": "^27.x || ^26.x",
     "reflect-metadata": "^0.x"
   },
   "publishConfig": {

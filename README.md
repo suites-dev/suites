@@ -1,118 +1,169 @@
 [![ISC license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-[![npm version](http://img.shields.io/npm/v/mockingbird.svg?style=flat)](https://npmjs.org/package/mockingbird "View this project on npm")
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/mockingbird/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/mockingbird)
-[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
-[![ci](https://github.com/omermorad/mockingbird/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/mockingbird/actions)
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/aromajs/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/aromajs)
+[![ci](https://github.com/omermorad/aromajs/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/aromajs/actions)
+[![npm version](https://img.shields.io/npm/v/@aromajs/sinon?color=%23995f44&label=@aromajs/sinon&logo=AromaJS%20Sinon)](https://npmjs.org/package/@aromajs/jest "View this project on npm")
+[![npm version](https://img.shields.io/npm/v/@aromajs/jest?color=%23aa709f&label=%40aromajs%2Fjest&logo=AromaJS%20Jest)](https://npmjs.org/package/@aromajs/sinon "View this project on npm")
+
 
 <p align="center">
-  <img width="450" src="https://raw.githubusercontent.com/omermorad/mockingbird/master/docs/logo.png" alt="Mockingbird Logo" />
-
-  <h1 align="center">Mockingbird</h1>
+  <h1 align="center">AromaJS ☕</h1>
 
   <h3 align="center">
-    Simple Yet Powerful TypeScript Mocking Library
+    Standalone Library for Writing Unit Tests Easily with Auto Mocking Capabilities for TypeScript
+  </h3>
+
+  <h3 align="center">
+    Works with any unit testing framework
   </h3>
 
   <h4 align="center">
-    Manage and create your test mocks easily, and focus on your tests logic instead
+    Create unit test simply and easily with 100% isolation of class dependencies
   </h4>
 </p>
 
 ## Installation
+💡 It doesn't matter which test runner you are using, but only the mocks/stubs library
+you are working with
 
+Using Jest? Install `@aromajs/jest`
 ```bash
-npm i -D mockingbird
+npm i -D @aromajs/jest
 ```
 
+\
+Using Sinon? Install `@aromajs/sinon`
 ```bash
-yarn add -D mockingbird
+npm i -D @aromajs/sinon
 ```
 
-## What is "Mocking Library"?
-A lot of times you find yourself “preparing” some dummy data for your tests that
-has to make sense for a specific test case(s) and is manipulated often.
-Some developers are preparing JSON files, others create a long verbose object in
-the test file itself, but the outcome always contains some fake data inside
-(or even a snapshot from an external API).
+## Who can use this library? 🤩
+**TL;DR**
 
-This is what Mockingbird aims to solve!
-It suggests two ways of creating mocks for your entities/models classes, thus,
-creating one uniform way to manage mocks (whether you are working alone or with your team),
-your dev experience will improve, and you won’t have to deal with this messy setup at all!
-
-## Features
-- Prepare as many unique mocks/fixtures as you need for your tests
-- Generate dummy (but reasonable) data for database seeding
-- Manage your mocks from one place, forget about the messy work
-- Full TypeScript compatibility
-- Convenient and simple API
-
-## Usage
-
-**Here is the simplest usage of Mockingbird:**
+If you are using this pattern in your framework (it doesn't matter which one):
 
 ```typescript
-// Could be interface as well
-class BirdEntity {
-  name: string;
-  birthday: Date;
-  goodPoints: number;
+export class AwesomeClass {
+  public constructor(private readonly dependecy1: SomeOtherClass) {}
 }
 ```
 
+AromaJS is exactly for you!
+
+### Tell me more 🤔
+If you are using any TypeScript framework: Angular, React+TypeScript, NestJS, TypeDI, Ts.ED
+or even if you are framework free, AromaJS is for you.
+
+AromaJS is framework agnostic, so it's basically serves everyone!
+
+The only assumption/requirement is that you are taking your class dependencies via
+your class constructor (like in the example above).
+
+## What is this library❓
+
+This library helps isolate the dependencies of any given class, by using a simple
+reflection mechanism on the class constructor params metadata.
+Meaning all the class dependencies (constructor params) will be overridden
+automatically and become mocks.
+
+## Example and Usage 💁‍
+
+This specific example is for Jest, but don't worry, we got you covered with examples
+for every testing framework! [Jump to the recipes page](http://)
+
 ```typescript
-import { Mock, MockFactory } from 'mockingbird';
+import { DeepMockOf, MockOf, Spec } from '@aromajs/jest';
 
-// BirdEntity could be an interface or a class
-class BirdEntityMock implements BirdEntity {
-  @Mock(faker => faker.name.firstName())
-  name!: string;
+describe('SomeService Unit Test', () => {
+  let someService: SomeService;
+  let logger: MockOf<Logger>;
+  let userService: MockOf<UserService>;
 
-  @Mock()
-  birthday!: Date; // Will generate a recent date
+  const USERS_DATA = [{ name: 'user', email: 'user@user.com' }];
 
-  @Mock()
-  goodPoints!: number; // Will generate a random number
-}
+  beforeAll(() => {
+    const { unit, unitRef } = Spec.createUnit<SomeService>(SomeService)
+      .mock(FeatureFlagService)
+      .using({
+        isFeatureOn: () => Promise.resolve(true),
+      })
+      // All the rest of the dependencies will be mocked
+      // Pass true if you want to deep mock all of the rest
+      .compile();
 
-const oneBird = MockFactory(BirdEntityMock).one();
-const lotsOfBirds = MockFactory(BirdEntityMock).many(3);
+    someService = unit;
+    userService = unitRef.get(UserService);
+  });
+
+  describe('When something happens', () => {
+    beforeAll(() => (userService.getUsers.mockResolvedValueOnce(USERS_DATA));
+    
+    test('then check something', async () => {
+      const result = await service.doSomethingNice();
+
+      expect(logger.log).toHaveBeenCalledWith(USERS_DATA);
+      expect(result).toEqual(USERS_DATA);
+    });
+  });
+});
 ```
 
-## Documentation
-**[Jump to the full documentation and explore the full API](https://github.com/omermorad/faker.ts/blob/master/docs/README.md)**
+<details><summary><code>📄 Show me the source</code></summary><p>
 
-**There's also an example, [you can find it under the sample folder](https://github.com/omermorad/mockingbird/tree/master/sample)**
+```typescript
+@Reflectable()
+export class SomeService {
+  public constructor(
+    private readonly logger: Logger,
+    private readonly catsService: CatsService,
+    private readonly userService: UserService,
+    private readonly featureFlagService: FeatureFlagService,
+  ) {}
+  
+  public async doSomethingNice() {
+    if (this.featureFlagService.isFeatureOn()) {
+      const users = await this.userService.getUsers('https://example.com/json.json');
+      this.logger.log(users);
 
-## Playground
+      return users;
+    }
+    
+    return null;
+  }
+}
+```
+</p></details>
 
-**Jump to the [REPL Playground](https://repl.it/@omermorad/Mockingbird-Playground) where you can see Mockingbird in action!**
+<hr />
 
-## Motivation
+<details>
+    <summary>What is this <code>@Reflectable()</code> decorator?</summary>
+    <p>
+In order to reflect the constructor class params it needs to be decorated with any
+class decorator, no matter what its original functionality.
+If you are not using any kind of decorator, you can just use the default decorator that
+does, literally, nothing; his purpose is to emit class metadata; so no w
 
-Creating mocks for your tests (sometimes called "fixtures") can be a tedious and
-cumbersome process usually done manually.
+But, for example, if you do use `@Injecatable()` (NestJS or Angular), `@Service()` (TypeDI),
+`@Component()` or any kind of decorator, you don't need to decorate your class with
+the `@Reflectable()` decorator.
 
-We came up with a simple yet super convenient solution: all you have to do to get mocks out of the
-box is to decorate your classes (whether it's an entity, or a model representing the database layer)
-and generate simple or complex mocks.
+</p>
+</details>
 
-Mockingbird offers two different ways for preparing mocks; The first one (as we call it), is the TypeScript
-way which requires decorating existing (or duplicate) classes.
-The second way is to use Mockingbird's functionality directly
+## Motivation 💪
 
+Unit tests exercise very small parts of the application **in complete isolation**. \
+**"Complete isolation" means that, when unit testing, you don’t typically
+connect your application with external dependencies such as databases, the filesystem,
+or HTTP services**. That allows unit tests to be fast and more stable since they won’t
+fail due to problems with those external services. (Thank you, Testim.io - [jump to source](https://www.testim.io/blog/unit-testing-best-practices/))
 
-### What is `faker.js`?
-
-`faker.js` it's a library which is used to "generate massive amounts of fake data in the browser and Node".
-
-Mockingbird uses `faker.js` under the hood, making it possible to enjoy its rich database, and thereby allows
-to create mocks that are meaningful like email, first name, address and many more.
-
-## License
+## License 📜
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-## Acknowledgements
+## Acknowledgements 📙
 
-[faker.js](https://github.com/marak/Faker.js)
+* [sinon](https://github.com/sinonjs/sinon)
+* [jest](https://github.com/facebook/jest)
+* [jest-mock-extended](https://github.com/marchaos/jest-mock-extended)

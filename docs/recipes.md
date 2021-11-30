@@ -1,3 +1,0 @@
-# Mockingbird Recipes
-
-### Coming soon!

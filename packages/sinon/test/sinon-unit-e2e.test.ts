@@ -10,7 +10,7 @@ describe('Sinon Unit E2E Test', () => {
     beforeAll(() => {
       unitBuilder = Spec.createUnit<MainTestClass>(MainTestClass)
         .mock(TestClassOne)
-        .using({ foo: Promise.resolve('123') });
+        .using({ foo: Promise.resolve('foo-from-test') });
     });
 
     describe('when compiling the builder and turning into testing unit', () => {
@@ -33,13 +33,12 @@ describe('Sinon Unit E2E Test', () => {
         expect(unitRef.get(TestClassThree)).toBeDefined();
       });
 
-      test('then do not return the actual reflected dependencies of the injectable class', () => {
-        // Indeed, they all need to be overwritten
+      test('then return the actual reflected dependencies of the injectable class', () => {
         const { unitRef } = unit;
 
-        expect(unitRef.get(TestClassOne)).not.toBeInstanceOf(TestClassOne);
-        expect(unitRef.get(TestClassTwo)).not.toBeInstanceOf(TestClassTwo);
-        expect(unitRef.get(TestClassThree)).not.toBeInstanceOf(TestClassThree);
+        expect(unitRef.get(TestClassOne)).toBeInstanceOf(TestClassOne);
+        expect(unitRef.get(TestClassTwo)).toBeInstanceOf(TestClassTwo);
+        expect(unitRef.get(TestClassThree)).toBeInstanceOf(TestClassThree);
       });
 
       test('then hard-mock the implementation of TestClassOne using the "foo" (partial impl function)', async () => {

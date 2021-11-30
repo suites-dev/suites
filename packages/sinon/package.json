@@ -38,11 +38,12 @@
   "devDependencies": {
     "@types/sinon": "^10.0.6",
     "reflect-metadata": "^0.1.13",
-    "sinon": "^12.0.0"
+    "sinon": "^12.x"
   },
   "peerDependencies": {
+    "@types/sinon": "*",
     "reflect-metadata": "^0.1.13",
-    "sinon": "^12.x"
+    "sinon": "*"
   },
   "publishConfig": {
     "access": "public"

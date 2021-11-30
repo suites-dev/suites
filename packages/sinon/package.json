@@ -1,6 +1,6 @@
 {
   "name": "@aromajs/sinon",
-  "version": "0.0.0",
+  "version": "0.0.1-rc.0",
   "license": "MIT",
   "description": "AromaJS Sinon Package",
   "main": "dist/aromajs-sinon.cjs.js",
@@ -33,7 +33,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@aromajs/core": "0.0.0"
+    "@aromajs/core": "^0.0.1-rc.0"
   },
   "devDependencies": {
     "@types/sinon": "^10.0.6",

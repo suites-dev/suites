@@ -7,7 +7,11 @@
   <h1 align="center">AromaJS ☕ Sinon</h1>
 
   <h3 align="center">
-    Standalone Library for Writing Unit Tests Easily with Auto Mocking Capabilities for TypeScript
+    Standalone Library for Auto Mocking Your Dependencies while Unit Testing (for TypeScript)
+  </h3>
+
+  <h3 align="center">
+    Works with any testing framework!
   </h3>
 
   <h4 align="center">
@@ -55,84 +59,30 @@ This specific example is for Jest, but don't worry, we got you covered with exam
 for every testing framework! [Jump to the recipes page](http://)
 
 ```typescript
-import { DeepMockOf, MockOf, Spec } from '@aromajs/jest';
+import { MockOf, Spec } from '@aromajs/sinon';
 
 describe('SomeService Unit Test', () => {
-  let someService: SomeService;
+  let testedService: SomeService;
   let logger: MockOf<Logger>;
-  let userService: MockOf<UserService>;
-
-  const USERS_DATA = [{ name: 'user', email: 'user@user.com' }];
 
   beforeAll(() => {
-    const { unit, unitRef } = Spec.createUnit<SomeService>(SomeService)
-      .mock(FeatureFlagService)
-      .using({
-        isFeatureOn: () => Promise.resolve(true),
-      })
-      // All the rest of the dependencies will be mocked
-      // Pass true if you want to deep mock all of the rest
+    const { unit, unitRef } = Spec
+      .createUnit<SomeService>(SomeService)
       .compile();
 
-    someService = unit;
-    userService = unitRef.get(UserService);
+    testedService = unit;
+    logger = unitRef.get(Logger);
   });
 
   describe('When something happens', () => {
-    beforeAll(() => (userService.getUsers.mockResolvedValueOnce(USERS_DATA));
-    
-    test('then check something', async () => {
-      const result = await service.doSomethingNice();
+    beforeAll(() => (testedService.doSomething()));
 
-      expect(logger.log).toHaveBeenCalledWith(USERS_DATA);
-      expect(result).toEqual(USERS_DATA);
+    test('then call logger log', async () => {
+      expect(logger.log).toHaveBeenCalled();
     });
   });
 });
 ```
-
-<details><summary><code>📄 Show me the source</code></summary><p>
-
-```typescript
-@Reflectable()
-export class SomeService {
-  public constructor(
-    private readonly logger: Logger,
-    private readonly catsService: CatsService,
-    private readonly userService: UserService,
-    private readonly featureFlagService: FeatureFlagService,
-  ) {}
-  
-  public async doSomethingNice() {
-    if (this.featureFlagService.isFeatureOn()) {
-      const users = await this.userService.getUsers('https://example.com/json.json');
-      this.logger.log(users);
-
-      return users;
-    }
-    
-    return null;
-  }
-}
-```
-</p></details>
-
-<hr />
-
-<details>
-    <summary>What is this <code>@Reflectable()</code> decorator?</summary>
-    <p>
-In order to reflect the constructor class params it needs to be decorated with any
-class decorator, no matter what its original functionality.
-If you are not using any kind of decorator, you can just use the default decorator that
-does, literally, nothing; his purpose is to emit class metadata; so no w
-
-But, for example, if you do use `@Injecatable()` (NestJS or Angular), `@Service()` (TypeDI),
-`@Component()` or any kind of decorator, you don't need to decorate your class with
-the `@Reflectable()` decorator.
-
-</p>
-</details>
 
 ## Motivation 💪
 
@@ -148,4 +98,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Acknowledgements 📙
 
-* [sinon](https://github.com/sinonjs/sinon)
+[Sinon](https://github.com/sinonjs/sinon)

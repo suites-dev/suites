@@ -1,10 +1,10 @@
 {
-  "name": "@automock/common",
-  "version": "0.0.1-rc.1",
+  "name": "@automock/jest",
+  "version": "0.0.1-rc.2",
   "license": "MIT",
-  "description": "AromaJS Common Package",
-  "main": "dist/aromajs-common.cjs.js",
-  "module": "dist/aromajs-common.esm.js",
+  "description": "AromaJS Jest Package",
+  "main": "dist/aromajs-jest.cjs.js",
+  "module": "dist/aromajs-jest.esm.js",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/omermorad/aromajs/issues"
   },
-  "readme": "https://github.com/omermorad/aromajs/tree/master/packages/common/README.md",
+  "readme": "https://github.com/omermorad/aromajs/tree/master/packages/jest/README.md",
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "tsc",
@@ -31,10 +31,19 @@
     "README.md",
     "CHANGELOG.md"
   ],
+  "dependencies": {
+    "@automock/common": "^0.0.1-rc.1",
+    "@automock/core": "^0.0.1-rc.1",
+    "jest-mock-extended": "^2.0.4"
+  },
   "devDependencies": {
     "@types/jest": "^27.0.3",
-    "@types/sinon": "^10.0.6",
-    "jest-mock-extended": "^2.0.4"
+    "jest": "27.0.6",
+    "reflect-metadata": "^0.1.13"
+  },
+  "peerDependencies": {
+    "@types/jest": "^27.x || ^26.x",
+    "reflect-metadata": "^0.x"
   },
   "publishConfig": {
     "access": "public"

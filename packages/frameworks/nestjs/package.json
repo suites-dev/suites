@@ -1,10 +1,9 @@
 {
-  "name": "@automock/common",
+  "name": "@automock/nestjs",
   "version": "0.0.1-rc.1",
   "license": "MIT",
-  "description": "AromaJS Common Package",
-  "main": "dist/aromajs-common.cjs.js",
-  "module": "dist/aromajs-common.esm.js",
+  "main": "dist/aromajs-nestjs.cjs.js",
+  "module": "dist/aromajs-nestjs.esm.js",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -31,10 +30,12 @@
     "README.md",
     "CHANGELOG.md"
   ],
+  "peerDependencies": {
+    "@nestjs/common": ">= 6.x <= 8.x"
+  },
   "devDependencies": {
-    "@types/jest": "^27.0.3",
-    "@types/sinon": "^10.0.6",
-    "jest-mock-extended": "^2.0.4"
+    "@automock/reflect": "^0.0.1-rc.1",
+    "@nestjs/common": "^7.0.0"
   },
   "publishConfig": {
     "access": "public"

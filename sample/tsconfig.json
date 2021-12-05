@@ -16,20 +16,19 @@
     "resolveJsonModule": true,
     "types": [
       "node",
-      "jest",
+      "chai",
+      "mocha",
       "sinon"
     ],
     "allowJs": true,
     "lib": [
-      "es2019",
       "es6"
     ],
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true
   },
   "exclude": [
-    "**/node_modules",
-    "**/dist",
-    "**/sample"
+    "node_modules",
+    "dist"
   ]
 }

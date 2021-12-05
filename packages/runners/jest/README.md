@@ -1,19 +1,13 @@
 [![ISC license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/automock/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/automock)
-[![ci](https://github.com/omermorad/automock/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/automock/actions)
-[![npm version](https://img.shields.io/npm/v/@automock/sinon?color=%23995f44&label=@automock/sinon&logo=automock%20Sinon)](https://npmjs.org/package/@automock/sinon "View this project on npm")
-[![npm version](https://img.shields.io/npm/v/@automock/jest?color=%23aa709f&label=%40automock%2Fjest&logo=automock%20Jest)](https://npmjs.org/package/@automock/jest "View this project on npm")
-
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/aromajs/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/aromajs)
+[![ci](https://github.com/omermorad/aromajs/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/aromajs/actions)
+[![npm version](https://img.shields.io/npm/v/@aromajs/jest?color=%23aa709f&label=%40aromajs%2Fjest&logo=AromaJS%20Jest)](https://npmjs.org/package/@aromajs/jest "View this project on npm")
 
 <p align="center">
-  <h1 align="center">AutoMock</h1>
+  <h1 align="center">AromaJS ☕ Jest</h1>
 
   <h3 align="center">
     Standalone Library for Auto Mocking Your Dependencies while Unit Testing (for TypeScript)
-  </h3>
-
-  <h3 align="center">
-    Works with any testing framework!
   </h3>
 
   <h4 align="center">
@@ -22,24 +16,14 @@
 </p>
 
 ## Installation
-💡 It doesn't matter which test runner you are using, but only the mocks/stubs library
-you are working with
-
-Using **Jest**? Install `@automock/jest`
 ```bash
 npm i -D @automock/jest
-```
-
-\
-Using **Sinon**? Install `@automock/sinon`
-```bash
-npm i -D @automock/sinon
 ```
 
 ## Who can use this library? 🤩
 **TL;DR**
 
-If you are using this pattern in your framework (no matter which):
+If you are using this pattern in your framework (it doesn't matter which one):
 
 ```typescript
 export class AwesomeClass {
@@ -47,27 +31,27 @@ export class AwesomeClass {
 }
 ```
 
-`automock` is for you!
+AromaJS is exactly for you!
 
 ### Tell me more 🤔
-If you are using any TypeScript framework like Angular, React+TypeScript, NestJS, TypeDI, Ts.ED,
-Vue+TypeScript, or even if you are framework free, `automock` is for you.
-automock is framework agnostic, so everyone can enjoy it!
+If you are using any TypeScript framework: Angular, React+TypeScript, NestJS, TypeDI, Ts.ED
+or even if you are framework free, AromaJS is for you. AromaJS is framework agnostic,
+so it's basically serves everyone!
 
-The only assumption we make is that you are taking your class dependencies,
-(no matter if they are classes, functions or even interfaces) through the
-class constructor.
+The only assumption/requirement is that you are taking your class dependencies,
+(no matter if they are classes, functions or even interfaces) via
+your class constructor.
 
 ## What is this library❓
 
 This library helps isolate the dependencies of any given class, by using a simple
 reflection mechanism on the class constructor params metadata.
 Meaning all the class dependencies (constructor params) will be overridden
-automatically and will become mocks.
+automatically and become mocks.
 
 ## Example and Usage 💁‍
 
-This specific example is for Jest, but don't worry, we got you covered with more examples
+This specific example is for Jest, but don't worry, we got you covered with examples
 for every testing framework! [Jump to the recipes page](http://)
 
 ```typescript
@@ -110,6 +94,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Acknowledgements 📙
 
-* [sinon](https://github.com/sinonjs/sinon)
-* [jest](https://github.com/facebook/jest)
+* [Jest](https://github.com/facebook/jest)
 * [jest-mock-extended](https://github.com/marchaos/jest-mock-extended)

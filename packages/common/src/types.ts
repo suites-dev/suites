@@ -8,14 +8,18 @@ export type JestMockFn<T> = {
 
 export type SinonMockFn<T> = SinonStubbedInstance<T>;
 
-export type MockOf<T> = JestMockFn<T> | SinonMockFn<T>;
-
 export type SinonMockOverrides<T> = {
   [K in keyof T]?: SinonStubbedMember<T[K]> | (T[K] extends (...args: any[]) => infer R ? R : T[K]);
 };
+
+export type ConcreteMock<T, Y extends JestMockFn<T> | SinonMockFn<T>> = Y;
 
 export type MockPartialImplementation<T> = DeepPartial<T> | SinonMockOverrides<T>;
 
 export interface Type<T = any> extends Function {
   new (...args: any[]): T;
 }
+
+export type DependencyKey<T = unknown> = string | Type<T>;
+
+export type DependencyType = Type<unknown> | null;

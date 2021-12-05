@@ -1,12 +1,12 @@
-import { BaseUnitBuilder } from '@aromajs/core';
-import { MockOf, MockPartialImplementation } from '@aromajs/common';
+import { MockPartialImplementation } from '@automock/common';
 import { MockResolver } from './mock-resolver';
+import { UnitBuilderr } from './unit-builder-abstract';
 
-export interface Override<T> {
-  using: (mockImplementation: MockPartialImplementation<T>) => BaseUnitBuilder;
+export interface Override<Partial, TClass> {
+  using: (mockImplementation: MockPartialImplementation<Partial>) => UnitBuilderr<TClass>;
 }
 
 export interface TestingUnit<TClass = any> {
   unit: TClass;
-  unitRef: MockResolver<MockOf<any>>;
+  unitRef: MockResolver;
 }

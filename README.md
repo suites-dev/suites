@@ -9,8 +9,6 @@
 
   <h1 align="center">AutoMock</h1>
 
-  <hr />
-
   <h3 align="center">
     Standalone Library for Dependencies Auto Mocking (for TypeScript)
   </h3>

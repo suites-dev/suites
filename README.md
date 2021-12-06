@@ -4,19 +4,21 @@
 [![ci](https://github.com/omermorad/jest-unit/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/jest-unit/actions)
 
 <p align="center">
-  <img width="400" src="https://raw.githubusercontent.com/omermorad/jest-unit/master/logo.png" alt="Logo" />
+  <img width="400" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
 
-  <h1 align="center">Jest Unit 🤡</h1>
+  <h1 align="center">AutoMock</h1>
 
   <h3 align="center">
-    Library for Writing Unit Tests Easily with Auto Mocking Capabilities for TypeScript & Jest
+    Standalone Library for Dependencies Auto Mocking (for TypeScript)
+  </h3>
+
+  <h3 align="center">
+    Works with any testing framework!
   </h3>
 
   <h4 align="center">
     Create unit test simply and easily with 100% isolation of class dependencies
   </h4>
-
-  <img align="center" width="400" src="https://raw.githubusercontent.com/omermorad/jest-unit/master/icons.png" alt="Icons" />
 </p>
 
 ## Installation

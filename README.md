@@ -4,9 +4,12 @@
 [![ci](https://github.com/omermorad/jest-unit/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/jest-unit/actions)
 
 <p align="center">
-  <img width="400" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
+  <br/>
+  <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
 
   <h1 align="center">AutoMock</h1>
+
+  <hr />
 
   <h3 align="center">
     Standalone Library for Dependencies Auto Mocking (for TypeScript)

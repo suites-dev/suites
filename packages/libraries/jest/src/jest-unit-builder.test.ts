@@ -1,4 +1,4 @@
-import assert from 'assert';
+import * as assert from 'assert';
 import { UnitBuilder } from './jest-unit-builder';
 import { TestingUnit } from '@automock/core';
 import { MainTestClass, TestClassOne, TestClassTwo } from '../../../../test/spec-assets';
@@ -7,13 +7,9 @@ describe('Jest Unit Builder Unit Test', () => {
   describe('given a JestUnitBuilder', () => {
     const TESTED_CLASS_DEPENDENCIES = [TestClassOne, TestClassTwo];
 
-    const reflectorMock = {
-      getMetadata: () => TESTED_CLASS_DEPENDENCIES,
-    } as unknown as typeof Reflect;
-
     const createMockFn = jest.fn().mockImplementation((partial) => partial || 'MOCKED');
 
-    const createBuilder = () => new UnitBuilder<MainTestClass>(reflectorMock, MainTestClass, createMockFn);
+    const createBuilder = () => new UnitBuilder<MainTestClass>(MainTestClass, createMockFn);
 
     const bar = async (): Promise<string> => 'from-test';
 

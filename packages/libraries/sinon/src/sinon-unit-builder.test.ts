@@ -1,18 +1,14 @@
-import assert from 'assert';
+import * as assert from 'assert';
 import { TestingUnit } from '@automock/core';
 import { UnitBuilder } from './sinon-unit-builder';
-import { MainTestClass, TestClassOne, TestClassTwo } from '../test/spec-assets';
+import { MainTestClass, TestClassOne, TestClassTwo } from '../../../../test/spec-assets';
 
 describe('Sinon Unit Builder Unit Test', () => {
   describe('given a SinonUnitBuilder', () => {
     const TESTED_CLASS_DEPENDENCIES = [TestClassOne, TestClassTwo];
 
-    const reflectorMock = {
-      getMetadata: () => TESTED_CLASS_DEPENDENCIES,
-    } as unknown as typeof Reflect;
-
     const createMockFn = jest.fn().mockImplementation((partial) => partial || 'MOCKED');
-    const createBuilder = () => new UnitBuilder<MainTestClass>(reflectorMock, MainTestClass, createMockFn);
+    const createBuilder = () => new UnitBuilder<MainTestClass>(MainTestClass, createMockFn);
     const bar = { bar: Promise.resolve('bar') };
 
     describe('scenario: do not mock the implementation of any of the dependencies', () => {

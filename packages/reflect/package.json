@@ -2,9 +2,9 @@
   "name": "@automock/reflect",
   "version": "0.0.1-rc.1",
   "license": "MIT",
-  "description": "AromaJS Reflect Package",
-  "main": "dist/aromajs-reflect.cjs.js",
-  "module": "dist/aromajs-reflect.esm.js",
+  "description": "automock Reflect Package",
+  "main": "dist/automock-reflect.cjs.js",
+  "module": "dist/automock-reflect.esm.js",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -16,12 +16,11 @@
     "url": "https://github.com/omermorad/automock.git"
   },
   "bugs": {
-    "url": "https://github.com/omermorad/aromajs/issues"
+    "url": "https://github.com/omermorad/automock/issues"
   },
-  "readme": "https://github.com/omermorad/aromajs/tree/master/packages/reflect/README.md",
+  "readme": "https://github.com/omermorad/automock/tree/master/packages/reflect/README.md",
   "scripts": {
     "prebuild": "yarn rimraf dist",
-    "build": "tsc",
     "watch": "tsc --watch",
     "lint": "eslint '{src,test}/**/*.ts'",
     "lint:fix": "eslint '{src,test}/**/*.ts' --fix"

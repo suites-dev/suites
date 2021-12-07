@@ -3,8 +3,8 @@
   "version": "0.0.1-rc.1",
   "license": "MIT",
   "description": "AromaJS Common Package",
-  "main": "dist/aromajs-common.cjs.js",
-  "module": "dist/aromajs-common.esm.js",
+  "main": "dist/automock-common.cjs.js",
+  "module": "dist/automock-common.esm.js",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -20,8 +20,6 @@
   },
   "readme": "https://github.com/omermorad/aromajs/tree/master/packages/common/README.md",
   "scripts": {
-    "prebuild": "yarn rimraf dist",
-    "build": "tsc",
     "watch": "tsc --watch",
     "lint": "eslint '{src,test}/**/*.ts'",
     "lint:fix": "eslint '{src,test}/**/*.ts' --fix"

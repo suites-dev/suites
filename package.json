@@ -3,44 +3,35 @@
   "private": true,
   "version": "0.0.0",
   "license": "MIT",
-  "description": "AromaJS Monorepo",
+  "description": "AutoMock Monorepo",
   "keywords": [
-    "faker",
-    "faker-typescript",
-    "typescript-faker",
-    "typescript-mocks",
-    "faker-unit-tests",
-    "mockingbird-ts",
-    "mockingbird",
+    "automock",
     "unit-test",
     "unit-test-mocks",
     "testing-mocks",
-    "testing"
+    "testing",
+    "auto-mock"
   ],
   "contributors": [
     {
       "name": "Omer Morad",
       "email": "omer.moradd@gmail.com"
-    },
-    {
-      "name": "Idan Ptichi",
-      "email": "idanpt@gmail.com"
     }
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/omermorad/mockingbird.git"
+    "url": "https://github.com/omermorad/automock.git"
   },
   "bugs": {
-    "url": "https://github.com/omermorad/mockingbird/issues"
+    "url": "https://github.com/omermorad/automock/issues"
   },
-  "readme": "https://github.com/omermorad/mockingbird/README.md",
+  "readme": "https://github.com/omermorad/automock/README.md",
   "scripts": {
     "prepare": "husky install",
-    "build": "preconstruct build",
+    "build": "tsc && preconstruct build",
     "watch": "lerna exec -- watch",
     "test": "jest --runInBand && yarn test:sample",
-    "test:sample": "export NODE_ENV=test && cd sample/mockingbird-typeorm && yarn test",
+    "test:sample": "export NODE_ENV=test && cd sample/automock-typeorm && yarn test",
     "test:cov": "jest --coverage --runInBand --reporters=jest-junit",
     "lint": "lerna run lint --since HEAD"
   },
@@ -106,13 +97,14 @@
   "workspaces": [
     "packages/*",
     "packages/frameworks/*",
-    "packages/runners/*"
+    "packages/libraries/*"
   ],
   "preconstruct": {
     "packages": [
       "packages/*",
       "packages/frameworks/*",
-      "packages/runners/*"
+      "packages/libraries/*",
+      "!packages/cli"
     ]
   }
 }

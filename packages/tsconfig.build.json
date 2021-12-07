@@ -6,8 +6,8 @@
   },
   "exclude": [
     "node_modules",
-    "dist",
-    "test",
+    "**/dist",
+    "**/test",
     "**/*.test.ts",
     "**/*.spec.ts",
     "index.ts",

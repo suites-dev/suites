@@ -1,4 +1,4 @@
-# AromaJS Docs & References
+# AutoMock Docs & References
 
 * [Guidelines ☕](mock-decorator.md)
 * [API Reference 👨‍🔬](mock-factory.md)

@@ -6,10 +6,13 @@
 
 
 <p align="center">
+  <br/>
+  <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
+
   <h1 align="center">AutoMock</h1>
 
   <h3 align="center">
-    Standalone Library for Auto Mocking Your Dependencies while Unit Testing (for TypeScript)
+    Standalone Library for Dependencies Auto Mocking (for TypeScript)
   </h3>
 
   <h3 align="center">
@@ -22,19 +25,20 @@
 </p>
 
 ## Installation
-💡 It doesn't matter which test runner you are using, but only the mocks/stubs library
-you are working with
+Install `@automock/cli`
 
-Using **Jest**? Install `@automock/jest`
 ```bash
-npm i -D @automock/jest
+npm i -g @automock/cli
 ```
 
-\
-Using **Sinon**? Install `@automock/sinon`
+run init simply by hitting
+
 ```bash
-npm i -D @automock/sinon
+automock init
 ```
+
+This will install the selected mocking library (Sinon/Jest), and let you choose the framework. \
+Available frameworks: NestJS, TypeDI, Ts.ED, Angular
 
 ## Who can use this library? 🤩
 **TL;DR**
@@ -47,12 +51,12 @@ export class AwesomeClass {
 }
 ```
 
-`automock` is for you!
+AutoMock is for you!
 
 ### Tell me more 🤔
 If you are using any TypeScript framework like Angular, React+TypeScript, NestJS, TypeDI, Ts.ED,
-Vue+TypeScript, or even if you are framework free, `automock` is for you.
-automock is framework agnostic, so everyone can enjoy it!
+Vue+TypeScript, or even if you are framework free, AutoMock is for you.
+AutoMock is framework agnostic, so everyone can enjoy it!
 
 The only assumption we make is that you are taking your class dependencies,
 (no matter if they are classes, functions or even interfaces) through the
@@ -71,7 +75,7 @@ This specific example is for Jest, but don't worry, we got you covered with more
 for every testing framework! [Jump to the recipes page](http://)
 
 ```typescript
-import { MockOf, Spec } from '@automock/jest';
+import { MockOf, Spec } from '@automock/spec';
 
 describe('SomeService Unit Test', () => {
   let testedService: SomeService;

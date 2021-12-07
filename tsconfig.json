@@ -5,6 +5,7 @@
     "removeComments": false,
     "isolatedModules": true,
     "emitDecoratorMetadata": true,
+    "noEmit": true,
     "experimentalDecorators": true,
     "target": "es6",
     "sourceMap": true,
@@ -12,7 +13,7 @@
     "noImplicitAny": false,
     "strictNullChecks": false,
     "moduleResolution": "node",
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "resolveJsonModule": true,
     "types": [
       "node",

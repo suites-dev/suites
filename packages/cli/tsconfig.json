@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig.build.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "target": "es5",
+    "noEmit": false,
+    "declaration": false,
+    "sourceMap": false
+  },
+  "exclude": [
+    "node_modules",
+    "test",
+    "src/**/*.test.ts",
+    "src/index.ts"
+  ],
+  "include": ["src"]
+}

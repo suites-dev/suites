@@ -3,8 +3,8 @@
   "version": "0.0.1-rc.1",
   "license": "MIT",
   "description": "AromaJS Core Package",
-  "main": "dist/aromajs-core.cjs.js",
-  "module": "dist/aromajs-core.esm.js",
+  "main": "dist/automock-core.cjs.js",
+  "module": "dist/automock-core.esm.js",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -20,8 +20,6 @@
   },
   "readme": "https://github.com/omermorad/aromajs/tree/master/packages/core/README.md",
   "scripts": {
-    "prebuild": "npx rimraf dist",
-    "build": "tsc",
     "watch": "tsc --watch",
     "test": "exit 0;",
     "lint": "eslint 'src/index.ts'",

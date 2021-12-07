@@ -3,8 +3,8 @@
   "version": "0.0.1-rc.2",
   "license": "MIT",
   "description": "AromaJS Sinon Package",
-  "main": "dist/aromajs-sinon.cjs.js",
-  "module": "dist/aromajs-sinon.esm.js",
+  "main": "dist/automock-sinon.cjs.js",
+  "module": "dist/automock-sinon.esm.js",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -20,8 +20,6 @@
   },
   "readme": "https://github.com/omermorad/aromajs/tree/master/packages/sinon/README.md",
   "scripts": {
-    "prebuild": "npx rimraf dist",
-    "build": "tsc",
     "watch": "tsc --watch",
     "test": "jest --runInBand --verbose",
     "lint": "eslint '{src,test}/**/*.ts'",

@@ -2,8 +2,8 @@
   "name": "@automock/nestjs",
   "version": "0.0.1-rc.1",
   "license": "MIT",
-  "main": "dist/aromajs-nestjs.cjs.js",
-  "module": "dist/aromajs-nestjs.esm.js",
+  "main": "dist/automock-nestjs.cjs.js",
+  "module": "dist/automock-nestjs.esm.js",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -19,8 +19,6 @@
   },
   "readme": "https://github.com/omermorad/aromajs/tree/master/packages/common/README.md",
   "scripts": {
-    "prebuild": "yarn rimraf dist",
-    "build": "tsc",
     "watch": "tsc --watch",
     "lint": "eslint '{src,test}/**/*.ts'",
     "lint:fix": "eslint '{src,test}/**/*.ts' --fix"

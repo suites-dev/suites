@@ -3,8 +3,8 @@
   "version": "0.0.1-rc.2",
   "license": "MIT",
   "description": "AromaJS Jest Package",
-  "main": "dist/aromajs-jest.cjs.js",
-  "module": "dist/aromajs-jest.esm.js",
+  "main": "dist/automock-jest.cjs.js",
+  "module": "dist/automock-jest.esm.js",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -20,8 +20,6 @@
   },
   "readme": "https://github.com/omermorad/aromajs/tree/master/packages/jest/README.md",
   "scripts": {
-    "prebuild": "yarn rimraf dist",
-    "build": "tsc",
     "watch": "tsc --watch",
     "lint": "eslint '{src,test}/**/*.ts'",
     "lint:fix": "eslint '{src,test}/**/*.ts' --fix"

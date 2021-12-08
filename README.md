@@ -1,119 +1,71 @@
-[![ISC license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/automock/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/automock)
-[![ci](https://github.com/omermorad/automock/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/automock/actions)
-[![npm version](https://img.shields.io/npm/v/@automock/sinon?color=%23995f44&label=@automock/sinon&logo=automock%20Sinon)](https://npmjs.org/package/@automock/sinon "View this project on npm")
-[![npm version](https://img.shields.io/npm/v/@automock/jest?color=%23aa709f&label=%40automock%2Fjest&logo=automock%20Jest)](https://npmjs.org/package/@automock/jest "View this project on npm")
+# 🎭 AutoMock
 
+{% hint style="info" %}
+**Good to know:** providing a brief overview of your product and its core use cases is a great place to start with product docs. Your product might seem obvious to you – you made it! However, to others, even folks who are trying your product after reading your site or getting a sales demo, it can still be unclear. This is your chance to clarify your product and set the right expectations!
+{% endhint %}
 
-<p align="center">
-  <br/>
-  <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
+Here are a couple of examples of succinct overviews from products with really great docs:
 
-  <h1 align="center">AutoMock</h1>
+> Loom is a video messaging tool that helps you get your message across through instantly shareable videos.
+>
+> With Loom, you can record your camera, microphone, and desktop simultaneously. Your video is then instantly available to share through Loom's patented technology.
+>
+> — From the [Loom Docs](https://support.loom.com/hc/en-us/articles/360002158057-What-is-Loom-)
 
-  <h3 align="center">
-    Standalone Library for Dependencies Auto Mocking (for TypeScript)
-  </h3>
+> The Mailchimp Marketing API provides programmatic access to Mailchimp data and functionality, allowing developers to build custom features to do things like sync email activity and campaign analytics with their database, manage audiences and campaigns, and more.
+>
+> — From the [Mailchimp Marketing API docs](https://mailchimp.com/developer/marketing/docs/fundamentals/)
 
-  <h3 align="center">
-    Works with any testing framework!
-  </h3>
+## Getting Started
 
-  <h4 align="center">
-    Create unit test simply and easily with 100% isolation of class dependencies
-  </h4>
-</p>
+**Got 2 minutes?** Check out a video overview of our product:
 
-## Installation
-Install `@automock/cli`
+{% embed url="https://www.loom.com/share/3bfa83acc9fd41b7b98b803ba9197d90" %}
 
-```bash
-npm i -g @automock/cli
-```
+{% hint style="info" %}
+**Good to know:** A succinct video overview is a great way to introduce folks to your product. Embed a Loom, Vimeo or YouTube video and you're good to go! We love this video from the fine folks at [Loom](https://loom.com) as a perfect example of a succinct feature overview.
+{% endhint %}
 
-run init simply by hitting
+### Guides: Jump right in
 
-```bash
-automock init
-```
+Follow our handy guides to get started on the basics as quickly as possible:
 
-This will install the selected mocking library (Sinon/Jest), and let you choose the framework. \
-Available frameworks: NestJS, TypeDI, Ts.ED, Angular
+{% content-ref url="guides/creating-your-first-project.md" %}
+[creating-your-first-project.md](guides/creating-your-first-project.md)
+{% endcontent-ref %}
 
-## Who can use this library? 🤩
-**TL;DR**
+{% content-ref url="guides/creating-your-first-task.md" %}
+[creating-your-first-task.md](guides/creating-your-first-task.md)
+{% endcontent-ref %}
 
-If you are using this pattern in your framework (no matter which):
+{% content-ref url="guides/advanced-permissions.md" %}
+[advanced-permissions.md](guides/advanced-permissions.md)
+{% endcontent-ref %}
 
-```typescript
-export class AwesomeClass {
-  public constructor(private readonly dependecy: SomeClassOrInterface) {}
-}
-```
+{% hint style="info" %}
+**Good to know:** your product docs aren't just a reference of all your features! use them to encourage folks to perform certain actions and discover the value in your product.
+{% endhint %}
 
-AutoMock is for you!
+### Fundamentals: Dive a little deeper
 
-### Tell me more 🤔
-If you are using any TypeScript framework like Angular, React+TypeScript, NestJS, TypeDI, Ts.ED,
-Vue+TypeScript, or even if you are framework free, AutoMock is for you.
-AutoMock is framework agnostic, so everyone can enjoy it!
+Learn the fundamentals of MyProduct to get a deeper understanding of our main features:
 
-The only assumption we make is that you are taking your class dependencies,
-(no matter if they are classes, functions or even interfaces) through the
-class constructor.
+{% content-ref url="fundamentals/projects.md" %}
+[projects.md](fundamentals/projects.md)
+{% endcontent-ref %}
 
-## What is this library❓
+{% content-ref url="fundamentals/members.md" %}
+[members.md](fundamentals/members.md)
+{% endcontent-ref %}
 
-This library helps isolate the dependencies of any given class, by using a simple
-reflection mechanism on the class constructor params metadata.
-Meaning all the class dependencies (constructor params) will be overridden
-automatically and will become mocks.
+{% content-ref url="fundamentals/task-lists.md" %}
+[task-lists.md](fundamentals/task-lists.md)
+{% endcontent-ref %}
 
-## Example and Usage 💁‍
+{% content-ref url="fundamentals/tasks.md" %}
+[tasks.md](fundamentals/tasks.md)
+{% endcontent-ref %}
 
-This specific example is for Jest, but don't worry, we got you covered with more examples
-for every testing framework! [Jump to the recipes page](http://)
-
-```typescript
-import { MockOf, Spec } from '@automock/spec';
-
-describe('SomeService Unit Test', () => {
-  let testedService: SomeService;
-  let logger: MockOf<Logger>;
-
-  beforeAll(() => {
-    const { unit, unitRef } = Spec
-      .createUnit<SomeService>(SomeService)
-      .compile();
-
-    testedService = unit;
-    logger = unitRef.get(Logger);
-  });
-
-  describe('When something happens', () => {
-    beforeAll(() => (testedService.doSomething()));
-
-    test('then call logger log', async () => {
-      expect(logger.log).toHaveBeenCalled();
-    });
-  });
-});
-```
-
-## Motivation 💪
-
-Unit tests exercise very small parts of the application **in complete isolation**. \
-**"Complete isolation" means that, when unit testing, you don’t typically
-connect your application with external dependencies such as databases, the filesystem,
-or HTTP services**. That allows unit tests to be fast and more stable since they won’t
-fail due to problems with those external services. (Thank you, Testim.io - [jump to source](https://www.testim.io/blog/unit-testing-best-practices/))
-
-## License 📜
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## Acknowledgements 📙
-
-* [sinon](https://github.com/sinonjs/sinon)
-* [jest](https://github.com/facebook/jest)
-* [jest-mock-extended](https://github.com/marchaos/jest-mock-extended)
+{% hint style="info" %}
+**Good to know:** Splitting your product into fundamental concepts, objects, or areas can be a great way to let readers deep dive into the concepts that matter most to them. Combine guides with this approach to 'fundamentals' and you're well on your way to great documentation!
+{% endhint %}

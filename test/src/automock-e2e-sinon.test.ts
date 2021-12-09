@@ -1,30 +1,26 @@
-import { TestingUnit, SpecBuilder } from '@automock/core';
-import { MockOf, JestSpecBuilder } from '../src';
-import { Logger, MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from '../../../../test/spec-assets';
-import { mock } from 'jest-mock-extended';
+import { Unit, MockOf, TestingUnitt } from '@automock/unit';
+import { Logger, MainTestClass, Queue, TestClassOne, TestClassThree, TestClassTwo } from './spec-assets';
+import sinon = require('sinon');
 
-describe('Jester E2E Test', () => {
-  let testingUnit: TestingUnit<MainTestClass>;
-  let specBuilder: SpecBuilder<MainTestClass>;
+describe('AutoMock e2e Test', () => {
+  let testingUnit: TestingUnitt<MainTestClass>;
+  let logger: MockOf<Logger>;
+
+  const stub = sinon.stub<TestClassOne>({
+    foo: async () => 'asd',
+  });
 
   describe('given a unit testing builder with two overrides', () => {
     beforeAll(() => {
-      specBuilder = new JestSpecBuilder<MainTestClass>(MainTestClass, mock)
+      testingUnit = Unit.create(MainTestClass)
         .mock(TestClassOne)
-        .using({
-          async foo(): Promise<string> {
-            return 'foo-from-test';
-          },
-        })
-        .mock('Logger')
-        .using({ asd: () => 123 });
+        .using(stub)
+        .mock<Queue>('Queue')
+        .using({ publish: true })
+        .compile();
     });
 
     describe('when compiling the builder and turning into testing unit', () => {
-      beforeAll(() => {
-        testingUnit = specBuilder.compile();
-      });
-
       test('then return an actual instance of the injectable class', () => {
         expect(testingUnit).toHaveProperty('unit');
         expect(testingUnit.unit).toBeInstanceOf(MainTestClass);
@@ -53,7 +49,7 @@ describe('Jester E2E Test', () => {
 
       test('then hard-mock the implementation of TestClassOne using the "foo" (partial impl function)', async () => {
         const { unitRef } = testingUnit;
-        const testClassOne = unitRef.get(TestClassOne);
+        const testClassOne = unitRef.get<TestClassOne>(TestClassOne);
         const logger = unitRef.get<Logger>('Logger');
 
         await testingUnit.unit.test();
@@ -71,8 +67,8 @@ describe('Jester E2E Test', () => {
         const { unitRef } = testingUnit;
         const testClassTwo: MockOf<TestClassTwo> = unitRef.get(TestClassTwo);
 
-        expect(testClassTwo.bar.getMockName).toBeDefined();
-        expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');
+        expect(testClassTwo.bar).toBeDefined();
+        // expect(testClassTwo.bar).toBe('jest.fn()');
       });
     });
   });

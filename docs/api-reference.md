@@ -83,7 +83,7 @@ type DependencyKey<T = unknown> = string | Type<T>;
 ### `.using(mockImplementation: MockPartialImplementation<Partial>) => UnitBuilderr<TClass>`
 
 The actual partial implementation of the subject mock
-§
+
 ```typescript
 import { Unit } from '@automock/unit';
 

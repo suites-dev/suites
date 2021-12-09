@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.build.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "target": "es6"
+    "target": "es6",
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",

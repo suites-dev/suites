@@ -1,15 +1,14 @@
 import * as assert from 'assert';
 import { TestingUnit } from '@automock/core';
-import { MainTestClass, TestClassOne, TestClassTwo } from '../../../../test/spec-assets';
+import { MainTestClass, TestClassOne, TestClassTwo } from 'automock-e2e-test/src/spec-assets';
+import { JestSpecBuilder } from './jest-spec-builder';
 
 describe('Jest Unit Builder Unit Test', () => {
+  const TESTED_CLASS_DEPENDENCIES = [TestClassOne, TestClassTwo];
+  const createMockFn = jest.fn().mockImplementation((partial) => partial || 'MOCKED');
+  const createBuilder = () => new JestSpecBuilder<MainTestClass>(MainTestClass, createMockFn);
+
   describe('given a JestUnitBuilder', () => {
-    const TESTED_CLASS_DEPENDENCIES = [TestClassOne, TestClassTwo];
-
-    const createMockFn = jest.fn().mockImplementation((partial) => partial || 'MOCKED');
-
-    const createBuilder = () => new JestUnitBuilder<MainTestClass>(MainTestClass, createMockFn);
-
     const bar = async (): Promise<string> => 'from-test';
 
     describe('scenario: do not mock the implementation of any of the dependencies', () => {

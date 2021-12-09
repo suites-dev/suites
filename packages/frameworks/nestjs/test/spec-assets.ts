@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Injectable, Inject } from '@nestjs/common';
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from './spec-assets';
-import { NestJSClassReflector } from '../src/reflector';
+import NestJSClassReflector from '../src';
 
 describe('NestJS Class Reflector Integration Test', () => {
   let reflector: NestJSClassReflector;

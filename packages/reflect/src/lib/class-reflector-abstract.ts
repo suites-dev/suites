@@ -4,6 +4,7 @@ export type DependenciesMap = Map<DependencyKey, Type<unknown>>;
 
 export interface ClassReflector {
   dependencies: DependenciesMap;
+  resolve: (keyOrToken: DependencyKey<unknown>) => Type<unknown>;
 }
 
 export abstract class ClassReflectorAbstract implements ClassReflector {

@@ -45,8 +45,8 @@ export class NestJSClassReflector extends ClassReflectorAbstract {
           const token = NestJSClassReflector.findToken(tokens, index);
           classDependencies.set(token, type);
         } catch (error) {
-          console.warn(
-            `'${this.targetClass}' is missing a token for dependency at index [${index}], did you forget to inject it using @Inject()?`
+          throw new Error(
+            `'${this.targetClass.name}' is missing a token for the dependency at index [${index}], did you forget to inject it using @Inject()?`
           );
         }
       } else {

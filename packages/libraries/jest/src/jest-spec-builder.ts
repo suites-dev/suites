@@ -4,9 +4,9 @@ import { TestingUnit, Override, SpecBuilderAbstract, SpecBuilder } from '@automo
 import { DependencyKey, JestMockFn, Type } from '@automock/common';
 
 export interface JestSpecBuilder<TClass> {
-  mock<T = any>(token: string): Override<T, TClass>;
-  mock<T = any>(token: Type<T>): Override<T, TClass>;
-  mock<T = any>(token: DependencyKey<T>): Override<T, TClass>;
+  mock<T = any>(token: string): Override<T>;
+  mock<T = any>(token: Type<T>): Override<T>;
+  mock<T = any>(token: DependencyKey<T>): Override<T>;
 
   compile(deep?: boolean): TestingUnit<TClass>;
 }
@@ -16,10 +16,10 @@ export class JestSpecBuilder<TClass = any> extends SpecBuilderAbstract<TClass> {
     super(targetClass);
   }
 
-  public mock<T = any>(token: string): Override<T, TClass>;
-  public mock<T = any>(type: Type<T>): Override<T, TClass>;
+  public mock<T = any>(token: string): Override<T>;
+  public mock<T = any>(type: Type<T>): Override<T>;
 
-  public mock<T = any>(typeOrToken: DependencyKey<T>): Override<T, TClass> {
+  public mock<T = any>(typeOrToken: DependencyKey<T>): Override<T> {
     return {
       using: (mockImplementation: T): SpecBuilder<TClass> => {
         this.mockImpls.set(typeOrToken, this.mockFn<T>(mockImplementation as DeepPartial<T>));

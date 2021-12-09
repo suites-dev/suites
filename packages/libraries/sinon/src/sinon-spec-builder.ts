@@ -3,9 +3,9 @@ import { TestingUnit, Override, SpecBuilderAbstract, SpecBuilder } from '@automo
 import { SinonMockOverrides, SinonMockFn, Type, DependencyKey } from '@automock/common';
 
 export interface SinonSpecBuilder<TClass> {
-  mock<T = any>(dependencyToken: string): Override<T, TClass>;
-  mock<T = any>(type: Type<T>): Override<T, TClass>;
-  mock<T = any>(dependencyTypeOrToken: DependencyKey<T>): Override<T, TClass>;
+  mock<T = any>(dependencyToken: string): Override<T>;
+  mock<T = any>(type: Type<T>): Override<T>;
+  mock<T = any>(dependencyTypeOrToken: DependencyKey<T>): Override<T>;
 
   compile(): TestingUnit<TClass>;
 }
@@ -15,10 +15,10 @@ export class SinonSpecBuilder<TClass = any> extends SpecBuilderAbstract<TClass> 
     super(targetClass);
   }
 
-  public mock<T = any>(token: string): Override<T, TClass>;
-  public mock<T = any>(type: Type<T>): Override<T, TClass>;
+  public mock<T = any>(token: string): Override<T>;
+  public mock<T = any>(type: Type<T>): Override<T>;
 
-  public mock<T = any>(typeOrToken: DependencyKey<T>): Override<T, TClass> {
+  public mock<T = any>(typeOrToken: DependencyKey<T>): Override<T> {
     return {
       using: (mockImplementation: SinonMockOverrides<T>): SpecBuilder<TClass> => {
         if (typeof typeOrToken === 'string') {

@@ -5,9 +5,14 @@ export class Unit {
   /**
    * Creates new unit builder
    * @param targetClass
-   * @return JestUnitBuilder<TClass>
+   * @return SpecBuilder<TClass>
    */
   public static create<TClass = any>(targetClass: Type<TClass>): SpecBuilder<TClass> {
-    // return new UnitBuilder(targetClass, mock);
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const specBuilder = require('@automock/jest').default;
+
+    const a = specBuilder(targetClass);
+
+    return a;
   }
 }

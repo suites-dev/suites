@@ -1,4 +1,4 @@
-import { Reflectable } from '../../test/spec-assets';
+import { Reflectable } from '@automock/reflect';
 
 @Reflectable()
 export class RandomNameService {

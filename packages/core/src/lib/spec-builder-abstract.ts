@@ -1,4 +1,4 @@
-import { ClassReflectorAbstract } from '@automock/reflect';
+import { ClassReflector } from '@automock/reflect';
 import { DependencyKey, DependencyType, MockPartialImplementation, MockFn, Type } from '@automock/common';
 import { MockResolver } from './mock-resolver';
 import { Override, TestingUnit } from './types';
@@ -11,9 +11,9 @@ export interface SpecBuilder<TClass = any> {
    * @return Override
    * @param token
    */
-  mock<T = any>(token: string): Override<T, TClass>;
-  mock<T = any>(dependency: Type<T>): Override<T, TClass>;
-  mock<T = any>(dependency: DependencyKey<T>): Override<T, TClass>;
+  mock<T = any>(token: string): Override<T>;
+  mock<T = any>(dependency: Type<T>): Override<T>;
+  mock<T = any>(dependency: DependencyKey<T>): Override<T>;
 
   /**
    * Compiles the unit and creates new testing unit
@@ -25,18 +25,18 @@ export interface SpecBuilder<TClass = any> {
 
 export abstract class SpecBuilderAbstract<TClass = any> implements SpecBuilder<TClass> {
   private readonly depNamesToMocks = new Map<DependencyKey, MockFn<unknown, unknown>>();
-  private readonly classReflector: ClassReflectorAbstract;
+  private readonly classReflector: ClassReflector;
 
   protected readonly dependencies: DependencyType[] = [];
-  protected readonly mockImpls = new Map<DependencyKey, MockPartialImplementation<unknown>>();
+  protected readonly mockImpls = new Map<DependencyKey, MockPartialImplementation<unknown, unknown>>();
 
   protected constructor(private readonly targetClass: Type<TClass>) {
     this.classReflector = DependenciesExtractorFactory.create(this.targetClass);
   }
 
-  public abstract mock<T = any>(token: string): Override<T, TClass>;
-  public abstract mock<T = any>(type: Type<T>): Override<T, TClass>;
-  public abstract mock<T = any>(typeOrToken: DependencyKey<T>): Override<T, TClass>;
+  public abstract mock<T = any>(token: string): Override<T>;
+  public abstract mock<T = any>(type: Type<T>): Override<T>;
+  public abstract mock<T = any>(typeOrToken: DependencyKey<T>): Override<T>;
 
   public compile(...args: any[]): TestingUnit<TClass> {
     this.mockUnMockedDependencies(...args);

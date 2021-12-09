@@ -1,2 +1,3 @@
-export * from './types';
-export * from './sinon-spec-builder';
+import { SinonSpecBuilder } from './sinon-spec-builder';
+
+export = SinonSpecBuilder;

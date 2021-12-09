@@ -14,7 +14,9 @@ export type SinonMockOverrides<T> = {
 
 export type MockFn<T, MockFn extends JestMockFn<T> | SinonMockFn<T>> = MockFn;
 
-export type MockPartialImplementation<T> = DeepPartial<T> | SinonMockOverrides<T>;
+export type ImplementationFunctions<P> = DeepPartial<P> | SinonMockOverrides<P>;
+
+export type MockPartialImplementation<P, Fn extends ImplementationFunctions<P>> = Fn;
 
 export interface Type<T = any> extends Function {
   new (...args: any[]): T;

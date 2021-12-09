@@ -1,4 +1,5 @@
-import { Reflectable, Token } from '@automock/reflect';
+import { Reflectable } from '@automock/reflect';
+import { Inject } from '@nestjs/common';
 
 @Reflectable()
 export class TestClassOne {
@@ -30,7 +31,7 @@ export interface Logger {
 }
 
 export interface Queue {
-  publish: (data: any) => void;
+  publish: (data: any) => boolean;
 }
 
 @Reflectable()
@@ -39,8 +40,8 @@ export class MainTestClass {
     private readonly testClassOne: TestClassOne,
     private readonly testClassTwo: TestClassTwo,
     private readonly testClassThree: TestClassThree,
-    @Token('Logger') private readonly logger: Logger,
-    @Token('Queue') private readonly queue: Queue
+    @Inject('Logger') private readonly logger: Logger,
+    @Inject('Queue') private readonly queue: Queue
   ) {}
 
   async test(): Promise<string> {

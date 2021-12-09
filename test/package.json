@@ -1,0 +1,18 @@
+{
+  "name": "automock-e2e-test",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@automock/core": "^0.0.0",
+    "@automock/jest": "^0.0.0",
+    "@automock/reflect": "^0.0.0",
+    "@automock/unit": "^0.0.0"
+  },
+  "devDependencies": {
+    "@automock/common": "^0.0.0"
+  },
+  "automock": {
+    "lib": "jest",
+    "framework": "agnostic"
+  }
+}

@@ -5,10 +5,10 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
-    "@automock/sinon": "^0.0.1-rc.2",
-    "@automock/reflect": "^0.0.1-rc.1",
-    "@automock/jest": "^0.0.1-rc.2",
-    "@automock/spec": "^0.0.1-rc.2",
+    "@automock/sinon": "^0.0.0",
+    "@automock/reflect": "^0.0.0",
+    "@automock/jest": "^0.0.0",
+    "@automock/spec": "^0.0.0",
     "sinon": "^12.0.1"
   },
   "automock": {

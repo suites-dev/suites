@@ -1,0 +1,40 @@
+{
+  "name": "@automock/unit",
+  "version": "0.0.1-rc.1",
+  "license": "MIT",
+  "description": "AromaJS Spec Package",
+  "main": "dist/automock-spec.cjs.js",
+  "module": "dist/automock-spec.esm.js",
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omermorad/automock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/omermorad/automock/issues"
+  },
+  "readme": "https://github.com/omermorad/automock/tree/master/packages/spec/README.md",
+  "scripts": {
+    "prebuild": "yarn rimraf dist",
+    "watch": "tsc --watch",
+    "lint": "eslint '{src,test}/**/*.ts'",
+    "lint:fix": "eslint '{src,test}/**/*.ts' --fix"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "dependencies": {
+    "@automock/common": "^0.0.1-rc.1",
+    "@automock/core": "^0.0.1-rc.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

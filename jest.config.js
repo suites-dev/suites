@@ -7,6 +7,7 @@ module.exports = {
     '<rootDir>/packages/core',
     '<rootDir>/packages/common',
     '<rootDir>/packages/reflect',
+    '<rootDir>/packages/unit',
     '<rootDir>/packages/libraries/jest',
     '<rootDir>/packages/libraries/sinon',
     '<rootDir>/packages/frameworks/nestjs',

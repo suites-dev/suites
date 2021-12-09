@@ -1,3 +1,2 @@
 export * from './types';
-export * from './sinon-unit-builder';
-export * from './spec-factory';
+export * from './sinon-spec-builder';

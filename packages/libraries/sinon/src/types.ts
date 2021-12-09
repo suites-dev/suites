@@ -1,3 +1,3 @@
-import { ConcreteMock, JestMockFn } from '@automock/common';
+import { MockFn, SinonMockFn } from '@automock/common';
 
-export type MockOf<T> = ConcreteMock<T, JestMockFn<T>>;
+export type MockOf<T> = MockFn<T, SinonMockFn<T>>;

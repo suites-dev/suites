@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import { TestingUnit } from '@automock/core';
-import { UnitBuilder } from './sinon-unit-builder';
+import { SinonSpecBuilder } from './sinon-spec-builder';
 import { MainTestClass, TestClassOne, TestClassTwo } from '../../../../test/spec-assets';
 
 describe('Sinon Unit Builder Unit Test', () => {

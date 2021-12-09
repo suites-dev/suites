@@ -1,8 +1,8 @@
 import { createStubInstance } from 'sinon';
-import { TestingUnit, Override, UnitBuilderAbstract, UnitBuilderr } from '@automock/core';
+import { TestingUnit, Override, SpecBuilderAbstract, SpecBuilder } from '@automock/core';
 import { SinonMockOverrides, SinonMockFn, Type, DependencyKey } from '@automock/common';
 
-export interface UnitBuilder<TClass> {
+export interface SinonSpecBuilder<TClass> {
   mock<T = any>(dependencyToken: string): Override<T, TClass>;
   mock<T = any>(type: Type<T>): Override<T, TClass>;
   mock<T = any>(dependencyTypeOrToken: DependencyKey<T>): Override<T, TClass>;
@@ -10,7 +10,7 @@ export interface UnitBuilder<TClass> {
   compile(): TestingUnit<TClass>;
 }
 
-export class UnitBuilder<TClass = any> extends UnitBuilderAbstract<TClass> implements UnitBuilderr<TClass> {
+export class SinonSpecBuilder<TClass = any> extends SpecBuilderAbstract<TClass> {
   public constructor(targetClass: Type<TClass>, private readonly mockFn: typeof createStubInstance) {
     super(targetClass);
   }
@@ -20,7 +20,7 @@ export class UnitBuilder<TClass = any> extends UnitBuilderAbstract<TClass> imple
 
   public mock<T = any>(typeOrToken: DependencyKey<T>): Override<T, TClass> {
     return {
-      using: (mockImplementation: SinonMockOverrides<T>): UnitBuilder<TClass> => {
+      using: (mockImplementation: SinonMockOverrides<T>): SpecBuilder<TClass> => {
         if (typeof typeOrToken === 'string') {
           this.mockImpls.set(typeOrToken, this.mockFn<T>(new Function(), mockImplementation));
         } else {

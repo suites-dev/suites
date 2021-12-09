@@ -1,6 +1,6 @@
 {
   "name": "@automock/jest",
-  "version": "0.0.1-rc.2",
+  "version": "0.0.0",
   "license": "MIT",
   "description": "AromaJS Jest Package",
   "main": "dist/automock-jest.cjs.js",
@@ -30,8 +30,8 @@
     "CHANGELOG.md"
   ],
   "dependencies": {
-    "@automock/common": "^0.0.1-rc.1",
-    "@automock/core": "^0.0.1-rc.1",
+    "@automock/common": "^0.0.0",
+    "@automock/core": "^0.0.0",
     "jest-mock-extended": "^2.0.4"
   },
   "devDependencies": {

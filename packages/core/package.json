@@ -1,6 +1,6 @@
 {
   "name": "@automock/core",
-  "version": "0.0.1-rc.1",
+  "version": "0.0.0",
   "license": "MIT",
   "description": "AromaJS Core Package",
   "main": "dist/automock-core.cjs.js",
@@ -31,8 +31,8 @@
     "CHANGELOG.md"
   ],
   "devDependencies": {
-    "@automock/common": "^0.0.1-rc.1",
-    "@automock/reflect": "^0.0.1-rc.1"
+    "@automock/common": "^0.0.0",
+    "@automock/reflect": "^0.0.0"
   },
   "publishConfig": {
     "access": "public"

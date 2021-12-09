@@ -1,8 +1,8 @@
 {
   "name": "@automock/sinon",
-  "version": "0.0.1-rc.2",
+  "version": "0.0.0",
   "license": "MIT",
-  "description": "AromaJS Sinon Package",
+  "description": "AutoMock Sinon Package",
   "main": "dist/automock-sinon.cjs.js",
   "module": "dist/automock-sinon.esm.js",
   "contributors": [
@@ -31,10 +31,10 @@
     "README.md"
   ],
   "dependencies": {
-    "@automock/core": "^0.0.1-rc.1"
+    "@automock/core": "^0.0.0",
+    "@types/sinon": "^10.0.6"
   },
   "devDependencies": {
-    "@types/sinon": "^10.0.6",
     "reflect-metadata": "^0.1.13",
     "sinon": "^12.x"
   },

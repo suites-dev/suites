@@ -13,7 +13,6 @@
     "noImplicitAny": false,
     "strictNullChecks": false,
     "moduleResolution": "node",
-    "esModuleInterop": false,
     "resolveJsonModule": true,
     "types": [
       "node",
@@ -25,8 +24,7 @@
       "es2019",
       "es6"
     ],
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true
+    "skipLibCheck": true
   },
   "exclude": [
     "**/node_modules",

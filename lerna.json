@@ -15,8 +15,12 @@
   "useWorkspaces": true,
   "npmClient": "yarn",
   "packages": [
+    "test",
     "packages/*",
     "packages/frameworks/*",
     "packages/runners/*"
+  ],
+  "ignoreChanges": [
+    "test"
   ]
 }

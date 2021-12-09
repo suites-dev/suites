@@ -4,6 +4,7 @@ module.exports = {
   ...base,
   roots: ['<rootDir>'],
   projects: [
+    '<rootDir>/test',
     '<rootDir>/packages/core',
     '<rootDir>/packages/common',
     '<rootDir>/packages/reflect',

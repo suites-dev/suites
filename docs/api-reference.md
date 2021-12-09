@@ -56,7 +56,7 @@ You need to use compile() in order to create a new testing unit
 
 ## UnitBuilder API
 
-### `.mock<T = any>(token: DependencyKey<T>): Override<T, TClass>;`
+### `.mock<T = any>(token: DependencyKey<T>): Override<T>;`
 Mark the class, or the token you want to partially mock its implementation.
 This will allow you to use `using()` on order to declare the new partial implementation
 of the mock
@@ -91,10 +91,10 @@ Unit.create<MainService>(MainService)
   .mock(UserService)
   .using({
     async findOne(): Promise<string> {
-      return { email: 'test@email.com', username: 'test-user' };
+      return { email: 'test@email.com', username: 'test-user' },
     },
   });
-)
+
 ```
 
 <details><summary><code>💡 Hint</code></summary><p>

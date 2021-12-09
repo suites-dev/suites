@@ -12,7 +12,7 @@ export type SinonMockOverrides<T> = {
   [K in keyof T]?: SinonStubbedMember<T[K]> | (T[K] extends (...args: any[]) => infer R ? R : T[K]);
 };
 
-export type ConcreteMock<T, Y extends JestMockFn<T> | SinonMockFn<T>> = Y;
+export type MockFn<T, MockFn extends JestMockFn<T> | SinonMockFn<T>> = MockFn;
 
 export type MockPartialImplementation<T> = DeepPartial<T> | SinonMockOverrides<T>;
 

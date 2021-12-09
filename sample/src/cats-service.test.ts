@@ -1,12 +1,12 @@
 import { CatsService } from './cats.service';
-import { DeepMockOf, MockOf, Spec } from '../src';
+import { DeepMockOf, MockOf, Spec } from '../../src';
 import { RandomNameService } from './random-name.service';
 import { CatsApiService, ExternalApiCatResponse } from './cats-api.service';
 import { Logger } from './logger';
 
 describe('Cats Service Unit Test', () => {
   let catsService: CatsService;
-  let logger: DeepMockOf<Logger>;
+  let logger: MockOf<Logger>;
   let catsApiService: DeepMockOf<CatsApiService>;
   let randomNameService: MockOf<RandomNameService>;
 
@@ -29,9 +29,7 @@ describe('Cats Service Unit Test', () => {
 
     describe('without a replacement flag', () => {
       beforeAll(async () => {
-        catsApiService.getCatsFromApi.mockImplementation(() =>
-          Promise.resolve(EXTERNAL_API_RESPONSE)
-        );
+        catsApiService.getCatsFromApi.mockImplementation(() => Promise.resolve(EXTERNAL_API_RESPONSE));
 
         cats = await catsService.getCats();
       });

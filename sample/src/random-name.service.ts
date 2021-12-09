@@ -1,4 +1,4 @@
-import { Reflectable } from '../test/spec-assets';
+import { Reflectable } from '../../test/spec-assets';
 
 @Reflectable()
 export class RandomNameService {

@@ -1,7 +1,7 @@
+import { Reflectable } from '@automock/reflect';
 import { CatsApiService } from './cats-api.service';
-import { RandomNameService } from './random-name.service';
 import { Logger } from './logger';
-import { Reflectable } from '../src/lib/reflectable.decorator';
+import { RandomNameService } from './random-name.service';
 
 @Reflectable()
 export class CatsService {

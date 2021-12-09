@@ -83,7 +83,7 @@ type DependencyKey<T = unknown> = string | Type<T>;
 ### `.using(mockImplementation: MockPartialImplementation<Partial>) => UnitBuilderr<TClass>`
 
 The actual partial implementation of the subject mock
-
+§
 ```typescript
 import { Unit } from '@automock/unit';
 
@@ -91,7 +91,7 @@ Unit.create<MainService>(MainService)
   .mock(UserService)
   .using({
     async findOne(): Promise<string> {
-      return { email: 'test@email.com', username: 'test-user' },
+      return { email: 'test@email.com', username: 'test-user' }
     },
   });
 

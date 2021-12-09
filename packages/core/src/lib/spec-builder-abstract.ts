@@ -1,10 +1,10 @@
 import { ClassReflectorAbstract } from '@automock/reflect';
-import { DependencyKey, DependencyType, MockPartialImplementation, ConcreteMock, Type } from '@automock/common';
+import { DependencyKey, DependencyType, MockPartialImplementation, MockFn, Type } from '@automock/common';
 import { MockResolver } from './mock-resolver';
 import { Override, TestingUnit } from './types';
 import { DependenciesExtractorFactory } from './dependencies-extractor.factory';
 
-export interface UnitBuilderr<TClass = any> {
+export interface SpecBuilder<TClass = any> {
   /**
    * Declares on the dependency to mock
    *
@@ -23,8 +23,8 @@ export interface UnitBuilderr<TClass = any> {
   compile(): TestingUnit<TClass>;
 }
 
-export abstract class UnitBuilderAbstract<TClass = any> implements UnitBuilderr<TClass> {
-  private readonly depNamesToMocks = new Map<DependencyKey, ConcreteMock<unknown, unknown>>();
+export abstract class SpecBuilderAbstract<TClass = any> implements SpecBuilder<TClass> {
+  private readonly depNamesToMocks = new Map<DependencyKey, MockFn<unknown, unknown>>();
   private readonly classReflector: ClassReflectorAbstract;
 
   protected readonly dependencies: DependencyType[] = [];
@@ -49,7 +49,7 @@ export abstract class UnitBuilderAbstract<TClass = any> implements UnitBuilderr<
     };
   }
 
-  protected abstract voidMock<T>(type: Type<T>, ...args: any[]): ConcreteMock<unknown, unknown>;
+  protected abstract voidMock<T>(type: Type<T>, ...args: any[]): MockFn<unknown, unknown>;
 
   private mockUnMockedDependencies(...args: any[]): void {
     this.classReflector.dependencies.forEach((type: DependencyType, key: DependencyKey) => {

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { DeepPartial } from 'ts-essentials';
-import { DeepMockOf, MockOf, MockFunction, Override, TestingUnit, Type } from './types';
+import { MockOf, MockFunction, Override, TestingUnit, Type } from './types';
 import { MockResolver } from './mock-resolver';
 
 export interface UnitBuilder<TClass = any> {
@@ -13,77 +13,110 @@ export interface UnitBuilder<TClass = any> {
    * @return Override
    */
   mock<T = any>(dependency: Type<T>): Override<T>;
-
-  /**
-   * Declares on the dependency to deep mock
-   *
-   * @see {@link https://github.com/marchaos/jest-mock-extended#deep-mocks}
-   *
-   * @param dependency {Type}
-   * @return Override
-   */
-  mockDeep<T = any>(dependency: Type<T>): Override<T>;
+  mock<T = any>(dependency: string): Override<T>;
+  mock<T = any>(dependency: Type<T> | string): Override<T>;
 
   /**
    * Compiles the unit and creates new testing unit
    *
-   * @param deep {boolean} - deep mock the rest of the dependencies
-   * @default false
    * @return TestingUnit
    */
-  compile(deep?: boolean): TestingUnit<TClass>;
+  compile(): TestingUnit<TClass>;
+}
+
+interface CustomToken {
+  index: number;
+  param: string;
 }
 
 export class UnitBuilder<TClass = any> {
-  private readonly unitDeps: Type[];
-  private readonly overloadsMap = new Map<Type, DeepPartial<unknown>>();
-  private readonly depNamesToMocks = new Map<Type, DeepMockOf<any> | MockOf<any>>();
+  private static readonly INJECTED_TOKENS_METADATA = 'self:paramtypes';
+  private static readonly PARAM_TYPES_METADATA = 'design:paramtypes';
+
+  private readonly dependencies = new Map<Type | string, DeepPartial<unknown>>();
+  private readonly depNamesToMocks = new Map<Type | string, MockOf<any>>();
 
   public constructor(
     private readonly reflector: typeof Reflect,
     private readonly mockFn: MockFunction,
     private readonly targetClass: Type<TClass>
   ) {
-    this.unitDeps = this.reflector.getMetadata('design:paramtypes', this.targetClass);
+    this.dependencies = this.reflectDependencies();
   }
 
-  public mock<T = any>(dependency: Type<T>): Override<T> {
+  public mock<T = any>(dependency: string): Override<T>;
+  public mock<T = any>(dependency: Type<T>): Override<T>;
+  public mock<T = any>(dependency: Type<T> | string): Override<T> {
     return {
       using: (mockImplementation: DeepPartial<T>): UnitBuilder<TClass> => {
-        this.overloadsMap.set(dependency, this.mockFn<T>(mockImplementation));
+        this.depNamesToMocks.set(dependency, this.mockFn<T>(mockImplementation));
         return this;
       },
     };
   }
 
-  public mockDeep<T = any>(dependency: Type<T>): Override<T> {
-    return {
-      using: (mockImplementation: DeepPartial<T>): UnitBuilder<TClass> => {
-        this.overloadsMap.set(dependency, this.mockFn<T>(mockImplementation, { deep: true }));
-        return this;
-      },
-    };
+  private reflectParamTokens(): CustomToken[] {
+    return this.reflector.getMetadata(UnitBuilder.INJECTED_TOKENS_METADATA, this.targetClass) || [];
   }
 
-  public compile(deep = false): TestingUnit<TClass> {
-    this.mockUnMockedDependencies(deep);
+  private reflectParamTypes(): Type<unknown>[] {
+    return this.reflector.getMetadata(UnitBuilder.PARAM_TYPES_METADATA, this.targetClass) || [];
+  }
 
-    const values = Array.from(this.depNamesToMocks.values());
+  private static findToken(list: CustomToken[], index: number): string | never {
+    const record = list.find((element) => element.index === index);
+
+    if (!record) {
+      throw new Error('Cannot find token');
+    }
+
+    return record.param;
+  }
+
+  public compile(): TestingUnit<TClass> {
+    const deps = this.mockUnMockedDependencies();
+    const values = Array.from(deps.values());
 
     return {
       unit: new this.targetClass(...values) as TClass,
-      unitRef: new MockResolver(this.depNamesToMocks),
+      unitRef: new MockResolver(deps),
     };
   }
 
-  private mockUnMockedDependencies(deep = false) {
-    this.unitDeps.forEach((dependency: Type<any>) => {
-      const overriddenDep = this.overloadsMap.get(dependency);
-      const mock = overriddenDep
-        ? overriddenDep
-        : this.mockFn<typeof dependency>(undefined, { deep });
+  private reflectDependencies(): Map<string | Type<unknown>, Type<unknown>> {
+    const classDependencies = new Map<string | Type<unknown>, Type<unknown>>();
 
-      this.depNamesToMocks.set(dependency, mock);
+    const types = this.reflectParamTypes();
+    const tokens = this.reflectParamTokens();
+
+    types.map((type: Type<unknown>, index: number) => {
+      if (type.name === 'Object') {
+        try {
+          const token = UnitBuilder.findToken(tokens, index);
+          classDependencies.set(token, type);
+        } catch (error) {
+          throw new Error(
+            `'${this.targetClass.name}' is missing a token for the dependency at index [${index}], did you forget to inject it using @Inject()?`
+          );
+        }
+      } else {
+        classDependencies.set(type, type);
+      }
     });
+
+    return classDependencies;
+  }
+
+  private mockUnMockedDependencies(): Map<Type | string, MockOf<any>> {
+    const map = new Map<Type | string, MockOf<any>>();
+
+    for (const [key, dependency] of this.dependencies.entries()) {
+      const overriddenDep = this.depNamesToMocks.get(key);
+      const mock = overriddenDep ? overriddenDep : this.mockFn<typeof dependency>();
+
+      map.set(key, mock);
+    }
+
+    return map;
   }
 }

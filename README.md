@@ -1,13 +1,13 @@
 [![ISC license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-[![npm version](http://img.shields.io/npm/v/jest-unit.svg?style=flat)](https://npmjs.org/package/jest-unit "View this project on npm")
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/jest-unit/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/jest-unit)
-[![ci](https://github.com/omermorad/jest-unit/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/jest-unit/actions)
+[![npm version](http://img.shields.io/npm/v/@automock/jest.svg?style=flat)](https://npmjs.org/package/automock "View this project on npm")
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/omermorad/automock/master.svg?style=flat-square)](https://codecov.io/gh/omermorad/automock)
+[![ci](https://github.com/omermorad/automock/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/omermorad/automock/actions)
 
 <p align="center">
   <br/>
   <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
 
-  <h1 align="center">AutoMock</h1>
+  <h1 align="center">AutoMock (Jest)</h1>
 
   <h3 align="center">
     Standalone Library for Dependencies Auto Mocking (for TypeScript)
@@ -28,12 +28,12 @@
 
 With NPM:
 ```bash
-npm i -D jest-unit jest-mock-extended
+npm i -D @automock/jest
 ```
 
 Or with Yarn:
 ```bash
-yarn add -D jest-unit jest-mock-extended
+yarn add -D @automock/jest
 ```
 
 ## Who can use this library? 🤩
@@ -70,7 +70,7 @@ automatically and become mocks (or deep mocks if you want it to).
 ## Example and Usage 💁‍
 
 ```typescript
-import { DeepMockOf, MockOf, Spec } from 'jest-unit';
+import { DeepMockOf, MockOf, Spec } from 'automock';
 
 describe('SomeService Unit Test', () => {
   let someService: SomeService;
@@ -149,7 +149,7 @@ the `@Reflectable()` decorator.
 </p>
 </details>
 
-**Still need further example? [Jump to full sample](https://github.com/omermorad/jest-unit/tree/master/sample) 📄**
+**Still need further example? [Jump to full sample](https://github.com/omermorad/automock/tree/master/sample) 📄**
 
 
 ## Motivation 💪
@@ -159,11 +159,6 @@ Unit tests exercise very small parts of the application **in complete isolation*
 connect your application with external dependencies such as databases, the filesystem,
 or HTTP services**. That allows unit tests to be fast and more stable since they won’t
 fail due to problems with those external services. (Thank you, Testim.io - [jump to source](https://www.testim.io/blog/unit-testing-best-practices/))
-
-## More about `jest-mock-extended` package 📦
-`jest-mock-extended` is a library which enables type safe mocking for Jest with TypeScript.
-It provides a complete Typescript type safety for interfaces, argument types and return types
-and has the ability to mock any interface or object.
 
 ## License 📜
 

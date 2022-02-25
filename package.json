@@ -1,6 +1,6 @@
 {
-  "name": "jest-unit",
-  "version": "0.0.1",
+  "name": "@automock/jest",
+  "version": "0.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
@@ -11,10 +11,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/omermorad/jest-unit.git"
+    "url": "https://github.com/omermorad/automock.git"
   },
   "bugs": {
-    "url": "https://github.com/omermorad/jest-unit/issues"
+    "url": "https://github.com/omermorad/automock/issues"
   },
   "contributors": [
     {
@@ -47,6 +47,8 @@
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
+    "@nestjs/common": "^8.3.1",
+    "@nestjs/core": "^8.3.1",
     "@types/jest": "^27.0.2",
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/node": "^14.17.34",

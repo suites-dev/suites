@@ -1,13 +1,7 @@
 import { DeepPartial } from 'ts-essentials';
-import { CalledWithMock, DeepMockProxy, mock } from 'jest-mock-extended';
+import { CalledWithMock, mock } from 'jest-mock-extended';
 import { UnitBuilder } from './unit-builder';
 import { MockResolver } from './mock-resolver';
-
-export type DeepMockOf<T> = {
-  [K in keyof T]: T[K] extends (...args: infer A) => infer B
-    ? CalledWithMock<B, A>
-    : DeepMockProxy<T[K]>;
-} & T;
 
 export type MockOf<T> = {
   [K in keyof T]: T[K] extends (...args: infer A) => infer B ? CalledWithMock<B, A> : T[K];

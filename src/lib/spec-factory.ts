@@ -8,7 +8,7 @@ export class Spec {
    * @param targetClass
    * @return UnitBuilder
    */
-  public static createUnit<TClass = any>(targetClass: Type<TClass>): UnitBuilder<TClass> {
+  public static create<TClass = any>(targetClass: Type<TClass>): UnitBuilder<TClass> {
     return new UnitBuilder<TClass>(Reflect, mock, targetClass);
   }
 }

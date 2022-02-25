@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { Inject, Injectable } from '@nestjs/common';
 import { Reflectable } from '../src';
 
 @Reflectable()
@@ -38,6 +39,27 @@ export class MainTestClass {
     const value = await this.testClassOne.foo(true);
     const value2 = await this.testClassTwo.bar();
     const value3 = this.testClassThree.baz();
+
+    return `${value}-${value2}-${value3}`;
+  }
+}
+
+export interface Logger {
+  baz(): any;
+}
+
+@Injectable()
+export class NestJSTestClass {
+  constructor(
+    private readonly testClassOne: TestClassOne,
+    private readonly testClassTwo: TestClassTwo,
+    @Inject('LOGGER') private readonly logger: Logger
+  ) {}
+
+  async test(): Promise<string> {
+    const value = await this.testClassOne.foo(true);
+    const value2 = await this.testClassTwo.bar();
+    const value3 = this.logger.baz();
 
     return `${value}-${value2}-${value3}`;
   }

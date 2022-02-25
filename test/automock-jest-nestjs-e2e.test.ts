@@ -1,20 +1,20 @@
-import { MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from './spec-assets';
+import { Logger, NestJSTestClass, TestClassOne, TestClassTwo } from './spec-assets';
 import { MockOf, Spec, TestingUnit, UnitBuilder } from '../src';
 
-describe('Jester E2E Test', () => {
-  let unit: TestingUnit<MainTestClass>;
-  let unitBuilder: UnitBuilder<MainTestClass>;
+describe('AutoMock NestJS E2E Test', () => {
+  let unit: TestingUnit<NestJSTestClass>;
+  let unitBuilder: UnitBuilder<NestJSTestClass>;
 
   describe('given a unit testing builder with two overrides', () => {
     beforeAll(() => {
-      unitBuilder = Spec.createUnit<MainTestClass>(MainTestClass)
+      unitBuilder = Spec.create<NestJSTestClass>(NestJSTestClass)
         .mock(TestClassOne)
         .using({
           async foo(): Promise<string> {
             return 'foo-from-test';
           },
         })
-        .mockDeep(TestClassThree)
+        .mock<Logger>('LOGGER')
         .using({
           baz() {
             return 'baz-from-test';
@@ -27,7 +27,7 @@ describe('Jester E2E Test', () => {
 
       test('then return an actual instance of the injectable class', () => {
         expect(unit).toHaveProperty('unit');
-        expect(unit.unit).toBeInstanceOf(MainTestClass);
+        expect(unit.unit).toBeInstanceOf(NestJSTestClass);
       });
 
       test('then return a reference of the the compiled unit', () => {
@@ -39,7 +39,7 @@ describe('Jester E2E Test', () => {
 
         expect(unitRef.get(TestClassOne)).toBeDefined();
         expect(unitRef.get(TestClassTwo)).toBeDefined();
-        expect(unitRef.get(TestClassThree)).toBeDefined();
+        expect(unitRef.get('LOGGER')).toBeDefined();
       });
 
       test('then do not return the actual reflected dependencies of the injectable class', () => {
@@ -48,18 +48,20 @@ describe('Jester E2E Test', () => {
 
         expect(unitRef.get(TestClassOne)).not.toBeInstanceOf(TestClassOne);
         expect(unitRef.get(TestClassTwo)).not.toBeInstanceOf(TestClassTwo);
-        expect(unitRef.get(TestClassThree)).not.toBeInstanceOf(TestClassThree);
       });
 
       test('then hard-mock the implementation of TestClassOne using the "foo" (partial impl function)', async () => {
         const { unitRef } = unit;
         const testClassOne = unitRef.get(TestClassOne);
+        const logger = unitRef.get<Logger>('LOGGER');
 
         // The original 'foo' method in TestClassOne return value should be changed
         // according to the passed flag; here, always return the same value
-        // cause we mock the implementation of foo permanently
+        // because we mock the implementation of foo permanently
         await expect(testClassOne.foo(true)).resolves.toBe('foo-from-test');
         await expect(testClassOne.foo(false)).resolves.toBe('foo-from-test');
+
+        expect(logger.baz).toBeDefined();
       });
 
       test('then all the un-override classes/dependencies should be stubs', () => {

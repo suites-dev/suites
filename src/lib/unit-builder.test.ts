@@ -40,8 +40,8 @@ describe('Unit Builder Unit Test', () => {
             'expectation is based of two dependencies'
           );
 
-          expect(createMockFn).toHaveBeenNthCalledWith(1, undefined, { deep: false });
-          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined, { deep: false });
+          expect(createMockFn).toHaveBeenNthCalledWith(1, undefined);
+          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined);
         });
       });
     });
@@ -62,41 +62,7 @@ describe('Unit Builder Unit Test', () => {
         });
 
         test('then the second call of the mock fn has been invoked with undefined', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined, { deep: false });
-        });
-      });
-    });
-
-    describe('scenario: deep mock some of the dependencies implementation with specific partial mock', () => {
-      describe('when overriding arbitrary dependency in the tested class', () => {
-        beforeAll(() => {
-          createMockFn.mockClear();
-          createBuilder().mockDeep(TestClassTwo).using({ bar }).compile();
-        });
-
-        test('then the first call of the mock fn has been invoked with the partial implementation and deep flag', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(1, { bar }, { deep: true });
-        });
-
-        test('then the second call of the mock fn has been invoked with undefined', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined, { deep: false });
-        });
-      });
-    });
-
-    describe('scenario: compile with a flag indicating to deep-mock the unmocked dependencies', () => {
-      describe('when overriding arbitrary dependency in the tested class', () => {
-        beforeAll(() => {
-          createMockFn.mockClear();
-          createBuilder().compile(true);
-        });
-
-        test('then the first call of the mock fn has been invoked with ', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(1, undefined, { deep: true });
-        });
-
-        test('then the second call of the mock fn has been invoked with undefined', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined, { deep: true });
+          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined);
         });
       });
     });

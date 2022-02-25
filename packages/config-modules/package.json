@@ -1,0 +1,43 @@
+{
+  "name": "@automock/config-modules",
+  "version": "0.0.1-rc.1",
+  "license": "MIT",
+  "description": "AutoMock Config/Modules Package",
+  "main": "dist/cli.js",
+  "bin": {
+    "automock": "dist/cli.js"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omermorad/automock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/omermorad/automock/issues"
+  },
+  "readme": "https://github.com/omermorad/automock/tree/master/packages/config-modules/README.md",
+  "scripts": {
+    "prebuild": "yarn rimraf dist",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "lint": "eslint '{src,test}/**/*.ts'",
+    "lint:fix": "eslint '{src,test}/**/*.ts' --fix"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

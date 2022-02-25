@@ -30,7 +30,7 @@ describe('Unit Builder Unit Test', () => {
           expect(testingUnit.unit).toBeInstanceOf(MainTestClass);
         });
 
-        test('then call the mock function exactly by length of the dependencies', () => {
+        test('then call the mock function exactly by the length of the dependencies', () => {
           expect(createMockFn).toHaveBeenCalledTimes(TESTED_CLASS_DEPENDENCIES.length);
         });
 
@@ -40,8 +40,8 @@ describe('Unit Builder Unit Test', () => {
             'expectation is based of two dependencies'
           );
 
-          expect(createMockFn).toHaveBeenNthCalledWith(1, undefined);
-          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined);
+          expect(createMockFn).toHaveBeenNthCalledWith(1);
+          expect(createMockFn).toHaveBeenNthCalledWith(2);
         });
       });
     });
@@ -62,7 +62,7 @@ describe('Unit Builder Unit Test', () => {
         });
 
         test('then the second call of the mock fn has been invoked with undefined', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined);
+          expect(createMockFn).toHaveBeenNthCalledWith(2);
         });
       });
     });

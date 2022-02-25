@@ -7,24 +7,19 @@
   <br/>
   <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
 
-  <h1 align="center">AutoMock (Jest)</h1>
+  <h1 align="center">AutoMock</h1>
 
   <h3 align="center">
-    Standalone Library for Dependencies Auto Mocking (for TypeScript)
-  </h3>
-
-  <h3 align="center">
-    Works with any testing framework!
+    Standalone Library for Dependencies Auto Mocking/Stubbing (for TypeScript)
   </h3>
 
   <h4 align="center">
-    Create unit test simply and easily with 100% isolation of class dependencies
+    Create solitary unit tests easily, with total isolation of other class dependencies
   </h4>
 </p>
 
 ## Installation
-
-💡 Install `jest-mock-extended` as a peer dependency
+**Note: sinon is coming soon**
 
 With NPM:
 ```bash
@@ -39,54 +34,42 @@ yarn add -D @automock/jest
 ## Who can use this library? 🤩
 **TL;DR**
 
-If you are using this pattern in your framework (it doesn't matter which one):
-
+If you use any kind of framework that supports dependency inversion (with any DI engine)
+like in the following example:
 ```typescript
 export class AwesomeClass {
-  public constructor(private readonly dependecy1: SomeOtherClass) {}
+  public constructor(private readonly logger: Logger) {}
 }
 ```
 
-You can use Jest Unit :)
+You can use AutoMock.
 
-### Tell me more 🤔
-If you are using any TypeScript framework: Angular, React+TypeScript, NestJS, TypeDI, TsED
-or even if you are framework free, jest unit is for you.
+## Tell Me More 🤔
+Unit testing is actually significant part of our code, and unit tests need to
+be written quickly and rapidly. Unit tests should be written with complete isolation,
+which means all the external (injected) dependencies should be mocked (actually, stubbed).
 
-Jest Unit is framework agnostic, so it's basically serves everyone! if you
-are using any implementation of dependency inversion (dependency injection on most cases)
-this library is for you.
-
-The only assumption/requirement is that you are taking your class dependencies via
-the class constructor (like in the example above).
-
-## What is this library❓
-
-This package helps isolate the dependencies of any given class, by using a simple
-reflection mechanism on the class constructor params metadata. When used in conjunction with
-`jest-mock-extended` library, all the class dependencies (constructor params) will be overridden
-automatically and become mocks (or deep mocks if you want it to).
+AutoMock does that for you; using simple reflection (which requires a decorator on the class)
+AutoMock will replace the dependencies with mocks (in this case, `jest.fn()`), which can also
+take implementation, see the example in the next section.
 
 ## Example and Usage 💁‍
 
 ```typescript
-import { DeepMockOf, MockOf, Spec } from 'automock';
+import { MockOf, Spec } from '@automock/jest';
 
 describe('SomeService Unit Test', () => {
-  let someService: SomeService;
+  let someService: MainService;
+
   let logger: MockOf<Logger>;
   let userService: MockOf<UserService>;
 
   const USERS_DATA = [{ name: 'user', email: 'user@user.com' }];
 
   beforeAll(() => {
-    const { unit, unitRef } = Spec.createUnit<SomeService>(SomeService)
+    const { unit, unitRef } = Spec.createUnit(MainService)
       .mock(FeatureFlagService)
-      .using({
-        isFeatureOn: () => Promise.resolve(true),
-      })
-      // All the rest of the dependencies will be mocked
-      // Pass true if you want to deep mock all of the rest
+      .using({ isFeatureOn: () => Promise.resolve(true) })
       .compile();
 
     someService = unit;
@@ -97,10 +80,8 @@ describe('SomeService Unit Test', () => {
     beforeAll(() => (userService.getUsers.mockResolvedValueOnce(USERS_DATA));
     
     test('then check something', async () => {
-      const result = await service.doSomethingNice();
-
+      await service.doSomethingNice();
       expect(logger.log).toHaveBeenCalledWith(USERS_DATA);
-      expect(result).toEqual(USERS_DATA);
     });
   });
 });
@@ -150,15 +131,6 @@ the `@Reflectable()` decorator.
 </details>
 
 **Still need further example? [Jump to full sample](https://github.com/omermorad/automock/tree/master/sample) 📄**
-
-
-## Motivation 💪
-
-Unit tests exercise very small parts of the application **in complete isolation**. \
-**"Complete isolation" means that, when unit testing, you don’t typically
-connect your application with external dependencies such as databases, the filesystem,
-or HTTP services**. That allows unit tests to be fast and more stable since they won’t
-fail due to problems with those external services. (Thank you, Testim.io - [jump to source](https://www.testim.io/blog/unit-testing-best-practices/))
 
 ## License 📜
 

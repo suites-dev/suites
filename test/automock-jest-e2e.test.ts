@@ -1,4 +1,4 @@
-import { MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from './spec-assets';
+import { Logger, MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from './spec-assets';
 import { MockOf, Spec, TestingUnit, UnitBuilder } from '../src';
 
 describe('AutoMock E2E Test', () => {
@@ -10,16 +10,10 @@ describe('AutoMock E2E Test', () => {
       unitBuilder = Spec.create<MainTestClass>(MainTestClass)
         .mock(TestClassOne)
         .using({
-          async foo(): Promise<string> {
-            return 'foo-from-test';
-          },
+          foo: (): Promise<string> => Promise.resolve('foo-from-test'),
         })
-        .mock(TestClassThree)
-        .using({
-          baz() {
-            return 'baz-from-test';
-          },
-        });
+        .mock<Logger>('LOGGER')
+        .using({ log: () => 'baz-from-test' });
     });
 
     describe('when compiling the builder and turning into testing unit', () => {
@@ -30,16 +24,12 @@ describe('AutoMock E2E Test', () => {
         expect(unit.unit).toBeInstanceOf(MainTestClass);
       });
 
-      test('then return a reference of the the compiled unit', () => {
-        expect(unit).toHaveProperty('unitRef');
-      });
-
       test('then successfully resolve the dependencies of the tested classes', () => {
         const { unitRef } = unit;
 
         expect(unitRef.get(TestClassOne)).toBeDefined();
         expect(unitRef.get(TestClassTwo)).toBeDefined();
-        expect(unitRef.get(TestClassThree)).toBeDefined();
+        expect(unitRef.get('LOGGER')).toBeDefined();
       });
 
       test('then do not return the actual reflected dependencies of the injectable class', () => {
@@ -57,7 +47,7 @@ describe('AutoMock E2E Test', () => {
 
         // The original 'foo' method in TestClassOne return value should be changed
         // according to the passed flag; here, always return the same value
-        // cause we mock the implementation of foo permanently
+        // because we mock the implementation of foo permanently
         await expect(testClassOne.foo(true)).resolves.toBe('foo-from-test');
         await expect(testClassOne.foo(false)).resolves.toBe('foo-from-test');
       });

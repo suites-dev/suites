@@ -27,25 +27,25 @@ export class TestClassThree {
   }
 }
 
+export interface Logger {
+  log(): any;
+}
+
 @Reflectable()
 export class MainTestClass {
   constructor(
     private readonly testClassOne: TestClassOne,
     private readonly testClassTwo: TestClassTwo,
-    private readonly testClassThree: TestClassThree
+    @Inject('LOGGER') private readonly logger: Logger
   ) {}
 
   async test(): Promise<string> {
     const value = await this.testClassOne.foo(true);
     const value2 = await this.testClassTwo.bar();
-    const value3 = this.testClassThree.baz();
+    const value3 = this.logger.log();
 
     return `${value}-${value2}-${value3}`;
   }
-}
-
-export interface Logger {
-  baz(): any;
 }
 
 @Injectable()
@@ -59,7 +59,7 @@ export class NestJSTestClass {
   async test(): Promise<string> {
     const value = await this.testClassOne.foo(true);
     const value2 = await this.testClassTwo.bar();
-    const value3 = this.logger.baz();
+    const value3 = this.logger.log();
 
     return `${value}-${value2}-${value3}`;
   }

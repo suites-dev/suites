@@ -16,7 +16,7 @@ describe('AutoMock NestJS E2E Test', () => {
         })
         .mock<Logger>('LOGGER')
         .using({
-          baz() {
+          log() {
             return 'baz-from-test';
           },
         });
@@ -28,10 +28,6 @@ describe('AutoMock NestJS E2E Test', () => {
       test('then return an actual instance of the injectable class', () => {
         expect(unit).toHaveProperty('unit');
         expect(unit.unit).toBeInstanceOf(NestJSTestClass);
-      });
-
-      test('then return a reference of the the compiled unit', () => {
-        expect(unit).toHaveProperty('unitRef');
       });
 
       test('then successfully resolve the dependencies of the tested classes', () => {
@@ -61,7 +57,7 @@ describe('AutoMock NestJS E2E Test', () => {
         await expect(testClassOne.foo(true)).resolves.toBe('foo-from-test');
         await expect(testClassOne.foo(false)).resolves.toBe('foo-from-test');
 
-        expect(logger.baz).toBeDefined();
+        expect(logger.log).toBeDefined();
       });
 
       test('then all the un-override classes/dependencies should be stubs', () => {

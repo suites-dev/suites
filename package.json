@@ -1,6 +1,6 @@
 {
   "name": "@automock/jest",
-  "version": "0.0.0",
+  "version": "0.0.0-beta.0",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
@@ -42,6 +42,7 @@
     "README.md"
   ],
   "dependencies": {
+    "jest-mock-extended": "^2.0.4",
     "ts-essentials": "^7.0.3"
   },
   "devDependencies": {
@@ -65,7 +66,6 @@
     "eslint-plugin-prettier": "^3.4.1",
     "husky": "^7.0.4",
     "jest": "^27.3.1",
-    "jest-mock-extended": "^2.0.4",
     "lint-staged": "^11.2.6",
     "lodash.clonedeep": "^4.5.0",
     "prettier": "^2.4.1",
@@ -80,9 +80,7 @@
     "typescript": "^4.0.0"
   },
   "peerDependencies": {
-    "jest-mock-extended": "^2.x",
-    "reflect-metadata": "^0.1.x",
-    "ts-essentials": "^7.x"
+    "reflect-metadata": "^0.1.3"
   },
   "lint-staged": {
     "*.ts": [

@@ -2,8 +2,9 @@ import assert from 'assert';
 import { UnitBuilder } from './unit-builder';
 import { MainTestClass, TestClassOne, TestClassTwo } from '../../test/spec-assets';
 import { TestingUnit } from './types';
+import { ReflectorService } from './reflector.service';
 
-describe('Unit Builder Unit Test', () => {
+describe('Unit Builder Spec', () => {
   describe('given a DependenciesBuilder', () => {
     const TESTED_CLASS_DEPENDENCIES = [TestClassOne, TestClassTwo];
 
@@ -14,7 +15,11 @@ describe('Unit Builder Unit Test', () => {
     const createMockFn = jest.fn().mockImplementation((partial) => partial || 'MOCKED');
 
     const createBuilder = () =>
-      new UnitBuilder<MainTestClass>(reflectorMock, createMockFn, MainTestClass);
+      new UnitBuilder<MainTestClass>(
+        new ReflectorService(reflectorMock),
+        createMockFn,
+        MainTestClass
+      );
 
     const bar = async (): Promise<string> => 'from-test';
 
@@ -30,7 +35,7 @@ describe('Unit Builder Unit Test', () => {
           expect(testingUnit.unit).toBeInstanceOf(MainTestClass);
         });
 
-        test('then call the mock function exactly by length of the dependencies', () => {
+        test('then call the mock function exactly by the length of the dependencies', () => {
           expect(createMockFn).toHaveBeenCalledTimes(TESTED_CLASS_DEPENDENCIES.length);
         });
 
@@ -40,8 +45,8 @@ describe('Unit Builder Unit Test', () => {
             'expectation is based of two dependencies'
           );
 
-          expect(createMockFn).toHaveBeenNthCalledWith(1, undefined, { deep: false });
-          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined, { deep: false });
+          expect(createMockFn).toHaveBeenNthCalledWith(1);
+          expect(createMockFn).toHaveBeenNthCalledWith(2);
         });
       });
     });
@@ -62,41 +67,7 @@ describe('Unit Builder Unit Test', () => {
         });
 
         test('then the second call of the mock fn has been invoked with undefined', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined, { deep: false });
-        });
-      });
-    });
-
-    describe('scenario: deep mock some of the dependencies implementation with specific partial mock', () => {
-      describe('when overriding arbitrary dependency in the tested class', () => {
-        beforeAll(() => {
-          createMockFn.mockClear();
-          createBuilder().mockDeep(TestClassTwo).using({ bar }).compile();
-        });
-
-        test('then the first call of the mock fn has been invoked with the partial implementation and deep flag', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(1, { bar }, { deep: true });
-        });
-
-        test('then the second call of the mock fn has been invoked with undefined', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined, { deep: false });
-        });
-      });
-    });
-
-    describe('scenario: compile with a flag indicating to deep-mock the unmocked dependencies', () => {
-      describe('when overriding arbitrary dependency in the tested class', () => {
-        beforeAll(() => {
-          createMockFn.mockClear();
-          createBuilder().compile(true);
-        });
-
-        test('then the first call of the mock fn has been invoked with ', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(1, undefined, { deep: true });
-        });
-
-        test('then the second call of the mock fn has been invoked with undefined', () => {
-          expect(createMockFn).toHaveBeenNthCalledWith(2, undefined, { deep: true });
+          expect(createMockFn).toHaveBeenNthCalledWith(2);
         });
       });
     });

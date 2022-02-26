@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { Inject, Injectable } from '@nestjs/common';
 import { Reflectable } from '../src';
 
 @Reflectable()
@@ -26,18 +27,51 @@ export class TestClassThree {
   }
 }
 
+export interface Logger {
+  log(): any;
+}
+
 @Reflectable()
 export class MainTestClass {
   constructor(
     private readonly testClassOne: TestClassOne,
     private readonly testClassTwo: TestClassTwo,
-    private readonly testClassThree: TestClassThree
+    @Inject('LOGGER') private readonly logger: Logger
   ) {}
 
   async test(): Promise<string> {
     const value = await this.testClassOne.foo(true);
     const value2 = await this.testClassTwo.bar();
-    const value3 = this.testClassThree.baz();
+    const value3 = this.logger.log();
+
+    return `${value}-${value2}-${value3}`;
+  }
+}
+
+@Reflectable()
+export class InvalidClass {
+  constructor(private readonly testClassOne: TestClassOne, private readonly logger: Logger) {}
+
+  async test(): Promise<string> {
+    const value = await this.testClassOne.foo(true);
+    const value3 = this.logger.log();
+
+    return `${value}-${value3}`;
+  }
+}
+
+@Injectable()
+export class NestJSTestClass {
+  constructor(
+    private readonly testClassOne: TestClassOne,
+    private readonly testClassTwo: TestClassTwo,
+    @Inject('LOGGER') private readonly logger: Logger
+  ) {}
+
+  async test(): Promise<string> {
+    const value = await this.testClassOne.foo(true);
+    const value2 = await this.testClassTwo.bar();
+    const value3 = this.logger.log();
 
     return `${value}-${value2}-${value3}`;
   }

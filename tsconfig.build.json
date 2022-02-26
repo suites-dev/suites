@@ -3,16 +3,18 @@
   "compilerOptions": {
     "incremental": false,
     "baseUrl": "./",
-    "rootDir": "./src",
+    "rootDir": "./",
     "outDir": "./dist",
     "sourceMap": false
   },
   "exclude": [
     "sample",
+    "spec-assets.ts",
     "node_modules",
     "test",
     "dist",
     "**/*test.ts",
+    "**/*spec.ts",
     "index.ts",
     "index.js",
     "index.d.ts",

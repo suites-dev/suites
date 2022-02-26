@@ -16,7 +16,7 @@ describe('Cats Service Unit Test', () => {
   ];
 
   beforeAll(() => {
-    const { unit, unitRef } = Spec.createUnit<CatsService>(CatsService).compile(true);
+    const { unit, unitRef } = Spec.create<CatsService>(CatsService).compile(true);
 
     catsService = unit;
     logger = unitRef.get(Logger);

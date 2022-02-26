@@ -13,6 +13,7 @@
     "test",
     "dist",
     "**/*test.ts",
+    "**/*spec.ts",
     "index.ts",
     "index.js",
     "index.d.ts",

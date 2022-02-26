@@ -5,7 +5,7 @@
     "ts"
   ],
   "rootDir": ".",
-  "testRegex": ".test.ts$",
+  "testRegex": ".(spec|test).ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },

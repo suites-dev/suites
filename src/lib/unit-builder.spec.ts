@@ -2,8 +2,9 @@ import assert from 'assert';
 import { UnitBuilder } from './unit-builder';
 import { MainTestClass, TestClassOne, TestClassTwo } from '../../test/spec-assets';
 import { TestingUnit } from './types';
+import { ReflectorService } from './reflector.service';
 
-describe('Unit Builder Unit Test', () => {
+describe('Unit Builder Spec', () => {
   describe('given a DependenciesBuilder', () => {
     const TESTED_CLASS_DEPENDENCIES = [TestClassOne, TestClassTwo];
 
@@ -14,7 +15,11 @@ describe('Unit Builder Unit Test', () => {
     const createMockFn = jest.fn().mockImplementation((partial) => partial || 'MOCKED');
 
     const createBuilder = () =>
-      new UnitBuilder<MainTestClass>(reflectorMock, createMockFn, MainTestClass);
+      new UnitBuilder<MainTestClass>(
+        new ReflectorService(reflectorMock),
+        createMockFn,
+        MainTestClass
+      );
 
     const bar = async (): Promise<string> => 'from-test';
 

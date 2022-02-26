@@ -48,6 +48,18 @@ export class MainTestClass {
   }
 }
 
+@Reflectable()
+export class InvalidClass {
+  constructor(private readonly testClassOne: TestClassOne, private readonly logger: Logger) {}
+
+  async test(): Promise<string> {
+    const value = await this.testClassOne.foo(true);
+    const value3 = this.logger.log();
+
+    return `${value}-${value3}`;
+  }
+}
+
 @Injectable()
 export class NestJSTestClass {
   constructor(

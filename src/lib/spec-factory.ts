@@ -1,6 +1,7 @@
 import { mock } from 'jest-mock-extended';
 import { UnitBuilder } from './unit-builder';
 import { Type } from './types';
+import { ReflectorService } from './reflector.service';
 
 export class Spec {
   /**
@@ -9,6 +10,8 @@ export class Spec {
    * @return UnitBuilder
    */
   public static create<TClass = any>(targetClass: Type<TClass>): UnitBuilder<TClass> {
-    return new UnitBuilder<TClass>(Reflect, mock, targetClass);
+    const reflector = new ReflectorService(Reflect);
+
+    return new UnitBuilder<TClass>(reflector, mock, targetClass);
   }
 }

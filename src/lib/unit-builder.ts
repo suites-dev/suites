@@ -1,8 +1,10 @@
 import 'reflect-metadata';
 import { DeepPartial } from 'ts-essentials';
-import { MockOf, MockFunction, Override, TestingUnit, Type } from './types';
+import { MockFunction, Override, TestingUnit, Type } from './types';
 import { MockResolver } from './mock-resolver';
 import { ReflectorService } from './reflector.service';
+
+import Mocked = jest.Mocked;
 
 export interface UnitBuilder<TClass = any> {
   /**
@@ -27,7 +29,7 @@ export interface UnitBuilder<TClass = any> {
 
 export class UnitBuilder<TClass = any> {
   private readonly dependencies = new Map<Type | string, DeepPartial<unknown>>();
-  private readonly depNamesToMocks = new Map<Type | string, MockOf<any>>();
+  private readonly depNamesToMocks = new Map<Type | string, Mocked<any>>();
 
   public constructor(
     private readonly reflector: ReflectorService,
@@ -58,8 +60,8 @@ export class UnitBuilder<TClass = any> {
     };
   }
 
-  private mockUnMockedDependencies(): Map<Type | string, MockOf<any>> {
-    const map = new Map<Type | string, MockOf<any>>();
+  private mockUnMockedDependencies(): Map<Type | string, Mocked<any>> {
+    const map = new Map<Type | string, Mocked<any>>();
 
     for (const [key, dependency] of this.dependencies.entries()) {
       const overriddenDep = this.depNamesToMocks.get(key);

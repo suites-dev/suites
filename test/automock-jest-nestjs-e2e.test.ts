@@ -1,5 +1,5 @@
 import { Logger, NestJSTestClass, TestClassOne, TestClassTwo } from './spec-assets';
-import { MockOf, Spec, TestingUnit, UnitBuilder } from '../src';
+import { Spec, TestingUnit, UnitBuilder } from '../src';
 
 describe('AutoMock NestJS E2E Test', () => {
   let unit: TestingUnit<NestJSTestClass>;
@@ -62,7 +62,7 @@ describe('AutoMock NestJS E2E Test', () => {
 
       test('then all the un-override classes/dependencies should be stubs', () => {
         const { unitRef } = unit;
-        const testClassTwo: MockOf<TestClassTwo> = unitRef.get(TestClassTwo);
+        const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
         expect(testClassTwo.bar.getMockName).toBeDefined();
         expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');

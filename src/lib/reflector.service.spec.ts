@@ -1,8 +1,8 @@
 import { CustomToken, ReflectorService } from './reflector.service';
 import { TestClassOne } from '../../test/spec-assets';
+import { Type } from './types';
 
 import Mocked = jest.Mocked;
-import { Type } from './types';
 
 const VALID_IMPL = (metadataKey: string) => {
   if (metadataKey === 'self:paramtypes') {

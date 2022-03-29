@@ -1,6 +1,8 @@
 import 'reflect-metadata';
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { Reflectable } from '../src';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Reflectable()
 export class TestClassOne {
@@ -60,12 +62,18 @@ export class InvalidClass {
   }
 }
 
+export class Foo {}
+export class Bar {}
+
 @Injectable()
 export class NestJSTestClass {
   constructor(
+    @Inject('LOGGER') private readonly logger: Logger,
+    @Inject(forwardRef(() => TestClassThree)) private readonly testClassThree: TestClassThree,
+    @InjectRepository(Foo) private readonly fooRepository: Repository<Foo>,
+    @InjectRepository(Bar) private readonly barRepository: Repository<Bar>,
     private readonly testClassOne: TestClassOne,
-    private readonly testClassTwo: TestClassTwo,
-    @Inject('LOGGER') private readonly logger: Logger
+    private readonly testClassTwo: TestClassTwo
   ) {}
 
   async test(): Promise<string> {

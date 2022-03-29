@@ -17,16 +17,25 @@ export class ReflectorService {
     const types = this.reflectParamTypes(targetClass);
     const tokens = this.reflectParamTokens(targetClass);
 
+    const duplicates = ReflectorService.findDuplicates([...types]).map((typeOrToken) =>
+      typeof typeOrToken === 'string' ? typeOrToken : typeOrToken.name
+    );
+
     types.map((type: Type<unknown>, index: number) => {
-      if (type.name === 'Object') {
-        try {
-          const token = ReflectorService.findToken(tokens, index);
-          classDependencies.set(token, type);
-        } catch (error) {
-          throw new Error(
-            `'${targetClass.name}' is missing a token for the dependency at index [${index}], did you forget to inject it using @Inject()?`
-          );
+      if (type.name === 'Object' || duplicates.includes(type.name)) {
+        const token = ReflectorService.findToken(tokens, index);
+
+        if (!token) {
+          if (type.name === 'Object') {
+            throw new Error(
+              `'${targetClass.name}' is missing a token for the dependency at index [${index}], did you forget to inject it using @Inject()?`
+            );
+          } else {
+            throw new Error(`'${targetClass.name}' includes non-unique types/tokens dependencies`);
+          }
         }
+
+        classDependencies.set(token as any, type);
       } else {
         classDependencies.set(type, type);
       }
@@ -43,13 +52,23 @@ export class ReflectorService {
     return this.reflector.getMetadata(ReflectorService.PARAM_TYPES_METADATA, targetClass) || [];
   }
 
-  private static findToken(list: CustomToken[], index: number): string | never {
+  private static findToken(list: CustomToken[], index: number): string | boolean {
     const record = list.find((element) => element.index === index);
+    return record?.param ?? false;
+  }
 
-    if (!record) {
-      throw new Error('Cannot find token');
+  private static findDuplicates(typesOrToken: (Type | string)[]) {
+    const items = [...typesOrToken.sort()];
+
+    let index = items.length;
+    const duplicates = [];
+
+    while (index--) {
+      items[index] === items[index - 1] &&
+        duplicates.indexOf(items[index]) == -1 &&
+        duplicates.push(items[index]);
     }
 
-    return record.param;
+    return duplicates;
   }
 }

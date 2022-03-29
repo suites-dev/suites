@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { UnitBuilder } from './unit-builder';
+import { UnitResolver } from './unit-resolver';
 import { MainTestClass, TestClassOne, TestClassTwo } from '../../test/spec-assets';
 import { TestingUnit } from './types';
 import { ReflectorService } from './reflector.service';
@@ -15,7 +15,7 @@ describe('Unit Builder Spec', () => {
     const createMockFn = jest.fn().mockImplementation((partial) => partial || 'MOCKED');
 
     const createBuilder = () =>
-      new UnitBuilder<MainTestClass>(
+      new UnitResolver<MainTestClass>(
         new ReflectorService(reflectorMock),
         createMockFn,
         MainTestClass

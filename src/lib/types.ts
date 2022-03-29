@@ -1,10 +1,10 @@
 import { DeepPartial } from 'ts-essentials';
 import { mock } from 'jest-mock-extended';
-import { UnitBuilder } from './unit-builder';
+import { UnitResolver } from './unit-resolver';
 import { MockResolver } from './mock-resolver';
 
 export interface Override<T> {
-  using: (mockImplementation: DeepPartial<T>) => UnitBuilder;
+  using: (mockImplementation: DeepPartial<T>) => UnitResolver;
 }
 
 export interface TestingUnit<TClass = any> {

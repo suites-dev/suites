@@ -1,9 +1,9 @@
 import { Logger, MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from './spec-assets';
-import { Spec, TestingUnit, UnitBuilder } from '../src';
+import { Spec, TestingUnit, UnitResolver } from '../src';
 
 describe('AutoMock E2E Test', () => {
   let unit: TestingUnit<MainTestClass>;
-  let unitBuilder: UnitBuilder<MainTestClass>;
+  let unitBuilder: UnitResolver<MainTestClass>;
 
   describe('given a unit testing builder with two overrides', () => {
     beforeAll(() => {

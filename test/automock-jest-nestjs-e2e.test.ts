@@ -1,9 +1,18 @@
-import { Logger, NestJSTestClass, TestClassOne, TestClassTwo } from './spec-assets';
-import { Spec, TestingUnit, UnitBuilder } from '../src';
+import {
+  Bar,
+  Foo,
+  Logger,
+  NestJSTestClass,
+  TestClassOne,
+  TestClassThree,
+  TestClassTwo,
+} from './spec-assets';
+import { Spec, TestingUnit, UnitResolver } from '../src';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('AutoMock NestJS E2E Test', () => {
   let unit: TestingUnit<NestJSTestClass>;
-  let unitBuilder: UnitBuilder<NestJSTestClass>;
+  let unitBuilder: UnitResolver<NestJSTestClass>;
 
   describe('given a unit testing builder with two overrides', () => {
     beforeAll(() => {
@@ -35,7 +44,10 @@ describe('AutoMock NestJS E2E Test', () => {
 
         expect(unitRef.get(TestClassOne)).toBeDefined();
         expect(unitRef.get(TestClassTwo)).toBeDefined();
+        expect(unitRef.get(getRepositoryToken(Foo) as string)).toBeDefined();
+        expect(unitRef.get(getRepositoryToken(Bar) as string)).toBeDefined();
         expect(unitRef.get('LOGGER')).toBeDefined();
+        expect(unitRef.get(TestClassThree)).toBeDefined();
       });
 
       test('then do not return the actual reflected dependencies of the injectable class', () => {

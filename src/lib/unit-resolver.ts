@@ -6,7 +6,7 @@ import { ReflectorService } from './reflector.service';
 
 import Mocked = jest.Mocked;
 
-export interface UnitBuilder<TClass = any> {
+export interface UnitResolver<TClass = any> {
   /**
    * Declares on the dependency to mock
    *
@@ -27,7 +27,7 @@ export interface UnitBuilder<TClass = any> {
   compile(): TestingUnit<TClass>;
 }
 
-export class UnitBuilder<TClass = any> {
+export class UnitResolver<TClass = any> {
   private readonly dependencies = new Map<Type | string, DeepPartial<unknown>>();
   private readonly depNamesToMocks = new Map<Type | string, Mocked<any>>();
 
@@ -43,7 +43,7 @@ export class UnitBuilder<TClass = any> {
   public mock<T = any>(dependency: Type<T>): Override<T>;
   public mock<T = any>(dependency: Type<T> | string): Override<T> {
     return {
-      using: (mockImplementation: DeepPartial<T>): UnitBuilder<TClass> => {
+      using: (mockImplementation: DeepPartial<T>): UnitResolver<TClass> => {
         this.depNamesToMocks.set(dependency, this.mockFn<T>(mockImplementation));
         return this;
       },

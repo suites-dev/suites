@@ -1,6 +1,6 @@
 {
   "name": "@automock/jest",
-  "version": "0.0.0-beta.1",
+  "version": "0.0.0-beta.2",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [

@@ -2,7 +2,7 @@ import { Type } from './types';
 
 export interface CustomToken {
   index: number;
-  param: string;
+  param: Type | { forwardRef: () => Type } | string;
 }
 
 export class ReflectorService {
@@ -21,7 +21,7 @@ export class ReflectorService {
       typeof typeOrToken === 'string' ? typeOrToken : typeOrToken.name
     );
 
-    types.map((type: Type<unknown>, index: number) => {
+    types.forEach((type: Type<unknown>, index: number) => {
       if (type.name === 'Object' || duplicates.includes(type.name)) {
         const token = ReflectorService.findToken(tokens, index);
 
@@ -35,7 +35,9 @@ export class ReflectorService {
           }
         }
 
-        classDependencies.set(token as any, type);
+        const ref = typeof token === 'object' && 'forwardRef' in token ? token.forwardRef() : token;
+
+        classDependencies.set(ref, type);
       } else {
         classDependencies.set(type, type);
       }
@@ -48,13 +50,17 @@ export class ReflectorService {
     return this.reflector.getMetadata(ReflectorService.INJECTED_TOKENS_METADATA, targetClass) || [];
   }
 
-  private reflectParamTypes(targetClass: Type): Type<unknown>[] {
+  private reflectParamTypes(targetClass: Type): Type[] {
     return this.reflector.getMetadata(ReflectorService.PARAM_TYPES_METADATA, targetClass) || [];
   }
 
-  private static findToken(list: CustomToken[], index: number): string | boolean {
+  private static findToken(
+    list: CustomToken[],
+    index: number
+  ): Type | { forwardRef: () => Type } | string | undefined {
     const record = list.find((element) => element.index === index);
-    return record?.param ?? false;
+
+    return record?.param;
   }
 
   private static findDuplicates(typesOrToken: (Type | string)[]) {

@@ -28,10 +28,7 @@ export interface UnitResolver<TClass = any> {
 }
 
 export class UnitResolver<TClass = any> {
-  private readonly dependencies = new Map<
-    Type | string | { forwardRef: () => Type },
-    DeepPartial<unknown>
-  >();
+  private readonly dependencies = new Map<Type | string, DeepPartial<unknown>>();
   private readonly depNamesToMocks = new Map<Type | string, Mocked<any>>();
 
   public constructor(
@@ -67,12 +64,10 @@ export class UnitResolver<TClass = any> {
     const map = new Map<Type | string, Mocked<any>>();
 
     for (const [key, dependency] of this.dependencies.entries()) {
-      const ref = typeof key === 'object' && 'forwardRef' in key ? key.forwardRef() : key;
-
-      const overriddenDep = this.depNamesToMocks.get(ref);
+      const overriddenDep = this.depNamesToMocks.get(key);
       const mock = overriddenDep ? overriddenDep : this.mockFn<typeof dependency>();
 
-      map.set(ref, mock);
+      map.set(key, mock);
     }
 
     return map;

@@ -65,11 +65,14 @@ export class InvalidClass {
 export class Foo {}
 export class Bar {}
 
+type Relation<T> = T;
+
 @Injectable()
 export class NestJSTestClass {
   constructor(
     @Inject('LOGGER') private readonly logger: Logger,
-    @Inject(forwardRef(() => TestClassThree)) private readonly testClassThree: TestClassThree,
+    @Inject(forwardRef(() => TestClassThree))
+    private readonly testClassThree: Relation<TestClassThree>,
     @InjectRepository(Foo) private readonly fooRepository: Repository<Foo>,
     @InjectRepository(Bar) private readonly barRepository: Repository<Bar>,
     private readonly testClassOne: TestClassOne,

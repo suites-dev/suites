@@ -22,7 +22,7 @@ export class ReflectorService {
     );
 
     types.map((type: Type<unknown>, index: number) => {
-      if (type.name === 'Object' || duplicates.includes(type.name)) {
+      if (duplicates.includes(type.name)) {
         const token = ReflectorService.findToken(tokens, index);
 
         if (!token) {

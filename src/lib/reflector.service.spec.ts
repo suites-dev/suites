@@ -22,7 +22,7 @@ const INVALID_IMPL = (metadataKey: string) => {
 
 class TestedClass {}
 
-describe('Reflector Service Spec', () => {
+describe('Reflector Service TestBed', () => {
   const getMetadataStub = jest.fn();
   let reflector: ReflectorService;
 

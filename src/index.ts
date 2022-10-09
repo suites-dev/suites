@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-export * from './lib/spec-factory';
-export * from './lib/unit-resolver';
+export * from './lib/testbed-factory';
+export * from './lib/test-bed-resolver';
 export * from './lib/types';
 export * from './lib/reflectable.decorator';

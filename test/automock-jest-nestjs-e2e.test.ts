@@ -7,16 +7,16 @@ import {
   TestClassThree,
   TestClassTwo,
 } from './spec-assets';
-import { Spec, TestingUnit, UnitResolver } from '../src';
+import { TestBed, UnitTestBed, TestBedResolver } from '../src';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('AutoMock NestJS E2E Test', () => {
-  let unit: TestingUnit<NestJSTestClass>;
-  let unitBuilder: UnitResolver<NestJSTestClass>;
+  let unit: UnitTestBed<NestJSTestClass>;
+  let unitResolver: TestBedResolver<NestJSTestClass>;
 
   describe('given a unit testing builder with two overrides', () => {
     beforeAll(() => {
-      unitBuilder = Spec.create<NestJSTestClass>(NestJSTestClass)
+      unitResolver = TestBed.create<NestJSTestClass>(NestJSTestClass)
         .mock(TestClassOne)
         .using({
           async foo(): Promise<string> {
@@ -32,7 +32,7 @@ describe('AutoMock NestJS E2E Test', () => {
     });
 
     describe('when compiling the builder and turning into testing unit', () => {
-      beforeAll(() => (unit = unitBuilder.compile()));
+      beforeAll(() => (unit = unitResolver.compile()));
 
       test('then return an actual instance of the injectable class', () => {
         expect(unit).toHaveProperty('unit');

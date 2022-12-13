@@ -34,7 +34,7 @@ describe('Reflector Service TestBed', () => {
 
   describe('scenario: successfully reflecting dependencies and tokens', () => {
     describe('when not overriding any of the class dependencies', () => {
-      let result: Map<string | Type<unknown>, Type<unknown>>;
+      let result: Map<string | Type<unknown>, string | Type<unknown>>;
 
       beforeAll(() => {
         getMetadataStub.mockImplementation(VALID_IMPL);

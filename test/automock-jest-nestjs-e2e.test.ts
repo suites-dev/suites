@@ -15,20 +15,22 @@ describe('AutoMock NestJS E2E Test', () => {
   let unitResolver: TestBedResolver<NestJSTestClass>;
 
   describe('given a unit testing builder with two overrides', () => {
+    const loggerMock = {
+      log() {
+        return 'baz-from-test';
+      },
+    };
+    const testClassOneMock: { foo?: ((flag: boolean) => Promise<string>) | undefined; } = {
+      async foo(): Promise<string> {
+        return 'foo-from-test';
+      },
+    };
     beforeAll(() => {
       unitResolver = TestBed.create<NestJSTestClass>(NestJSTestClass)
         .mock(TestClassOne)
-        .using({
-          async foo(): Promise<string> {
-            return 'foo-from-test';
-          },
-        })
+        .using(testClassOneMock)
         .mock<Logger>('LOGGER')
-        .using({
-          log() {
-            return 'baz-from-test';
-          },
-        });
+        .using(loggerMock);
     });
 
     describe('when compiling the builder and turning into testing unit', () => {
@@ -42,11 +44,11 @@ describe('AutoMock NestJS E2E Test', () => {
       test('then successfully resolve the dependencies of the tested classes', () => {
         const { unitRef } = unit;
 
-        expect(unitRef.get(TestClassOne)).toBeDefined();
+        expect(unitRef.get(TestClassOne).foo).toBe(testClassOneMock.foo);
         expect(unitRef.get(TestClassTwo)).toBeDefined();
         expect(unitRef.get(getRepositoryToken(Foo) as string)).toBeDefined();
         expect(unitRef.get(getRepositoryToken(Bar) as string)).toBeDefined();
-        expect(unitRef.get('LOGGER')).toBeDefined();
+        expect(unitRef.get<{ log: () => void }>('LOGGER').log).toBe(loggerMock.log);
         expect(unitRef.get(TestClassThree)).toBeDefined();
       });
 

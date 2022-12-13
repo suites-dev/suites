@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { DeepPartial } from 'ts-essentials';
 import { MockFunction, Override, UnitTestBed, Type } from './types';
 import { MockResolver } from './mock-resolver';
-import { ReflectorService } from './reflector.service';
+import { ReflectorService, TokenOrType } from './reflector.service';
 
 import Mocked = jest.Mocked;
 
@@ -28,7 +28,7 @@ export interface TestBedResolver<TClass = any> {
 }
 
 export class TestBedResolver<TClass = any> {
-  private readonly dependencies = new Map<Type | string, DeepPartial<unknown>>();
+  private readonly dependencies = new Map<TokenOrType, Type<unknown>>();
   private readonly depNamesToMocks = new Map<Type | string, Mocked<any>>();
 
   public constructor(

@@ -29,7 +29,7 @@
     "index.ts",
     "node_modules",
     "dist",
-    "test",
+    "packages/jest/test",
     "env",
     "coverage"
   ]

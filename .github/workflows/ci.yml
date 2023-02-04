@@ -1,50 +1,121 @@
-name: CI
+name: Continuous Integration
 on:
   pull_request:
-  push:
     branches:
       - master
 
 jobs:
-  build-and-test:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    name: Build & Test
-
+  build:
+    name: Build
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
-
+        node-version: [14.x, 16.x, 18.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
+        uses: actions/checkout@v3
 
-      - name: Use NodeJS ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Yarn
-        run: yarn
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Lint
-        run: yarn lint
+      - name: Yarn
+        run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Build
         run: yarn build
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Yarn
+        run: yarn --frozen-lockfile && lerna bootstrap --ci
+
+      - name: Lint
+        run: yarn Lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+        jest-project: ['jest', 'sinon']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Yarn
+        run: yarn --frozen-lockfile && lerna bootstrap --ci
+
       - name: Test
-        run: yarn test:ci
+        run: yarn jest --selectProjects ${{ matrix.jest-project }} --coverage
+        env:
+          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-project }}
+          JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-project }}.xml
+
+      - name: Tests Results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          reporter: 'jest-junit'
+          name: Tests Results (Node ${{ matrix.node_version }} - Project ${{ matrix.jest-project }})
+          path: test-reports/${{ matrix.jest-project }}.xml
+          fail-on-error: false
+
+      - name: Coverage Report Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage/${{ matrix.jest-project }}.xml
+
+  upload-coverage:
+    name: Upload Coverage Report
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: coverage
+          path: coverage
 
       - name: Upload Report to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: ./coverage
-          fail_ci_if_error: false
-          files: ./coverage/cobertura-coverage.xml
           name: codecov-umbrella
-          verbose: false
+          flags: jest,sinon
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          directory: coverage
+          files: ./coverage/jest.xml,./coverage/sinon.xml
+          verbose: true

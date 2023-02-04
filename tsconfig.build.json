@@ -11,7 +11,6 @@
     "sample",
     "spec-assets.ts",
     "node_modules",
-    "test",
     "dist",
     "**/*test.ts",
     "**/*spec.ts",

@@ -1,10 +1,26 @@
 import type { Config } from '@jest/types';
-import base from './jest.base.config';
 
-export default async (): Promise<Config.InitialOptions> => {
+export default async (coverageFileName = 'coverage-report'): Promise<Config.InitialOptions> => {
   return {
-    ...base,
-    roots: ['<rootDir>'],
-    projects: ['<rootDir>/packages/jest'],
+    preset: 'ts-jest',
+    roots: ['<rootDir>/packages/jest/src', '<rootDir>/packages/jest/test'],
+    rootDir: '.',
+    moduleFileExtensions: ['js', 'json', 'ts'],
+    testRegex: '.(spec|test).ts$',
+    transform: {
+      '^.+\\.(t|j)s$': 'ts-jest',
+    },
+    coveragePathIgnorePatterns: ['/node_modules/', 'spec-assets.ts', 'spec-assets.js'],
+    testPathIgnorePatterns: ['/node_modules/'],
+    coverageDirectory: './coverage',
+    coverageReporters: ['text', ['cobertura', { file: `${coverageFileName}.xml` }]],
+    testEnvironment: 'node',
+    reporters: ['default', 'jest-junit'],
+    testResultsProcessor: 'jest-junit',
+    globals: {
+      'ts-jest': {
+        isolatedModules: true,
+      },
+    },
   };
 };

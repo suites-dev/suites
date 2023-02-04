@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jest-project: ['jest']
+        jest-projects: ['jest']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -76,25 +76,25 @@ jobs:
         run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Test
-        run: yarn jest test --coverage --verbose
+        run: yarn jest --selectProjects ${{ matrix.jest-projects }} --coverage --verbose
         env:
-          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-project }}
-          JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-project }}.xml
+          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-projects }}
+          JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-projects }}.xml
 
       - name: Tests Results
         uses: dorny/test-reporter@v1
         if: always()
         with:
           reporter: 'jest-junit'
-          name: Tests Results (${{ matrix.jest-project }})
-          path: test-reports/${{ matrix.jest-project }}.xml
+          name: Tests Results (${{ matrix.jest-projects }})
+          path: test-reports/${{ matrix.jest-projects }}.xml
           fail-on-error: false
 
       - name: Coverage Report Artifact
         uses: actions/upload-artifact@v3
         with:
           name: coverage
-          path: coverage/${{ matrix.jest-project }}.xml
+          path: coverage/${{ matrix.jest-projects }}.xml
 
   upload-coverage:
     name: Upload Coverage Report

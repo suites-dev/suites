@@ -67,16 +67,16 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+#      - uses: actions/cache@v2
+#        with:
+#          path: '**/node_modules'
+#          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
         run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Test
-        run: yarn jest --selectProjects ${{ matrix.jest-project }} --coverage
+        run: yarn jest --selectProjects ${{ matrix.jest-project }} --coverage --verbose
         env:
           COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-project }}
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-project }}.xml

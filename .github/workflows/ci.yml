@@ -73,7 +73,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
-        run: yarn && lerna bootstrap --ci
+        run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Test
         run: yarn jest --selectProjects ${{ matrix.jest-project }} --coverage --verbose --detectOpenHandles --forceExit

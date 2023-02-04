@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jest-project: ['@automock/jest']
+        jest-project: ['jest']
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -1,5 +1,4 @@
 import type { Config } from '@jest/types';
-import { name } from './package.json';
 import base from '../../jest.config';
 
 export default async (): Promise<Config.InitialOptions> => {
@@ -9,8 +8,8 @@ export default async (): Promise<Config.InitialOptions> => {
 
   return {
     ...baseConfig,
-    name,
-    displayName: name,
+    name: 'jest',
+    displayName: 'jest',
     collectCoverageFrom: ['src/**/*.ts', 'test/**/*.ts'],
     coveragePathIgnorePatterns: ['index.ts', 'spec-assets.ts'],
   };

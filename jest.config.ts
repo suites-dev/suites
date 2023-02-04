@@ -3,7 +3,7 @@ import type { Config } from '@jest/types';
 export default async (coverageFileName = 'coverage-report'): Promise<Config.InitialOptions> => {
   return {
     preset: 'ts-jest',
-    roots: ['<rootDir>/packages/jest/src', '<rootDir>/packages/jest/test'],
+    roots: ['<rootDir>'],
     rootDir: '.',
     moduleFileExtensions: ['js', 'json', 'ts'],
     testRegex: '.(spec|test).ts$',
@@ -22,5 +22,6 @@ export default async (coverageFileName = 'coverage-report'): Promise<Config.Init
         isolatedModules: true,
       },
     },
+    projects: ['<rootDir>/packages/jest'],
   };
 };

@@ -76,9 +76,7 @@ jobs:
         run: yarn && lerna bootstrap --ci
 
       - name: Test
-        run: |
-          npx browserslist@latest --update-db &&
-          yarn jest --selectProjects ${{ matrix.jest-project }} --coverage --verbose
+        run: yarn jest --selectProjects ${{ matrix.jest-project }} --coverage --verbose --detectOpenHandles --forceExit
         env:
           COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-project }}
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-project }}.xml

@@ -90,24 +90,6 @@ jobs:
           path: test-reports/${{ matrix.jest-projects }}.xml
           fail-on-error: false
 
-      - name: Coverage Report Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage
-          path: coverage
-
-  upload-coverage:
-    name: Upload Coverage Report
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: coverage
-          path: coverage
-
       - name: Upload Report to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -116,5 +98,4 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           directory: coverage
-          files: ./coverage/jest.xml
           verbose: true

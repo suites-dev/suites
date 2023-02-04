@@ -94,7 +94,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: coverage
-          path: coverage/${{ matrix.jest-projects }}.xml
+          path: coverage
 
   upload-coverage:
     name: Upload Coverage Report

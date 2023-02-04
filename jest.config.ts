@@ -1,6 +1,6 @@
 import type { Config } from '@jest/types';
 
-export default async (coverageFileName = 'coverage-report'): Promise<Config.InitialOptions> => {
+export default async (): Promise<Config.InitialOptions> => {
   return {
     preset: 'ts-jest',
     roots: ['<rootDir>'],
@@ -13,7 +13,7 @@ export default async (coverageFileName = 'coverage-report'): Promise<Config.Init
     coveragePathIgnorePatterns: ['/node_modules/', 'spec-assets.ts', 'spec-assets.js'],
     testPathIgnorePatterns: ['/node_modules/'],
     coverageDirectory: './coverage',
-    coverageReporters: ['text', ['cobertura', { file: `${coverageFileName}.xml` }]],
+    coverageReporters: ['text', ['cobertura', { file: 'coverage-report.xml' }]],
     testEnvironment: 'node',
     reporters: ['default', 'jest-junit'],
     testResultsProcessor: 'jest-junit',

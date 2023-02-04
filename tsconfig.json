@@ -16,8 +16,8 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "types": [
-      "node",
-      "jest"
+      "jest",
+      "node"
     ],
     "lib": [
       "es6",

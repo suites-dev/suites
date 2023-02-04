@@ -66,5 +66,13 @@
     "*.ts": [
       "eslint --ext .ts --fix"
     ]
+  },
+  "jest-junit": {
+    "outputDirectory": "test-reports",
+    "ancestorSeparator": " › ",
+    "uniqueOutputName": "false",
+    "suiteNameTemplate": "{filepath}",
+    "classNameTemplate": "{classname}",
+    "titleTemplate": "{title}"
   }
 }

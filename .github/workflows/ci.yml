@@ -76,7 +76,7 @@ jobs:
         run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Test
-        run: yarn jest --selectProjects ${{ matrix.jest-project }} --coverage --verbose --detectOpenHandles --forceExit
+        run: yarn jest test --coverage --verbose
         env:
           COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-project }}
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-project }}.xml

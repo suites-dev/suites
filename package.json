@@ -24,7 +24,9 @@
     }
   ],
   "scripts": {
-    "build": "yarn lerna run build"
+    "build": "yarn lerna run build",
+    "test": "yarn jest",
+    "lint": "yarn lerna run lint --parallel"
   },
   "dependencies": {
     "@commitlint/cli": "^11.0.0",
@@ -64,5 +66,8 @@
     "*.ts": [
       "eslint --ext .ts --fix"
     ]
+  },
+  "devDependencies": {
+    "jest-junit": "^15.0.0"
   }
 }

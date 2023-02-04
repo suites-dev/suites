@@ -57,8 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
-        jest-project: ['jest', 'sinon']
+        jest-project: ['@automock/jest']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -87,7 +86,7 @@ jobs:
         if: always()
         with:
           reporter: 'jest-junit'
-          name: Tests Results (Node ${{ matrix.node_version }} - Project ${{ matrix.jest-project }})
+          name: Tests Results (${{ matrix.jest-project }})
           path: test-reports/${{ matrix.jest-project }}.xml
           fail-on-error: false
 
@@ -113,9 +112,9 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest,sinon
+          flags: jest
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           directory: coverage
-          files: ./coverage/jest.xml,./coverage/sinon.xml
+          files: ./coverage/jest.xml
           verbose: true

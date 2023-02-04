@@ -5,6 +5,6 @@ export default async (): Promise<Config.InitialOptions> => {
   return {
     ...base,
     roots: ['<rootDir>'],
-    projects: ['<rootDir>/packages/jest', '<rootDir>/packages/sinon'],
+    projects: ['<rootDir>/packages/jest'],
   };
 };

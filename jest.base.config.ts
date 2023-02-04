@@ -4,8 +4,8 @@ export default async (coverageFileName = 'coverage-report'): Promise<Config.Init
   return {
     roots: ['<rootDir>/src', '<rootDir>/test'],
     rootDir: '.',
-    moduleFileExtensions: ['json', 'ts'],
-    testRegex: '.spec.ts$',
+    moduleFileExtensions: ['js', 'json', 'ts'],
+    testRegex: '.(spec|test).ts$',
     transform: {
       '^.+\\.(t|j)s$': 'ts-jest',
     },

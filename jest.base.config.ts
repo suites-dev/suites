@@ -12,7 +12,10 @@ export default async (coverageFileName = 'coverage-report'): Promise<Config.Init
     coveragePathIgnorePatterns: ['/node_modules/', 'spec-assets.ts', 'spec-assets.js'],
     testPathIgnorePatterns: ['/node_modules/', 'sample'],
     coverageDirectory: './coverage',
-    coverageReporters: ['text', ['cobertura', { file: `${coverageFileName}.xml` }]],
+    coverageReporters: [
+      'text',
+      ['cobertura', { file: `${coverageFileName.replace('/', '-')}.xml` }],
+    ],
     testEnvironment: 'node',
     reporters: ['default', 'jest-junit'],
     testResultsProcessor: 'jest-junit',

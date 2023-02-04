@@ -9,6 +9,7 @@ export default async (): Promise<Config.InitialOptions> => {
 
   return {
     ...baseConfig,
+    name,
     displayName: name,
     collectCoverageFrom: ['src/**/*.ts', 'test/**/*.ts'],
     coveragePathIgnorePatterns: ['index.ts', 'spec-assets.ts'],

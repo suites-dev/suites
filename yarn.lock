@@ -1507,7 +1507,7 @@
     jju "^1.4.0"
     read-yaml-file "^1.1.0"
 
-"@nestjs/common@^8.x.x":
+"@nestjs/common@^8.4.7":
   version "8.4.7"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-8.4.7.tgz#fc4a575b797e230bb5a0bcab6da8b796aa88d605"
   integrity sha512-m/YsbcBal+gA5CFrDpqXqsSfylo+DIQrkFY3qhVIltsYRfu8ct8J9pqsTO6OPf3mvqdOpFGrV5sBjoyAzOBvsw==
@@ -1517,7 +1517,7 @@
     tslib "2.4.0"
     uuid "8.3.2"
 
-"@nestjs/core@^8.x.x":
+"@nestjs/core@^8.4.7":
   version "8.4.7"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-8.4.7.tgz#fbec7fa744ac8749a4b966f759a6656c1cf43883"
   integrity sha512-XB9uexHqzr2xkPo6QSiQWJJttyYYLmvQ5My64cFvWFi7Wk2NIus0/xUNInwX3kmFWB6pF1ab5Y2ZBvWdPwGBhw==
@@ -1530,7 +1530,7 @@
     tslib "2.4.0"
     uuid "8.3.2"
 
-"@nestjs/typeorm@^8.x.x":
+"@nestjs/typeorm@^8.1.4":
   version "8.1.4"
   resolved "https://registry.yarnpkg.com/@nestjs/typeorm/-/typeorm-8.1.4.tgz#ab2286b39b69d1ce74e039d1847708d56c2c3e60"
   integrity sha512-hKv0Y9PG7YkHQfjsrNqM1s/VajlT7Mla8gaoblmuLzgMKsOQFsZXSHlXNxXZ8CA4aCPeDUiXtvqc4zocadGiIQ==

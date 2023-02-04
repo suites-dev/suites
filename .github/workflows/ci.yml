@@ -65,7 +65,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.15.0'
+          node-version: '16.18.0'
 
       - uses: actions/cache@v2
         with:
@@ -76,7 +76,9 @@ jobs:
         run: yarn && lerna bootstrap --ci
 
       - name: Test
-        run: yarn jest --selectProjects ${{ matrix.jest-project }} --coverage --verbose
+        run: |
+          npx browserslist@latest --update-db \
+          yarn jest --selectProjects ${{ matrix.jest-project }} --coverage --verbose
         env:
           COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-project }}
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-project }}.xml

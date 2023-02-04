@@ -50,7 +50,7 @@ jobs:
         run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Lint
-        run: yarn Lint
+        run: yarn lint
 
   test:
     name: Test

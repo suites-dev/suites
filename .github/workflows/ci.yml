@@ -77,7 +77,7 @@ jobs:
 
       - name: Test
         run: |
-          npx browserslist@latest --update-db \
+          npx browserslist@latest --update-db &&
           yarn jest --selectProjects ${{ matrix.jest-project }} --coverage --verbose
         env:
           COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-project }}

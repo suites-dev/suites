@@ -1,0 +1,54 @@
+name: Set Coverage
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jest-projects: ['jest']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.18.0'
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Yarn
+        run: yarn --frozen-lockfile && lerna bootstrap --ci
+
+      - name: Test
+        run: yarn jest --selectProjects ${{ matrix.jest-projects }} --coverage --verbose
+        env:
+          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-projects }}
+          JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-projects }}.xml
+
+      - name: Tests Results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          reporter: 'jest-junit'
+          name: Tests Results (${{ matrix.jest-projects }})
+          path: test-reports/${{ matrix.jest-projects }}.xml
+          fail-on-error: false
+
+      - name: Upload Report to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          name: codecov-umbrella
+          flags: jest
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          directory: coverage
+          verbose: true

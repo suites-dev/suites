@@ -7,7 +7,6 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 jobs:
   version-packages:
@@ -44,7 +43,7 @@ jobs:
           --conventional-commits \
           --conventional-prerelease
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Create PR Comment
         uses: actions-ecosystem/action-create-comment@v1

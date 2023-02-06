@@ -20,7 +20,7 @@ describe('AutoMock NestJS E2E Test', () => {
         return 'baz-from-test';
       },
     };
-    const testClassOneMock: { foo?: ((flag: boolean) => Promise<string>) | undefined; } = {
+    const testClassOneMock: { foo?: ((flag: boolean) => Promise<string>) | undefined } = {
       async foo(): Promise<string> {
         return 'foo-from-test';
       },

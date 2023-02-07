@@ -11,12 +11,11 @@
   <h1 align="center">Automock</h1>
 
   <h3 align="center">
-    Standalone Library for Class Dependencies Auto Mocking (TypeScript Based)
+    Standalone Library for Automated Class Dependencies Mocking
   </h3>
 
   <h4 align="center">
-    Write solitary unit tests rapidly and easily, with total isolation
-    of external class dependencies
+    Write unit tests quickly and easily, with complete isolation of external class dependencies.
   </h4>
 </p>
 
@@ -31,34 +30,13 @@ the principles of dependency injection and inversion of control. Automock
 could be extremely useful with these frameworks and integrates easily with
 them.
 
-**Some well-known supported frameworks are: NestJS, Ts.ED, TypeDI and Angular.**
-
 ## Installation
 ```bash
 npm i -D @automock/jest
 ```
 
-Jest is the only test framework currently supported by Automock.
+> Jest is the only test framework currently supported by Automock.
 Sinon will shortly be released.
-
-## Prerequisites
-* Automock can be used if the framework you're working with supports
-dependency injection (or you either implementing it manually by yourself).
-
-* The dependency injection engine makes use of class constructor injection.
-
-<details><summary><strong>💡 More about IoC and DI</strong></summary><p>
-Inversion of Control (IoC) and dependency injection (DI) are used interchangeably.
-IoC is achieved through DI. DI is the process of providing dependencies and IoC is
-the end result of DI. Usually, IoC containers enforces the DI pattern for different
-components, and this leaves them loosely coupled and allows you to code to
-abstractions.
-
-Dependency injection is a style of object configuration in which an object's fields
-and collaborators are set by an external entity. In other words, objects are
-configured by an external entity. Dependency injection is an alternative to having
-the object configure itself.
-</p></details>
 
 ## 🤔 Problem(s)
 Consider the following class and interface:

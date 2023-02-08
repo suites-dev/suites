@@ -1,12 +1,9 @@
-import { Type } from './types';
+import { ClassDependencies, CustomInjectableToken, Type, ConstructorParam } from '../types';
 
-export interface CustomToken {
+interface CustomToken {
   index: number;
-  param: Type | { forwardRef: () => Type } | string;
+  param: ConstructorParam;
 }
-
-export type TokenOrType = string | Type<unknown>;
-export type ClassDependencies = Map<TokenOrType, Type<unknown>>;
 
 export class ReflectorService {
   private static readonly INJECTED_TOKENS_METADATA = 'self:paramtypes';
@@ -15,7 +12,7 @@ export class ReflectorService {
   public constructor(private readonly reflector: typeof Reflect) {}
 
   public reflectDependencies(targetClass: Type): ClassDependencies {
-    const classDependencies = new Map<TokenOrType, Type<unknown>>();
+    const classDependencies = new Map<Type | string, Type>();
 
     const types = this.reflectParamTypes(targetClass);
     const tokens = this.reflectParamTokens(targetClass);
@@ -26,17 +23,20 @@ export class ReflectorService {
 
       if (token) {
         const ref = ReflectorService.resolveRefFromToken(token);
+
         if (isObjectType) {
           if (typeof ref !== 'string') {
             classDependencies.set(ref, ref);
             return;
           }
         }
+
         if (type) {
           classDependencies.set(ref, type);
           return;
         }
       }
+
       if (type && !isObjectType) {
         classDependencies.set(type, type);
         return;
@@ -54,19 +54,16 @@ export class ReflectorService {
     return this.reflector.getMetadata(ReflectorService.INJECTED_TOKENS_METADATA, targetClass) || [];
   }
 
-  private reflectParamTypes(targetClass: Type): Array<Type | undefined> {
+  private reflectParamTypes(targetClass: Type): (Type | undefined)[] {
     return this.reflector.getMetadata(ReflectorService.PARAM_TYPES_METADATA, targetClass) || [];
   }
 
-  private static findToken(list: CustomToken[], index: number): Token | undefined {
+  private static findToken(list: CustomToken[], index: number): ConstructorParam | undefined {
     const record = list.find((element) => element.index === index);
-
     return record?.param;
   }
 
-  private static resolveRefFromToken(token: Token): string | Type<any> {
+  private static resolveRefFromToken(token: CustomInjectableToken | Type): string | Type {
     return typeof token === 'object' && 'forwardRef' in token ? token.forwardRef() : token;
   }
 }
-
-type Token = Type | { forwardRef: () => Type } | string;

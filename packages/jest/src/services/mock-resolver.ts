@@ -1,4 +1,4 @@
-import { Type } from './types';
+import { Type } from '../types';
 import Mocked = jest.Mocked;
 
 export class MockResolver {

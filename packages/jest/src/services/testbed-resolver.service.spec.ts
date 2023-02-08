@@ -1,7 +1,7 @@
 import assert from 'assert';
-import { TestBedResolver } from './test-bed-resolver';
+import { TestbedResolver } from './testbed-resolver.service';
 import { MainTestClass, TestClassOne, TestClassTwo } from '../../test/spec-assets';
-import { UnitTestBed } from './types';
+import { UnitTestbed } from '../types';
 import { ReflectorService } from './reflector.service';
 
 describe('Unit Builder TestBed', () => {
@@ -15,7 +15,7 @@ describe('Unit Builder TestBed', () => {
     const createMockFn = jest.fn().mockImplementation((partial) => partial || 'MOCKED');
 
     const createBuilder = () =>
-      new TestBedResolver<MainTestClass>(
+      new TestbedResolver<MainTestClass>(
         new ReflectorService(reflectorMock),
         createMockFn,
         MainTestClass
@@ -24,7 +24,7 @@ describe('Unit Builder TestBed', () => {
     const bar = async (): Promise<string> => 'from-test';
 
     describe('scenario: do not mock the implementation of any of the dependencies', () => {
-      let testingUnit: UnitTestBed<MainTestClass>;
+      let testingUnit: UnitTestbed<MainTestClass>;
 
       describe('when not overriding any of the class dependencies', () => {
         beforeAll(() => {

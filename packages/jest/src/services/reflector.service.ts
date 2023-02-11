@@ -1,51 +1,36 @@
-import { ClassDependencies, CustomInjectableToken, Type, ConstructorParam } from '../types';
-
-interface CustomToken {
-  index: number;
-  param: ConstructorParam;
-}
+import { ClassDependencies, Type } from '../types';
+import { CustomToken, TokensReflector } from './token-reflector.module';
 
 export class ReflectorService {
   private static readonly INJECTED_TOKENS_METADATA = 'self:paramtypes';
   private static readonly PARAM_TYPES_METADATA = 'design:paramtypes';
 
-  public constructor(private readonly reflector: typeof Reflect) {}
+  public constructor(
+    private readonly reflector: typeof Reflect,
+    private readonly tokensReflector: TokensReflector
+  ) {}
 
   public reflectDependencies(targetClass: Type): ClassDependencies {
-    const classDependencies = new Map<Type | string, Type>();
-
     const types = this.reflectParamTypes(targetClass);
     const tokens = this.reflectParamTokens(targetClass);
+    const classDependencies: ClassDependencies = new Map<Type | string, Type>();
 
-    types.forEach((type, index) => {
-      const token = ReflectorService.findToken(tokens, index);
-      const isObjectType = type && type.name === 'Object';
+    const callback = this.tokensReflector.attachTokenToDependency(tokens);
 
-      if (token) {
-        const ref = ReflectorService.resolveRefFromToken(token);
-
-        if (isObjectType) {
-          if (typeof ref !== 'string') {
-            classDependencies.set(ref, ref);
-            return;
-          }
+    types
+      .map((typeOrUndefined, index) => {
+        try {
+          return callback(typeOrUndefined, index);
+        } catch (error) {
+          throw new Error(
+            `'${targetClass.name}' is missing a token for the dependency at index [${index}], did you forget to inject it using @Inject()?`
+          );
         }
-
-        if (type) {
-          classDependencies.set(ref, type);
-          return;
-        }
-      }
-
-      if (type && !isObjectType) {
-        classDependencies.set(type, type);
-        return;
-      }
-
-      throw new Error(
-        `'${targetClass.name}' is missing a token for the dependency at index [${index}], did you forget to inject it using @Inject()?`
-      );
-    });
+      })
+      .forEach((tuple) => {
+        const [typeOrToken, type] = tuple;
+        classDependencies.set(typeOrToken, type);
+      });
 
     return classDependencies;
   }
@@ -56,14 +41,5 @@ export class ReflectorService {
 
   private reflectParamTypes(targetClass: Type): (Type | undefined)[] {
     return this.reflector.getMetadata(ReflectorService.PARAM_TYPES_METADATA, targetClass) || [];
-  }
-
-  private static findToken(list: CustomToken[], index: number): ConstructorParam | undefined {
-    const record = list.find((element) => element.index === index);
-    return record?.param;
-  }
-
-  private static resolveRefFromToken(token: CustomInjectableToken | Type): string | Type {
-    return typeof token === 'object' && 'forwardRef' in token ? token.forwardRef() : token;
   }
 }

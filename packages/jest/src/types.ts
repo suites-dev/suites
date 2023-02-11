@@ -20,5 +20,4 @@ export type ForwardRefToken = { forwardRef: () => Type };
 export type CustomInjectableToken = ForwardRefToken | string;
 export type ConstructorParam = Type | CustomInjectableToken;
 export type ClassDependencies = Map<Type | string, Type>;
-
 export type MockFunction = typeof mock;

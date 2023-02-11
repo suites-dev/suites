@@ -6,7 +6,7 @@ import {
   TestClassOne,
   TestClassThree,
   TestClassTwo,
-} from './spec-assets';
+} from './testing-classes.assets';
 import { TestBed, UnitTestbed, TestbedResolver } from '../src';
 import { getRepositoryToken } from '@nestjs/typeorm';
 

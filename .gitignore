@@ -36,3 +36,4 @@ lerna-debug.log*
 .npmrc
 junit.xml
 .gitconfig
+test-reports

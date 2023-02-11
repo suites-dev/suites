@@ -1,10 +1,11 @@
 import assert from 'assert';
 import { TestbedResolver } from './testbed-resolver.service';
-import { MainTestClass, TestClassOne, TestClassTwo } from '../../test/spec-assets';
+import { MainTestClass, TestClassOne, TestClassTwo } from '../../__test__/testing-classes.assets';
 import { UnitTestbed } from '../types';
 import { ReflectorService } from './reflector.service';
+import { TokensReflector } from './token-reflector.module';
 
-describe('Unit Builder TestBed', () => {
+describe('Unit Builder Spec', () => {
   describe('given a DependenciesBuilder', () => {
     const TESTED_CLASS_DEPENDENCIES = [TestClassOne, TestClassTwo];
 
@@ -16,7 +17,7 @@ describe('Unit Builder TestBed', () => {
 
     const createBuilder = () =>
       new TestbedResolver<MainTestClass>(
-        new ReflectorService(reflectorMock),
+        new ReflectorService(reflectorMock, TokensReflector()),
         createMockFn,
         MainTestClass
       );

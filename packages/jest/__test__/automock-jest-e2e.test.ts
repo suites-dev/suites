@@ -1,4 +1,4 @@
-import { Logger, MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from './spec-assets';
+import { Logger, MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from './testing-classes.assets';
 import { TestBed, UnitTestbed, TestbedResolver } from '../src';
 
 describe('AutoMock E2E Test', () => {

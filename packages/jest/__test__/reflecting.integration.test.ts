@@ -1,6 +1,7 @@
-import { CustomToken, ReflectorService } from './reflector.service';
-import { TestClassOne } from '../../test/spec-assets';
-import { Type } from './types';
+import { CustomToken, TokensReflector } from '../src/services/token-reflector.module';
+import { ReflectorService } from '../src/services/reflector.service';
+import { TestClassOne } from './testing-classes.assets';
+import { Type } from '../src/types';
 
 import Mocked = jest.Mocked;
 
@@ -27,9 +28,10 @@ describe('Reflector Service TestBed', () => {
   let reflector: ReflectorService;
 
   beforeAll(() => {
-    reflector = new ReflectorService({ getMetadata: getMetadataStub } as unknown as Mocked<
-      typeof Reflect
-    >);
+    reflector = new ReflectorService(
+      { getMetadata: getMetadataStub } as unknown as Mocked<typeof Reflect>,
+      TokensReflector()
+    );
   });
 
   describe('scenario: successfully reflecting dependencies and tokens', () => {

@@ -8,11 +8,8 @@
   },
   "exclude": [
     "node_modules",
-    "test",
-    "src/**/*.spec.ts",
+    "__test__",
+    "**/*.spec.ts",
     "jest.config.ts"
-  ],
-  "include": [
-    "src"
   ]
 }

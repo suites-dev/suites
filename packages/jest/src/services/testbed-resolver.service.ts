@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { DeepPartial } from 'ts-essentials';
-import { MockFunction, Override, UnitTestBed, Type } from './types';
+import { MockFunction, Override, UnitTestbed, Type, ClassDependencies } from '../types';
 import { MockResolver } from './mock-resolver';
-import { ReflectorService, TokenOrType } from './reflector.service';
+import { ReflectorService } from './reflector.service';
 
 import Mocked = jest.Mocked;
 
-export interface TestBedResolver<TClass = any> {
+export interface TestbedResolver<TClass = any> {
   /**
    * Declares on the dependency to mock
    *
@@ -22,13 +22,13 @@ export interface TestBedResolver<TClass = any> {
   /**
    * Compiles the unit and creates new testing unit
    *
-   * @return UnitTestBed
+   * @return UnitTestbed
    */
-  compile(): UnitTestBed<TClass>;
+  compile(): UnitTestbed<TClass>;
 }
 
-export class TestBedResolver<TClass = any> {
-  private readonly dependencies = new Map<TokenOrType, Type<unknown>>();
+export class TestbedResolver<TClass = any> {
+  private readonly dependencies: ClassDependencies = new Map<Type | string, Type>();
   private readonly depNamesToMocks = new Map<Type | string, Mocked<any>>();
 
   public constructor(
@@ -43,14 +43,14 @@ export class TestBedResolver<TClass = any> {
   public mock<T = any>(type: Type<T>): Override<T>;
   public mock<T = any>(typeOrToken: Type<T> | string): Override<T> {
     return {
-      using: (mockImplementation: DeepPartial<T>): TestBedResolver<TClass> => {
+      using: (mockImplementation: DeepPartial<T>): TestbedResolver<TClass> => {
         this.depNamesToMocks.set(typeOrToken, this.mockFn<T>(mockImplementation));
         return this;
       },
     };
   }
 
-  public compile(): UnitTestBed<TClass> {
+  public compile(): UnitTestbed<TClass> {
     const deps = this.mockUnMockedDependencies();
     const values = Array.from(deps.values());
 

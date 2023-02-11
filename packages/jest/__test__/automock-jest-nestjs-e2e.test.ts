@@ -6,13 +6,13 @@ import {
   TestClassOne,
   TestClassThree,
   TestClassTwo,
-} from './spec-assets';
-import { TestBed, UnitTestBed, TestBedResolver } from '../src';
+} from './testing-classes.assets';
+import { TestBed, UnitTestbed, TestbedResolver } from '../src';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('AutoMock NestJS E2E Test', () => {
-  let unit: UnitTestBed<NestJSTestClass>;
-  let unitResolver: TestBedResolver<NestJSTestClass>;
+  let unit: UnitTestbed<NestJSTestClass>;
+  let unitResolver: TestbedResolver<NestJSTestClass>;
 
   describe('given a unit testing builder with two overrides', () => {
     const loggerMock = {

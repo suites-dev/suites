@@ -1,0 +1,37 @@
+{
+  "name": "@automock/types",
+  "version": "1.0.0",
+  "license": "MIT",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "mock",
+    "jest",
+    "auto-mock",
+    "reflection"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omermorad/automock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/omermorad/automock/issues"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "scripts": {
+    "prebuild": "yarn rimraf dist",
+    "build": "yarn tsc -p tsconfig.build.json",
+    "test": "yarn jest",
+    "lint": "yarn eslint '{src,test}/**/*.ts'"
+  },
+  "files": [
+    "dist",
+    "index.d.ts",
+    "index.js",
+    "README.md"
+  ]
+}

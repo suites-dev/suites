@@ -30,5 +30,6 @@ jobs:
           scopes: |
             sinon
             jest
+            types
             *
           wip: true

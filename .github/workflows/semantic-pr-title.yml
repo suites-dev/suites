@@ -1,4 +1,4 @@
-name: Semantic Pull Reqest
+name: Semantic Pull Request
 
 on:
   pull_request_target:
@@ -30,5 +30,6 @@ jobs:
           scopes: |
             sinon
             jest
+            types
             *
           wip: true

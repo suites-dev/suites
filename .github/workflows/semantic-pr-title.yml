@@ -32,5 +32,5 @@ jobs:
             jest
             types
             doubles(\.)?.jest
-            \*
+            *
           wip: true

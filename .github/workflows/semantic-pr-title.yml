@@ -28,7 +28,7 @@ jobs:
             chore
             pref
           scopes: |
-            doubles.jest
+            doubles(\.)?.jest
             sinon
             jest
             types

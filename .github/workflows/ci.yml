@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jest-projects: ['jest', 'doubles']
+        jest-projects: ['jest', 'doubles.jest']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -91,7 +91,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest,doubles
+          flags: jest,doubles.jest
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           directory: coverage

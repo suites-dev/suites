@@ -1,5 +1,5 @@
 import { ClassDependencies, Type } from '../types';
-import { CustomToken, TokensReflector } from './token-reflector.module';
+import { CustomToken, TokensReflector } from './token-reflector.service';
 
 export class ReflectorService {
   private static readonly INJECTED_TOKENS_METADATA = 'self:paramtypes';

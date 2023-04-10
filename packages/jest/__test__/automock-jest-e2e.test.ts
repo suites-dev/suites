@@ -1,13 +1,19 @@
-import { Logger, MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from './testing-classes.assets';
-import { TestBed, UnitTestbed, TestbedResolver } from '../src';
+import {
+  Logger,
+  MainTestClass,
+  TestClassOne,
+  TestClassThree,
+  TestClassTwo,
+} from './testing-classes.assets';
+import { TestBed, UnitTestbed, TestbedBuilder } from '../src';
 
-describe('AutoMock E2E Test', () => {
+describe('@automock/jest e2e test', () => {
   let unit: UnitTestbed<MainTestClass>;
-  let unitBuilder: TestbedResolver<MainTestClass>;
+  let testbedBuilder: TestbedBuilder<MainTestClass>;
 
-  describe('given a unit testing builder with two overrides', () => {
+  describe('given a testbed builder with two overrides', () => {
     beforeAll(() => {
-      unitBuilder = TestBed.create<MainTestClass>(MainTestClass)
+      testbedBuilder = TestBed.create<MainTestClass>(MainTestClass)
         .mock(TestClassOne)
         .using({
           foo: (): Promise<string> => Promise.resolve('foo-from-test'),
@@ -17,7 +23,7 @@ describe('AutoMock E2E Test', () => {
     });
 
     describe('when compiling the builder and turning into testing unit', () => {
-      beforeAll(() => (unit = unitBuilder.compile()));
+      beforeAll(() => (unit = testbedBuilder.compile()));
 
       test('then return an actual instance of the injectable class', () => {
         expect(unit).toHaveProperty('unit');

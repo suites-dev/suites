@@ -30,7 +30,7 @@ export class TestClassThree {
 }
 
 export interface Logger {
-  log(): any;
+  log(): string;
 }
 
 @Reflectable()

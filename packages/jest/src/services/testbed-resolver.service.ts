@@ -1,19 +1,16 @@
 import 'reflect-metadata';
-import { DeepPartial } from 'ts-essentials';
-import { MockFunction, Override, UnitTestbed, Type, ClassDependencies } from '../types';
+import { FnPartialReturn } from '@automock/types';
 import { MockResolver } from './mock-resolver';
 import { ReflectorService } from './reflector.service';
+import { MockFunction, Override, UnitTestbed, Type, ClassDependencies } from '../types';
+import { DeepMocked } from '@automock/doubles.jest';
 
-import Mocked = jest.Mocked;
-
-export interface TestbedResolver<TClass = any> {
+export interface TestbedBuilder<TClass = any> {
   /**
    * Declares on the dependency to mock
    *
-   * @see jest-mock-extended in action {@link https://github.com/marchaos/jest-mock-extended#example}
-   *
-   * @return Override
    * @param type
+   * @return Override
    */
   mock<T = any>(type: Type<T>): Override<T>;
   mock<T = any>(token: string): Override<T>;
@@ -27,9 +24,9 @@ export interface TestbedResolver<TClass = any> {
   compile(): UnitTestbed<TClass>;
 }
 
-export class TestbedResolver<TClass = any> {
+export class TestbedBuilder<TClass = any> {
   private readonly dependencies: ClassDependencies = new Map<Type | string, Type>();
-  private readonly depNamesToMocks = new Map<Type | string, Mocked<any>>();
+  private readonly depNamesToMocks = new Map<Type | string, DeepMocked<TClass>>();
 
   public constructor(
     private readonly reflector: ReflectorService,
@@ -39,11 +36,13 @@ export class TestbedResolver<TClass = any> {
     this.dependencies = this.reflector.reflectDependencies(targetClass);
   }
 
-  public mock<T = any>(token: string): Override<T>;
-  public mock<T = any>(type: Type<T>): Override<T>;
-  public mock<T = any>(typeOrToken: Type<T> | string): Override<T> {
+  public mock<T extends Record<string | number | symbol, any> = any>(token: string): Override<T>;
+  public mock<T extends Record<string | number | symbol, any> = any>(type: Type<T>): Override<T>;
+  public mock<T extends Record<string | number | symbol, any> = any>(
+    typeOrToken: Type<T> | string
+  ): Override<T> {
     return {
-      using: (mockImplementation: DeepPartial<T>): TestbedResolver<TClass> => {
+      using: (mockImplementation: FnPartialReturn<T>): TestbedBuilder<TClass> => {
         this.depNamesToMocks.set(typeOrToken, this.mockFn<T>(mockImplementation));
         return this;
       },
@@ -60,8 +59,8 @@ export class TestbedResolver<TClass = any> {
     };
   }
 
-  private mockUnMockedDependencies(): Map<Type | string, Mocked<any>> {
-    const map = new Map<Type | string, Mocked<any>>();
+  private mockUnMockedDependencies(): Map<Type | string, DeepMocked<any>> {
+    const map = new Map<Type | string, DeepMocked<any>>();
 
     for (const [key, dependency] of this.dependencies.entries()) {
       const overriddenDep = this.depNamesToMocks.get(key);

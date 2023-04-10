@@ -36,8 +36,10 @@
     "README.md"
   ],
   "dependencies": {
-    "jest-mock-extended": "^2.0.4",
-    "ts-essentials": "^7.0.3"
+    "@automock/doubles.jest": "^1.0.0"
+  },
+  "peerDependencies": {
+    "jest": ">= 26.x"
   },
   "devDependencies": {
     "@nestjs/common": "^8.3.1",

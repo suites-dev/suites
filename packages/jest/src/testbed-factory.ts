@@ -1,19 +1,18 @@
-import { mock } from 'jest-mock-extended';
-import { TestbedResolver } from './services/testbed-resolver.service';
+import { MockFactory } from '@automock/doubles.jest';
+import { TestbedBuilder } from './services/testbed-resolver.service';
 import { Type } from './types';
 import { ReflectorService } from './services/reflector.service';
-import { TokensReflector } from './services/token-reflector.module';
+import { TokensReflector } from './services/token-reflector.service';
 
 export class TestBed {
   /**
    * @description Create new testbed builder
    *
    * @param targetClass
-   * @return TestbedResolver
+   * @return TestbedBuilder
    */
-  public static create<TClass = any>(targetClass: Type<TClass>): TestbedResolver<TClass> {
-    const reflector = new ReflectorService(Reflect, TokensReflector());
-
-    return new TestbedResolver<TClass>(reflector, mock, targetClass);
+  public static create<TClass = any>(targetClass: Type<TClass>): TestbedBuilder<TClass> {
+    const reflector = new ReflectorService(Reflect, TokensReflector);
+    return new TestbedBuilder<TClass>(reflector, MockFactory.create, targetClass);
   }
 }

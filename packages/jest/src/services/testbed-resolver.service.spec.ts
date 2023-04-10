@@ -1,9 +1,9 @@
 import assert from 'assert';
-import { TestbedResolver } from './testbed-resolver.service';
+import { TestbedBuilder } from './testbed-resolver.service';
 import { MainTestClass, TestClassOne, TestClassTwo } from '../../__test__/testing-classes.assets';
 import { UnitTestbed } from '../types';
 import { ReflectorService } from './reflector.service';
-import { TokensReflector } from './token-reflector.module';
+import { TokensReflector } from './token-reflector.service';
 
 describe('Unit Builder Spec', () => {
   describe('given a DependenciesBuilder', () => {
@@ -16,8 +16,8 @@ describe('Unit Builder Spec', () => {
     const createMockFn = jest.fn().mockImplementation((partial) => partial || 'MOCKED');
 
     const createBuilder = () =>
-      new TestbedResolver<MainTestClass>(
-        new ReflectorService(reflectorMock, TokensReflector()),
+      new TestbedBuilder<MainTestClass>(
+        new ReflectorService(reflectorMock, TokensReflector),
         createMockFn,
         MainTestClass
       );

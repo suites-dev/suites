@@ -31,6 +31,6 @@ jobs:
             sinon
             jest
             types
-            doubles.jest
+            doubles\.jest
             *
           wip: true

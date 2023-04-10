@@ -8,6 +8,10 @@ type MockObjectRecordKey = string | symbol | number;
 type MockOrDeepMock<TType> = DeepMocked<TType> | Mock<TType>;
 type MockObjectRecord<TType> = Map<MockObjectRecordKey, MockOrDeepMock<TType>>;
 
+export type MockFactory = {
+  create<TType extends Record<MockObjectRecordKey, any>>(): DeepMocked<TType>;
+};
+
 export const MockFactory = (() => {
   function createMockProxyRecursively<TType>(
     mockName: string

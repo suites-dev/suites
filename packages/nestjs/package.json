@@ -29,9 +29,6 @@
     "index.js",
     "README.md"
   ],
-  "dependencies": {
-    "@automock/core": "^1.0.0"
-  },
   "devDependencies": {
     "@nestjs/common": "^8.3.1",
     "@nestjs/core": "^8.3.1",

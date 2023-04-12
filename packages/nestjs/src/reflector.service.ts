@@ -1,9 +1,14 @@
 import { Type } from '@automock/types';
-import { ClassDependencies, Reflector } from '@automock/core';
 import { CustomToken, TokensReflector } from './token-reflector.service';
 
 const INJECTED_TOKENS_METADATA = 'self:paramtypes';
 const PARAM_TYPES_METADATA = 'design:paramtypes';
+
+interface Reflector {
+  reflectDependencies(targetClass: Type): ClassDependencies;
+}
+
+type ClassDependencies = Map<Type | string, Type>;
 
 export class ReflectorService implements Reflector {
   public constructor(

@@ -1,10 +1,11 @@
-import { ClassDependencies, Type } from '../types';
-import { CustomToken, TokensReflector } from './token-reflector.module';
+import { Type } from '@automock/types';
+import { ClassDependencies, Reflector } from '@automock/core';
+import { CustomToken, TokensReflector } from './token-reflector.service';
 
-export class ReflectorService {
-  private static readonly INJECTED_TOKENS_METADATA = 'self:paramtypes';
-  private static readonly PARAM_TYPES_METADATA = 'design:paramtypes';
+const INJECTED_TOKENS_METADATA = 'self:paramtypes';
+const PARAM_TYPES_METADATA = 'design:paramtypes';
 
+export class ReflectorService implements Reflector {
   public constructor(
     private readonly reflector: typeof Reflect,
     private readonly tokensReflector: TokensReflector
@@ -36,10 +37,10 @@ export class ReflectorService {
   }
 
   private reflectParamTokens(targetClass: Type): CustomToken[] {
-    return this.reflector.getMetadata(ReflectorService.INJECTED_TOKENS_METADATA, targetClass) || [];
+    return this.reflector.getMetadata(INJECTED_TOKENS_METADATA, targetClass) || [];
   }
 
   private reflectParamTypes(targetClass: Type): (Type | undefined)[] {
-    return this.reflector.getMetadata(ReflectorService.PARAM_TYPES_METADATA, targetClass) || [];
+    return this.reflector.getMetadata(PARAM_TYPES_METADATA, targetClass) || [];
   }
 }

@@ -1,4 +1,5 @@
-import { ConstructorParam, CustomInjectableToken, Type } from '../types';
+import { Type } from '@automock/types';
+import { ConstructorParam, CustomInjectableToken } from './types';
 
 export interface CustomToken {
   index: number;
@@ -11,7 +12,7 @@ export type TokensReflector = {
   ): (typeOrUndefined: Type | string | undefined, index: number) => [string | Type, Type];
 };
 
-export const TokensReflector = (): TokensReflector => {
+export const TokensReflector = (function (): TokensReflector {
   function lookupTokenInParams(tokens: CustomToken[], index: number): ConstructorParam | undefined {
     const record = tokens.find((token) => token.index === index);
     return record?.param;
@@ -49,4 +50,4 @@ export const TokensReflector = (): TokensReflector => {
   return {
     attachTokenToDependency,
   };
-};
+})();

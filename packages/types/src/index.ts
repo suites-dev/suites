@@ -13,3 +13,7 @@ export type FnPartialReturn<Type> = {
     ? (...args: Args) => FnPartialReturn<U>
     : DeepPartial<Type[Key]>;
 };
+
+export interface Type<T = any> extends Function {
+  new (...args: any[]): T;
+}

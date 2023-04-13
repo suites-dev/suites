@@ -12,6 +12,7 @@ export type TokensReflector = {
   ): (typeOrUndefined: Type | string | undefined, index: number) => [string | Type, Type];
 };
 
+// TODO: Add unit spec for tokens reflector
 export const TokensReflector = (function (): TokensReflector {
   function lookupTokenInParams(tokens: CustomToken[], index: number): ConstructorParam | undefined {
     const record = tokens.find((token) => token.index === index);

@@ -1,7 +1,8 @@
 import { Type } from '@automock/types';
-import { Reflectable } from '@automock/core';
+// TODO: Move to '@automock/core'
+import { Reflectable } from '@automock/jest';
+import { ReflectorService } from './reflector.service';
 import { CustomToken, TokensReflector } from './token-reflector.service';
-import { ReflectorService } from './index';
 
 @Reflectable()
 export class TestClassOne {

@@ -1,5 +1,5 @@
 {
-  "name": "@automock/reflector.nestjs",
+  "name": "@automock/nestjs",
   "version": "1.0.0",
   "license": "MIT",
   "main": "dist/index.js",
@@ -26,8 +26,7 @@
   "files": [
     "dist",
     "index.d.ts",
-    "index.js",
-    "README.md"
+    "index.js"
   ],
   "devDependencies": {
     "@nestjs/common": "^8.3.1",

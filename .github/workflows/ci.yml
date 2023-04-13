@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jest-projects: ['jest', 'doubles.jest']
+        jest-projects: ['jest', 'doubles.jest', 'nestjs']
     steps:
       - name: Checkout
         uses: actions/checkout@v3

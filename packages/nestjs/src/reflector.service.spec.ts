@@ -1,8 +1,11 @@
 import { Type } from '@automock/types';
-// TODO: Move to '@automock/core'
-import { Reflectable } from '@automock/jest';
 import { ReflectorService } from './reflector.service';
 import { CustomToken, TokensReflector } from './token-reflector.service';
+
+// TODO: import from '@automock/core'
+export const Reflectable = (): ClassDecorator => {
+  return () => undefined;
+};
 
 @Reflectable()
 export class TestClassOne {

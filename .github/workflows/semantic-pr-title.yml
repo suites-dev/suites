@@ -31,6 +31,7 @@ jobs:
             sinon
             jest
             types
+            nestjs
             doubles(\.)?.jest
             *
           wip: true

@@ -1,0 +1,37 @@
+{
+  "name": "@automock/nestjs",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omermorad/automock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/omermorad/automock/issues"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "scripts": {
+    "prebuild": "yarn rimraf dist",
+    "build": "yarn tsc -p tsconfig.build.json",
+    "test": "yarn jest",
+    "lint": "yarn eslint '{src,test}/**/*.ts'"
+  },
+  "files": [
+    "dist",
+    "index.d.ts",
+    "index.js"
+  ],
+  "devDependencies": {
+    "@nestjs/common": "^8.3.1",
+    "@nestjs/core": "^8.3.1",
+    "@nestjs/typeorm": "^8.0.3",
+    "typeorm": "^0.3.11"
+  }
+}

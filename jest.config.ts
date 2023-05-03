@@ -22,6 +22,13 @@ export default async (): Promise<Config.InitialOptions> => {
         isolatedModules: true,
       },
     },
-    projects: ['<rootDir>/packages/jest'],
+    projects: [
+      '<rootDir>/packages/core',
+      '<rootDir>/packages/doubles/jest',
+      '<rootDir>/packages/doubles/sinon',
+      '<rootDir>/packages/reflectors/nestjs',
+      '<rootDir>/packages/testbeds/jest',
+      '<rootDir>/packages/testbeds/sinon',
+    ],
   };
 };

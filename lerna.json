@@ -2,6 +2,7 @@
   "version": "independent",
   "command": {
     "publish": {
+      "registry": "https://registry.npmjs.org/",
       "allowBranch": [
         "master",
         "next"
@@ -20,5 +21,8 @@
   },
   "npmClient": "yarn",
   "useWorkspaces": true,
-  "packages": ["packages/*"]
+  "packages": [
+    "packages/*",
+    "packages/doubles/*"
+  ]
 }

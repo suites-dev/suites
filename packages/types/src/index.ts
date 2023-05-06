@@ -10,6 +10,12 @@ export type DeepPartial<Type> = {
     : DeepPartial<Type[Prop]>;
 };
 
+export type FnPartialReturn<Type> = {
+  [Key in keyof Type]?: Type[Key] extends (...args: infer Args) => infer U
+    ? (...args: Args) => FnPartialReturn<U>
+    : DeepPartial<Type[Key]>;
+};
+
 export interface Type<T = any> {
   new (...args: any[]): T;
 }

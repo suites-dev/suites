@@ -28,10 +28,10 @@
     "index.d.ts",
     "index.js"
   ],
+  "peerDependencies": {
+    "@nestjs/common": ">= 8.x"
+  },
   "devDependencies": {
-    "@nestjs/common": "^8.3.1",
-    "@nestjs/core": "^8.3.1",
-    "@nestjs/typeorm": "^8.0.3",
-    "typeorm": "^0.3.11"
+    "@nestjs/common": "^8.3.1"
   }
 }

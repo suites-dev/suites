@@ -1,13 +1,10 @@
 import { Type } from '@automock/types';
-import { ReflectorService } from './reflector.service';
+import { DependenciesReflector } from '@automock/core';
+import { Injectable } from '@nestjs/common';
 import { CustomToken, TokensReflector } from './token-reflector.service';
+import { ReflectorFactory } from './reflector.service';
 
-// TODO: import from '@automock/core'
-export const Reflectable = (): ClassDecorator => {
-  return () => undefined;
-};
-
-@Reflectable()
+@Injectable()
 export class TestClassOne {
   async foo(flag: boolean): Promise<string> {
     if (flag) {
@@ -38,10 +35,10 @@ class TestedClass {}
 
 describe('NestJS Reflector Unit Spec', () => {
   const getMetadataStub = jest.fn();
-  let reflector: ReflectorService;
+  let reflector: DependenciesReflector;
 
   beforeAll(() => {
-    reflector = new ReflectorService({ getMetadata: getMetadataStub } as never, TokensReflector);
+    reflector = ReflectorFactory({ getMetadata: getMetadataStub } as never, TokensReflector);
   });
 
   describe('scenario: successfully reflecting dependencies and tokens', () => {

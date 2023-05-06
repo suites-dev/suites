@@ -1,6 +1,5 @@
-import { Type } from '@automock/types';
+import { StubbedInstance, Type } from '@automock/types';
 import { UnitReference } from './unit-reference';
-import { StubbedInstance } from '../types';
 
 class ClassType {}
 class ClassTypeStubbedInstanceFake {}

@@ -1,27 +1,22 @@
 import { Type } from '@automock/types';
+import { DependenciesReflector as AutomockDependenciesReflector } from '@automock/core';
 import { CustomToken, TokensReflector } from './token-reflector.service';
 
 const INJECTED_TOKENS_METADATA = 'self:paramtypes';
 const PARAM_TYPES_METADATA = 'design:paramtypes';
 
-interface Reflector {
-  reflectDependencies(targetClass: Type): ClassDependencies;
-}
-
 type ClassDependencies = Map<Type | string, Type>;
 
-export class ReflectorService implements Reflector {
-  public constructor(
-    private readonly reflector: typeof Reflect,
-    private readonly tokensReflector: TokensReflector
-  ) {}
-
-  public reflectDependencies(targetClass: Type): ClassDependencies {
-    const types = this.reflectParamTypes(targetClass);
-    const tokens = this.reflectParamTokens(targetClass);
+export function ReflectorFactory(
+  reflector: typeof Reflect,
+  tokensReflector: TokensReflector
+): AutomockDependenciesReflector {
+  function reflectDependencies(targetClass: Type): ClassDependencies {
+    const types = reflectParamTypes(targetClass);
+    const tokens = reflectParamTokens(targetClass);
     const classDependencies: ClassDependencies = new Map<Type | string, Type>();
 
-    const callback = this.tokensReflector.attachTokenToDependency(tokens);
+    const callback = tokensReflector.attachTokenToDependency(tokens);
 
     types
       .map((typeOrUndefined, index) => {
@@ -41,11 +36,13 @@ export class ReflectorService implements Reflector {
     return classDependencies;
   }
 
-  private reflectParamTokens(targetClass: Type): CustomToken[] {
-    return this.reflector.getMetadata(INJECTED_TOKENS_METADATA, targetClass) || [];
+  function reflectParamTokens(targetClass: Type): CustomToken[] {
+    return reflector.getMetadata(INJECTED_TOKENS_METADATA, targetClass) || [];
   }
 
-  private reflectParamTypes(targetClass: Type): (Type | undefined)[] {
-    return this.reflector.getMetadata(PARAM_TYPES_METADATA, targetClass) || [];
+  function reflectParamTypes(targetClass: Type): (Type | undefined)[] {
+    return reflector.getMetadata(PARAM_TYPES_METADATA, targetClass) || [];
   }
+
+  return { reflectDependencies };
 }

@@ -1,5 +1,5 @@
-import { Type } from '@automock/types';
-import { MockFunction, DependenciesReflector, StubbedInstance } from '../types';
+import { Type, MockFunction, StubbedInstance } from '@automock/types';
+import { DependenciesReflector } from '../types';
 
 export class DependenciesMocker {
   public constructor(

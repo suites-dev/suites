@@ -1,5 +1,4 @@
-import { Type } from '@automock/types';
-import { StubbedInstance } from '../types';
+import { StubbedInstance, Type } from '@automock/types';
 
 export interface UnitReference {
   /**

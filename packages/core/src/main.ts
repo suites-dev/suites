@@ -1,8 +1,7 @@
-import { Type } from '@automock/types';
+import { MockFunction, Type } from '@automock/types';
 import { AutomockReflectors, PackageResolver } from './services/package-resolver';
 import { DependenciesMocker } from './services/dependencies-mocker';
 import { BuilderFactory, TestBedBuilder } from './services/testbed-builder';
-import { MockFunction } from './types';
 
 export function createTestbedBuilder<TClass>(
   mockFn: MockFunction<unknown>,

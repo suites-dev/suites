@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 import { Type } from '@automock/types';
 import { UnitReference } from './unit-reference';
-import { MockFunction, UnitTestbed, Stubbable, StubbedInstance } from '../types';
+import { MockFunction, Stubbable, StubbedInstance } from '@automock/types';
 import { DependenciesMocker } from './dependencies-mocker';
+import { UnitTestbed } from '../types';
 
 interface MockOverride<TDep, TClass> {
   /**

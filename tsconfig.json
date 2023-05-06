@@ -26,10 +26,11 @@
     "allowSyntheticDefaultImports": true
   },
   "exclude": [
+    "augmented.ts",
     "index.ts",
     "node_modules",
     "dist",
-    "packages/jest/__test__",
+    "__test__",
     "env",
     "coverage"
   ]

@@ -1,30 +1,22 @@
-import { FnPartialReturn } from '@automock/types';
-import { DeepMocked } from './types';
+import { DeepPartial, Type } from '@automock/types';
 
 import Mock = jest.Mock;
+import JestMocked = jest.Mocked;
 
 type MockOptions = { mockName?: string };
-type MockObjectRecordKey = string | symbol | number;
-type MockOrDeepMock<TType> = DeepMocked<TType> | Mock<TType>;
-type MockObjectRecord<TType> = Map<MockObjectRecordKey, MockOrDeepMock<TType>>;
-
-export type MockFactory = {
-  create<TType extends Record<MockObjectRecordKey, any>>(): DeepMocked<TType>;
-};
+type MockObjectProp = string | symbol | number;
+type MocksMap<TType> = Map<MockObjectProp, Mock<TType>>;
 
 export const MockFactory = (() => {
   function createMockProxyRecursively<TType>(
     mockName: string
-  ): Mock<DeepMocked<Record<MockObjectRecordKey, TType>>> {
-    const mocksMap: MockObjectRecord<TType> = new Map();
+  ): Mock<Record<string | symbol | number, TType>, []> {
+    const mocksMap: MocksMap<TType> = new Map();
 
-    const proxy = new Proxy<DeepMocked<Record<MockObjectRecordKey, TType>>>(
+    const proxy = new Proxy<Record<MockObjectProp, TType>>(
       {},
       {
-        get: (
-          target: DeepMocked<Record<MockObjectRecordKey, TType>>,
-          property: string | symbol
-        ) => {
+        get: (target: Record<MockObjectProp, TType>, property: string | symbol) => {
           const propertyName = property.toString();
 
           if (mocksMap.has(property)) {
@@ -33,16 +25,19 @@ export const MockFactory = (() => {
 
           const checkProp = target[property];
 
-          const mockedProperty =
-            property in target
-              ? typeof checkProp === 'function'
-                ? jest.fn()
-                : checkProp
-              : propertyName === 'then'
-              ? undefined
-              : createMockProxyRecursively(propertyName);
+          let mockedProperty;
 
-          mocksMap.set(property, mockedProperty as MockOrDeepMock<TType>);
+          if (property in target) {
+            if (typeof checkProp === 'function') {
+              mockedProperty = jest.fn();
+            } else {
+              mockedProperty = checkProp;
+            }
+          } else if (propertyName !== 'then') {
+            mockedProperty = createMockProxyRecursively(propertyName);
+          }
+
+          mocksMap.set(property, mockedProperty as Mock<TType>);
 
           return mockedProperty;
         },
@@ -53,10 +48,10 @@ export const MockFactory = (() => {
   }
 
   function proxyHandler<TType>(
-    mocksMap: MockObjectRecord<TType>,
+    mocksMap: MocksMap<TType>,
     options: MockOptions
-  ): (returnPartialObject: FnPartialReturn<TType>, property: string | symbol) => TType {
-    return (returnPartialObject: FnPartialReturn<TType>, property: string | symbol) => {
+  ): (mockPartialImpl: DeepPartial<Type> | Type<TType>, property: string | symbol) => TType {
+    return (mockPartialImpl: DeepPartial<Type> | Type<TType>, property: string | symbol) => {
       const { mockName = 'mock' } = options;
 
       if (
@@ -70,31 +65,39 @@ export const MockFactory = (() => {
         return mocksMap.get(property);
       }
 
-      const propertyExistInObject = property in returnPartialObject;
-      const subjectProperty = (returnPartialObject as Record<MockObjectRecordKey, any>)[property];
+      const propertyExistInObject = property in mockPartialImpl;
+      const subjectProperty = (mockPartialImpl as Record<MockObjectProp, any>)[property];
       const subjectPropertyIsFunction = typeof subjectProperty === 'function';
 
-      const mockedFunctions = propertyExistInObject
-        ? subjectPropertyIsFunction
-          ? jest.fn<TType, any[]>(subjectProperty)
-          : subjectProperty
-        : createMockProxyRecursively(`${mockName}.${property.toString()}`);
+      let mockedFunctions;
+
+      if (propertyExistInObject) {
+        if (subjectPropertyIsFunction) {
+          mockedFunctions = jest.fn<TType, any[]>(subjectProperty);
+        } else {
+          mockedFunctions = subjectProperty;
+        }
+      } else {
+        mockedFunctions = createMockProxyRecursively(`${mockName}.${property.toString()}`);
+      }
 
       mocksMap.set(property, mockedFunctions);
       return mockedFunctions;
     };
   }
 
-  function create<TType extends Record<MockObjectRecordKey, any>>(
-    mockPartialImpl: FnPartialReturn<TType> = {},
+  function create<TType>(mockPartialImpl?: DeepPartial<TType>): JestMocked<TType>;
+  function create<TType>(type: Type<TType>): JestMocked<TType>;
+  function create<TType>(
+    mockPartialImpl: DeepPartial<TType> = {},
     options: MockOptions = {}
-  ): DeepMocked<TType> {
-    const mocksMap: MockObjectRecord<TType> = new Map();
+  ): JestMocked<TType> {
+    const mocksMap: MocksMap<TType> = new Map();
     const { mockName = 'mock' } = options;
 
-    return new Proxy<FnPartialReturn<TType>>(mockPartialImpl, {
+    return new Proxy<DeepPartial<TType> | Type<TType>>(mockPartialImpl, {
       get: proxyHandler(mocksMap, { mockName }),
-    }) as DeepMocked<TType>;
+    }) as JestMocked<TType>;
   }
 
   return { create };

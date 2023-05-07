@@ -2,14 +2,10 @@
   "extends": "../../../tsconfig.build.json",
   "compilerOptions": {
     "rootDir": "src",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "outDir": "dist",
     "target": "es6"
   },
-  "include": [
-    "./src/**/*.ts",
-    "src/types/index.ts"
-  ],
   "exclude": [
     "index.ts",
     "node_modules",

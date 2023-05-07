@@ -61,9 +61,7 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/doubles/*",
-    "packages/reflectors/*",
-    "packages/testbeds/*"
+    "packages/doubles/*"
   ],
   "lint-staged": {
     "*.ts": [

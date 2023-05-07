@@ -73,7 +73,7 @@ jobs:
         run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Test
-        run: yarn jest --selectProjects ${{ matrix.jest-projects }} --coverage --verbose
+        run: yarn jest --selectProjects ${{ matrix.jest-projects }} --coverage --verbose --passWithNoTests
         env:
           COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-projects }}
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-projects }}.xml

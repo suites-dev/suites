@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "outDir": "dist",
+    "target": "es6"
+  },
+  "include": [
+    "./src/**/*.ts",
+    "types/index.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "__test__",
+    "**/*.spec.ts",
+    "jest.config.ts"
+  ]
+}

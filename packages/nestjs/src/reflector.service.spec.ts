@@ -1,8 +1,19 @@
-import { CustomToken, ReflectorService } from './reflector.service';
-import { TestClassOne } from '../../test/spec-assets';
-import { Type } from './types';
+import { Type } from '@automock/types';
+import { DependenciesReflector } from '@automock/core';
+import { Injectable } from '@nestjs/common';
+import { CustomToken, TokensReflector } from './token-reflector.service';
+import { ReflectorFactory } from './reflector.service';
 
-import Mocked = jest.Mocked;
+@Injectable()
+export class TestClassOne {
+  async foo(flag: boolean): Promise<string> {
+    if (flag) {
+      return Promise.resolve('foo-with-flag');
+    }
+
+    return Promise.resolve('foo');
+  }
+}
 
 const VALID_IMPL = (metadataKey: string) => {
   if (metadataKey === 'self:paramtypes') {
@@ -22,14 +33,12 @@ const INVALID_IMPL = (metadataKey: string) => {
 
 class TestedClass {}
 
-describe('Reflector Service TestBed', () => {
+describe('NestJS Reflector Unit Spec', () => {
   const getMetadataStub = jest.fn();
-  let reflector: ReflectorService;
+  let reflector: DependenciesReflector;
 
   beforeAll(() => {
-    reflector = new ReflectorService({ getMetadata: getMetadataStub } as unknown as Mocked<
-      typeof Reflect
-    >);
+    reflector = ReflectorFactory({ getMetadata: getMetadataStub } as never, TokensReflector);
   });
 
   describe('scenario: successfully reflecting dependencies and tokens', () => {

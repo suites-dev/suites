@@ -11,42 +11,34 @@
   <h1 align="center">Automock</h1>
 
   <h3 align="center">
-    Standalone Library for Automated Mocking of Class Dependencies.
+    Standalone Library for Automated Class Dependencies Mocking
   </h3>
 
   <h4 align="center">
-    Rapid and effortless creation of unit tests
-    while ensuring complete isolation of class dependencies.
+    Write unit tests quickly and easily, with complete isolation of external class dependencies.
   </h4>
 </p>
 
 ## What is Automock?
-**Automock is a TypeScript-based library designed for unit testing applications.**
+Automock is a mocking library for unit testing TypeScript-based applications.
+Using TypeScript Reflection API (`reflect-metadata`) internally to produce
+mock objects, Automock streamlines test development by automatically mocking
+external dependencies.
 
-By leveraging the TypeScript Reflection API (`reflect-metadata`) under the hood,
-Automock simplifies the process of writing tests by automatically generating mock
-objects for a class's dependencies.
+Class constructor injection is commonly used within frameworks that implement
+the principles of dependency injection and inversion of control. Automock
+could be extremely useful with these frameworks and integrates easily with
+them.
 
 ## Installation
-To begin, you need to install a mocking library such as Sinon or Jest.
-* Jest - `@automock/jest`
-* Sinon - `@automock/sinon`
-
-Next, proceed with the installation of the necessary plugin for your chosen framework.
-The frameworks that are supported include NestJS, Ts.ED, and Inversify.
-
-* NestJS - `@automock/nestjs`
-* Inversify - `@automock/inversify`
-* Ts.ED - `@automock/tsed`
-
-Automock takes care of the remaining wiring.
-
-For example, using Jest and NestJS:
 ```bash
-npm install -D @automock/jest @automock/nestjs
+npm i -D @automock/jest
 ```
 
-## :thinking: Problem
+> Jest is the only test framework currently supported by Automock.
+Sinon will shortly be released.
+
+## 🤔 Problem(s)
 Consider the following class and interface:
 
 ```typescript
@@ -56,7 +48,7 @@ interface Logger {
   info(msg: string, metadata: any): void;
 }
 
-@Injectable()
+@Injectable() // Could be any decorator
 class UsersService {
   constructor(private logger: Logger) {}
   
@@ -68,7 +60,7 @@ class UsersService {
 }
 ```
 
-A sample unit test for this class could resemble the following code snippet:
+An example of a unit test for this class may look something like this:
 
 ```typescript
 describe('Users Service Unit Spec', () => {
@@ -76,7 +68,7 @@ describe('Users Service Unit Spec', () => {
   let loggerMock: jest.Mocked<Logger>;
   
   beforeAll(() => {
-    loggerMock = { log: jest.fn() };
+    loggerMock = { log: jest.fn() }; // ! TSC will emit an error
     usersService = new UsersService(loggerMock);
   });
   
@@ -87,10 +79,23 @@ describe('Users Service Unit Spec', () => {
 });
 ```
 
-One of the primary challenges in writing unit tests is the requirement to initialize
-each class dependency individually and generate a mock object for each of these dependencies.
+One of the main challenging aspects of writing unit tests is
+the necessity to individually initialize all class dependencies
+and create a mock object for each of these dependencies.
 
-<details><summary><b>Reveal Even Worse Example</b> 🤦</summary><p>
+Implementing the `Logger` interface is mandatory when working with
+the [`jest.Mocked` (read more)](https://jestjs.io/docs/mock-function-api#jestmockedsource).
+In case the `Logger` interface is extended, TypeScript will enforce
+that the corresponding `loggerMock` variable also implement all of those
+methods, ending up with an object full of stubs
+
+Another issue that arises when utilizing an IoC/DI in unit tests,
+is that the dependencies resolved from the container (DI container),
+are not mocked and instead yield actual instances of their classes.
+Therefor, running into the same issue, which is manually constructing
+mock objects and stub functions.
+
+<details><summary><code>💡 Demonstration / Example</code></summary><p>
 
 ```typescript
 describe('Users Service Unit Spec', () => {
@@ -106,41 +111,46 @@ describe('Users Service Unit Spec', () => {
 
   test('...', () => { ... });
 });
+
 ```
 </p></details>
 
-## :bulb: The Solution
+## 💡 Solution with Automock
 ```typescript
 import { TestBed } from '@automock/jest';
 
 describe('Users Service Unit Spec', () => {
   let unitUnderTest: UsersService;
   let logger: jest.Mocked<Logger>;
+  let apiService: jest.Mocked<UsersService>;
 
   beforeAll(() => {
     const { unit, unitRef } = TestBed.create(UsersService).compile();
 
-    // The actual instance of the class
     unitUnderTest = unit;
-
-    // The reference to logger mock object
-    logger = unitRef.get(Logger); 
+    apiService = unitRef.get(ApiService);
+    logger = unitRef.get(Logger);
   });
 
   describe('when something happens', () => {
     test('then expect for something else to happen', async () => {
       await unitUnderTest.callSomeMethod();
+
       expect(logger.log).toHaveBeenCalled();
     });
   });
 });
 ```
 
-As demonstrated by the code snippet above, the utilization of Automock enables one
-to concentrate on testing the logic, rather than expending effort on the laborious
-task of manually creating mock objects and stub functions. Additionally, there is
-no need for concern regarding the potential for breaking the class type.
+As seen in the preceding code sample, by using Automock, developers can focus
+more on testing the logic and less on the tedious task of manually constructing
+mock objects and stub functions. Furthermore, they don't need to worry about
+breaking the class type.
 
 ## 📜 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
+## 📙 Acknowledgements
+
+[jest-mock-extended](https://github.com/marchaos/jest-mock-extended)

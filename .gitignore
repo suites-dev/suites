@@ -35,6 +35,7 @@ lerna-debug.log*
 
 .npmrc
 *.d.ts
+!types/index.d.ts
 *.js
 junit.xml
 .gitconfig

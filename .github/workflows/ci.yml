@@ -1,8 +1,5 @@
 name: Continuous Integration
-on:
-  pull_request:
-    branches:
-      - master
+on: [pull_request]
 
 jobs:
   build:
@@ -57,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jest-projects: ['jest']
+        jest-projects: ['jest', 'sinon', 'doubles.jest', 'nestjs', 'core']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -94,7 +91,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest
+          flags: jest,sinon,doubles.jest,nestjs,core
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           directory: coverage

@@ -28,10 +28,23 @@ Automock simplifies the process of writing tests by automatically generating moc
 objects for a class's dependencies.
 
 ## Installation
+To begin, you need to install a mocking library such as Sinon or Jest.
+* Jest - `@automock/jest`
+* Sinon - `@automock/sinon`
+
+Next, proceed with the installation of the necessary plugin for your chosen framework.
+The frameworks that are supported include NestJS, Ts.ED, and Inversify.
+
+* NestJS - `@automock/nestjs`
+* Inversify - `@automock/inversify`
+* Ts.ED - `@automock/tsed`
+
+Automock takes care of the remaining wiring.
+
+For example, using Jest and NestJS:
 ```bash
-npm install -D @automock/jest
+npm install -D @automock/jest @automock/nestjs
 ```
-> 👷 Upcoming release of Sinon, we are almost there!
 
 ## :thinking: Problem
 Consider the following class and interface:

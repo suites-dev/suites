@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "bin",
+    "rootDir": "bin",
+    "target": "es5"
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

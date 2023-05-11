@@ -35,5 +35,4 @@ jobs:
 
       - name: Publish Canary
         run: lerna publish --yes --canary --preid dev --dist-tag dev
-        env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

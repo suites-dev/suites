@@ -26,13 +26,14 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "test": "yarn ",
+    "test": "yarn jest",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "peerDependencies": {
     "sinon": ">= 8.x"
   },
   "devDependencies": {
+    "@automock/types": "^1.0.0",
     "@types/sinon": "9.0.0",
     "sinon": "^9.0.2"
   },

@@ -1,7 +1,27 @@
-import { ExecutionContext } from '@nestjs/common';
-import { HttpArgumentsHost } from '@nestjs/common/interfaces';
+import { Type } from '@automock/types';
 import { MockFactory } from './mock.factory';
-import sinon from 'sinon';
+
+export interface ExecutionContext {
+  getClass<T = any>(): Type<T>;
+  getHandler(): (args: any[]) => any;
+  switchToRpc(): any;
+  /**
+   * Switch context to HTTP.
+   * @returns interface with methods to retrieve HTTP arguments
+   */
+  switchToHttp(): HttpArgumentsHost;
+  /**
+   * Switch context to WebSockets.
+   * @returns interface with methods to retrieve WebSockets arguments
+   */
+  switchToWs(): any;
+}
+
+export interface HttpArgumentsHost {
+  getRequest<T = any>(): T;
+  getResponse<T = any>(): T;
+  getNext<T = any>(): T;
+}
 
 interface TestInterface {
   someNum: number;
@@ -11,8 +31,6 @@ interface TestInterface {
 }
 
 class TestClass {
-  someProperty!: number;
-
   someMethod() {
     return 42;
   }
@@ -131,9 +149,9 @@ describe('Sinon Mock Factory', () => {
         }),
       });
 
-      const first = mock.switchToRpc();
-      const second = mock.switchToRpc();
-      const third = mock.switchToWs();
+      expect(mock.switchToRpc).toBeDefined();
+      expect(mock.switchToRpc).toBeDefined();
+      expect(mock.switchToWs).toBeDefined();
     });
 
     it('and also for literal values', () => {

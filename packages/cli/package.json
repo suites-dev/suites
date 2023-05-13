@@ -26,9 +26,9 @@
     }
   ],
   "scripts": {
-    "prebuild": "yarn rimraf bin/index.js",
+    "prebuild": "yarn rimraf ./bin/index.js",
     "build": "yarn tsc -p tsconfig.build.json",
-    "lint": "yarn eslint '{src,test}/**/*.ts'"
+    "lint": "yarn eslint ./bin/index.ts"
   },
   "files": [
     "index.js",

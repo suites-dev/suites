@@ -41,6 +41,7 @@
     "@automock/nestjs": "^1.0.0"
   },
   "devDependencies": {
+    "@automock/nestjs": "^1.0.0",
     "jest": "^27.5.1"
   },
   "peerDependencies": {

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import { Type } from '@automock/types';
+import { DeepPartial, Type } from '@automock/types';
 import { UnitReference } from './unit-reference';
-import { MockFunction, Stubbable, StubbedInstance } from '@automock/types';
+import { MockFunction, StubbedInstance } from '@automock/types';
 import { DependenciesMocker } from './dependencies-mocker';
 import { UnitTestbed } from '../types';
 
@@ -12,7 +12,7 @@ interface MockOverride<TDep, TClass> {
    *
    * @param mockImplementation
    */
-  using: <Impl extends Stubbable<TDep>>(mockImplementation: Impl) => TestBedBuilder<TClass>;
+  using: <Impl extends DeepPartial<TDep>>(mockImplementation: Impl) => TestBedBuilder<TClass>;
 }
 
 export interface TestBedBuilder<TClass> {
@@ -69,7 +69,7 @@ export class BuilderFactory {
           typeOrToken: string | Type<TDependency>
         ): MockOverride<TDependency, TClass> {
           return {
-            using: (mockImplementation: Stubbable<TDependency>) => {
+            using: (mockImplementation: DeepPartial<TDependency>) => {
               dependenciesToOverride.set(
                 typeOrToken,
                 instance.mockFn(mockImplementation) as StubbedInstance<TDependency>

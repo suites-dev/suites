@@ -1,0 +1,47 @@
+{
+  "name": "@automock/cli",
+  "private": false,
+  "version": "0.0.0",
+  "license": "MIT",
+  "main": "bin/index.js",
+  "keywords": [
+    "mock",
+    "automock",
+    "reflection"
+  ],
+  "bin": {
+    "init": "bin/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omermorad/automock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/omermorad/automock/issues"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "scripts": {
+    "prebuild": "yarn rimraf ./bin/index.js",
+    "build": "yarn tsc -p tsconfig.build.json",
+    "lint": "yarn eslint ./bin/index.ts"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "config": {
+    "publishConfig": "public"
+  },
+  "dependencies": {
+    "detect-package-manager": "^2.0.1",
+    "inquirer": "^8.2.5"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^8.2.5"
+  }
+}

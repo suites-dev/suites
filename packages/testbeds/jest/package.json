@@ -1,9 +1,9 @@
 {
   "name": "@automock/jest",
+  "private": false,
   "version": "1.0.1",
   "license": "MIT",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "keywords": [
     "mock",
     "jest",
@@ -26,24 +26,27 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "test": "yarn jest",
+    "test": "yarn node_modules/.bin/jest",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
     "dist",
-    "index.d.ts",
-    "index.js",
     "README.md"
   ],
   "dependencies": {
-    "jest-mock-extended": "^2.0.4",
-    "ts-essentials": "^7.0.3"
+    "@automock/core": "^1.0.0",
+    "@automock/doubles.jest": "^1.0.0"
+  },
+  "optionalDependencies": {
+    "@automock/nestjs": "^1.0.0"
   },
   "devDependencies": {
-    "@nestjs/common": "^8.3.1",
-    "@nestjs/core": "^8.3.1",
-    "@nestjs/typeorm": "^8.0.3",
-    "@types/lodash.clonedeep": "^4.5.6",
-    "typeorm": "^0.3.11"
+    "jest": "^27.5.1"
+  },
+  "peerDependencies": {
+    "jest": ">= 26.x"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

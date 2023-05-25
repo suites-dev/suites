@@ -45,7 +45,7 @@ jobs:
 
       - name: Copy
         run: |
-          mkdir -p e2e/node_modules/@automock
+          mkdir -p node_modules/@automock
 
           for file in ./tarballs/*.tgz; do
               newname=$(echo "$file" | sed -E 's/automock-|-[0-9]+\.[0-9]+\.[0-9]+//g' | sed 's/\.tgz$//')

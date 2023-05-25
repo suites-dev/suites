@@ -1,0 +1,66 @@
+name: Automock E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'E2E Target Branch'
+        required: true
+
+jobs:
+  build:
+    name: Build, Prepare and Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        projects: ['jest', 'sinon']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+
+      - name: Use Node 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: NPM
+        run: yarn --frozen-lockfile && lerna bootstrap --ci
+
+      - name: Build
+        run: yarn build
+
+      - name: Pack
+        run: lerna exec -- npm pack
+
+      - name: Move
+        run: lerna exec -- mv "*.tgz" $PWD/e2e/tarballs
+
+      - name: Copy
+        run: |
+          mkdir -p node_modules/@automock
+
+          for file in ./tarballs/*.tgz; do
+              newname=$(echo "$file" | sed -E 's/automock-|-[0-9]+\.[0-9]+\.[0-9]+//g' | sed 's/\.tgz$//')
+              mkdir -p "$newname"
+              tar -xzvf "$file" -C "$newname" --no-same-owner --strip-components=1 "package/*"
+              mv "$newname" ./node_modules/@automock
+          done
+        with:
+          path: e2e
+
+      - name: Install Packages in E2E
+        run: npm ci
+        with:
+          path: e2e
+
+      - name: Test e2e
+        run: npm run test
+        with:
+          path: e2e

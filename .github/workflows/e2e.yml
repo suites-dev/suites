@@ -11,9 +11,6 @@ jobs:
   build:
     name: Build, Prepare and Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        projects: ['jest', 'sinon']
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -1,0 +1,31 @@
+name: Automock E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'E2E Target Branch'
+        required: true
+
+jobs:
+  build:
+    name: Build, Prepare and Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        projects: ['jest', 'sinon']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+
+      - name: Use Node 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}

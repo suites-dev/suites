@@ -39,14 +39,18 @@ jobs:
       - name: Move
         run: lerna exec -- mv "*.tgz" $PWD/e2e/tarballs
 
+      - name: List Files
+        run: ls -R
+        working-directory: e2e
+
       - name: Copy
         run: |
-          mkdir -p node_modules/@automock
+          mkdir -p e2e/node_modules/@automock
 
           for file in ./tarballs/*.tgz; do
               newname=$(echo "$file" | sed -E 's/automock-|-[0-9]+\.[0-9]+\.[0-9]+//g' | sed 's/\.tgz$//')
               mkdir -p "$newname"
-              tar -xzvf "$file" -C "$newname" --no-same-owner --strip-components=1 "package/*"
+              tar --wildcards -xzvf "$file" -C "$newname" --no-same-owner --strip-components=1 "package/*"
               mv "$newname" ./node_modules/@automock
           done
         working-directory: e2e

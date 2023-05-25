@@ -27,7 +27,7 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: NPM
+      - name: Yarn
         run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Build
@@ -49,15 +49,12 @@ jobs:
               tar -xzvf "$file" -C "$newname" --no-same-owner --strip-components=1 "package/*"
               mv "$newname" ./node_modules/@automock
           done
-        with:
-          path: e2e
+        working-directory: e2e
 
       - name: Install Packages in E2E
         run: npm ci
-        with:
-          path: e2e
+        working-directory: e2e
 
       - name: Test e2e
         run: npm run test
-        with:
-          path: e2e
+        working-directory: e2e

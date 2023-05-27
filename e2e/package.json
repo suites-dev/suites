@@ -9,15 +9,19 @@
     "@automock/doubles.sinon": "*",
     "@automock/nestjs": "*",
     "@automock/types": "*",
-    "typescript": "^4.0.0"
+    "@types/node": "^16.18.34",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.1.6"
   },
   "scripts": {
-    "test": "npm run test -ws "
+    "test": "npm run test -ws"
   },
   "workspaces": [
     "jest",
     "jest/*",
     "sinon",
     "sinon/*"
-  ]
+  ],
+  "devDependencies": {
+  }
 }

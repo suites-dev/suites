@@ -39,10 +39,6 @@ jobs:
       - name: Move
         run: lerna exec -- mv "*.tgz" $PWD/e2e/tarballs
 
-      - name: List Files
-        run: ls -R
-        working-directory: e2e
-
       - name: Copy
         run: |
           mkdir -p node_modules/@automock

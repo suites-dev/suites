@@ -1,0 +1,27 @@
+{
+  "name": "automock-e2e",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "@automock/common": "*",
+    "@automock/core": "*",
+    "@automock/doubles.jest": "*",
+    "@automock/doubles.sinon": "*",
+    "@automock/nestjs": "*",
+    "@automock/types": "*",
+    "@types/node": "^16.18.34",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.1.6"
+  },
+  "scripts": {
+    "test": "npm run test -ws"
+  },
+  "workspaces": [
+    "jest",
+    "jest/*",
+    "sinon",
+    "sinon/*"
+  ],
+  "devDependencies": {
+  }
+}

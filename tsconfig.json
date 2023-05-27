@@ -26,6 +26,7 @@
     "allowSyntheticDefaultImports": true
   },
   "exclude": [
+    "e2e",
     "index.ts",
     "node_modules",
     "dist",

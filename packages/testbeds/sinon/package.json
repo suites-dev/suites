@@ -36,9 +36,9 @@
     "README.md"
   ],
   "dependencies": {
-  "@automock/doubles.sinon": "^1.0.0",
-  "@automock/core": "^1.0.0"
-},
+    "@automock/doubles.sinon": "^1.0.0",
+    "@automock/core": "^1.0.0"
+  },
   "devDependencies": {
     "@automock/types": "^1.0.0",
     "@types/sinon": "9.0.0",

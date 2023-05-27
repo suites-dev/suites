@@ -93,7 +93,7 @@ Automock streamlines the test creation process by automating the creation of moc
 boilerplate code and eliminating the manual setup effort. This allows you to focus on writing meaningful test cases and
 validating the behavior of your code without getting bogged down in repetitive mock object creation.
 
-**[For more examples and API reference visit the full documentation page](blob/master/docs/automock.md)**
+**[For more examples and API reference visit the full documentation page](https://github.com/automock/automock/blob/master/docs/automock.md)**
 
 ## :bulb: Philosophy
 

@@ -21,9 +21,11 @@
 
 ## What is Automock?
 
-**Automock is a TypeScript library designed to streamline the process of writing unit tests.** By automatically creating
-mock objects for class dependencies, Automock simplifies the setup of test environments, enabling developers to focus on
-writing test cases without the hassle of manually creating mocks.
+**Automock simplifies the process of writing unit tests by automatically creating mock objects for class dependencies,
+allowing developers to focus on writing test cases instead of manual mock setup.** It is specially designed for Inversion
+of Control (IoC) and Dependency Injection (DI) scenarios, seamlessly integrating automatic mocking into your framework
+of choice. With Automock, you can effortlessly isolate and test individual components, improving the efficiency and
+reliability of your unit testing process.
 
 ## :package: Installation
 
@@ -47,11 +49,13 @@ the following example:
 import { TestBed } from '@automock/jest';
 
 class Database {
-  getUsers(): Promise<User[]> { ... }
+  getUsers(): Promise<User[]> { ...
+  }
 }
 
 class UserService {
-  constructor(private database: Database) {}
+  constructor(private database: Database) {
+  }
 
   async getAllUsers(): Promise<User[]> {
     return this.database.getUsers();

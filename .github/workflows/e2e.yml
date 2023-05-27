@@ -52,7 +52,7 @@ jobs:
         working-directory: e2e
 
       - name: Install Packages in E2E
-        run: npm ci
+        run: npm install
         working-directory: e2e
 
       - name: Test e2e

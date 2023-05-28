@@ -91,9 +91,9 @@ describe('User Service Unit Spec', () => {
 
   beforeEach(() => {
     const { unit, unitRef } = TestBed.create(UserService)
-      .mock(UserService)
+      .mock(Database)
       .using({
-        getAllUsers: async () => [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]
+        getUsers: async () => [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]
       })
       .compile();
 

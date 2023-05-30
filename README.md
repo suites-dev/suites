@@ -33,7 +33,7 @@ reliability of your unit testing process.
 npm i -D @automock/jest
 ```
 
-> 👷 Coming Soon: Sinon Support! We are currently working on adding Sinon support, allowing you to leverage its powerful mocking capabilities.
+> 👷 Coming Soon: Sinon Support! We are currently working on adding Sinon support, allowing you to leverage its mocking capabilities.
 
 ## :computer: Usage Example
 
@@ -102,8 +102,8 @@ validating the behavior of your code without getting bogged down in repetitive m
 ## :bulb: Philosophy
 
 We think that creating high-quality unit tests ought to be a breeze. We created Automock to remove the human element
-from the otherwise tedious and error-prone process of creating mock objects manually. The following tenets form the
-basis of our philosophy:
+from the otherwise tedious and error-prone process of creating mock objects manually. The following concepts serve
+as the cornerstones of our philosophical framework:
 
 * ✨ **Productivity.** Automock aims to save developers valuable time and effort by automating the process of creating
   mock objects. It eliminates the need for manual mock setup and reduces boilerplate code, enabling you to focus on
@@ -115,8 +115,7 @@ basis of our philosophy:
   making unit testing more approachable.
 
 
-* 🔧 **Maintainability.** By generating mock objects that closely resemble the original dependencies, Automock promotes
-  code maintainability. The generated mocks retain the same type information as the real objects, ensuring type safety
+* 🔧 **Maintainability.** The generated mocks retain the same type information as the real objects, ensuring type safety
   and allowing you to leverage TypeScript's powerful static type checking capabilities. This approach enhances code
   readability, reduces the risk of errors, and makes it easier to refactor and maintain tests over time.
 
@@ -131,7 +130,7 @@ Automock can greatly enhance your CI pipeline. Since it automatically mocks all 
 assume that your unit tests are executed in complete isolation, creating a solitary unit testing environment.
 
 We recommend naming your test files with a specific suffix, such as `*.spec.ts` or `*.unit.ts`. This convention allows
-you to easily distinguish and run your unit tests separately.
+you to easily distinguish and run your unit tests separately. [Read more about the Jest projects](https://jestjs.io/docs/configuration#projects-arraystring--projectconfig)
 
 This solitary unit testing environment provides numerous benefits for optimizing your CI process:
 
@@ -158,11 +157,10 @@ This solitary unit testing environment provides numerous benefits for optimizing
 
 Automock is influenced by the principles and concepts discussed in Martin Fowler's blog post on "Unit Tests". He
 discusses the idea of creating "solitary" unit tests, which focus on testing a single unit of code in isolation,
-independent of its dependencies. This approach promotes test independence, enhances test reliability, and simplifies
-test maintenance.
+independent of its dependencies.
 
-To learn more about the theory of solitary unit tests, we encourage you to read Martin Fowler's blog
-post: https://martinfowler.com/bliki/UnitTest.html
+To learn more about unit tests, we encourage you to read Martin Fowler's blog post:
+https://martinfowler.com/bliki/UnitTest.html
 
 ## :scroll: License
 

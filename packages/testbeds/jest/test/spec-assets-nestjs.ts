@@ -1,10 +1,9 @@
 import 'reflect-metadata';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { Reflectable } from '../src';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-@Reflectable()
+@Injectable()
 export class TestClassOne {
   async foo(flag: boolean): Promise<string> {
     if (flag) {
@@ -15,14 +14,14 @@ export class TestClassOne {
   }
 }
 
-@Reflectable()
+@Injectable()
 export class TestClassTwo {
   async bar(): Promise<string> {
     return Promise.resolve('bar');
   }
 }
 
-@Reflectable()
+@Injectable()
 export class TestClassThree {
   baz(): string {
     return 'baz';
@@ -33,7 +32,7 @@ export interface Logger {
   log(): any;
 }
 
-@Reflectable()
+@Injectable()
 export class MainTestClass {
   constructor(
     private readonly testClassOne: TestClassOne,
@@ -50,7 +49,7 @@ export class MainTestClass {
   }
 }
 
-@Reflectable()
+@Injectable()
 export class InvalidClass {
   constructor(private readonly testClassOne: TestClassOne, private readonly logger: Logger) {}
 

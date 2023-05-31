@@ -1,8 +1,10 @@
 name: Continuous Integration
-on:
-  pull_request:
-    branches:
-      - master
+on: [pull_request]
+
+permissions:
+  id-token: write
+  contents: read
+  checks: write
 
 jobs:
   build:
@@ -57,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jest-projects: ['jest']
+        project: ['jest', 'nestjs', 'core']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -76,25 +78,25 @@ jobs:
         run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Test
-        run: yarn jest --selectProjects ${{ matrix.jest-projects }} --coverage --verbose
+        run: yarn jest --selectProjects ${{ matrix.project }} --coverage --verbose --passWithNoTests
         env:
-          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-projects }}
-          JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-projects }}.xml
+          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.project }}
+          JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
 
       - name: Tests Results
         uses: dorny/test-reporter@v1
         if: always()
         with:
           reporter: 'jest-junit'
-          name: Tests Results (${{ matrix.jest-projects }})
-          path: test-reports/${{ matrix.jest-projects }}.xml
+          name: Tests Results (${{ matrix.project }})
+          path: test-reports/${{ matrix.project }}.xml
           fail-on-error: false
 
       - name: Upload Report to Codecov
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest
+          flags: jest,sinon,doubles.jest,doubles.sinon,nestjs,core
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           directory: coverage

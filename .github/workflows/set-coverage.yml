@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jest-projects: ['jest']
+        project: ['jest', 'nestjs', 'core']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -29,18 +29,18 @@ jobs:
         run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Test
-        run: yarn jest --selectProjects ${{ matrix.jest-projects }} --coverage --verbose
+        run: yarn jest --selectProjects ${{ matrix.project }} --coverage --verbose
         env:
-          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.jest-projects }}
-          JEST_JUNIT_OUTPUT_NAME: ${{ matrix.jest-projects }}.xml
+          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.project }}
+          JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
 
       - name: Tests Results
         uses: dorny/test-reporter@v1
         if: always()
         with:
           reporter: 'jest-junit'
-          name: Tests Results (${{ matrix.jest-projects }})
-          path: test-reports/${{ matrix.jest-projects }}.xml
+          name: Tests Results (${{ matrix.project }})
+          path: test-reports/${{ matrix.project }}.xml
           fail-on-error: false
 
       - name: Upload Report to Codecov

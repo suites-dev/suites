@@ -60,7 +60,9 @@
     "typescript": "^4.0.0"
   },
   "workspaces": [
-    "packages/**"
+    "packages/*",
+    "packages/reflectors/*",
+    "packages/testbeds/*"
   ],
   "lint-staged": {
     "*.ts": [

@@ -22,10 +22,11 @@
 ## What is Automock?
 
 **Automock simplifies the process of writing unit tests by automatically creating mock objects for class dependencies,
-allowing developers to focus on writing test cases instead of manual mock setup.** It is specially designed for Inversion
-of Control (IoC) and Dependency Injection (DI) scenarios, seamlessly integrating automatic mocking into your framework
-of choice. With Automock, you can effortlessly isolate and test individual components, improving the efficiency and
-reliability of your unit testing process.
+allowing developers to focus on writing test cases instead of manual mock setup.**
+
+Automock specially designed for Inversion of Control (IoC) and Dependency Injection (DI) scenarios, seamlessly
+integrating automatic mocking into your framework of choice. With Automock, you can effortlessly isolate and test
+individual components, improving the efficiency and reliability of your unit testing process.
 
 ## :package: Installation
 
@@ -37,11 +38,6 @@ npm i -D @automock/jest
 
 ## :computer: Usage Example
 
-Consider a simple example where you have a `UserService` class that relies on a `Database` service for data retrieval.
-Traditionally, when writing unit tests for `UserService`, you would need to manually create mock objects for the
-`Database` dependency and stub out its methods. This manual setup can be time-consuming and error-prone, leading to
-repetitive code and increased maintenance overhead.
-
 With Automock, you can streamline the test creation process and eliminate the need for manual mock setup. Take a look at
 the following example:
 
@@ -49,13 +45,11 @@ the following example:
 import { TestBed } from '@automock/jest';
 
 class Database {
-  getUsers(): Promise<User[]> { ...
-  }
+  getUsers(): Promise<User[]> { ... }
 }
 
 class UserService {
-  constructor(private database: Database) {
-  }
+  constructor(private database: Database) {}
 
   async getAllUsers(): Promise<User[]> {
     return this.database.getUsers();
@@ -84,45 +78,37 @@ describe('User Service Unit Spec', () => {
 });
 ```
 
-In this example, Automock simplifies the creation of mock objects and stubs for the `Database` dependency. By utilizing
-the `TestBed`, you can create an instance of the `UserService` class with automatically generated mock objects for its
-dependencies. The `compile()` method compiles the test bed and returns an instance of the class under test (userService)
-.
-
-During the test, you can directly access the automatically created mock object for the `Database` dependency (database).
-By stubbing the `getUsers()` method of the database mock object, you can define its behavior and ensure it resolves with
-a specific set of mock users.
-
 Automock streamlines the test creation process by automating the creation of mock objects and stubs, reducing
 boilerplate code and eliminating the manual setup effort. This allows you to focus on writing meaningful test cases and
 validating the behavior of your code without getting bogged down in repetitive mock object creation.
 
-**[For more examples and API reference visit the full documentation page](https://github.com/automock/automock/blob/master/docs/automock.md)**
+**[:books: For more examples and for API reference visit our docs page](https://github.com/automock/automock/blob/master/docs/automock.md)**
 
 ## :bulb: Philosophy
 
-We think that creating high-quality unit tests ought to be a breeze. We created Automock to remove the human element
-from the otherwise tedious and error-prone process of creating mock objects manually. The following concepts serve
-as the cornerstones of our philosophical framework:
+**We think that creating high-quality unit tests ought to be a breeze. We created Automock to remove the human element
+from the otherwise tedious and error-prone process of creating mock objects manually. The following tenets form the
+basis of our philosophy:**
 
-* ✨ **Productivity.** Automock aims to save developers valuable time and effort by automating the process of creating
-  mock objects. It eliminates the need for manual mock setup and reduces boilerplate code, enabling you to focus on
-  writing meaningful test cases and improving code quality.
+✨ **Productivity** \
+Automock aims to save developers valuable time and effort by automating the process of creating mock objects. It
+eliminates the need for manual mock setup and reduces boilerplate code, enabling you to focus on writing meaningful test
+cases and improving code quality.
 
+:rocket: **Simplicity** \
+The library provides an intuitive and easy-to-use API, making it accessible to developers of all skill levels. By
+automating mock object creation, Automock simplifies the testing process, reducing complexity and making unit testing
+more approachable.
 
-* :rocket: **Simplicity**. The library provides an intuitive and easy-to-use API, making it accessible to developers of
-  all skill levels. By automating mock object creation, Automock simplifies the testing process, reducing complexity and
-  making unit testing more approachable.
+🔧 **Maintainability** \
+By generating mock objects that closely resemble the original dependencies, Automock promotes code maintainability. The
+generated mocks retain the same type information as the real objects, ensuring type safety and allowing you to leverage
+TypeScript's powerful static type checking capabilities. This approach enhances code readability, reduces the risk of
+errors, and makes it easier to refactor and maintain tests over time.
 
-
-* 🔧 **Maintainability.** The generated mocks retain the same type information as the real objects, ensuring type safety
-  and allowing you to leverage TypeScript's powerful static type checking capabilities. This approach enhances code
-  readability, reduces the risk of errors, and makes it easier to refactor and maintain tests over time.
-
-
-* 📐 **Consistent Syntax and Test Structure.** Automock promotes a uniform test syntax and test structure, ensuring
-  consistency and coherence across your unit tests. By adhering to established conventions and guidelines, you can
-  establish a standardized approach to writing tests.
+📐 **Consistent Syntax and Test Structure.** \
+Automock promotes a uniform test syntax and test structure, ensuring consistency and coherence across your unit tests.
+By adhering to established conventions and guidelines, you can establish a standardized approach to writing tests.
 
 ## :rocket: Improving Continuous Integration (CI)
 

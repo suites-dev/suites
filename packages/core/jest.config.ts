@@ -6,9 +6,9 @@ export default async (): Promise<Config.InitialOptions> => {
 
   return {
     ...baseConfig,
-    name: 'jest',
-    displayName: 'jest',
-    collectCoverageFrom: ['src/**/*.ts', 'test/**/*.ts'],
-    coveragePathIgnorePatterns: ['index.ts', 'spec-assets.ts'],
+    name: 'core',
+    displayName: 'core',
+    collectCoverageFrom: ['src/**/*.ts', '__test__/**/*.ts'],
+    coveragePathIgnorePatterns: ['index.ts', 'integration.assets.ts'],
   };
 };

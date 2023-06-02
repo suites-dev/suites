@@ -1,7 +1,7 @@
 {
   "name": "@automock/nestjs",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.1.0-dev.0",
   "license": "MIT",
   "main": "dist/index.js",
   "repository": {
@@ -29,13 +29,13 @@
     "index.js"
   ],
   "dependencies": {
-    "@automock/common": "^1.0.0"
+    "@automock/common": "^1.1.0-dev.0"
   },
   "peerDependencies": {
     "@nestjs/common": ">= 8.x"
   },
   "devDependencies": {
-    "@automock/types": "^1.0.1",
+    "@automock/types": "^1.1.0-dev.0",
     "@nestjs/common": "^8.3.1"
   },
   "publishConfig": {

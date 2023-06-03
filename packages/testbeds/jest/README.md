@@ -34,7 +34,11 @@ individual components, improving the efficiency and reliability of your unit tes
 npm i -D @automock/jest
 ```
 
-> 👷 Coming Soon: Sinon Support! We are currently working on adding Sinon support, allowing you to leverage its mocking capabilities.
+> Note: We are actively developing Sinon support to enhance Automock with additional mocking capabilities.
+
+> Note: Currently, Automock supports only NestJS.
+We are working on expanding our framework support in the next major release, which will include Ts.ED, Inversify and
+> TypeDI frameworks.
 
 ## :computer: Usage Example
 
@@ -116,7 +120,8 @@ Automock can greatly enhance your CI pipeline. Since it automatically mocks all 
 assume that your unit tests are executed in complete isolation, creating a solitary unit testing environment.
 
 We recommend naming your test files with a specific suffix, such as `*.spec.ts` or `*.unit.ts`. This convention allows
-you to easily distinguish and run your unit tests separately. [Read more about the Jest projects](https://jestjs.io/docs/configuration#projects-arraystring--projectconfig)
+you to easily distinguish and run your unit tests
+separately. [Read more about the Jest projects](https://jestjs.io/docs/configuration#projects-arraystring--projectconfig)
 
 This solitary unit testing environment provides numerous benefits for optimizing your CI process:
 

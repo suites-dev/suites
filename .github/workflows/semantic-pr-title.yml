@@ -1,9 +1,8 @@
 name: Semantic Pull Request
 
 permissions:
-  id-token: write
-  contents: read
   checks: write
+  pull-requests: read
 
 on:
   pull_request_target:

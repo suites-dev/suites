@@ -36,7 +36,7 @@ jobs:
             sinon
             jest
             types
-            nestjs
+            adapters(\.)?nestjs
             core
             doubles(\.)?.jest
             *

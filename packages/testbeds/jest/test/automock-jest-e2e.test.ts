@@ -1,4 +1,10 @@
-import { Logger, MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from './spec-assets-nestjs';
+import {
+  Logger,
+  MainTestClass,
+  TestClassOne,
+  TestClassThree,
+  TestClassTwo,
+} from './spec-assets-nestjs';
 import { TestBed, UnitTestBed, TestBedResolver } from '../src';
 
 describe('AutoMock E2E Test', () => {

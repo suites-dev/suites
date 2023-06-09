@@ -24,7 +24,7 @@ export default async (): Promise<Config.InitialOptions> => {
     },
     projects: [
       '<rootDir>/packages/core',
-      '<rootDir>/packages/reflectors/nestjs',
+      '<rootDir>/packages/adapters/nestjs',
       '<rootDir>/packages/testbeds/jest',
     ],
   };

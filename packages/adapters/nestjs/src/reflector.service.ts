@@ -1,11 +1,13 @@
 import { Type } from '@automock/types';
-import { DependenciesReflector as AutomockDependenciesReflector } from '@automock/common';
+import {
+  ClassDependencies,
+  DependenciesReflector as AutomockDependenciesReflector,
+  PrimitiveValue,
+} from '@automock/common';
 import { CustomToken, TokensReflector } from './token-reflector.service';
 
 const INJECTED_TOKENS_METADATA = 'self:paramtypes';
 const PARAM_TYPES_METADATA = 'design:paramtypes';
-
-type ClassDependencies = Map<Type | string, Type>;
 
 export function ReflectorFactory(
   reflector: typeof Reflect,
@@ -14,7 +16,7 @@ export function ReflectorFactory(
   function reflectDependencies(targetClass: Type): ClassDependencies {
     const types = reflectParamTypes(targetClass);
     const tokens = reflectParamTokens(targetClass);
-    const classDependencies: ClassDependencies = new Map<Type | string, Type>();
+    const classDependencies: ClassDependencies = new Map<Type | string, PrimitiveValue | Type>();
 
     const callback = tokensReflector.attachTokenToDependency(tokens);
 

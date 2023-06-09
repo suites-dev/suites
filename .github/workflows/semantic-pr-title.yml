@@ -1,5 +1,10 @@
 name: Semantic Pull Request
 
+permissions:
+  id-token: write
+  contents: read
+  checks: write
+
 on:
   pull_request_target:
     types:
@@ -12,7 +17,7 @@ jobs:
     name: Validate
     runs-on: ubuntu-latest
     steps:
-      - uses: amannn/action-semantic-pull-request@v4
+      - uses: amannn/action-semantic-pull-request@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -31,7 +36,7 @@ jobs:
             sinon
             jest
             types
-            nestjs
+            adapters(\.)?nestjs
             core
             doubles(\.)?.jest
             *

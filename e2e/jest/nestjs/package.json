@@ -1,0 +1,11 @@
+{
+  "name": "automock-jest-nestjs",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@automock/nestjs": "*"
+  },
+  "scripts": {
+    "test": "exit 0;"
+  }
+}

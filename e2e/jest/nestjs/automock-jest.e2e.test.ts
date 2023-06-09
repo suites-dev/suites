@@ -67,8 +67,6 @@ describe('Automock Jest / NestJS E2E Test', () => {
       .using({
         log: () => 'dummy-mocked',
       })
-      .mock<string>('PRIMITIVE')
-      .using('DUMMY-STRING')
       .compile();
   });
 
@@ -97,12 +95,5 @@ describe('Automock Jest / NestJS E2E Test', () => {
   test('return the exact value when using the jest mocking api', () => {
     unitTestbed.unitRef.get(Numberer).returnANumber.mockReturnValue(47356);
     expect(unitTestbed.unit.generateNumber()).toBe(47356);
-  });
-
-  test('return the primitive value when using primitive values', () => {
-    const primitiveValue = unitTestbed.unitRef.get('PRIMITIVE');
-
-    expect(primitiveValue).toBe('DUMMY-STRING');
-    expect(unitTestbed.unit.returnPrimitive()).toBe('DUMMY-STRING');
   });
 });

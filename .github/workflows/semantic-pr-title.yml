@@ -1,5 +1,10 @@
 name: Semantic Pull Request
 
+permissions:
+  id-token: write
+  contents: read
+  checks: write
+
 on:
   pull_request_target:
     types:
@@ -31,7 +36,7 @@ jobs:
             sinon
             jest
             types
-            nestjs
+            adapters(\.)?nestjs
             core
             doubles(\.)?.jest
             *

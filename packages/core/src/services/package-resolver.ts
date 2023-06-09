@@ -1,6 +1,6 @@
 import { DependenciesReflector } from '@automock/common';
 
-export const AutomockReflectors: Record<string, string> = {
+export const AutomockAdapters: Record<string, string> = {
   nestjs: '@automock/adapters.nestjs',
 } as const;
 
@@ -11,22 +11,22 @@ interface NodeRequire {
 
 export class PackageResolver {
   public constructor(
-    private readonly reflectors: Record<string, string>,
+    private readonly adapters: Record<string, string>,
     private readonly require: NodeRequire
   ) {}
 
-  public resolveCorrespondingReflector(): DependenciesReflector | never {
-    const resolvers = Object.keys(this.reflectors);
+  public resolveCorrespondingAdapter(): DependenciesReflector | never {
+    const resolvers = Object.keys(this.adapters);
 
-    const reflectorName = resolvers.find((resolverName: string) =>
-      this.packageIsAvailable(this.reflectors[resolverName])
+    const adapterName = resolvers.find((resolverName: string) =>
+      this.packageIsAvailable(this.adapters[resolverName])
     );
 
-    if (!reflectorName) {
-      throw new Error('No corresponding reflector found');
+    if (!adapterName) {
+      throw new Error('No corresponding adapter found');
     }
 
-    return this.require.require(this.reflectors[reflectorName]) as DependenciesReflector;
+    return this.require.require(this.adapters[adapterName]) as DependenciesReflector;
   }
 
   private packageIsAvailable(path: string): boolean {

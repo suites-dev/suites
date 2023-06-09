@@ -1,8 +1,7 @@
 name: Semantic Pull Request
 
 permissions:
-  checks: write
-  pull-requests: read
+  pull-requests: write
 
 on:
   pull_request_target:

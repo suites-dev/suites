@@ -8,7 +8,7 @@ export default async (): Promise<Config.InitialOptions> => {
     ...baseConfig,
     name: 'adapters.nestjs',
     displayName: 'adapters.nestjs',
-    collectCoverageFrom: ['src/**/*.ts'],
-    coveragePathIgnorePatterns: ['index.ts'],
+    collectCoverageFrom: ['src/**/*.ts', '__test__/**/*.ts'],
+    coveragePathIgnorePatterns: ['index.ts', '__test__/integration.assets.ts'],
   };
 };

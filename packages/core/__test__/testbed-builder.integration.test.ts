@@ -9,22 +9,24 @@ import {
   DependencyTwo,
   DependencyFive,
 } from './integration.assets';
+import { PrimitiveValue } from '@automock/common';
 
 describe('Builder Factory Integration Test', () => {
   let underTest: TestBedBuilder<MainClass>;
 
-  // It's a function that mocks the mock function, don't be confused by the name
+  // It's a mark for a function that mocks the mock function, don't be confused by the name
   const mockFunctionMockOfBuilder = jest.fn(() => '__MOCKED_FROM_BUILDER__');
   const mockFunctionMockOfMocker = jest.fn(() => '__MOCKED_FROM_MOCKER__');
 
   const reflectorMock = {
     reflectDependencies: () => {
-      return new Map<Type | string, Type>([
+      return new Map<Type | string, Type | PrimitiveValue>([
         [DependencyOne, DependencyOne],
         [DependencyTwo, DependencyTwo],
         [DependencyThree, DependencyThree],
         ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
         [DependencyFive, DependencyFive],
+        ['STRING_TOKEN', 'ANY STRING'],
       ]);
     },
   };
@@ -55,6 +57,8 @@ describe('Builder Factory Integration Test', () => {
         .using({
           print: () => 'dependency-four-overridden',
         })
+        .mock<string>('STRING_TOKEN')
+        .using('ARBITRARY_STRING')
         .compile();
     });
 
@@ -73,8 +77,9 @@ describe('Builder Factory Integration Test', () => {
         [DependencyOne.name, '__MOCKED_FROM_BUILDER__', DependencyOne],
         [DependencyTwo.name, '__MOCKED_FROM_BUILDER__', DependencyTwo],
         [DependencyThree.name, '__MOCKED_FROM_MOCKER__', DependencyThree],
-        ['DEPENDENCY_FOUR_TOKEN', '__MOCKED_FROM_BUILDER__', 'DEPENDENCY_FOUR_TOKEN'],
+        ['custom token with function', '__MOCKED_FROM_BUILDER__', 'DEPENDENCY_FOUR_TOKEN'],
         [DependencyFive.name, '__MOCKED_FROM_MOCKER__', DependencyFive],
+        ['custom token with primitive value', 'ARBITRARY_STRING', 'STRING_TOKEN'],
       ])(
         'should return a stubbed instance for %p, mocked from %p',
         (name: string, expectedResult: Type | string, dependency: Type | string) => {

@@ -1,5 +1,5 @@
 import { Type, MockFunction, StubbedInstance } from '@automock/types';
-import { DependenciesReflector } from '@automock/common';
+import { DependenciesReflector, PrimitiveValue } from '@automock/common';
 
 export class DependenciesMocker {
   public constructor(
@@ -16,7 +16,7 @@ export class DependenciesMocker {
   public mockAllDependencies<TClass>(
     targetClass: Type<TClass>
   ): (
-    alreadyMockedDependencies: Map<Type | string, StubbedInstance<unknown>>
+    alreadyMockedDependencies: Map<Type | string, StubbedInstance<unknown> | PrimitiveValue>
   ) => Map<Type | string, StubbedInstance<unknown>> {
     return (alreadyMockedDependencies: Map<Type | string, StubbedInstance<unknown>>) => {
       const classDependencies = this.reflector.reflectDependencies(targetClass);

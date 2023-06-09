@@ -2,7 +2,9 @@ name: Continuous Integration
 on: [pull_request]
 
 permissions:
-  pull-requests: write
+  id-token: write
+  contents: read
+  checks: write
 
 jobs:
   build:

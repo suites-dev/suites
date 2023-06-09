@@ -1,6 +1,10 @@
-import { UnitTestbed } from '@automock/core';
+import { UnitTestBed } from '@automock/core';
 import { TestBed } from '@automock/jest';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+
+interface Logger {
+  log(message: string): string;
+}
 
 @Injectable()
 export class Numberer {
@@ -28,7 +32,9 @@ class MainClass {
   public constructor(
     private readonly dep1: Numberer,
     private readonly dep2: Stringer,
-    private readonly dep3: Useless
+    private readonly dep3: Useless,
+    @Inject('LOGGER') private readonly logger: Logger,
+    @Inject('PRIMITIVE') private readonly primitive: string
   ) {}
 
   public generateString(): string {
@@ -39,13 +45,17 @@ class MainClass {
     return this.dep1.returnANumber();
   }
 
-  public doNothing(): void {
-    return this.dep3.voidMethod();
+  public returnPrimitive(): string {
+    return this.primitive;
+  }
+
+  public returnLogger(): string {
+    return this.logger.log('hello');
   }
 }
 
 describe('Automock Jest / NestJS E2E Test', () => {
-  let unitTestbed: UnitTestbed<MainClass>;
+  let unitTestbed: UnitTestBed<MainClass>;
 
   beforeAll(() => {
     unitTestbed = TestBed.create(MainClass)
@@ -53,6 +63,12 @@ describe('Automock Jest / NestJS E2E Test', () => {
       .using({
         returnAString: () => 'not-random',
       })
+      .mock<Logger>('LOGGER')
+      .using({
+        log: () => 'dummy-mocked',
+      })
+      .mock<string>('PRIMITIVE')
+      .using('DUMMY-STRING')
       .compile();
   });
 
@@ -78,12 +94,15 @@ describe('Automock Jest / NestJS E2E Test', () => {
     expect(unitTestbed.unit.generateString()).toBe('not-random');
   });
 
-  test('return a number from the method that call the dependency that generates numbers', () => {
-    expect(unitTestbed.unit.generateNumber()).toBe(10);
-  });
-
   test('return the exact value when using the jest mocking api', () => {
     unitTestbed.unitRef.get(Numberer).returnANumber.mockReturnValue(47356);
     expect(unitTestbed.unit.generateNumber()).toBe(47356);
+  });
+
+  test('return the primitive value when using primitive values', () => {
+    const primitiveValue = unitTestbed.unitRef.get('PRIMITIVE');
+
+    expect(primitiveValue).toBe('DUMMY-STRING');
+    expect(unitTestbed.unit.returnPrimitive()).toBe('DUMMY-STRING');
   });
 });

@@ -5,9 +5,7 @@
   "dependencies": {
     "@automock/common": "*",
     "@automock/core": "*",
-    "@automock/doubles.jest": "*",
-    "@automock/doubles.sinon": "*",
-    "@automock/nestjs": "*",
+    "@automock/adapters.nestjs": "*",
     "@automock/types": "*",
     "@types/node": "^16.18.34",
     "ts-node": "^10.9.1",

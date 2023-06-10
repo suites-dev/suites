@@ -61,7 +61,7 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/reflectors/*",
+    "packages/adapters/*",
     "packages/testbeds/*"
   ],
   "lint-staged": {

@@ -18,6 +18,8 @@ describe('AutoMock E2E Test', () => {
         .using({
           foo: (): Promise<string> => Promise.resolve('foo-from-test'),
         })
+        .mock<string>('PRIVATE_VALUE')
+        .using('arbitrary-string')
         .mock<Logger>('LOGGER')
         .using({ log: () => 'baz-from-test' });
     });

@@ -4,6 +4,11 @@ on:
     branches:
       - master
 
+permissions:
+  id-token: write
+  contents: read
+  checks: write
+
 jobs:
   test:
     name: Test

@@ -33,12 +33,13 @@
     "README.md"
   ],
   "dependencies": {
-    "@automock/core": "^1.1.0",
     "@automock/adapters.nestjs": "^1.1.0",
+    "@automock/core": "^1.1.0",
     "@automock/types": "^1.1.0",
     "jest-mock-extended": "^2.0.9"
   },
   "devDependencies": {
+    "@nestjs/common": "^8.3.1",
     "@nestjs/core": "^8.0.3",
     "@nestjs/typeorm": "^8.0.3",
     "jest": "^27.5.1",

@@ -83,4 +83,4 @@ jobs:
         run: yarn --frozen-lockfile && lerna bootstrap --ci
 
       - name: Version Graduate
-        run: lerna version --conventional-commits --conventional-graduate --create-release github
+        run: lerna version --yes --conventional-commits --conventional-graduate --create-release github

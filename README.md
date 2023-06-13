@@ -9,7 +9,7 @@
 <h1 align="center">Automock</h1>
 
 <p align="center">
-<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for class dependencies, <br>
+<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for<br>class dependencies,
 allowing you to focus on writing test cases instead of mock setup.</strong>
 </p>
 

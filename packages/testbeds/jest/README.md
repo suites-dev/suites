@@ -5,8 +5,8 @@
 <h1 align="center">Automock</h1>
 
 <p align="center">
-<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for class dependencies, <br>
-allowing you to focus on writing test cases instead of mock setup.</strong>
+<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for class
+dependencies, allowing you to focus on writing test cases instead of mock setup.</strong>
 </p>
 
 <br>
@@ -106,4 +106,3 @@ https://martinfowler.com/bliki/UnitTest.html
 ## :scroll: License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-  

@@ -22,7 +22,7 @@ export class DependenciesMocker {
       const classDependencies = this.reflector.reflectDependencies(targetClass);
       const classMockedDependencies = new Map<Type | string, StubbedInstance<unknown>>();
 
-      for (const [dependency] of classDependencies.entries()) {
+      for (const [dependency] of classDependencies.constructor) {
         const alreadyMocked = alreadyMockedDependencies.get(dependency);
 
         const mockedDependency = alreadyMocked

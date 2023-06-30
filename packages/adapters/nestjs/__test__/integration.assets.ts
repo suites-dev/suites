@@ -1,5 +1,7 @@
 import { forwardRef, Inject } from '@nestjs/common';
 
+type DummyType = string;
+
 export class DependencyOne {
   print(): string {
     return 'dependencyOne';
@@ -30,6 +32,7 @@ export class MainClass {
     private readonly dependencyTwo: DependencyTwo,
     @Inject(forwardRef(() => DependencyThree)) private readonly dependencyThree: DependencyThree,
     @Inject('CUSTOM_TOKEN') private readonly dependencyFour: DependencyFourToken,
+    @Inject('CUSTOM_TOKEN') private readonly dummy: DummyType,
     @Inject('LITERAL_VALUE_ARR') private readonly literalValueArray: string[],
     @Inject('LITERAL_VALUE_STR') private readonly literalValueString: string
   ) {}

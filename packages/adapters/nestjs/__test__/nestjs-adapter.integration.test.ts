@@ -7,8 +7,7 @@ import {
   DependencyTwo,
   MainClass,
 } from './integration.assets';
-import { Type } from '@automock/types';
-import { ClassDependencies, PrimitiveValue } from '@automock/common';
+import { ClassDependenciesMap } from '@automock/common';
 
 describe('NestJS Automock Adapter Integration Test', () => {
   describe('reflecting a class', () => {
@@ -16,16 +15,15 @@ describe('NestJS Automock Adapter Integration Test', () => {
     const classDependencies = reflectorFactory.reflectDependencies(MainClass);
 
     it('should return a map of the class dependencies', () => {
-      expect(classDependencies).toStrictEqual<ClassDependencies>(
-        new Map<Type | string, PrimitiveValue | Type>([
-          ['CUSTOM_TOKEN', DependencyFourToken],
-          [DependencyOne, DependencyOne],
-          [DependencyTwo, DependencyTwo],
-          [DependencyThree, DependencyThree],
-          ['LITERAL_VALUE_ARR', Array],
-          ['LITERAL_VALUE_STR', String],
-        ])
-      );
+      expect(classDependencies.constructor).toStrictEqual<ClassDependenciesMap['constructor']>([
+        [DependencyOne, DependencyOne],
+        [DependencyTwo, DependencyTwo],
+        [DependencyThree, DependencyThree],
+        ['CUSTOM_TOKEN', DependencyFourToken],
+        ['CUSTOM_TOKEN', String],
+        ['LITERAL_VALUE_ARR', Array],
+        ['LITERAL_VALUE_STR', String],
+      ]);
     });
   });
 });

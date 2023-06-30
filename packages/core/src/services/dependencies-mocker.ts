@@ -1,5 +1,11 @@
 import { Type, MockFunction, StubbedInstance } from '@automock/types';
 import { DependenciesReflector, PrimitiveValue } from '@automock/common';
+import { ClassDependenciesMap } from '@automock/common/src';
+
+export interface MockedDependencies {
+  mocks: Map<Type | string, StubbedInstance<unknown>>;
+  origin: ClassDependenciesMap;
+}
 
 export class DependenciesMocker {
   public constructor(
@@ -17,12 +23,14 @@ export class DependenciesMocker {
     targetClass: Type<TClass>
   ): (
     alreadyMockedDependencies: Map<Type | string, StubbedInstance<unknown> | PrimitiveValue>
-  ) => Map<Type | string, StubbedInstance<unknown>> {
-    return (alreadyMockedDependencies: Map<Type | string, StubbedInstance<unknown>>) => {
+  ) => MockedDependencies {
+    return (
+      alreadyMockedDependencies: Map<Type | string, StubbedInstance<unknown>>
+    ): MockedDependencies => {
       const classDependencies = this.reflector.reflectDependencies(targetClass);
       const classMockedDependencies = new Map<Type | string, StubbedInstance<unknown>>();
 
-      for (const [dependency] of classDependencies.entries()) {
+      for (const [dependency] of classDependencies.constructor) {
         const alreadyMocked = alreadyMockedDependencies.get(dependency);
 
         const mockedDependency = alreadyMocked
@@ -32,7 +40,10 @@ export class DependenciesMocker {
         classMockedDependencies.set(dependency, mockedDependency);
       }
 
-      return classMockedDependencies;
+      return {
+        mocks: classMockedDependencies,
+        origin: classDependencies,
+      };
     };
   }
 }

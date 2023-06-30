@@ -9,7 +9,7 @@ import {
   DependencyTwo,
   DependencyFive,
 } from './integration.assets';
-import { PrimitiveValue } from '@automock/common';
+import { DependenciesReflector } from '@automock/common';
 
 describe('Builder Factory Integration Test', () => {
   let underTest: TestBedBuilder<MainClass>;
@@ -18,16 +18,22 @@ describe('Builder Factory Integration Test', () => {
   const mockFunctionMockOfBuilder = jest.fn(() => '__MOCKED_FROM_BUILDER__');
   const mockFunctionMockOfMocker = jest.fn(() => '__MOCKED_FROM_MOCKER__');
 
-  const reflectorMock = {
+  const reflectorMock: DependenciesReflector = {
     reflectDependencies: () => {
-      return new Map<Type | string, Type | PrimitiveValue>([
-        [DependencyOne, DependencyOne],
-        [DependencyTwo, DependencyTwo],
-        [DependencyThree, DependencyThree],
-        ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
-        [DependencyFive, DependencyFive],
-        ['STRING_TOKEN', 'ANY STRING'],
-      ]);
+      return {
+        constructor: [
+          [DependencyOne, DependencyOne],
+          // Repeat on the same dependency twice, as it can be returned from the reflector (@since 1.2.2)
+          [DependencyTwo, DependencyTwo],
+          [DependencyTwo, DependencyTwo],
+          [DependencyThree, DependencyThree],
+          // Repeat on the same dependency twice, as it can be returned from the reflector (@since 1.2.2)
+          ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
+          ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
+          [DependencyFive, DependencyFive],
+          ['STRING_TOKEN', 'ANY STRING'],
+        ],
+      };
     },
   };
 
@@ -75,6 +81,7 @@ describe('Builder Factory Integration Test', () => {
     describe('override the dependencies from the builder, and leave the rest for the dependencies mocked', () => {
       it.each([
         [DependencyOne.name, '__MOCKED_FROM_BUILDER__', DependencyOne],
+        [DependencyTwo.name, '__MOCKED_FROM_BUILDER__', DependencyTwo],
         [DependencyTwo.name, '__MOCKED_FROM_BUILDER__', DependencyTwo],
         [DependencyThree.name, '__MOCKED_FROM_MOCKER__', DependencyThree],
         ['custom token with function', '__MOCKED_FROM_BUILDER__', 'DEPENDENCY_FOUR_TOKEN'],

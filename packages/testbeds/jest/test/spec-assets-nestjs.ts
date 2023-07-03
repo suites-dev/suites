@@ -37,6 +37,7 @@ export class MainTestClass {
   constructor(
     private readonly testClassOne: TestClassOne,
     private readonly testClassTwo: TestClassTwo,
+    private readonly testClassTwoSecond: TestClassTwo,
     @Inject('LOGGER') private readonly logger: Logger,
     @Inject('PRIMITIVE_VALUE') private readonly primitiveValue: string
   ) {}

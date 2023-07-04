@@ -1,4 +1,10 @@
-import { Logger, MainTestClass, TestClassOne, TestClassThree, TestClassTwo } from './spec-assets-nestjs';
+import {
+  Logger,
+  MainTestClass,
+  TestClassOne,
+  TestClassThree,
+  TestClassTwo,
+} from './spec-assets-nestjs';
 import { TestBed, UnitTestBed, TestBedResolver } from '../src';
 
 describe('AutoMock E2E Test', () => {
@@ -12,6 +18,8 @@ describe('AutoMock E2E Test', () => {
         .using({
           foo: (): Promise<string> => Promise.resolve('foo-from-test'),
         })
+        .mock<string>('PRIVATE_VALUE')
+        .using('arbitrary-string')
         .mock<Logger>('LOGGER')
         .using({ log: () => 'baz-from-test' });
     });

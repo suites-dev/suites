@@ -41,6 +41,7 @@ jobs:
 
       - name: Copy
         run: |
+          rm -rf node_modules/@automock
           mkdir -p node_modules/@automock
 
           for file in ./tarballs/*.tgz; do

@@ -4,13 +4,18 @@ on:
     branches:
       - master
 
+permissions:
+  id-token: write
+  contents: read
+  checks: write
+
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ['jest', 'nestjs', 'core']
+        project: ['jest', 'adapters.nestjs', 'core']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -47,7 +52,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest
+          flags: jest,adapters.nestjs,core
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           directory: coverage

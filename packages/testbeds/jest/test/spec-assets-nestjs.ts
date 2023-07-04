@@ -37,7 +37,9 @@ export class MainTestClass {
   constructor(
     private readonly testClassOne: TestClassOne,
     private readonly testClassTwo: TestClassTwo,
-    @Inject('LOGGER') private readonly logger: Logger
+    private readonly testClassTwoSecond: TestClassTwo,
+    @Inject('LOGGER') private readonly logger: Logger,
+    @Inject('PRIMITIVE_VALUE') private readonly primitiveValue: string
   ) {}
 
   async test(): Promise<string> {
@@ -45,19 +47,7 @@ export class MainTestClass {
     const value2 = await this.testClassTwo.bar();
     const value3 = this.logger.log();
 
-    return `${value}-${value2}-${value3}`;
-  }
-}
-
-@Injectable()
-export class InvalidClass {
-  constructor(private readonly testClassOne: TestClassOne, private readonly logger: Logger) {}
-
-  async test(): Promise<string> {
-    const value = await this.testClassOne.foo(true);
-    const value3 = this.logger.log();
-
-    return `${value}-${value3}`;
+    return `${value}-${value2}-${value3}-${this.primitiveValue}`;
   }
 }
 
@@ -75,7 +65,8 @@ export class NestJSTestClass {
     @InjectRepository(Foo) private readonly fooRepository: Repository<Foo>,
     @InjectRepository(Bar) private readonly barRepository: Repository<Bar>,
     private readonly testClassOne: TestClassOne,
-    private readonly testClassTwo: TestClassTwo
+    private readonly testClassTwo: TestClassTwo,
+    @Inject('PRIMITIVE_VALUE') private readonly primitiveValue: string
   ) {}
 
   async test(): Promise<string> {

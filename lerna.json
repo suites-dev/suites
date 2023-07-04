@@ -20,10 +20,9 @@
     }
   },
   "npmClient": "yarn",
-  "useWorkspaces": true,
   "packages": [
     "packages/*",
-    "packages/reflectors/*",
+    "packages/adapters/*",
     "packages/testbeds/*"
   ]
 }

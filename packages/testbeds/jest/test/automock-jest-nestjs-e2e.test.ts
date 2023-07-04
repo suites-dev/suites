@@ -30,7 +30,9 @@ describe('AutoMock NestJS E2E Test', () => {
         .mock(TestClassOne)
         .using(testClassOneMock)
         .mock<Logger>('LOGGER')
-        .using(loggerMock);
+        .using(loggerMock)
+        .mock<string>('PRIMITIVE_VALUE')
+        .using('arbitrary-string');
     });
 
     describe('when compiling the builder and turning into testing unit', () => {
@@ -50,6 +52,7 @@ describe('AutoMock NestJS E2E Test', () => {
         expect(unitRef.get(getRepositoryToken(Bar) as string)).toBeDefined();
         expect(unitRef.get<{ log: () => void }>('LOGGER').log).toBe(loggerMock.log);
         expect(unitRef.get(TestClassThree)).toBeDefined();
+        expect(unitRef.get('PRIMITIVE_VALUE')).toBe('arbitrary-string');
       });
 
       test('then do not return the actual reflected dependencies of the injectable class', () => {

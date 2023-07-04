@@ -9,23 +9,31 @@ import {
   DependencyTwo,
   DependencyFive,
 } from './integration.assets';
+import { DependenciesReflector } from '@automock/common';
 
 describe('Builder Factory Integration Test', () => {
   let underTest: TestBedBuilder<MainClass>;
 
-  // It's a function that mocks the mock function, don't be confused by the name
+  // It's a mark for a function that mocks the mock function, don't be confused by the name
   const mockFunctionMockOfBuilder = jest.fn(() => '__MOCKED_FROM_BUILDER__');
   const mockFunctionMockOfMocker = jest.fn(() => '__MOCKED_FROM_MOCKER__');
 
-  const reflectorMock = {
+  const reflectorMock: DependenciesReflector = {
     reflectDependencies: () => {
-      return new Map<Type | string, Type>([
-        [DependencyOne, DependencyOne],
-        [DependencyTwo, DependencyTwo],
-        [DependencyThree, DependencyThree],
-        ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
-        [DependencyFive, DependencyFive],
-      ]);
+      return {
+        constructor: [
+          [DependencyOne, DependencyOne],
+          // Repeat on the same dependency twice, as it can be returned from the reflector (@since 1.2.2)
+          [DependencyTwo, DependencyTwo],
+          [DependencyTwo, DependencyTwo],
+          [DependencyThree, DependencyThree],
+          // Repeat on the same dependency twice, as it can be returned from the reflector (@since 1.2.2)
+          ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
+          ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
+          [DependencyFive, DependencyFive],
+          ['STRING_TOKEN', 'ANY STRING'],
+        ],
+      };
     },
   };
 
@@ -55,6 +63,8 @@ describe('Builder Factory Integration Test', () => {
         .using({
           print: () => 'dependency-four-overridden',
         })
+        .mock<string>('STRING_TOKEN')
+        .using('ARBITRARY_STRING')
         .compile();
     });
 
@@ -72,9 +82,11 @@ describe('Builder Factory Integration Test', () => {
       it.each([
         [DependencyOne.name, '__MOCKED_FROM_BUILDER__', DependencyOne],
         [DependencyTwo.name, '__MOCKED_FROM_BUILDER__', DependencyTwo],
+        [DependencyTwo.name, '__MOCKED_FROM_BUILDER__', DependencyTwo],
         [DependencyThree.name, '__MOCKED_FROM_MOCKER__', DependencyThree],
-        ['DEPENDENCY_FOUR_TOKEN', '__MOCKED_FROM_BUILDER__', 'DEPENDENCY_FOUR_TOKEN'],
+        ['custom token with function', '__MOCKED_FROM_BUILDER__', 'DEPENDENCY_FOUR_TOKEN'],
         [DependencyFive.name, '__MOCKED_FROM_MOCKER__', DependencyFive],
+        ['custom token with primitive value', 'ARBITRARY_STRING', 'STRING_TOKEN'],
       ])(
         'should return a stubbed instance for %p, mocked from %p',
         (name: string, expectedResult: Type | string, dependency: Type | string) => {

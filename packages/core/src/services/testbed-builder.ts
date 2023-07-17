@@ -114,14 +114,14 @@ export class BuilderFactory {
           };
         },
         compile(): UnitTestBed<TClass> {
-          const allDependenciesMocked =
+          const { mocks, origin } =
             instance.dependenciesMocker.mockAllDependencies(targetClass)(dependenciesToOverride);
 
-          const values = Array.from(allDependenciesMocked.values());
+          const values = origin.constructor.map(([dependency]) => mocks.get(dependency));
 
           return {
             unit: new targetClass(...values) as TClass,
-            unitRef: new UnitReference(allDependenciesMocked),
+            unitRef: new UnitReference(mocks),
           };
         },
       };

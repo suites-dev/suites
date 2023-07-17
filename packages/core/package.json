@@ -1,7 +1,7 @@
 {
   "name": "@automock/core",
   "private": false,
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
@@ -35,7 +35,7 @@
     "README.md"
   ],
   "devDependencies": {
-    "@automock/common": "^1.2.0",
+    "@automock/common": "^2.0.0",
     "@automock/types": "^1.2.0"
   }
 }

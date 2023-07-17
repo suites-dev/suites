@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.2.2 (2023-07-01)
+
+### Code Refactoring
+
+* **core:** dependencies mocker to return new interface ([0881c0e4](https://github.com/omermorad/automock/commit/0881c0e468951166be3afe14454bb45d319859bd))
+
 # 1.2.0 (2023-06-10)
 
 ### Features

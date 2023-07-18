@@ -19,6 +19,7 @@
       "conventionalCommits": true
     }
   },
+  "useWorkspaces": true,
   "npmClient": "yarn",
   "packages": [
     "packages/*",

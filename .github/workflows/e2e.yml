@@ -39,9 +39,12 @@ jobs:
       - name: Move
         run: lerna exec -- mv "*.tgz" $PWD/e2e/tarballs
 
+      - name: Install Packages in E2E
+        run: npm install
+        working-directory: e2e
+
       - name: Copy
         run: |
-          rm -rf node_modules/@automock
           mkdir -p node_modules/@automock
 
           for file in ./tarballs/*.tgz; do
@@ -50,10 +53,6 @@ jobs:
               tar --wildcards -xzvf "$file" -C "$newname" --no-same-owner --strip-components=1 "package/*"
               mv "$newname" ./node_modules/@automock
           done
-        working-directory: e2e
-
-      - name: Install Packages in E2E
-        run: npm install
         working-directory: e2e
 
       - name: Test e2e

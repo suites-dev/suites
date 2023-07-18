@@ -28,7 +28,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
-        run: yarn --frozen-lockfile && lerna bootstrap --ci
+        run: yarn --frozen-lockfile
 
       - name: Build
         run: yarn build
@@ -38,6 +38,10 @@ jobs:
 
       - name: Move
         run: lerna exec -- mv "*.tgz" $PWD/e2e/tarballs
+
+      - name: Install Packages in E2E
+        run: npm install
+        working-directory: e2e
 
       - name: Copy
         run: |
@@ -50,10 +54,6 @@ jobs:
               tar --wildcards -xzvf "$file" -C "$newname" --no-same-owner --strip-components=1 "package/*"
               mv "$newname" ./node_modules/@automock
           done
-        working-directory: e2e
-
-      - name: Install Packages in E2E
-        run: npm install
         working-directory: e2e
 
       - name: Test e2e

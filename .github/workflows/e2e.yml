@@ -28,7 +28,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
-        run: yarn --frozen-lockfile && lerna bootstrap --ci
+        run: yarn --frozen-lockfile
 
       - name: Build
         run: yarn build

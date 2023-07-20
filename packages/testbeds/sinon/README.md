@@ -5,8 +5,8 @@
 <h1 align="center">Automock</h1>
 
 <p align="center">
-<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for class
-dependencies, allowing you to focus on writing test cases instead of mock setup.</strong>
+<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for<br>class dependencies,
+allowing you to focus on writing test cases instead of mock setup.</strong>
 </p>
 
 <br>
@@ -18,7 +18,7 @@ individual components, improving the efficiency and reliability of your unit tes
 ## :package: Installation
 
 ```bash
-npm i -D @automock/jest
+npm i -D @automock/sinon
 ```
 
 ## :computer: Usage Example
@@ -27,7 +27,8 @@ With Automock, you can streamline the test creation process and eliminate the ne
 the following example:
 
 ```typescript
-import { TestBed } from '@automock/jest';
+import { TestBed } from '@automock/sinon';
+import { SinonStubbedInstance } from 'sinon';
 
 class Database {
   getUsers(): Promise<User[]> { ... }
@@ -43,7 +44,7 @@ class UserService {
 
 describe('User Service Unit Spec', () => {
   let userService: UserService;
-  let database: jest.Mocked<Database>;
+  let database: SinonStubbedInstance<Database>;
 
   beforeEach(() => {
     const { unit, unitRef } = TestBed.create(UserService).compile();
@@ -52,10 +53,13 @@ describe('User Service Unit Spec', () => {
   });
 
   test('getAllUsers should retrieve users from the database', async () => {
-    database.getUsers.mockResolvedValue([{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]);
+    const mockUsers: User[] = [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }];
+    database.getUsers.resolves(mockUsers);
 
     const users = await userService.getAllUsers();
-    expect(users).toEqual(mockUsers);
+
+    expect(database.getUsers).to.be.calledOnce();
+    expect(users).to.be(mockUsers);
   });
 });
 ```
@@ -63,9 +67,6 @@ describe('User Service Unit Spec', () => {
 Automock streamlines the test creation process by automating the creation of mock objects and stubs, reducing
 boilerplate code and eliminating the manual setup effort. This allows you to focus on writing meaningful test cases and
 validating the behavior of your code without getting bogged down in repetitive mock object creation.
-
-Automock specially designed for Inversion of Control (IoC) and Dependency Injection (DI) scenarios, seamlessly
-integrating automatic mocking into your framework of choice.
 
 **[:books: For more examples and for API reference visit our docs page](https://github.com/automock/automock/blob/master/docs/automock.md)**
 
@@ -101,6 +102,7 @@ Automock is influenced by the principles and concepts discussed in Martin Fowler
 discusses the idea of creating "solitary" unit tests, which focus on testing a single unit of code in isolation,
 independent of its dependencies.
 
+To learn more about unit tests, we encourage you to read Martin Fowler's blog post:
 https://martinfowler.com/bliki/UnitTest.html
 
 ## :scroll: License

@@ -1,0 +1,11 @@
+{
+  "name": "automock-sinon-nestjs",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@automock/adapters.nestjs": "*"
+  },
+  "scripts": {
+    "test": "exit 0;"
+  }
+}

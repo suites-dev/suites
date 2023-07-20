@@ -1,3 +1,5 @@
+import { SinonStubbedInstance } from 'sinon';
+import { TestBedBuilder } from '@automock/core';
 import {
   Logger,
   MainTestClass,
@@ -5,12 +7,12 @@ import {
   TestClassThree,
   TestClassTwo,
 } from './spec-assets-nestjs';
-import { TestBed, UnitTestBed, TestBedResolver } from '../src';
-import { SinonStubbedInstance } from 'sinon';
+import { TestBed, UnitTestBed } from '../src';
+import sinon from 'sinon';
 
 describe('AutoMock E2E Test', () => {
   let unit: UnitTestBed<MainTestClass>;
-  let unitBuilder: TestBedResolver<MainTestClass>;
+  let unitBuilder: TestBedBuilder<MainTestClass>;
 
   describe('given a unit testing builder with two overrides', () => {
     beforeAll(() => {
@@ -69,8 +71,8 @@ describe('AutoMock E2E Test', () => {
         const { unitRef } = unit;
         const testClassTwo: SinonStubbedInstance<TestClassTwo> = unitRef.get(TestClassTwo);
 
-        expect(testClassTwo.bar.getMockName).toBeDefined();
-        expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');
+        expect(testClassTwo.bar).toBeDefined();
+        expect(testClassTwo.bar).toEqual(sinon.stub);
       });
     });
   });

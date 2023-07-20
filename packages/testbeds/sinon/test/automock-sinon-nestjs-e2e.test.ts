@@ -1,3 +1,6 @@
+import sinon, { SinonStubbedInstance } from 'sinon';
+import { TestBedBuilder } from '@automock/core';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import {
   Bar,
   Foo,
@@ -7,25 +10,21 @@ import {
   TestClassThree,
   TestClassTwo,
 } from './spec-assets-nestjs';
-import { TestBed, UnitTestBed, TestBedResolver } from '../src';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { SinonStubbedInstance } from 'sinon';
+import { TestBed, UnitTestBed } from '../src';
 
 describe('AutoMock NestJS E2E Test', () => {
   let unit: UnitTestBed<NestJSTestClass>;
-  let unitResolver: TestBedResolver<NestJSTestClass>;
+  let unitResolver: TestBedBuilder<NestJSTestClass>;
 
   describe('given a unit testing builder with two overrides', () => {
-    const loggerMock = {
-      log() {
-        return 'baz-from-test';
-      },
-    };
+    const loggerMock = { log: () => 'baz-from-test' };
+
     const testClassOneMock: { foo?: ((flag: boolean) => Promise<string>) | undefined } = {
       async foo(): Promise<string> {
         return 'foo-from-test';
       },
     };
+
     beforeAll(() => {
       unitResolver = TestBed.create<NestJSTestClass>(NestJSTestClass)
         .mock(TestClassOne)
@@ -82,8 +81,8 @@ describe('AutoMock NestJS E2E Test', () => {
         const { unitRef } = unit;
         const testClassTwo: SinonStubbedInstance<TestClassTwo> = unitRef.get(TestClassTwo);
 
-        expect(testClassTwo.bar.getMockName).toBeDefined();
-        expect(testClassTwo.bar.getMockName()).toBe('sinon.stub()');
+        expect(testClassTwo.bar).toBeDefined();
+        expect(testClassTwo.bar).toEqual(sinon.stub);
       });
     });
   });

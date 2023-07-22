@@ -7,5 +7,10 @@
   },
   "scripts": {
     "test": "exit 0;"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "ts-mocha": "^10.0.0"
   }
 }

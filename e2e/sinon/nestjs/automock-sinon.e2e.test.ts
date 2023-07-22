@@ -1,6 +1,8 @@
-import { UnitTestBed } from '@automock/core';
-import { TestBed } from '@automock/sinon';
-import { Injectable, Inject } from '@nestjs/common';
+import { UnitReference } from '@automock/core';
+import { TestBed, UnitTestBed } from '@automock/sinon';
+import { Inject, Injectable } from '@nestjs/common';
+import { expect } from 'chai';
+import { before } from 'mocha';
 
 interface Logger {
   log(message: string): string;
@@ -53,7 +55,7 @@ class MainClass {
 describe('Automock Sinon / NestJS E2E Test', () => {
   let unitTestbed: UnitTestBed<MainClass>;
 
-  beforeAll(() => {
+  before(() => {
     unitTestbed = TestBed.create(MainClass)
       .mock(Stringer)
       .using({
@@ -69,36 +71,36 @@ describe('Automock Sinon / NestJS E2E Test', () => {
   });
 
   it('should return an object with two properties, unit and unitRef', () => {
-    expect(unitTestbed).toHaveProperty('unit');
-    expect(unitTestbed).toHaveProperty('unitRef');
+    expect(unitTestbed).to.have.property('unit');
+    expect(unitTestbed).to.have.property('unitRef');
   });
 
   it('should return a unit which is an instance of the subject class', () => {
-    expect(unitTestbed.unit).toBeInstanceOf(MainClass);
+    expect(unitTestbed.unit).to.be.instanceof(MainClass);
   });
 
   it('should return a unit reference which is an instance of unit reference', () => {
-    expect(unitTestbed.unitRef.constructor.name).toBe('UnitReference');
+    expect(unitTestbed.unitRef).to.be.instanceof(UnitReference);
   });
 
   it('should contain all the method of the subject class', () => {
-    expect(unitTestbed.unit.generateString).toBeDefined();
-    expect(unitTestbed.unit.generateNumber).toBeDefined();
+    expect(unitTestbed.unit.generateString).not.to.be.undefined;
+    expect(unitTestbed.unit.generateNumber).not.to.be.undefined;
   });
 
-  test('return the default value from test bed builder when calling the target method that triggers the mock', () => {
-    expect(unitTestbed.unit.generateString()).toBe('not-random');
+  it('return the default value from test bed builder when calling the target method that triggers the mock', () => {
+    expect(unitTestbed.unit.generateString()).to.equal('not-random');
   });
 
-  test('return the exact value when using the sinon mocking api', () => {
+  it('return the exact value when using the jest mocking api', () => {
     unitTestbed.unitRef.get(Numberer).returnANumber.returns(47356);
-    expect(unitTestbed.unit.generateNumber()).toBe(47356);
+    expect(unitTestbed.unit.generateNumber()).to.equal(47356);
   });
 
-  test('return the primitive value when using primitive values', () => {
+  it('return the primitive value when using primitive values', () => {
     const primitiveValue = unitTestbed.unitRef.get('PRIMITIVE');
 
-    expect(primitiveValue).toBe('DUMMY-STRING');
-    expect(unitTestbed.unit.returnPrimitive()).toBe('DUMMY-STRING');
+    expect(primitiveValue).to.equal('DUMMY-STRING');
+    expect(unitTestbed.unit.returnPrimitive()).to.equal('DUMMY-STRING');
   });
 });

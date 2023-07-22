@@ -1,6 +1,6 @@
 {
   "name": "@automock/sinon",
-  "version": "1.2.2",
+  "version": "1.2.2-rc.0",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
@@ -11,10 +11,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/omermorad/automock.git"
+    "url": "https://github.com/automock/automock.git"
   },
   "bugs": {
-    "url": "https://github.com/omermorad/automock/issues"
+    "url": "https://github.com/automock/automock/issues"
   },
   "contributors": [
     {

@@ -2,11 +2,11 @@
   <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
 </p>
 
-<h1 align="center">Automock</h1>
+<h1 align="center">Automock (Sinon)</h1>
 
 <p align="center">
-<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for<br>class dependencies,
-allowing you to focus on writing test cases instead of mock setup.</strong>
+<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for class
+dependencies, allowing you to focus on writing test cases instead of mock setup.</strong>
 </p>
 
 <br>

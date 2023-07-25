@@ -1,6 +1,6 @@
 {
   "name": "@automock/jest",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
@@ -34,7 +34,7 @@
   ],
   "dependencies": {
     "@automock/adapters.nestjs": "^1.2.1",
-    "@automock/core": "^1.2.1",
+    "@automock/core": "^1.2.2",
     "@automock/types": "^1.2.0",
     "jest-mock-extended": "^2.0.9"
   },

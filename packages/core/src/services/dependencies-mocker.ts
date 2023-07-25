@@ -1,6 +1,5 @@
 import { Type, MockFunction, StubbedInstance } from '@automock/types';
-import { DependenciesReflector, PrimitiveValue } from '@automock/common';
-import { ClassDependenciesMap } from '@automock/common/src';
+import { DependenciesReflector, PrimitiveValue, ClassDependenciesMap } from '@automock/common';
 
 export interface MockedDependencies {
   mocks: Map<Type | string, StubbedInstance<unknown>>;

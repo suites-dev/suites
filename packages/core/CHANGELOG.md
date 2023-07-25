@@ -3,7 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# 1.2.2 (2023-07-01)
+# 1.2.2 (2023-07-25)
+
+### Bug Fixes
+
+* **core:** broken import from common src ([8d2326a3](https://github.com/omermorad/automock/commit/8d2326a3ec33853214de767aa90ebd46517fd234))
+
+# 1.2.1 (2023-07-01)
 
 ### Code Refactoring
 

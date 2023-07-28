@@ -54,7 +54,7 @@ class MainClass {
   }
 }
 
-describe('Automock Jest / NestJS E2E Test', () => {
+describe('Automock Jest / NestJS E2E Test Ctor', () => {
   let unitTestbed: UnitTestBed<MainClass>;
 
   beforeAll(() => {

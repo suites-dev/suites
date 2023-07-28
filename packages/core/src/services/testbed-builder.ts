@@ -1,6 +1,6 @@
 import { DeepPartial, Type, MockFunction, StubbedInstance } from '@automock/types';
 import { UnitReference } from './unit-reference';
-import { DependenciesMocker } from './dependencies-mocker';
+import { UnitMocker } from './unit-mocker';
 import { UnitTestBed } from '../types';
 import { PrimitiveValue } from '@automock/common';
 
@@ -74,19 +74,19 @@ export interface TestBedBuilder<TClass> {
   compile(): UnitTestBed<TClass>;
 }
 
-export class BuilderFactory {
+export class UnitBuilder {
   private constructor(
     public readonly mockFn: MockFunction<unknown>,
-    public readonly dependenciesMocker: DependenciesMocker
+    public readonly unitMocker: UnitMocker
   ) {}
 
   public static create<TClass>(
     mockFn: MockFunction<unknown>,
-    dependenciesMocker: DependenciesMocker
+    dependenciesMocker: UnitMocker
   ): (targetClass: Type<TClass>) => TestBedBuilder<TClass> {
     return (targetClass: Type<TClass>): TestBedBuilder<TClass> => {
-      const instance = new this(mockFn, dependenciesMocker);
-      const dependenciesToOverride = new Map<
+      const builderFactory = new this(mockFn, dependenciesMocker);
+      const injectablesToOverride = new Map<
         Type | string,
         PrimitiveValue | StubbedInstance<unknown>
       >();
@@ -98,29 +98,24 @@ export class BuilderFactory {
           return {
             using: (mockImplementationOrValue: DeepPartial<TDependency> | PrimitiveValue) => {
               if (isPrimitive(mockImplementationOrValue)) {
-                dependenciesToOverride.set(
-                  typeOrToken,
-                  mockImplementationOrValue as PrimitiveValue
-                );
+                injectablesToOverride.set(typeOrToken, mockImplementationOrValue as PrimitiveValue);
                 return this;
               }
 
-              dependenciesToOverride.set(
+              injectablesToOverride.set(
                 typeOrToken,
-                instance.mockFn(mockImplementationOrValue) as StubbedInstance<TDependency>
+                builderFactory.mockFn(mockImplementationOrValue) as StubbedInstance<TDependency>
               );
               return this;
             },
           };
         },
         compile(): UnitTestBed<TClass> {
-          const { mocks, origin } =
-            instance.dependenciesMocker.mockAllDependencies(targetClass)(dependenciesToOverride);
-
-          const values = origin.constructor.map(([dependency]) => mocks.get(dependency));
+          const { mocks, unit } =
+            builderFactory.unitMocker.applyMocksToUnit<TClass>(targetClass)(injectablesToOverride);
 
           return {
-            unit: new targetClass(...values) as TClass,
+            unit,
             unitRef: new UnitReference(mocks),
           };
         },

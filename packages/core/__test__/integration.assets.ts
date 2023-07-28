@@ -28,7 +28,11 @@ export class DependencyFive {
   }
 }
 
+// No need for a decorator here, we mock the reflection part in the integration test
 export class MainClass {
+  public readonly arbitraryFive: DependencyFive;
+  private readonly arbitraryArray: [] = [];
+
   public constructor(
     private readonly dependencyOne: DependencyOne,
     private readonly dependencyTwo: DependencyTwo,

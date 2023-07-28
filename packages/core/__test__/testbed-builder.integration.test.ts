@@ -1,6 +1,6 @@
 import { Type } from '@automock/types';
-import { BuilderFactory, TestBedBuilder, UnitReference, UnitTestBed } from '../src';
-import { DependenciesMocker } from '../src/services/dependencies-mocker';
+import { UnitBuilder, TestBedBuilder, UnitReference, UnitTestBed } from '../src';
+import { UnitMocker } from '../src/services/unit-mocker';
 import {
   MainClass,
   DependencyFourToken,
@@ -11,7 +11,7 @@ import {
 } from './integration.assets';
 import { DependenciesReflector } from '@automock/common';
 
-describe('Builder Factory Integration Test', () => {
+describe('TestBedBuilder Integration Test', () => {
   let underTest: TestBedBuilder<MainClass>;
 
   // It's a mark for a function that mocks the mock function, don't be confused by the name
@@ -30,20 +30,28 @@ describe('Builder Factory Integration Test', () => {
           // Repeat on the same dependency twice, as it can be returned from the reflector (@since 1.2.2)
           ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
           ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
-          [DependencyFive, DependencyFive],
           ['STRING_TOKEN', 'ANY STRING'],
+        ],
+        properties: [
+          {
+            property: 'arbitraryFive',
+            typeOrToken: DependencyFive,
+            value: DependencyFive,
+          },
+          {
+            property: 'arbitraryArray',
+            typeOrToken: 'INJECTED_ARRAY',
+            value: Array,
+          },
         ],
       };
     },
   };
 
-  const dependenciesMockerMock = new DependenciesMocker(reflectorMock, mockFunctionMockOfMocker);
+  const unitMockerMock = new UnitMocker(reflectorMock, mockFunctionMockOfMocker);
 
   beforeAll(() => {
-    underTest = BuilderFactory.create<MainClass>(
-      mockFunctionMockOfBuilder,
-      dependenciesMockerMock
-    )(MainClass);
+    underTest = UnitBuilder.create<MainClass>(mockFunctionMockOfBuilder, unitMockerMock)(MainClass);
   });
 
   describe('creating a testbed builder with some mock overrides', () => {
@@ -85,6 +93,7 @@ describe('Builder Factory Integration Test', () => {
         [DependencyTwo.name, '__MOCKED_FROM_BUILDER__', DependencyTwo],
         [DependencyThree.name, '__MOCKED_FROM_MOCKER__', DependencyThree],
         ['custom token with function', '__MOCKED_FROM_BUILDER__', 'DEPENDENCY_FOUR_TOKEN'],
+        ['property custom token with injected array', '__MOCKED_FROM_MOCKER__', 'INJECTED_ARRAY'],
         [DependencyFive.name, '__MOCKED_FROM_MOCKER__', DependencyFive],
         ['custom token with primitive value', 'ARBITRARY_STRING', 'STRING_TOKEN'],
       ])(

@@ -1,29 +1,111 @@
-import { ReflectorFactory } from '../src/reflector.service';
-import { TokensReflector } from '../src/token-reflector.service';
 import {
-  DependencyFourToken,
   DependencyOne,
   DependencyThree,
   DependencyTwo,
-  MainClass,
+  ConstructorBasedInjectionClass,
+  PropsBasedMainClass,
+  ConstructorCombinedWithPropsClass,
 } from './integration.assets';
-import { ClassDependenciesMap } from '@automock/common';
+import {
+  ClassCtorInjectables,
+  ClassDependenciesMap,
+  ClassPropsInjectables,
+} from '@automock/common';
+import { ParamsTokensReflector } from '../src/params-token-resolver';
+import { ReflectorFactory } from '../src/class-reflector';
+import { ClassPropsReflector } from '../src/class-props-reflector';
+import { ClassCtorReflector } from '../src/class-ctor-reflector';
 
 describe('NestJS Automock Adapter Integration Test', () => {
-  describe('reflecting a class', () => {
-    const reflectorFactory = ReflectorFactory(Reflect, TokensReflector);
-    const classDependencies = reflectorFactory.reflectDependencies(MainClass);
+  const reflectorFactory = ReflectorFactory(
+    ClassPropsReflector(Reflect),
+    ClassCtorReflector(Reflect, ParamsTokensReflector)
+  );
+
+  describe('reflecting a class with constructor based injection', () => {
+    const classDependencies = reflectorFactory.reflectDependencies(ConstructorBasedInjectionClass);
 
     it('should return a map of the class dependencies', () => {
-      expect(classDependencies.constructor).toStrictEqual<ClassDependenciesMap['constructor']>([
+      expect(classDependencies.constructor).toStrictEqual<ClassCtorInjectables>([
         [DependencyOne, DependencyOne],
         [DependencyTwo, DependencyTwo],
         [DependencyThree, DependencyThree],
-        ['CUSTOM_TOKEN', DependencyFourToken],
-        ['CUSTOM_TOKEN', String],
+        ['CUSTOM_TOKEN', Object],
+        ['ANOTHER_CUSTOM_TOKEN', String],
         ['LITERAL_VALUE_ARR', Array],
         ['LITERAL_VALUE_STR', String],
       ]);
+    });
+  });
+
+  describe('reflecting a class with property based injection', () => {
+    const classDependencies = reflectorFactory.reflectDependencies(PropsBasedMainClass);
+
+    it('should return an array of tuples with the class dependencies', () => {
+      expect(classDependencies.properties).toStrictEqual<ClassPropsInjectables>([
+        {
+          property: 'dependencyOne',
+          typeOrToken: DependencyOne,
+          value: DependencyOne,
+        },
+        {
+          property: 'dependencyTwo',
+          typeOrToken: DependencyTwo,
+          value: DependencyTwo,
+        },
+        {
+          property: 'dependencyThree',
+          typeOrToken: DependencyThree,
+          value: DependencyThree,
+        },
+        {
+          property: 'dependencyFour',
+          typeOrToken: 'CUSTOM_TOKEN',
+          value: Object,
+        },
+        {
+          property: 'literalValueArray',
+          typeOrToken: 'LITERAL_VALUE_ARR',
+          value: Array,
+        },
+        {
+          property: 'literalValueString',
+          typeOrToken: 'LITERAL_VALUE_STR',
+          value: String,
+        },
+      ]);
+    });
+  });
+
+  describe('reflecting a class with constructor and properties combined', () => {
+    const classDependencies = reflectorFactory.reflectDependencies(
+      ConstructorCombinedWithPropsClass
+    );
+
+    it('should return an array of tuples with the class dependencies', () => {
+      expect(classDependencies).toEqual<ClassDependenciesMap>({
+        constructor: [
+          [DependencyOne, DependencyOne],
+          [DependencyTwo, DependencyTwo],
+        ],
+        properties: [
+          {
+            property: 'dependencyFour',
+            typeOrToken: 'CUSTOM_TOKEN',
+            value: Object,
+          },
+          {
+            property: 'literalValueString',
+            typeOrToken: 'LITERAL_VALUE_STR',
+            value: String,
+          },
+          {
+            property: 'dependencyThree',
+            typeOrToken: DependencyThree,
+            value: DependencyThree,
+          },
+        ],
+      });
     });
   });
 });

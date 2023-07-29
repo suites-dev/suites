@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/omermorad/automock/compare/@automock/adapters.nestjs@1.2.1...@automock/adapters.nestjs@1.3.0) (2023-07-29)
+
+
+### Features
+
+* **core,adapters.nestjs,common:** support property injection strategy ([#75](https://github.com/omermorad/automock/issues/75)) ([ce4c08d](https://github.com/omermorad/automock/commit/ce4c08dde68d63f95b766fa0b942d7794069d0bf))
+
+
+
+
+
 # 1.2.1 (2023-07-01)
 
 ### Code Refactoring

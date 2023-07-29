@@ -12,8 +12,9 @@ dependencies, allowing you to focus on writing test cases instead of mock setup.
 <br>
 
 Specially designed for Inversion of Control (IoC) and Dependency Injection (DI) scenarios, Automock seamlessly
-integrates automatic mocking into your (DI) framework of choice. With Automock, you can effortlessly isolate and test
-individual components, improving the efficiency and reliability of your unit testing process.
+integrates automatic mocking into various DI and testing frameworks. Automock's adaptability ensures a seamless and
+effective testing experience, empowers you to isolate and test individual components with ease, enhancing the efficiency
+and reliability of your unit testing process.
 
 ## :package: Installation
 
@@ -71,32 +72,6 @@ write unit tests for a wide range of classes, ensuring that all dependencies are
 testing, regardless of the injection method used.
 
 **[:books: For more examples and for API reference visit our docs page](https://github.com/automock/automock/blob/master/docs/automock.md)**
-
-## :bulb: Philosophy
-
-**We think that creating high-quality unit tests ought to be a breeze. We created Automock to remove the human element
-from the otherwise tedious and error-prone process of creating mock objects manually. The following tenets form the
-basis of our philosophy:**
-
-✨ **Productivity** \
-Automock aims to save developers valuable time and effort by automating the process of creating mock objects. It
-eliminates the need for manual mock setup and reduces boilerplate code, enabling you to focus on writing meaningful test
-cases and improving code quality.
-
-:rocket: **Simplicity** \
-The library provides an intuitive and easy-to-use API, making it accessible to developers of all skill levels. By
-automating mock object creation, Automock simplifies the testing process, reducing complexity and making unit testing
-more approachable.
-
-🔧 **Maintainability** \
-By generating mock objects that closely resemble the original dependencies, Automock promotes code maintainability. The
-generated mocks retain the same type information as the real objects, ensuring type safety and allowing you to leverage
-TypeScript's powerful static type checking capabilities. This approach enhances code readability, reduces the risk of
-errors, and makes it easier to refactor and maintain tests over time.
-
-📐 **Consistent Syntax and Test Structure.** \
-Automock promotes a uniform test syntax and test structure, ensuring consistency and coherence across your unit tests.
-By adhering to established conventions and guidelines, you can establish a standardized approach to writing tests.
 
 ## :bookmark_tabs: Acknowledgments
 

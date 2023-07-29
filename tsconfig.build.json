@@ -5,7 +5,6 @@
     "sourceMap": false
   },
   "exclude": [
-    "sample",
     "spec-assets.ts",
     "node_modules",
     "dist",

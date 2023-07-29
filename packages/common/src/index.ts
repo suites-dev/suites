@@ -1,6 +1,6 @@
 import { Type } from '@automock/types';
 
-export type PrimitiveValue = string | number | boolean | symbol | null;
+export type PrimitiveValue = unknown[] | string | number | boolean | symbol | null;
 
 /**
  * @deprecated

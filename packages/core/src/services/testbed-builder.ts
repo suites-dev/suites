@@ -126,6 +126,7 @@ export class UnitBuilder {
 
 function isPrimitive(value: unknown): value is PrimitiveValue {
   return (
+    Array.isArray(value) ||
     typeof value === 'string' ||
     typeof value === 'number' ||
     typeof value === 'boolean' ||

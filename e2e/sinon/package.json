@@ -1,0 +1,20 @@
+{
+  "name": "automock-sinon-nestjs-e2e",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "@automock/sinon": "*",
+    "sinon": "*",
+    "ts-node": "*"
+  },
+  "devDependencies": {
+    "@types/sinon": "*",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "sinon": "*",
+    "ts-mocha": "10.0.0"
+  },
+  "scripts": {
+    "test": "ts-mocha **/*.e2e.test.ts"
+  }
+}

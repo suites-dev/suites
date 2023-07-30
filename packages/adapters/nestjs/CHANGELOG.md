@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/omermorad/automock/compare/@automock/adapters.nestjs@1.3.0...@automock/adapters.nestjs@1.3.1) (2023-07-30)
+
+
+### Bug Fixes
+
+* **adapters.nestjs:** fix broken reflection when initiate class ([#80](https://github.com/omermorad/automock/issues/80)) ([5bb215a](https://github.com/omermorad/automock/commit/5bb215ad169a49a81a37cb6203975572795bdc25))
+
+
+
+
+
 # [1.3.0](https://github.com/omermorad/automock/compare/@automock/adapters.nestjs@1.2.1...@automock/adapters.nestjs@1.3.0) (2023-07-29)
 
 

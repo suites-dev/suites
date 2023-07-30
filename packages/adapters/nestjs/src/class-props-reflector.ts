@@ -8,7 +8,7 @@ export type ClassPropsReflector = ReturnType<typeof ClassPropsReflector>;
 export function ClassPropsReflector(reflector: MetadataReflector) {
   function reflectInjectables(targetClass: Type): ClassPropsInjectables {
     const classProperties = reflectProperties(targetClass)(reflector);
-    const classInstance = new targetClass();
+    const classInstance = Object.create(targetClass.prototype);
 
     return classProperties.map(({ key, type }) => {
       const reflectedType = reflector.getMetadata(

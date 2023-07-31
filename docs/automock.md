@@ -15,8 +15,7 @@ Traditionally, when writing unit tests for `UserService`, you would need to manu
 `Database` dependency and stub out its methods. This manual setup can be time-consuming and error-prone, leading to
 repetitive code and increased maintenance overhead.
 
-Automock streamlines the test creation process and eliminate the need for manual mock setup. Take a look at the
-following example:
+Take a look at the following example:
 
 ```typescript
 import { TestBed } from '@automock/jest';
@@ -37,7 +36,7 @@ describe('User Service Unit Spec', () => {
   let userService: UserService;
   let database: jest.Mocked<Database>;
 
-  beforeEach(() => {
+  beforeAll(() => {
     const { unit, unitRef } = TestBed.create(UserService).compile();
     userService = unit;
     database = unitRef.get(Database);
@@ -61,10 +60,8 @@ dependencies. The `compile()` method compiles the `TestBed` and returns an insta
 test (`userService`).
 
 During the test, you can directly access the automatically created mock object for the `Database`
-dependency (`database`). By stubbing the `getUsers()` method of the `database` mock object, you can define its behavior
+dependency (`database`) - Read more in [Dependency and Instance Access](#dependency-references-and-instance-access). By stubbing the `getUsers()` method of the `database` mock object, you can define its behavior
 and ensure it resolves with a specific set of mock users.
-
-<br />
 
 ## TestBed API
 
@@ -83,8 +80,6 @@ Example usage:
 ```typescript
 const { unit, unitRef } = TestBed.create(UserService);
 ```
-
-<br />
 
 ## TestBedBuilder API
 
@@ -112,7 +107,11 @@ provide default values or behavior for the methods of the mocked dependency.
 ### `.mock<TDependency>(token: string): MockOverride<TDependency, TClass>`
 
 The `.mock(token)` method is used to declare a dependency to be mocked using a token string. It takes the `token`
-parameter, which represents the token string representing the dependency to be mocked.
+parameter, which represents the token string representing the dependency to be mocked. 
+
+When using `.mock()` method with a token, the type of the dependency is not known at compile time. To specify the type,
+use the generic argument like .mock<SomeType>('MY_TOKEN'). This provides better type safety and ensures that the mocked
+value aligns with the expected type.
 
 Example usage:
 
@@ -126,6 +125,7 @@ const { unit, unitRef } = TestBed.create
 ```
 
 > :bulb: The `using()` method allows you to provide default values or behavior for the methods of the mocked dependency, read more in the `MockOverride` API Reference
+
 
 ### `.compile(): UnitTestBed<TClass>`
 
@@ -141,8 +141,6 @@ const { unit, unitRef } = TestBed.create(UserService).compile();
 In this example, the `unit` property represents the actual instance of the class under test (`UserService`).
 
 > :bulb: Read more about the `unitRef` property in the `Dependency References and Instance Access` section
-
-<br />
 
 ## MockOverride API
 
@@ -183,8 +181,6 @@ const { unit, unitRef } = TestBed.create(UserService)
   .using('some fixed value')
   .compile();
 ```
-
-<br />
 
 ## Dependency References and Instance Access
 

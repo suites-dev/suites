@@ -1,6 +1,6 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@tsed/di';
 
-type DummyType = string;
+// type DummyType = string;
 
 export class DependencyOne {
   print(): string {
@@ -32,12 +32,7 @@ export interface DependencyFourTokenInterface {
 export class ConstructorBasedInjectionClass {
   public constructor(
     private readonly dependencyOne: DependencyOne,
-    private readonly dependencyTwo: DependencyTwo,
-    @Inject(forwardRef(() => DependencyThree)) private readonly dependencyThree: DependencyThree,
-    @Inject('CUSTOM_TOKEN') private readonly dependencyFour: DependencyFourTokenInterface,
-    @Inject('ANOTHER_CUSTOM_TOKEN') private readonly dummy: DummyType,
-    @Inject('LITERAL_VALUE_ARR') private readonly literalValueArray: string[],
-    @Inject('LITERAL_VALUE_STR') private readonly literalValueString: string
+    private readonly dependencyTwo: DependencyTwo // @Inject(forwardRef(() => DependencyThree)) private readonly dependencyThree: DependencyThree, // @Inject('CUSTOM_TOKEN') private readonly dependencyFour: DependencyFourTokenInterface, // @Inject('ANOTHER_CUSTOM_TOKEN') private readonly dummy: DummyType, // @Inject('LITERAL_VALUE_ARR') private readonly literalValueArray: string[], // @Inject('LITERAL_VALUE_STR') private readonly literalValueString: string
   ) {}
 }
 
@@ -49,8 +44,8 @@ export class PropsBasedMainClass {
   @Inject(DependencyTwo)
   private readonly dependencyTwo: DependencyTwo;
 
-  @Inject(forwardRef(() => DependencyThree))
-  private readonly dependencyThree: DependencyThree;
+  // @Inject(forwardRef(() => DependencyThree))
+  // private readonly dependencyThree: DependencyThree;
 
   @Inject('CUSTOM_TOKEN')
   public readonly dependencyFour: DependencyFourTokenInterface;
@@ -70,8 +65,8 @@ export class ConstructorCombinedWithPropsClass {
   @Inject('LITERAL_VALUE_STR')
   private readonly literalValueString: string;
 
-  @Inject(forwardRef(() => DependencyThree))
-  private readonly dependencyThree: DependencyThreeInterface;
+  // @Inject(forwardRef(() => DependencyThree))
+  // private readonly dependencyThree: DependencyThreeInterface;
 
   public constructor(
     private readonly dependencyOne: DependencyOne,

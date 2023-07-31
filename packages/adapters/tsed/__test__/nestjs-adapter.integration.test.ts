@@ -19,7 +19,7 @@ import { ClassCtorReflector } from '../src/class-ctor-reflector';
 describe('NestJS Automock Adapter Integration Test', () => {
   const reflectorFactory = ReflectorFactory(
     new ClassPropsReflector(Reflect),
-    ClassCtorReflector(Reflect, ParamsTokensReflector)
+    new ClassCtorReflector(Reflect, ParamsTokensReflector)
   );
 
   describe('reflecting a class with constructor based injection', () => {

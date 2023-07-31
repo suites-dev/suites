@@ -4,17 +4,17 @@ import { MetadataReflector, NestJSInjectable } from './types';
 import { ClassCtorInjectables } from '@automock/common/src';
 import { CustomToken, ParamsTokensReflector } from './params-token-resolver';
 
-export type ClassCtorReflector = ReturnType<typeof ClassCtorReflector>;
+export class ClassCtorReflector {
+  constructor(
+    private reflector: MetadataReflector,
+    private paramsTokensReflector: ParamsTokensReflector
+  ) {}
 
-export function ClassCtorReflector(
-  reflector: MetadataReflector,
-  paramsTokensReflector: ParamsTokensReflector
-) {
-  function reflectInjectables(targetClass: Type): ClassCtorInjectables {
-    const paramTypes = reflectParamTypes(targetClass)(reflector);
-    const paramTokens = reflectParamTokens(targetClass)(reflector);
+  reflectInjectables(targetClass: Type): ClassCtorInjectables {
+    const paramTypes = this.reflectParamTypes(targetClass);
+    const paramTokens = this.reflectParamTokens(targetClass);
 
-    const resolveParamTokenCb = paramsTokensReflector.resolveDependencyValue(paramTokens);
+    const resolveParamTokenCb = this.paramsTokensReflector.resolveDependencyValue(paramTokens);
 
     return paramTypes.map((typeOrUndefined, index) => {
       try {
@@ -27,17 +27,11 @@ export function ClassCtorReflector(
     });
   }
 
-  function reflectParamTokens(targetClass: Type): (reflector: MetadataReflector) => CustomToken[] {
-    return (reflector: MetadataReflector) =>
-      reflector.getMetadata(SELF_DECLARED_DEPS_METADATA, targetClass) || [];
+  private reflectParamTokens(targetClass: Type): CustomToken[] {
+    return this.reflector.getMetadata(SELF_DECLARED_DEPS_METADATA, targetClass) || [];
   }
 
-  function reflectParamTypes(
-    targetClass: Type
-  ): (reflector: MetadataReflector) => (NestJSInjectable | undefined)[] {
-    return (reflector: MetadataReflector) =>
-      reflector.getMetadata(PARAMTYPES_METADATA, targetClass) || [];
+  private reflectParamTypes(targetClass: Type): (NestJSInjectable | undefined)[] {
+    return this.reflector.getMetadata(PARAMTYPES_METADATA, targetClass) || [];
   }
-
-  return { reflectInjectables };
 }

@@ -10,6 +10,6 @@ const DependenciesReflector: DependenciesReflector = ((
   classCtorReflector: ClassCtorReflector
 ) => {
   return ReflectorFactory(classPropsReflector, classCtorReflector);
-})(new ClassPropsReflector(Reflect), ClassCtorReflector(Reflect, ParamsTokensReflector));
+})(new ClassPropsReflector(Reflect), new ClassCtorReflector(Reflect, ParamsTokensReflector));
 
 export = DependenciesReflector;

@@ -6,16 +6,16 @@ import {
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
 
-export function ReflectorFactory(
-  classPropsReflector: ClassPropsReflector,
-  classCtorReflector: ClassCtorReflector
-): AutomockDependenciesReflector {
-  function reflectDependencies(targetClass: Type): ClassDependenciesMap {
+export class ReflectorFactory implements AutomockDependenciesReflector {
+  constructor(
+    private classPropsReflector: ClassPropsReflector,
+    private classCtorReflector: ClassCtorReflector
+  ) {}
+
+  reflectDependencies(targetClass: Type): ClassDependenciesMap {
     return {
-      constructor: classCtorReflector.reflectInjectables(targetClass),
-      properties: classPropsReflector.reflectInjectables(targetClass),
+      constructor: this.classCtorReflector.reflectInjectables(targetClass),
+      properties: this.classPropsReflector.reflectInjectables(targetClass),
     };
   }
-
-  return { reflectDependencies };
 }

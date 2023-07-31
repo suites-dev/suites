@@ -1,12 +1,9 @@
 import { Type } from '@automock/types';
-import {
-  DependenciesReflector as AutomockDependenciesReflector,
-  ClassDependenciesMap,
-} from '@automock/common';
+import { DependenciesReflector, ClassDependenciesMap } from '@automock/common';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
 
-export class ReflectorFactory implements AutomockDependenciesReflector {
+export class TsEDDependenciesReflector implements DependenciesReflector {
   constructor(
     private classPropsReflector: ClassPropsReflector,
     private classCtorReflector: ClassCtorReflector

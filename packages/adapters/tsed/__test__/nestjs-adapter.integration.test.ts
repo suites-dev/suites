@@ -12,18 +12,20 @@ import {
   ClassPropsInjectables,
 } from '@automock/common';
 import { ParamsTokensReflector } from '../src/params-token-resolver';
-import { ReflectorFactory } from '../src/class-reflector';
+import { TsEDDependenciesReflector } from '../src/dependencies-reflector';
 import { ClassPropsReflector } from '../src/class-props-reflector';
 import { ClassCtorReflector } from '../src/class-ctor-reflector';
 
 describe('NestJS Automock Adapter Integration Test', () => {
-  const reflectorFactory = ReflectorFactory(
+  const dependenciesReflector = new TsEDDependenciesReflector(
     new ClassPropsReflector(Reflect),
     new ClassCtorReflector(Reflect, ParamsTokensReflector)
   );
 
   describe('reflecting a class with constructor based injection', () => {
-    const classDependencies = reflectorFactory.reflectDependencies(ConstructorBasedInjectionClass);
+    const classDependencies = dependenciesReflector.reflectDependencies(
+      ConstructorBasedInjectionClass
+    );
 
     it('should return a map of the class dependencies', () => {
       expect(classDependencies.constructor).toStrictEqual<ClassCtorInjectables>([
@@ -39,7 +41,7 @@ describe('NestJS Automock Adapter Integration Test', () => {
   });
 
   describe('reflecting a class with property based injection', () => {
-    const classDependencies = reflectorFactory.reflectDependencies(PropsBasedMainClass);
+    const classDependencies = dependenciesReflector.reflectDependencies(PropsBasedMainClass);
 
     it('should return an array of tuples with the class dependencies', () => {
       expect(classDependencies.properties).toStrictEqual<ClassPropsInjectables>([
@@ -78,7 +80,7 @@ describe('NestJS Automock Adapter Integration Test', () => {
   });
 
   describe('reflecting a class with constructor and properties combined', () => {
-    const classDependencies = reflectorFactory.reflectDependencies(
+    const classDependencies = dependenciesReflector.reflectDependencies(
       ConstructorCombinedWithPropsClass
     );
 

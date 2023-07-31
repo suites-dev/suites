@@ -6,6 +6,7 @@
     "@automock/common": "*",
     "@automock/core": "*",
     "@automock/adapters.nestjs": "*",
+    "@automock/adapters.tsed": "*",
     "@automock/types": "*",
     "@types/node": "^16.18.34",
     "ts-node": "^10.9.1",
@@ -20,6 +21,5 @@
     "sinon",
     "sinon/*"
   ],
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

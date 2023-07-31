@@ -2,6 +2,7 @@ import { DependenciesReflector } from '@automock/common';
 
 export const AutomockAdapters: Record<string, string> = {
   nestjs: '@automock/adapters.nestjs',
+  tsed: '@automock/adapters.tsed',
 } as const;
 
 interface NodeRequire {

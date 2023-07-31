@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ['jest', 'sinon', 'adapters.nestjs', 'core']
+        project: ["jest", "sinon", "adapters.nestjs", "adapters.tsed", "core"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,11 +23,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.18.0'
+          node-version: "16.18.0"
 
       - uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
@@ -43,7 +43,7 @@ jobs:
         uses: dorny/test-reporter@v1
         if: always()
         with:
-          reporter: 'jest-junit'
+          reporter: "jest-junit"
           name: Tests Results (${{ matrix.project }})
           path: test-reports/${{ matrix.project }}.xml
           fail-on-error: false
@@ -52,7 +52,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest,sinon,adapters.nestjs,core
+          flags: jest,sinon,adapters.nestjs,adapters.tsed,core
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           directory: coverage

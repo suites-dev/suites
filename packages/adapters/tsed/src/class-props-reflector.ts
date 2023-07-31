@@ -3,15 +3,15 @@ import { ClassPropsInjectables, PrimitiveValue } from '@automock/common';
 import { Type } from '@automock/types';
 import { PROPERTY_DEPS_METADATA } from '@nestjs/common/constants';
 
-export type ClassPropsReflector = ReturnType<typeof ClassPropsReflector>;
+export class ClassPropsReflector {
+  constructor(private reflector: MetadataReflector) {}
 
-export function ClassPropsReflector(reflector: MetadataReflector) {
-  function reflectInjectables(targetClass: Type): ClassPropsInjectables {
-    const classProperties = reflectProperties(targetClass)(reflector);
+  reflectInjectables(targetClass: Type): ClassPropsInjectables {
+    const classProperties = this.reflectProperties(targetClass);
     const classInstance = Object.create(targetClass.prototype);
 
     return classProperties.map(({ key, type }) => {
-      const reflectedType = reflector.getMetadata(
+      const reflectedType = this.reflector.getMetadata(
         'design:type',
         classInstance,
         key
@@ -40,12 +40,7 @@ export function ClassPropsReflector(reflector: MetadataReflector) {
     });
   }
 
-  function reflectProperties(
-    targetClass: Type
-  ): (reflector: MetadataReflector) => ReflectedProperty[] {
-    return (reflector: MetadataReflector) =>
-      reflector.getMetadata(PROPERTY_DEPS_METADATA, targetClass) || [];
+  private reflectProperties(targetClass: Type): ReflectedProperty[] {
+    return this.reflector.getMetadata(PROPERTY_DEPS_METADATA, targetClass) || [];
   }
-
-  return { reflectInjectables };
 }

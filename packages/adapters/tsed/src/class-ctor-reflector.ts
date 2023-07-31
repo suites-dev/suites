@@ -7,7 +7,7 @@ import { CustomToken, ParamsTokensReflector } from './params-token-resolver';
 export class ClassCtorReflector {
   constructor(
     private reflector: MetadataReflector,
-    private paramsTokensReflector: ParamsTokensReflector
+    private paramsTokensReflector: typeof ParamsTokensReflector
   ) {}
 
   reflectInjectables(targetClass: Type): ClassCtorInjectables {

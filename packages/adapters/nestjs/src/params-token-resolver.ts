@@ -1,4 +1,5 @@
 import { Type } from '@automock/types';
+import { UndefinedOrNotFoundSymbol, UndefinedOrNotFound } from '@automock/common';
 import { NestJSInjectable, CustomInjectableToken } from './types';
 
 export interface CustomToken {
@@ -9,7 +10,10 @@ export interface CustomToken {
 export type ParamsTokensReflector = {
   resolveDependencyValue(
     tokens: CustomToken[]
-  ): (typeOrUndefined: NestJSInjectable | undefined, index: number) => [string | Type, Type];
+  ): (
+    typeOrUndefined: NestJSInjectable | undefined,
+    index: number
+  ) => [string | Type, Type | UndefinedOrNotFoundSymbol];
 };
 
 export const ParamsTokensReflector = (function (): ParamsTokensReflector {
@@ -24,22 +28,34 @@ export const ParamsTokensReflector = (function (): ParamsTokensReflector {
 
   function resolveDependencyValue(
     tokens: CustomToken[]
-  ): (typeOrUndefined: NestJSInjectable | undefined, index: number) => [string | Type, Type] {
-    return (dependencyType: Type, index: number): [string | Type, Type] => {
+  ): (
+    typeOrUndefined: NestJSInjectable,
+    tokenIndexInCtor: number
+  ) => [string | Type, Type | UndefinedOrNotFoundSymbol] {
+    return (
+      dependencyType: Type,
+      index: number
+    ): [string | Type, Type | UndefinedOrNotFoundSymbol] => {
       const token = lookupTokenInParams(tokens, index);
-      const isAnonymousObjectType = dependencyType && (dependencyType as Type).name === 'Object';
 
-      if (token) {
-        const ref = resolveReferenceCallbackFromToken(token);
-
-        if (dependencyType) {
-          return [ref, dependencyType];
-        }
-      } else if (dependencyType && !isAnonymousObjectType) {
-        return [dependencyType, dependencyType];
+      if (!token) {
+        throw new Error(`No token found at index: ${index}`);
       }
 
-      throw new Error(`No token found at index: ${index}`);
+      const ref = resolveReferenceCallbackFromToken(token);
+      const refIsAType = typeof ref !== 'string';
+
+      if (refIsAType) {
+        return [ref, ref];
+      }
+
+      if (!dependencyType && typeof token === 'string') {
+        return [token, UndefinedOrNotFound];
+      } else if (!dependencyType && typeof ref !== 'string') {
+        return [ref, UndefinedOrNotFound];
+      }
+
+      return [ref, dependencyType];
     };
   }
 

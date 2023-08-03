@@ -1,11 +1,15 @@
-import { MetadataReflector, NestJSInjectable, ReflectedProperty } from './types';
-import { ClassPropsInjectables, PrimitiveValue } from '@automock/common';
+import { ClassPropsInjectables } from '@automock/common';
 import { Type } from '@automock/types';
 import { PROPERTY_DEPS_METADATA } from '@nestjs/common/constants';
+import { MetadataReflector, NestJSInjectable, ReflectedProperty } from './types';
+import { PropertyReflectionStrategy } from './property-reflection-strategies.static';
 
 export type ClassPropsReflector = ReturnType<typeof ClassPropsReflector>;
 
-export function ClassPropsReflector(reflector: MetadataReflector) {
+export function ClassPropsReflector(
+  reflector: MetadataReflector,
+  reflectionStrategies: ReadonlyArray<PropertyReflectionStrategy>
+) {
   function reflectInjectables(targetClass: Type): ClassPropsInjectables {
     const classProperties = reflectProperties(targetClass)(reflector);
     const classInstance = Object.create(targetClass.prototype);
@@ -17,25 +21,23 @@ export function ClassPropsReflector(reflector: MetadataReflector) {
         key
       ) as NestJSInjectable;
 
-      if (!reflectedType) {
+      if (!reflectedType && !type) {
         throw new Error(
           `Automock has failed to reflect '${targetClass.name}.${key}' property, did you forget to inject it using @Inject()?`
         );
       }
 
-      let value;
-
-      if (typeof type === 'object' && 'forwardRef' in type) {
-        value = type.forwardRef();
-      } else {
-        value = type;
+      for (const strategy of reflectionStrategies) {
+        if (strategy.condition(reflectedType, type)) {
+          const result = strategy.exec(reflectedType, type);
+          return { ...result, property: key };
+        }
       }
 
       return {
         property: key,
-        typeOrToken: value as string | Type,
-        value:
-          typeof type === 'string' ? (reflectedType as Type) : (value as PrimitiveValue | Type),
+        typeOrToken: type as Type,
+        value: type as Type,
       };
     });
   }

@@ -1,12 +1,21 @@
 import { Type } from '@automock/types';
 
+/**
+ * @since 2.2.0
+ */
+export const UndefinedOrNotFound: unique symbol = Symbol('UndefinedOrNotFound');
+export type UndefinedOrNotFoundSymbol = typeof UndefinedOrNotFound;
+
 export type PrimitiveValue = unknown[] | string | number | boolean | symbol | null;
 
 /**
  * @deprecated
  * Use `ClassCtorInjectables` instead
  */
-export type ClassDependencies = [Type | string, PrimitiveValue | Type][];
+export type ClassDependencies = [
+  Type | string,
+  PrimitiveValue | Type | UndefinedOrNotFoundSymbol
+][];
 
 /**
  * @since 2.1.0
@@ -19,7 +28,7 @@ export type ClassCtorInjectables = ClassDependencies;
 export interface ClassInjectableProperty {
   property: string;
   typeOrToken: Type | string;
-  value?: PrimitiveValue | Type;
+  value?: PrimitiveValue | Type | UndefinedOrNotFoundSymbol;
 }
 
 /**

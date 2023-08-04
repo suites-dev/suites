@@ -4,6 +4,7 @@
   "version": "2.1.0",
   "license": "MIT",
   "types": "dist/index.d.ts",
+  "main": "dist/index.js",
   "keywords": [
     "mock",
     "auto-mock",

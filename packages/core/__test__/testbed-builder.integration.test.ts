@@ -1,15 +1,15 @@
 import { Type } from '@automock/types';
-import { UnitBuilder, TestBedBuilder, UnitReference, UnitTestBed } from '../src';
+import { TestBedBuilder, UnitBuilder, UnitReference, UnitTestBed } from '../src';
 import { UnitMocker } from '../src/services/unit-mocker';
 import {
-  MainClass,
+  DependencyFive,
   DependencyFourToken,
   DependencyOne,
   DependencyThree,
   DependencyTwo,
-  DependencyFive,
+  MainClass,
 } from './integration.assets';
-import { DependenciesReflector } from '@automock/common';
+import { DependenciesReflector, UndefinedOrNotFound } from '@automock/common';
 
 describe('TestBedBuilder Integration Test', () => {
   let underTest: TestBedBuilder<MainClass>;
@@ -26,17 +26,23 @@ describe('TestBedBuilder Integration Test', () => {
           // Repeat on the same dependency twice, as it can be returned from the reflector (@since 1.2.2)
           [DependencyTwo, DependencyTwo],
           [DependencyTwo, DependencyTwo],
-          [DependencyThree, DependencyThree],
+          [DependencyThree, UndefinedOrNotFound],
           // Repeat on the same dependency twice, as it can be returned from the reflector (@since 1.2.2)
           ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
           ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
           ['STRING_TOKEN', 'ANY STRING'],
+          ['TOKEN_WITH_UNDEFINED', UndefinedOrNotFound],
         ],
         properties: [
           {
             property: 'arbitraryFive',
             typeOrToken: DependencyFive,
             value: DependencyFive,
+          },
+          {
+            property: 'arbitraryFive',
+            typeOrToken: DependencyTwo,
+            value: UndefinedOrNotFound,
           },
           {
             property: 'arbitraryArray',
@@ -48,7 +54,9 @@ describe('TestBedBuilder Integration Test', () => {
     },
   };
 
-  const unitMockerMock = new UnitMocker(reflectorMock, mockFunctionMockOfMocker);
+  const unitMockerMock = new UnitMocker(reflectorMock, mockFunctionMockOfMocker, {
+    warn: () => undefined,
+  } as Console);
 
   beforeAll(() => {
     underTest = UnitBuilder.create<MainClass>(mockFunctionMockOfBuilder, unitMockerMock)(MainClass);
@@ -73,6 +81,8 @@ describe('TestBedBuilder Integration Test', () => {
         })
         .mock<string>('STRING_TOKEN')
         .using('ARBITRARY_STRING')
+        .mock('TOKEN_WITH_UNDEFINED')
+        .using('SOME_VALUE')
         .compile();
     });
 
@@ -93,6 +103,7 @@ describe('TestBedBuilder Integration Test', () => {
         [DependencyTwo.name, '__MOCKED_FROM_BUILDER__', DependencyTwo],
         [DependencyThree.name, '__MOCKED_FROM_MOCKER__', DependencyThree],
         ['custom token with function', '__MOCKED_FROM_BUILDER__', 'DEPENDENCY_FOUR_TOKEN'],
+        ['custom token with undefined symbol', 'SOME_VALUE', 'TOKEN_WITH_UNDEFINED'],
         ['property custom token with injected array', '__MOCKED_FROM_MOCKER__', 'INJECTED_ARRAY'],
         [DependencyFive.name, '__MOCKED_FROM_MOCKER__', DependencyFive],
         ['custom token with primitive value', 'ARBITRARY_STRING', 'STRING_TOKEN'],

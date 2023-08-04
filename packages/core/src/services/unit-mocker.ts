@@ -1,5 +1,5 @@
 import { Type, MockFunction, StubbedInstance } from '@automock/types';
-import { DependenciesReflector, PrimitiveValue } from '@automock/common';
+import { DependenciesReflector, PrimitiveValue, UndefinedOrNotFound } from '@automock/common';
 
 export interface MockedInjectables<T> {
   mocks: Map<Type | string, StubbedInstance<unknown>>;
@@ -9,7 +9,8 @@ export interface MockedInjectables<T> {
 export class UnitMocker {
   public constructor(
     private readonly reflector: DependenciesReflector,
-    private readonly mockFunction: MockFunction<unknown>
+    private readonly mockFunction: MockFunction<unknown>,
+    private readonly logger: Console
   ) {}
 
   /**
@@ -29,11 +30,15 @@ export class UnitMocker {
       const { constructor = [], properties = [] } = this.reflector.reflectDependencies(targetClass);
       const classMockedInjectables = new Map<Type | string, StubbedInstance<unknown>>();
 
-      for (const [injectable] of constructor) {
-        const alreadyMocked = mockedInjectablesMap.get(injectable);
+      for (const [typeOrToken, injectable] of constructor) {
+        if (injectable === UndefinedOrNotFound) {
+          this.logger.warn('Undefined or not found injectable.');
+        }
+
+        const alreadyMocked = mockedInjectablesMap.get(typeOrToken);
         const mockedDependency = alreadyMocked ? alreadyMocked : this.mockFunction();
 
-        classMockedInjectables.set(injectable, mockedDependency);
+        classMockedInjectables.set(typeOrToken, mockedDependency);
       }
 
       const classInstance = new targetClass(...classMockedInjectables.values()) as Record<
@@ -42,6 +47,10 @@ export class UnitMocker {
       >;
 
       properties.forEach((reflectedProperty) => {
+        if (reflectedProperty.value === UndefinedOrNotFound) {
+          this.logger.warn('Undefined or not found injectable.');
+        }
+
         const alreadyMocked = mockedInjectablesMap.get(reflectedProperty.typeOrToken);
         const mockToSet = alreadyMocked ? alreadyMocked : this.mockFunction();
 

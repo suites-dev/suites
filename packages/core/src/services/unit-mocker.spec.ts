@@ -1,7 +1,6 @@
-import { DependenciesReflector, PrimitiveValue } from '@automock/common';
-import { UnitMocker, MockedInjectables } from './unit-mocker';
+import { DependenciesReflector, PrimitiveValue, UndefinedOrNotFound } from '@automock/common';
+import { MockedInjectables, UnitMocker } from './unit-mocker';
 import { StubbedInstance, Type } from '@automock/types';
-
 import MockedFn = jest.MockedFn;
 
 class ArbitraryClassOne {}
@@ -28,8 +27,12 @@ describe('Unit Mocker - Unit Spec', () => {
     reflectDependencies: jest.fn() as MockedFn<DependenciesReflector['reflectDependencies']>,
   };
 
+  const warnStub = jest.fn();
+
   beforeAll(() => {
-    underTest = new UnitMocker(reflectorMock, mockFunctionStub);
+    underTest = new UnitMocker(reflectorMock, mockFunctionStub, {
+      warn: warnStub,
+    } as Partial<Console> as Console);
   });
 
   describe('given that the adapter returned both constructor and properties', () => {
@@ -50,6 +53,8 @@ describe('Unit Mocker - Unit Spec', () => {
           // We put the same class twice to test that the mocker, it is not a mistake
           [ArbitraryClassTwo, ArbitraryClassTwo],
           [ArbitraryClassTwo, ArbitraryClassTwo],
+          [SomeClassTwoMockedLike, UndefinedOrNotFound],
+          ['TOKEN_WITH_UNDEFINED', UndefinedOrNotFound],
           ['TOKEN', ClassFromToken],
         ],
         properties: [
@@ -79,12 +84,18 @@ describe('Unit Mocker - Unit Spec', () => {
         new Map<Type | string, StubbedInstance<unknown>>([
           [ArbitraryClassOne, MOCKED],
           [ArbitraryClassThree, MOCKED],
+          [SomeClassTwoMockedLike, MOCKED],
           [ArbitraryClassTwo, SomeClassTwoMockedLike],
           ['ANOTHER_TOKEN', MOCKED],
           ['TOKEN', MOCKED],
+          ['TOKEN_WITH_UNDEFINED', MOCKED],
           [ArbitraryClassFour, ArbitraryClassFourMockedLike],
         ])
       );
+    });
+
+    it('should trigger a logger warning because some of the dependencies values are undefined (symbol)', () => {
+      expect(warnStub).toBeCalledTimes(2);
     });
 
     it('should return the original reflected dependencies as well', () => {

@@ -1,5 +1,6 @@
 import { Type } from '@automock/types';
-import { NestJSInjectable, CustomInjectableToken } from './types';
+import { UndefinedDependency, UndefinedDependencySymbol } from '@automock/common';
+import { CustomInjectableToken, NestJSInjectable } from './types';
 
 export interface CustomToken {
   index: number;
@@ -9,7 +10,10 @@ export interface CustomToken {
 export type ParamsTokensReflector = {
   resolveDependencyValue(
     tokens: CustomToken[]
-  ): (typeOrUndefined: NestJSInjectable | undefined, index: number) => [string | Type, Type];
+  ): (
+    typeOrUndefined: NestJSInjectable | undefined,
+    index: number
+  ) => [string | Type, Type | UndefinedDependencySymbol];
 };
 
 export const ParamsTokensReflector = (function (): ParamsTokensReflector {
@@ -18,28 +22,42 @@ export const ParamsTokensReflector = (function (): ParamsTokensReflector {
     return record?.param;
   }
 
-  function resolveReferenceCallbackFromToken(token: CustomInjectableToken | Type): Type | string {
+  function resolveReferenceCallbackFromToken(
+    token: CustomInjectableToken | Type
+  ): Type | string | undefined {
     return typeof token === 'object' && 'forwardRef' in token ? token.forwardRef() : token;
   }
 
   function resolveDependencyValue(
     tokens: CustomToken[]
-  ): (typeOrUndefined: NestJSInjectable | undefined, index: number) => [string | Type, Type] {
-    return (dependencyType: Type, index: number): [string | Type, Type] => {
+  ): (
+    typeOrUndefined: NestJSInjectable,
+    tokenIndexInCtor: number
+  ) => [string | Type, Type | UndefinedDependencySymbol] {
+    return (
+      dependencyType: Type,
+      index: number
+    ): [string | Type, Type | UndefinedDependencySymbol] => {
       const token = lookupTokenInParams(tokens, index);
-      const isAnonymousObjectType = dependencyType && (dependencyType as Type).name === 'Object';
 
-      if (token) {
-        const ref = resolveReferenceCallbackFromToken(token);
-
-        if (dependencyType) {
-          return [ref, dependencyType];
-        }
-      } else if (dependencyType && !isAnonymousObjectType) {
-        return [dependencyType, dependencyType];
+      if (!token) {
+        throw new Error(`No token found at index: ${index}`);
       }
 
-      throw new Error(`No token found at index: ${index}`);
+      const ref = resolveReferenceCallbackFromToken(token);
+      const refIsAType = typeof ref !== 'string';
+
+      if (refIsAType) {
+        return [ref as Type, ref as Type];
+      }
+
+      if (!dependencyType && typeof token === 'string') {
+        return [token, UndefinedDependency];
+      } else if (!dependencyType && typeof ref !== 'string') {
+        return [ref, UndefinedDependency];
+      }
+
+      return [ref, dependencyType];
     };
   }
 

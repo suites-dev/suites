@@ -48,6 +48,9 @@ jobs:
           path: test-reports/${{ matrix.project }}.xml
           fail-on-error: false
 
+      - name: Build
+        run: yarn build
+
       - name: Upload Report to Codecov
         uses: codecov/codecov-action@v3
         with:

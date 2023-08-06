@@ -4,6 +4,9 @@
 [![npm downloads](https://img.shields.io/npm/dm/@automock/sinon.svg?label=%40automock%2Fsinon)](https://npmjs.org/package/@automock/sinon "View this project on npm")
 
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)
+[![ci](https://github.com/omermorad/jest-unit/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
+[![e2e](https://github.com/omermorad/jest-unit/actions/workflows/e2e.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
+
 
 <p align="center">
   <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />

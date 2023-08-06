@@ -28,6 +28,15 @@ export class TestClassThree {
   }
 }
 
+@Injectable()
+export class TestClassFour {
+  doSomething(): string {
+    return 'something';
+  }
+}
+
+export class ClassThatIsNotInjected {}
+
 export interface Logger {
   log(): any;
 }
@@ -58,13 +67,20 @@ type Relation<T> = T;
 
 @Injectable()
 export class NestJSTestClass {
-  constructor(
+  @Inject(TestClassOne)
+  private readonly testClassOne: TestClassOne;
+
+  @InjectRepository(Bar)
+  private readonly barRepository: Repository<Bar>;
+
+  public constructor(
     @Inject('LOGGER') private readonly logger: Logger,
+    @Inject('UNDEFINED') private readonly undefinedParam: undefined,
+    @Inject('UNDEFINED_SECOND') private readonly undefinedParamSecond: undefined,
+    @Inject(TestClassFour) private readonly testClassFour: undefined,
     @Inject(forwardRef(() => TestClassThree))
     private readonly testClassThree: Relation<TestClassThree>,
     @InjectRepository(Foo) private readonly fooRepository: Repository<Foo>,
-    @InjectRepository(Bar) private readonly barRepository: Repository<Bar>,
-    private readonly testClassOne: TestClassOne,
     private readonly testClassTwo: TestClassTwo,
     @Inject('PRIMITIVE_VALUE') private readonly primitiveValue: string
   ) {}

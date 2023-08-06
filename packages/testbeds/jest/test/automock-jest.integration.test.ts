@@ -1,21 +1,21 @@
-import { TestBedBuilder, UnitTestBed } from '@automock/core';
-import { TestBed } from '@automock/jest';
 import {
   Bar,
   ClassThatIsNotInjected,
   Foo,
   Logger,
   NestJSTestClass,
-  NestJSTestClassProp,
   TestClassFour,
   TestClassOne,
   TestClassThree,
   TestClassTwo,
-} from './e2e-assets';
+} from './spec-assets-nestjs';
+import { TestBed, UnitTestBed } from '../src';
+import { TestBedBuilder } from '@automock/core';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
-describe('Automock Jest / NestJS E2E Test (Property Injection)', () => {
-  let unitTestBed: UnitTestBed<NestJSTestClassProp>;
-  let testBedBuilder: TestBedBuilder<NestJSTestClassProp>;
+describe('Automock Jest Broad Integration Test', () => {
+  let unitTestBed: UnitTestBed<NestJSTestClass>;
+  let testBedBuilder: TestBedBuilder<NestJSTestClass>;
 
   const testClassOneMock: { foo?: ((flag: boolean) => Promise<string>) | undefined } = {
     async foo(): Promise<string> {
@@ -24,9 +24,12 @@ describe('Automock Jest / NestJS E2E Test (Property Injection)', () => {
   };
 
   const loggerMock = { log: () => 'baz-from-test' };
+
   describe('given a unit testing builder with two overrides', () => {
+    jest.spyOn(console, 'warn').mockReturnValue(undefined);
+
     beforeAll(() => {
-      testBedBuilder = TestBed.create<NestJSTestClassProp>(NestJSTestClassProp)
+      testBedBuilder = TestBed.create<NestJSTestClass>(NestJSTestClass)
         .mock(TestClassOne)
         .using(testClassOneMock)
         .mock<string>('PRIMITIVE_VALUE')
@@ -52,8 +55,8 @@ describe('Automock Jest / NestJS E2E Test (Property Injection)', () => {
 
         expect(unitRef.get(TestClassOne).foo).toBe(testClassOneMock.foo);
         expect(unitRef.get(TestClassTwo)).toBeDefined();
-        expect(unitRef.get(Foo)).toBeDefined();
-        expect(unitRef.get(Bar)).toBeDefined();
+        expect(unitRef.get(getRepositoryToken(Foo) as string)).toBeDefined();
+        expect(unitRef.get(getRepositoryToken(Bar) as string)).toBeDefined();
         expect(unitRef.get<{ log: () => void }>('LOGGER').log).toBe(loggerMock.log);
         expect(unitRef.get(TestClassThree)).toBeDefined();
         expect(unitRef.get('PRIMITIVE_VALUE')).toBe('arbitrary-string');
@@ -90,6 +93,8 @@ describe('Automock Jest / NestJS E2E Test (Property Injection)', () => {
 
       test('then all the un-override classes/dependencies should be stubs', () => {
         const { unitRef } = unitTestBed;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
         expect(testClassTwo.bar.getMockName).toBeDefined();
@@ -98,7 +103,12 @@ describe('Automock Jest / NestJS E2E Test (Property Injection)', () => {
 
       test('then mock the undefined reflected values and tokens', () => {
         const { unitRef } = unitTestBed;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         const testClassFour: jest.Mocked<TestClassFour> = unitRef.get(TestClassFour);
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         const undefinedValue: jest.Mocked<{ method: () => number }> = unitRef.get<{
           method: () => number;
         }>('UNDEFINED');

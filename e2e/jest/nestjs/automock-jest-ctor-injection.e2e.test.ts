@@ -1,108 +1,113 @@
-import { UnitTestBed } from '@automock/core';
+import { TestBedBuilder, UnitTestBed } from '@automock/core';
 import { TestBed } from '@automock/jest';
-import { Injectable, Inject } from '@nestjs/common';
-
-interface Logger {
-  log(message: string): string;
-}
-
-@Injectable()
-export class Numberer {
-  public returnANumber(): number {
-    return Math.floor(Math.random() * 100) + 1;
-  }
-}
-
-@Injectable()
-export class Stringer {
-  public returnAString(): string {
-    return Math.random().toString(36).slice(2, 8);
-  }
-}
-
-@Injectable()
-export class Useless {
-  public voidMethod(): void {
-    return;
-  }
-}
-
-@Injectable()
-class MainClass {
-  public constructor(
-    private readonly dep1: Numberer,
-    private readonly dep2: Stringer,
-    private readonly dep3: Useless,
-    @Inject('LOGGER') private readonly logger: Logger,
-    @Inject('PRIMITIVE') private readonly primitive: string
-  ) {}
-
-  public generateString(): string {
-    return this.dep2.returnAString();
-  }
-
-  public generateNumber(): number {
-    return this.dep1.returnANumber();
-  }
-
-  public returnPrimitive(): string {
-    return this.primitive;
-  }
-
-  public returnLogger(): string {
-    return this.logger.log('hello');
-  }
-}
+import {
+  Bar,
+  ClassThatIsNotInjected,
+  Foo,
+  Logger,
+  NestJSTestClass,
+  TestClassFour,
+  TestClassOne,
+  TestClassThree,
+  TestClassTwo,
+} from './e2e-assets';
 
 describe('Automock Jest / NestJS E2E Test Ctor', () => {
-  let unitTestbed: UnitTestBed<MainClass>;
+  let unitTestBed: UnitTestBed<NestJSTestClass>;
+  let testBedBuilder: TestBedBuilder<NestJSTestClass>;
 
-  beforeAll(() => {
-    unitTestbed = TestBed.create(MainClass)
-      .mock(Stringer)
-      .using({
-        returnAString: () => 'not-random',
-      })
-      .mock<Logger>('LOGGER')
-      .using({
-        log: () => 'dummy-mocked',
-      })
-      .mock<string>('PRIMITIVE')
-      .using('DUMMY-STRING')
-      .compile();
-  });
+  const testClassOneMock: { foo?: ((flag: boolean) => Promise<string>) | undefined } = {
+    async foo(): Promise<string> {
+      return 'foo-from-test';
+    },
+  };
 
-  it('should return an object with two properties, unit and unitRef', () => {
-    expect(unitTestbed).toHaveProperty('unit');
-    expect(unitTestbed).toHaveProperty('unitRef');
-  });
+  const loggerMock = { log: () => 'baz-from-test' };
 
-  it('should return a unit which is an instance of the subject class', () => {
-    expect(unitTestbed.unit).toBeInstanceOf(MainClass);
-  });
+  describe('given a unit testing builder with two overrides', () => {
+    beforeAll(() => {
+      testBedBuilder = TestBed.create<NestJSTestClass>(NestJSTestClass)
+        .mock(TestClassOne)
+        .using(testClassOneMock)
+        .mock<string>('PRIMITIVE_VALUE')
+        .using('arbitrary-string')
+        .mock('UNDEFINED')
+        .using({ method: () => 456 })
+        .mock<Logger>('LOGGER')
+        .using(loggerMock);
+    });
 
-  it('should return a unit reference which is an instance of unit reference', () => {
-    expect(unitTestbed.unitRef.constructor.name).toBe('UnitReference');
-  });
+    describe('when compiling the builder and turning into testing unit', () => {
+      beforeAll(() => (unitTestBed = testBedBuilder.compile()));
 
-  it('should contain all the method of the subject class', () => {
-    expect(unitTestbed.unit.generateString).toBeDefined();
-    expect(unitTestbed.unit.generateNumber).toBeDefined();
-  });
+      test('then return an actual instance of the injectable class', () => {
+        expect(unitTestBed).toHaveProperty('unit');
+        expect(unitTestBed.unit).toBeInstanceOf(NestJSTestClass);
+      });
 
-  test('return the default value from test bed builder when calling the target method that triggers the mock', () => {
-    expect(unitTestbed.unit.generateString()).toBe('not-random');
-  });
+      test('then successfully resolve the dependencies of the tested classes', () => {
+        expect(unitTestBed).toHaveProperty('unitRef');
 
-  test('return the exact value when using the jest mocking api', () => {
-    unitTestbed.unitRef.get(Numberer).returnANumber.mockReturnValue(47356);
-    expect(unitTestbed.unit.generateNumber()).toBe(47356);
-  });
+        const { unitRef } = unitTestBed;
 
-  test('return the primitive value when using primitive values', () => {
-    const primitiveValue = unitTestbed.unitRef.get('PRIMITIVE');
+        expect(unitRef.get(TestClassOne).foo).toBe(testClassOneMock.foo);
+        expect(unitRef.get(TestClassTwo)).toBeDefined();
+        expect(unitRef.get(Foo)).toBeDefined();
+        expect(unitRef.get(Bar)).toBeDefined();
+        expect(unitRef.get<{ log: () => void }>('LOGGER').log).toBe(loggerMock.log);
+        expect(unitRef.get(TestClassThree)).toBeDefined();
+        expect(unitRef.get('PRIMITIVE_VALUE')).toBe('arbitrary-string');
+        expect(unitRef.get('UNDEFINED_SECOND')).toBeDefined();
+        expect(unitRef.get(TestClassFour)).toBeDefined();
+      });
 
-    expect(primitiveValue).toBe('DUMMY-STRING');
-    expect(unitTestbed.unit.returnPrimitive()).toBe('DUMMY-STRING');
+      test('then do not return the actual reflected dependencies of the injectable class', () => {
+        // Indeed, they all need to be overwritten
+        const { unitRef } = unitTestBed;
+
+        expect(unitRef.get(TestClassOne)).not.toBeInstanceOf(TestClassOne);
+        expect(unitRef.get(TestClassTwo)).not.toBeInstanceOf(TestClassTwo);
+      });
+
+      test('then throw an error when trying to resolve not existing dependency', () => {
+        const { unitRef } = unitTestBed;
+        expect(() => unitRef.get(ClassThatIsNotInjected)).toThrow();
+      });
+
+      test('then hard-mock the implementation of TestClassOne using the "foo" (partial impl function)', async () => {
+        const { unitRef } = unitTestBed;
+        const testClassOne = unitRef.get(TestClassOne);
+        const logger = unitRef.get<Logger>('LOGGER');
+
+        // The original 'foo' method in TestClassOne return value should be changed
+        // according to the passed flag; here, always return the same value
+        // because we mock the implementation of foo permanently
+        await expect(testClassOne.foo(true)).resolves.toBe('foo-from-test');
+        await expect(testClassOne.foo(false)).resolves.toBe('foo-from-test');
+
+        expect(logger.log).toBeDefined();
+      });
+
+      test('then all the un-override classes/dependencies should be stubs', () => {
+        const { unitRef } = unitTestBed;
+        const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+
+        expect(testClassTwo.bar.getMockName).toBeDefined();
+        expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');
+      });
+
+      test('then mock the undefined reflected values and tokens', () => {
+        const { unitRef } = unitTestBed;
+        const testClassFour: jest.Mocked<TestClassFour> = unitRef.get(TestClassFour);
+        const undefinedValue: jest.Mocked<{ method: () => number }> = unitRef.get<{
+          method: () => number;
+        }>('UNDEFINED');
+
+        testClassFour.doSomething.mockReturnValue('mocked');
+
+        expect(testClassFour.doSomething()).toBe('mocked');
+        expect(undefinedValue.method()).toBe(456);
+      });
+    });
   });
 });

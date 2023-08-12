@@ -9,26 +9,39 @@
 dependencies, allowing you to focus on writing test cases instead of mock setup.</strong>
 </p>
 
-<br>
+### :books: [Documentation](https://automock.dev/docs/introduction/intro/) | :book: [API Reference](https://automock.dev/api-reference/category/api-reference/)
 
 Specially designed for Inversion of Control (IoC) and Dependency Injection (DI) scenarios, Automock seamlessly
-integrates automatic mocking into your (DI) framework of choice. With Automock, you can effortlessly isolate and test
-individual components, improving the efficiency and reliability of your unit testing process.
-
+integrates automatic mocking into various DI and testing frameworks. Automock's adaptability ensures a seamless and
+effective testing experience, empowers you to isolate and test individual components with ease, enhancing the efficiency
+and reliability of your unit testing journey.
 
 ## :package: Installation
 
+To fully integrate Automock into your dependency injection (DI) framework, **you'll need to install both
+`@automock/jest`, and the corresponding adapter for your DI framework.**
+
+Install the main package
 ```bash
 npm i -D @automock/jest
 ```
+\
+Install the corresponding package for your DI framework:
+```bash
+npm i -D @automock/adapters.nestjs
+```
 
-## :computer: Usage Example
+```bash
+npm i -D @automock/adapters.inversify
+```
 
-Take a look at the following example:
+## :bulb: Quick Example
+
+Take a look at the following example (using Jest, but the same applies for Sinon), Automock streamlines the test
+creation process by automating the creation of mock objects and stubs, reducing boilerplate code and eliminating the
+manual setup effort.
 
 ```typescript
-import { TestBed } from '@automock/jest';
-
 class Database {
   getUsers(): Promise<User[]> { ... }
 }
@@ -40,6 +53,10 @@ class UserService {
     return this.database.getUsers();
   }
 }
+```
+
+```typescript
+import { TestBed } from '@automock/jest';
 
 describe('User Service Unit Spec', () => {
   let userService: UserService;
@@ -52,30 +69,25 @@ describe('User Service Unit Spec', () => {
   });
 
   test('should return users from the database', async () => {
-    database.getUsers.mockResolvedValue([{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }]);
+    const mockUsers: User[] = [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }];
+    database.getUsers.mockResolvedValue(mockUsers);
 
     const users = await userService.getAllUsers();
+
+    expect(database.getUsers).toHaveBeenCalled();
     expect(users).toEqual(mockUsers);
   });
 });
 ```
 
-**Both property injection and constructor injection are supported.** Whether your classes rely on dependencies injected
-through properties or constructor parameters, Automock handles both scenarios seamlessly. This flexibility allows you to
-write unit tests for a wide range of classes, ensuring that all dependencies are effectively mocked and isolated during
-testing, regardless of the injection method used.
 
-**[:books: For more examples and for API reference visit our docs page](https://github.com/automock/automock/blob/master/docs/automock.md)**
+In this example, Automock simplifies the creation of mock objects and stubs for the `Database` dependency. By utilizing
+the `TestBed`, you can create an instance of the `UserService` class with automatically generated mock objects for its
+dependencies.
 
-## :bookmark_tabs: Acknowledgments
-
-Automock is built upon the fundamentals and principles of unit tests, particularly inspired by Martin Fowler's blog
-posts on unit tests. Fowler advocates for creating "solitary" unit tests that concentrate on testing a single unit of
-code in isolation, independently of its dependencies. This approach aligns with Automock's objective of providing a
-simple and effective solution for automatically mocking class dependencies during unit testing.
-
-If you're interested in learning more about unit tests, we encourage you to explore Martin Fowler's blog post on the
-topic: https://martinfowler.com/bliki/UnitTest.html
+During the test, you can directly access the automatically created mock object for the `Database` dependency (database).
+By stubbing the `getUsers()` method of the database mock object, you can define its behavior and ensure it resolves with
+a specific set of mock users.
 
 ## :scroll: License
 

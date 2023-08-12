@@ -1,65 +1,89 @@
 /// <reference types="@types/sinon" />
 
-import { Type as TypeFromTypes } from '@automock/types';
-import { UnitReference } from '@automock/core';
-import { createMock } from '@golevelup/ts-sinon';
+import { Type } from '@automock/types';
 import { SinonStubbedInstance } from 'sinon';
+import { IdentifierMetadata } from '@automock/common';
 export * from './testbed-factory';
 
-export type Type<T> = TypeFromTypes<T>;
-
 declare module '@automock/core' {
-  /**
-   * Represents a reference to the mocked object based on the provided type or token.
-   * This is an augmented module for the `StubbedInstance` type from @automock/core.
-   */
   export interface UnitReference {
     /**
      * Returns a reference to the mocked object based on the provided class type.
      *
-     * @param type - The type of the dependency.
+     * @param identifier - The type of the dependency.
      * @returns The mocked instance of the dependency.
-     * @template TDep - The type of the dependency.
+     * @template TDependency - The type of the dependency.
      */
-    get<TDep>(type: Type<TDep>): SinonStubbedInstance<TDep>;
+    get<TDependency>(identifier: Type<TDependency>): SinonStubbedInstance<TDependency>;
 
     /**
      * Returns a reference to the mocked object based on the provided token.
      *
-     * @param token - The token of the dependency.
+     * @param identifier - The string-based token of the dependency.
      * @returns The mocked instance of the dependency.
-     * @template TDep - The type of the dependency.
+     * @template TDependency - The type of the dependency.
      */
-    get<TDep>(token: string): SinonStubbedInstance<TDep>;
+    get<TDependency>(identifier: string): SinonStubbedInstance<TDependency>;
+
+    /**
+     * Returns a reference to the mocked object based on the provided token.
+     *
+     * @param identifier - The symbol-based token of the dependency.
+     * @returns The mocked instance of the dependency.
+     * @template TDependency - The type of the dependency.
+     */
+    get<TDependency>(identifier: symbol): SinonStubbedInstance<TDependency>;
 
     /**
      * Returns a reference to the mocked object based on the provided token or class type.
      *
-     * @param typeOrToken - The type or token of the dependency.
+     * @param identifier - The type or token of the dependency.
      * @returns The mocked instance of the dependency.
-     * @template TDep - The type of the dependency.
+     * @template TDependency - The type of the dependency.
      */
-    get<TDep>(typeOrToken: Type<TDep> | string): SinonStubbedInstance<TDep>;
+    get<TDependency>(identifier: Type | string | symbol): SinonStubbedInstance<TDependency>;
   }
 }
 
-/**
- * Represents the result of compiling a unit test bed.
- * @template TClass - The type of the class under test.
- */
-export interface UnitTestBed<TClass> {
-  /**
-   * The instance of the class under test.
-   */
-  unit: TClass;
+declare module '@automock/adapters.inversify' {
+  export interface UnitReference {
+    /**
+     * Returns a reference to the mocked object based on the provided string token and metadata.
+     *
+     * @param identifier - The string-based token of the dependency.
+     * @param bindings - The bindings to identify the dependency.
+     * @returns The mocked instance of the dependency.
+     * @template TDependency - The type of the dependency.
+     */
+    get<TDependency>(
+      identifier: string,
+      bindings: IdentifierMetadata
+    ): SinonStubbedInstance<TDependency>;
 
-  /**
-   * The reference to the dependencies of the class under test.
-   */
-  unitRef: UnitReference;
+    /**
+     * Returns a reference to the mocked object based on the provided symbol token and metadata.
+     *
+     * @param identifier - The symbol-based token of the dependency.
+     * @param bindings - The bindings to identify the dependency.
+     * @returns The mocked instance of the dependency.
+     * @template TDependency - The type of the dependency.
+     */
+    get<TDependency>(
+      identifier: symbol,
+      bindings: IdentifierMetadata
+    ): SinonStubbedInstance<TDependency>;
+
+    /**
+     * Returns a reference to the mocked object based on the provided token or class type.
+     *
+     * @param identifier - The type or token of the dependency.
+     * @param bindings - The bindings to identify the dependency.
+     * @returns The mocked instance of the dependency.
+     * @template TDependency - The type of the dependency.
+     */
+    get<TDependency>(
+      identifier: string | symbol,
+      bindings: IdentifierMetadata
+    ): SinonStubbedInstance<TDependency>;
+  }
 }
-
-/**
- * @deprecated Will be removed in the next major version.
- */
-export type MockFunction = typeof createMock;

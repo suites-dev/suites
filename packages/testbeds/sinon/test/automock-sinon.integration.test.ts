@@ -9,8 +9,8 @@ import {
   TestClassThree,
   TestClassTwo,
 } from './spec-assets-nestjs';
-import { TestBed, UnitTestBed } from '../src';
-import { TestBedBuilder } from '@automock/core';
+import { TestBed } from '../src';
+import { TestBedBuilder, UnitTestBed } from '@automock/core';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { SinonStubbedInstance } from 'sinon';
 

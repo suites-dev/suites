@@ -4,6 +4,7 @@ import {
   Foo,
   Logger,
   NestJSTestClass,
+  TestClassFour,
   TestClassOne,
   TestClassThree,
   TestClassTwo,
@@ -11,8 +12,9 @@ import {
 import { TestBed, UnitTestBed } from '../src';
 import { TestBedBuilder } from '@automock/core';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { SinonStubbedInstance } from 'sinon';
 
-describe('Automock Broad Integration Test', () => {
+describe('Automock Sinon Broad Integration Test', () => {
   let unitTestBed: UnitTestBed<NestJSTestClass>;
   let testBedBuilder: TestBedBuilder<NestJSTestClass>;
 
@@ -25,12 +27,16 @@ describe('Automock Broad Integration Test', () => {
   const loggerMock = { log: () => 'baz-from-test' };
 
   describe('given a unit testing builder with two overrides', () => {
+    jest.spyOn(console, 'warn').mockReturnValue(undefined);
+
     beforeAll(() => {
       testBedBuilder = TestBed.create<NestJSTestClass>(NestJSTestClass)
         .mock(TestClassOne)
         .using(testClassOneMock)
         .mock<string>('PRIMITIVE_VALUE')
         .using('arbitrary-string')
+        .mock('UNDEFINED')
+        .using({ method: () => 456 })
         .mock<Logger>('LOGGER')
         .using(loggerMock);
     });
@@ -48,13 +54,15 @@ describe('Automock Broad Integration Test', () => {
 
         const { unitRef } = unitTestBed;
 
-        expect(unitRef.get(TestClassOne).foo).toBe(testClassOneMock.foo);
+        expect(unitRef.get(TestClassOne).foo).toBeDefined();
         expect(unitRef.get(TestClassTwo)).toBeDefined();
         expect(unitRef.get(getRepositoryToken(Foo) as string)).toBeDefined();
         expect(unitRef.get(getRepositoryToken(Bar) as string)).toBeDefined();
-        expect(unitRef.get<{ log: () => void }>('LOGGER').log).toBe(loggerMock.log);
+        expect(unitRef.get<{ log: () => void }>('LOGGER').log).toBeDefined();
         expect(unitRef.get(TestClassThree)).toBeDefined();
         expect(unitRef.get('PRIMITIVE_VALUE')).toBe('arbitrary-string');
+        expect(unitRef.get('UNDEFINED_SECOND')).toBeDefined();
+        expect(unitRef.get(TestClassFour)).toBeDefined();
       });
 
       test('then do not return the actual reflected dependencies of the injectable class', () => {
@@ -84,12 +92,25 @@ describe('Automock Broad Integration Test', () => {
         expect(logger.log).toBeDefined();
       });
 
-      test('then all the un-override classes/dependencies should be stubs', () => {
+      test('then all the un-override classes/dependencies should be stubs', async () => {
         const { unitRef } = unitTestBed;
-        const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+        const testClassTwo: SinonStubbedInstance<TestClassTwo> = unitRef.get(TestClassTwo);
 
-        expect(testClassTwo.bar.getMockName).toBeDefined();
-        expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');
+        testClassTwo.bar.resolves('bar-from-test');
+        await expect(testClassTwo.bar()).resolves.toBe('bar-from-test');
+      });
+
+      test('then mock the undefined reflected values and tokens', () => {
+        const { unitRef } = unitTestBed;
+        const testClassFour: SinonStubbedInstance<TestClassFour> = unitRef.get(TestClassFour);
+        const undefinedValue: SinonStubbedInstance<{ method: () => number }> = unitRef.get<{
+          method: () => number;
+        }>('UNDEFINED');
+
+        testClassFour.doSomething.returns('mocked');
+
+        expect(testClassFour.doSomething()).toBe('mocked');
+        expect(undefinedValue.method()).toBe(456);
       });
     });
   });

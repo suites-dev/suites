@@ -1,24 +1,32 @@
 import {
+  ClassWithUndefinedDependency,
+  ClassWithUndefinedDependencyProps,
+  ClassWithUndefinedRefDependency,
+  ConstructorBasedInjectionClass,
+  ConstructorCombinedWithPropsClass,
+  DependencyFive,
   DependencyOne,
+  DependencySix,
   DependencyThree,
   DependencyTwo,
-  ConstructorBasedInjectionClass,
   PropsBasedMainClass,
-  ConstructorCombinedWithPropsClass,
 } from './integration.assets';
 import {
   ClassCtorInjectables,
   ClassDependenciesMap,
   ClassPropsInjectables,
+  UndefinedDependency,
 } from '@automock/common';
 import { ParamsTokensReflector } from '../src/params-token-resolver';
 import { ReflectorFactory } from '../src/class-reflector';
 import { ClassPropsReflector } from '../src/class-props-reflector';
 import { ClassCtorReflector } from '../src/class-ctor-reflector';
+import { Type } from '@automock/types';
+import { PropertyReflectionStrategies } from '../src/property-reflection-strategies.static';
 
 describe('NestJS Automock Adapter Integration Test', () => {
   const reflectorFactory = ReflectorFactory(
-    ClassPropsReflector(Reflect),
+    ClassPropsReflector(Reflect, PropertyReflectionStrategies),
     ClassCtorReflector(Reflect, ParamsTokensReflector)
   );
 
@@ -30,7 +38,10 @@ describe('NestJS Automock Adapter Integration Test', () => {
         [DependencyOne, DependencyOne],
         [DependencyTwo, DependencyTwo],
         [DependencyThree, DependencyThree],
+        ['SOME_TOKEN_FROM_REF', DependencyFive],
+        [DependencySix, UndefinedDependency],
         ['CUSTOM_TOKEN', Object],
+        ['CUSTOM_TOKEN_SECOND', UndefinedDependency],
         ['ANOTHER_CUSTOM_TOKEN', String],
         ['LITERAL_VALUE_ARR', Array],
         ['LITERAL_VALUE_STR', String],
@@ -59,9 +70,24 @@ describe('NestJS Automock Adapter Integration Test', () => {
           value: DependencyThree,
         },
         {
+          property: 'dependencySix',
+          typeOrToken: DependencySix,
+          value: UndefinedDependency,
+        },
+        {
           property: 'dependencyFour',
           typeOrToken: 'CUSTOM_TOKEN',
           value: Object,
+        },
+        {
+          property: 'dependencyMissingWithToken',
+          typeOrToken: DependencyFive,
+          value: DependencyFive,
+        },
+        {
+          property: 'dependencyUndefinedWithToken',
+          typeOrToken: 'CUSTOM_TOKEN_SECOND',
+          value: UndefinedDependency,
         },
         {
           property: 'literalValueArray',
@@ -106,6 +132,15 @@ describe('NestJS Automock Adapter Integration Test', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('reflecting classes with undefined constructor dependencies', () => {
+    it.each([
+      [ClassWithUndefinedDependency],
+      [ClassWithUndefinedDependencyProps],
+    ])('should fail with an error indicating that the dependency is not defined', (type: Type) => {
+      expect(() => reflectorFactory.reflectDependencies(type)).toThrow();
     });
   });
 });

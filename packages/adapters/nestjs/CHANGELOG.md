@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/omermorad/automock/compare/@automock/adapters.nestjs@1.3.1...@automock/adapters.nestjs@1.4.0) (2023-08-04)
+
+
+### Features
+
+* **adapters.nestjs:** support undefined dependency reflection ([a9ccaa6](https://github.com/omermorad/automock/commit/a9ccaa646289320d631b3f783ff9d51639b7dc1b))
+
+
+
+
+
 ## [1.3.1](https://github.com/omermorad/automock/compare/@automock/adapters.nestjs@1.3.0...@automock/adapters.nestjs@1.3.1) (2023-07-30)
 
 

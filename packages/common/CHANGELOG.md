@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/omermorad/automock/compare/@automock/common@2.1.0...@automock/common@2.2.0) (2023-08-04)
+
+
+### Features
+
+* **common:** add symbol and type for undefined dependency ([681f670](https://github.com/omermorad/automock/commit/681f670ad93f5d6bc000ca946c14e0837bff73ea))
+
+
+
+
+
 # [2.1.0](https://github.com/omermorad/automock/compare/@automock/common@2.0.0...@automock/common@2.1.0) (2023-07-29)
 
 

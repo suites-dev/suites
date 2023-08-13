@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/omermorad/automock/compare/@automock/core@1.3.0...@automock/core@1.4.0) (2023-08-04)
+
+
+### Features
+
+* **core:** support undefined dependency from adapter ([b85132d](https://github.com/omermorad/automock/commit/b85132d65ec4a5be7327597c47b29a4f281ff1ef))
+
+
+
+
+
 # [1.3.0](https://github.com/omermorad/automock/compare/@automock/core@1.2.2...@automock/core@1.3.0) (2023-07-29)
 
 

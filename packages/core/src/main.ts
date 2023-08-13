@@ -14,7 +14,7 @@ export function createTestbedBuilder<TClass>(
     });
 
     const adapter = packageResolver.resolveCorrespondingAdapter();
-    const unitMocker = new UnitMocker(adapter, mockFn);
+    const unitMocker = new UnitMocker(adapter, mockFn, console);
 
     return UnitBuilder.create<TClass>(mockFn, unitMocker);
   } catch (error: unknown) {

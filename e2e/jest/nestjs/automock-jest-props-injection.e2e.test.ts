@@ -1,104 +1,97 @@
-import { UnitTestBed } from '@automock/core';
+import { UnitReference } from '@automock/core';
 import { TestBed } from '@automock/jest';
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import {
+  ClassThatIsNotInjected,
+  Foo,
+  Logger,
+  NestJSTestClassProp,
+  TestClassFour,
+  TestClassOne,
+  TestClassThree,
+  TestClassTwo,
+} from './e2e-assets';
 
-export class DependencyOne {
-  print(): string {
-    return 'dependencyOne';
-  }
-}
-
-export class DependencyTwo {
-  print(): string {
-    return 'dependencyTwo';
-  }
-}
-
-interface DependencyThreeInterface {
-  print(): string;
-}
-
-export class DependencyThree implements DependencyThreeInterface {
-  print(): string {
-    return 'dependencyThree';
-  }
-}
-
-export interface DependencyFourTokenInterface {
-  print(): string;
-}
-
-@Injectable()
-export class MainClass {
-  @Inject(DependencyOne)
-  private readonly dependencyOne: DependencyOne;
-
-  @Inject(DependencyTwo)
-  private readonly dependencyTwo: DependencyTwo;
-
-  @Inject(forwardRef(() => DependencyThree))
-  private readonly dependencyThree: DependencyThree;
-
-  @Inject('CUSTOM_TOKEN')
-  public readonly dependencyFour: DependencyFourTokenInterface;
-
-  @Inject('LITERAL_VALUE_ARR')
-  private readonly literalValueArray: string[];
-
-  @Inject('LITERAL_VALUE_STR')
-  private readonly literalValueString: string;
-
-  public generateString(): string {
-    return this.dependencyTwo.print();
-  }
-
-  public returnStringValue() {
-    return this.literalValueString;
-  }
-}
-
-describe('Automock Jest / NestJS E2E Test', () => {
-  let unitTestbed: UnitTestBed<MainClass>;
+describe('Automock Jest / NestJS E2E Test Props', () => {
+  let unit: NestJSTestClassProp;
+  let unitRef: UnitReference;
 
   beforeAll(() => {
-    unitTestbed = TestBed.create(MainClass)
-      .mock(DependencyTwo)
+    const { unitRef: ref, unit: underTest } = TestBed.create<NestJSTestClassProp>(
+      NestJSTestClassProp
+    )
+      .mock(TestClassOne)
       .using({
-        print: () => 'mocked-dep-2-print',
+        async foo(): Promise<string> {
+          return 'foo-from-test';
+        },
       })
-      .mock(DependencyThree)
-      .using({
-        print: () => 'mocked-dep-3-print',
-      })
-      .mock<DependencyFourTokenInterface>('CUSTOM_TOKEN')
-      .using({
-        print: () => 'dep-four-with-custom-token',
-      })
-      .mock<string>('LITERAL_VALUE_STR')
-      .using('string-from-mock')
+      .mock<string>('PRIMITIVE_VALUE')
+      .using('arbitrary-string')
+      .mock('UNDEFINED')
+      .using({ method: () => 456 })
+      .mock<Logger>('LOGGER')
+      .using({ log: () => 'baz-from-test' })
       .compile();
 
-    console.log(unitTestbed.unitRef);
+    unitRef = ref;
+    unit = underTest;
   });
 
-  test('unit generateString() method should return "mocked-dep-2-print" since it has been overridden in the builder', () => {
-    expect(unitTestbed.unit.generateString()).toBe('mocked-dep-2-print');
-  });
+  describe('when compiling the builder and turning into testing unit', () => {
+    test('then the unit should an instance of the class under test', () => {
+      expect(unit).toBeInstanceOf(NestJSTestClassProp);
+    });
 
-  test('DependencyOne should remain unchanged and just be a stub', () => {
-    const dependencyOne = unitTestbed.unitRef.get(DependencyOne);
+    test('then successfully resolve the dependencies of the tested classes', () => {
+      expect(() => unitRef.get(TestClassOne).foo).toBeDefined();
+      expect(() => unitRef.get(TestClassTwo)).toBeDefined();
+      expect(() => unitRef.get(Foo)).toBeDefined();
+      expect(() => unitRef.get<{ log: () => void }>('LOGGER')).toBeDefined();
+      expect(() => unitRef.get(TestClassThree)).toBeDefined();
+      expect(() => unitRef.get('UNDEFINED_SECOND')).toBeDefined();
+      expect(() => unitRef.get(TestClassFour)).toBeDefined();
+    });
 
-    expect(dependencyOne).toBeDefined();
-    expect(dependencyOne.print).toHaveProperty('mockReturnValue');
-  });
+    test('then do not return the actual reflected dependencies of the injectable class', () => {
+      // Indeed, they all need to be overwritten
+      expect(() => unitRef.get(TestClassOne)).not.toBeInstanceOf(TestClassOne);
+      expect(() => unitRef.get(TestClassTwo)).not.toBeInstanceOf(TestClassTwo);
+    });
 
-  test('DependencyThree should replaced with constant value', () => {
-    const dependencyThree = unitTestbed.unitRef.get(DependencyThree);
-    expect(dependencyThree).toHaveProperty('print');
-  });
+    test('then hard-mock the implementation of TestClassOne using the "foo" (partial impl function)', async () => {
+      const testClassOne: jest.Mocked<TestClassOne> = unitRef.get(TestClassOne);
+      const logger = unitRef.get<Logger>('LOGGER');
 
-  test('literalValueArray should be ["1", "2", "3"] since it has been overridden in the builder', () => {
-    const value = unitTestbed.unit.returnStringValue();
-    expect(value).toEqual('string-from-mock');
+      // The original 'foo' method in TestClassOne return value should be changed
+      // according to the passed flag; here, always return the same value
+      // because we mock the implementation of foo permanently
+      await expect(testClassOne.foo(true)).resolves.toBe('foo-from-test');
+      await expect(testClassOne.foo(false)).resolves.toBe('foo-from-test');
+
+      expect(logger.log).toBeDefined();
+    });
+
+    test('then all the un-override classes/dependencies should be stubs', () => {
+      const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+
+      expect(testClassTwo.bar.getMockName).toBeDefined();
+      expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');
+    });
+
+    test('then mock the undefined reflected values and tokens', () => {
+      const testClassFour: jest.Mocked<TestClassFour> = unitRef.get(TestClassFour);
+      const undefinedValue: jest.Mocked<{ method: () => number }> = unitRef.get<{
+        method: () => number;
+      }>('UNDEFINED');
+
+      testClassFour.doSomething.mockReturnValue('mocked');
+
+      expect(testClassFour.doSomething()).toBe('mocked');
+      expect(undefinedValue.method()).toBe(456);
+    });
+
+    test('then throw an error when trying to resolve not existing dependency', () => {
+      expect(() => unitRef.get(ClassThatIsNotInjected)).toThrow();
+    });
   });
 });

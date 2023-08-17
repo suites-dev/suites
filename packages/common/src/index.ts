@@ -6,48 +6,60 @@ import { Type } from '@automock/types';
 export const UndefinedDependency: unique symbol = Symbol('UndefinedDependency');
 export type UndefinedDependencySymbol = typeof UndefinedDependency;
 
-export type PrimitiveValue = unknown[] | string | number | boolean | symbol | null;
+export type ConstantValue = unknown[] | string | number | boolean | symbol | null;
+
+export type InjectableIdentifier = Type | string | symbol;
+export type InjectableValue = ConstantValue | Type | UndefinedDependencySymbol;
 
 /**
- * @deprecated
- * Use `ClassCtorInjectables` instead
+ * @since 3.0.0
  */
-export type ClassDependencies = [
-  Type | string,
-  PrimitiveValue | Type | UndefinedDependencySymbol
-][];
+export type WithoutMetadata = {
+  identifier: InjectableIdentifier;
+  value: InjectableValue;
+  type: 'PROPERTY' | 'PARAM';
+  property?: Record<string, string>;
+};
 
 /**
- * @since 2.1.0
+ * @since 3.0.0
  */
-export type ClassCtorInjectables = ClassDependencies;
+export type WithMetadata<Metadata extends IdentifierMetadata> = {
+  identifier: string | symbol;
+  value: InjectableValue;
+  type: 'PROPERTY' | 'PARAM';
+  metadata: Metadata;
+  property?: Record<string, string>;
+};
 
 /**
- * @since 2.1.0
+ * @since 3.0.0
  */
-export interface ClassInjectableProperty {
-  property: string;
-  typeOrToken: Type | string;
-  value?: PrimitiveValue | Type | UndefinedDependencySymbol;
+export type ClassInjectable<
+  Metadata extends IdentifierMetadata = never,
+  TIdentifier extends InjectableIdentifier = InjectableIdentifier
+> = TIdentifier extends Type ? WithoutMetadata : WithMetadata<Metadata>;
+
+/**
+ * @since 3.0.0
+ */
+export interface AutomockDependenciesAdapter {
+  build(targetClass: Type): ClassInjectablesContainer;
 }
 
 /**
- * @since 2.1.0
+ * @since 3.0.0
  */
-export type ClassPropsInjectables = ClassInjectableProperty[];
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface IdentifierMetadata {}
 
-export interface ClassDependenciesMap {
-  /**
-   * @since 2.0.0
-   */
-  constructor: ClassCtorInjectables;
-
-  /**
-   * @since 2.1.0
-   */
-  properties: ClassPropsInjectables;
-}
-
-export interface DependenciesReflector {
-  reflectDependencies(targetClass: Type): ClassDependenciesMap;
+/**
+ * @since 3.0.0
+ */
+export interface ClassInjectablesContainer {
+  resolve<T extends IdentifierMetadata>(
+    identifier: InjectableIdentifier,
+    metadata?: IdentifierMetadata
+  ): ClassInjectable<T> | undefined;
+  list<T extends IdentifierMetadata>(): ClassInjectable<T>[] | [];
 }

@@ -29,14 +29,17 @@
     "index.js"
   ],
   "dependencies": {
-    "@automock/common": "^2.2.0"
+    "@automock/common": "^2.2.0",
+    "lodash.merge": "^4.6.2"
   },
   "peerDependencies": {
-    "@nestjs/common": ">= 8.x"
+    "@nestjs/common": "*",
+    "@nestjs/core": "*"
   },
   "devDependencies": {
     "@automock/types": "^1.2.0",
-    "@nestjs/common": "^8.3.1"
+    "@nestjs/common": "^8.3.1",
+    "@types/lodash.merge": "^4.6.7"
   },
   "publishConfig": {
     "access": "public"

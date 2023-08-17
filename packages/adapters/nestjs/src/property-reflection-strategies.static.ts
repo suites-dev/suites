@@ -1,9 +1,13 @@
 import { Type } from '@automock/types';
-import { UndefinedDependency, UndefinedDependencySymbol } from '@automock/common';
+import {
+  InjectableIdentifier,
+  UndefinedDependency,
+  UndefinedDependencySymbol,
+} from '@automock/common';
 import { ForwardRefToken, NestJSInjectable } from './types';
 
 export interface StrategyReturnType {
-  typeOrToken: string | Type;
+  identifier: InjectableIdentifier;
   value: Type | UndefinedDependencySymbol;
 }
 
@@ -26,13 +30,13 @@ export const PropertyReflectionStrategies: ReadonlyArray<PropertyReflectionStrat
 
       if (typeof forwardRefToken === 'string') {
         return {
-          typeOrToken: forwardRefToken as string,
+          identifier: forwardRefToken as string,
           value: typeof type === 'undefined' ? UndefinedDependency : (type as Type),
         };
       }
 
       return {
-        typeOrToken: forwardRefToken as Type,
+        identifier: forwardRefToken as Type,
         value: typeof reflectedType === 'undefined' ? UndefinedDependency : forwardRefToken,
       };
     },
@@ -43,7 +47,7 @@ export const PropertyReflectionStrategies: ReadonlyArray<PropertyReflectionStrat
     },
     exec: (reflectedType: NestJSInjectable, type: string) => {
       return {
-        typeOrToken: type,
+        identifier: type,
         value: UndefinedDependency,
       };
     },
@@ -54,7 +58,7 @@ export const PropertyReflectionStrategies: ReadonlyArray<PropertyReflectionStrat
     },
     exec: (reflectedType: NestJSInjectable, type: Type) => {
       return {
-        typeOrToken: type,
+        identifier: type,
         value: !type ? UndefinedDependency : type,
       };
     },
@@ -65,7 +69,7 @@ export const PropertyReflectionStrategies: ReadonlyArray<PropertyReflectionStrat
     },
     exec: (reflectedType: Type, type: string) => {
       return {
-        typeOrToken: type,
+        identifier: type,
         value: reflectedType,
       };
     },

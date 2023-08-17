@@ -1,7 +1,8 @@
 import { Type } from '@automock/types';
 import {
-  DependenciesReflector as AutomockDependenciesReflector,
-  ClassDependenciesMap,
+  AutomockDependenciesAdapter as AutomockDependenciesReflector,
+  ClassInjectable,
+  ClassInjectablesContainer,
 } from '@automock/common';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
@@ -10,12 +11,20 @@ export function ReflectorFactory(
   classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
 ): AutomockDependenciesReflector {
-  function reflectDependencies(targetClass: Type): ClassDependenciesMap {
+  function build(targetClass: Type): ClassInjectablesContainer {
+    const ctorInjectables = classCtorReflector.reflectInjectables(targetClass);
+    const propsInjectables = classPropsReflector.reflectInjectables(targetClass);
+    const allInjectables = [...ctorInjectables, ...propsInjectables];
+
     return {
-      constructor: classCtorReflector.reflectInjectables(targetClass),
-      properties: classPropsReflector.reflectInjectables(targetClass),
+      resolve(identifier: Type | string): ClassInjectable | undefined {
+        return allInjectables.find(({ identifier: typeOrToken }) => typeOrToken === identifier);
+      },
+      list(): ClassInjectable[] {
+        return allInjectables;
+      },
     };
   }
 
-  return { reflectDependencies };
+  return { build };
 }

@@ -1,82 +1,54 @@
-import { Type, MockFunction, StubbedInstance } from '@automock/types';
-import { DependenciesReflector, PrimitiveValue, UndefinedDependency } from '@automock/common';
-
-export interface MockedInjectables<T> {
-  mocks: Map<Type | string, StubbedInstance<unknown>>;
-  unit: T;
-}
+import { Type, MockFunction } from '@automock/types';
+import { InjectableIdentifier, ClassInjectablesContainer, WithMetadata } from '@automock/common';
+import { MocksContainer } from './mocks-container';
+import { IdentifierToMock, MockedUnit } from '../types';
 
 export class UnitMocker {
-  public constructor(
-    private readonly reflector: DependenciesReflector,
-    private readonly mockFunction: MockFunction<unknown>,
-    private readonly logger: Console
-  ) {}
+  public constructor(private readonly mockFunction: MockFunction<unknown>) {}
 
-  /**
-   * Mocks all dependencies of a target class.
-   * @param targetClass - The target class whose dependencies should be mocked.
-   * @returns A function that accepts already mocked dependencies and returns
-   * the updated map of mocked dependencies.
-   */
   public applyMocksToUnit<TClass>(
     targetClass: Type<TClass>
   ): (
-    mockedInjectablesMap: Map<Type | string, StubbedInstance<unknown> | PrimitiveValue>
-  ) => MockedInjectables<TClass> {
+    mockContainer: MocksContainer,
+    injectablesContainer: ClassInjectablesContainer
+  ) => MockedUnit<TClass> {
+    const identifiersToMocks: IdentifierToMock[] = [];
+
     return (
-      mockedInjectablesMap: Map<Type | string, StubbedInstance<unknown>>
-    ): MockedInjectables<TClass> => {
-      const { constructor = [], properties = [] } = this.reflector.reflectDependencies(targetClass);
-      const classMockedInjectables = new Map<Type | string, StubbedInstance<unknown>>();
+      alreadyMockedContainer: MocksContainer,
+      injectablesContainer: ClassInjectablesContainer
+    ): MockedUnit<TClass> => {
+      const allInjectables = injectablesContainer.list() as WithMetadata<never>[];
+      const ctorInjectables = allInjectables.filter(({ type }) => type === 'PARAM');
+      const propsInjectables = allInjectables.filter(({ type }) => type === 'PROPERTY');
 
-      for (const [typeOrToken, injectable] of constructor) {
-        if (injectable === UndefinedDependency) {
-          const name = typeof typeOrToken === 'string' ? typeOrToken : typeOrToken.name;
-
-          this.logger.warn(
-            `Automock has identified an undefined dependency with type or token '${name}' in class '${targetClass.name}'.
-This warning may be caused by improper parameter decoration, issues with type reflection, or unresolved dependencies
-due to circular references. Consider using the circular dependency resolution features provided by your DI framework.`
-          );
-        }
-
-        const alreadyMocked = mockedInjectablesMap.get(typeOrToken);
-        const mockedDependency = alreadyMocked ? alreadyMocked : this.mockFunction();
-
-        classMockedInjectables.set(typeOrToken, mockedDependency);
+      for (const { identifier, metadata } of ctorInjectables) {
+        const mock = alreadyMockedContainer.resolve(identifier, metadata) || this.mockFunction();
+        identifiersToMocks.push([normalizeIdentifier(identifier, metadata), mock]);
       }
 
-      const classInstance = new targetClass(...classMockedInjectables.values()) as Record<
-        string,
-        unknown
-      >;
+      const classCtorParams = identifiersToMocks.map(([, value]) => value);
+      const classInstance = new targetClass(...classCtorParams) as Record<string, unknown>;
 
-      properties.forEach((reflectedProperty) => {
-        if (reflectedProperty.value === UndefinedDependency) {
-          const name =
-            typeof reflectedProperty.typeOrToken === 'string'
-              ? reflectedProperty.typeOrToken
-              : reflectedProperty.typeOrToken.name;
+      for (const { identifier, metadata, property } of propsInjectables) {
+        const mock = alreadyMockedContainer.resolve(identifier, metadata) || this.mockFunction();
 
-          this.logger.warn(
-            `Automock has identified an undefined dependency with type or token '${name}' in class '${targetClass.name}', property ${reflectedProperty.property}.
-This warning may be caused by improper parameter decoration, issues with type reflection, or unresolved dependencies
-due to circular references. Consider using the circular dependency resolution features provided by your DI framework.`
-          );
-        }
-
-        const alreadyMocked = mockedInjectablesMap.get(reflectedProperty.typeOrToken);
-        const mockToSet = alreadyMocked ? alreadyMocked : this.mockFunction();
-
-        classInstance[reflectedProperty.property] = mockToSet;
-        classMockedInjectables.set(reflectedProperty.typeOrToken, mockToSet);
-      });
+        identifiersToMocks.push([normalizeIdentifier(identifier, metadata), mock]);
+        classInstance[property!.key] = mock;
+      }
 
       return {
-        mocks: classMockedInjectables,
-        unit: classInstance as TClass,
+        container: new MocksContainer(identifiersToMocks),
+        instance: classInstance as TClass,
       };
     };
   }
+}
+
+export function normalizeIdentifier(identifier: InjectableIdentifier, metadata?: unknown) {
+  if (metadata) {
+    return Object.assign({ identifier }, { metadata });
+  }
+
+  return { identifier };
 }

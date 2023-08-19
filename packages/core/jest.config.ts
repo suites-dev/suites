@@ -9,6 +9,13 @@ export default async (): Promise<Config.InitialOptions> => {
     name: 'core',
     displayName: 'core',
     collectCoverageFrom: ['src/**/*.ts', '__test__/**/*.ts'],
-    coveragePathIgnorePatterns: ['index.ts', 'integration.assets.ts'],
+    coveragePathIgnorePatterns: [
+      'index.ts',
+      'integration.assets.ts',
+      'invalid-adapter.ts',
+      'test-adapter.ts',
+      'main.ts',
+      'types.ts'
+    ],
   };
 };

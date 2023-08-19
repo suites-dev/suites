@@ -26,6 +26,7 @@ const symbolIdentifier = Symbol.for('TOKEN_METADATA');
 
 describe('Builder Integration Test', () => {
   let underTest: TestBedBuilder<ClassUnderTest>;
+  const resolveStub = jest.fn();
 
   // It's a mark for a function that mocks the mock function, don't be confused by the name
   const mockFunctionMockOfBuilder = jest.fn(() => MockedFromBuilder);
@@ -89,14 +90,14 @@ describe('Builder Integration Test', () => {
             },
           ];
         },
-        resolve: () => {
-          return {} as ClassInjectable;
-        },
+        resolve: resolveStub,
       };
     },
   };
 
   beforeAll(() => {
+    resolveStub.mockReturnValue({});
+
     underTest = UnitBuilder.create<ClassUnderTest>(
       mockFunctionMockOfBuilder,
       new UnitMocker(mockFunctionMockOfMocker),
@@ -121,6 +122,8 @@ describe('Builder Integration Test', () => {
         .using({
           print: () => 'overridden',
         })
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         .mock(symbolIdentifier, { metadata: { key: 'value' } })
         .using({
           print: () => 'overridden',
@@ -168,9 +171,14 @@ describe('Builder Integration Test', () => {
       );
     });
 
-    test('return an instance of the unit and a unit reference', () => {
+    it('should return an instance of the unit and a unit reference', () => {
       expect(unitTestBed.unit).toBeInstanceOf(ClassUnderTest);
       expect(unitTestBed.unitRef).toBeInstanceOf(UnitReference);
+    });
+
+    it('should throw an error indicating the dependency was not found on mocking missing dependency', () => {
+      resolveStub.mockReturnValue(undefined);
+      expect(() => underTest.mock('does-not-exists').using({}).compile()).toThrow();
     });
   });
 });

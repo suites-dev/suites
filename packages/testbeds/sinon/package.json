@@ -33,7 +33,6 @@
     "README.md"
   ],
   "dependencies": {
-    "@automock/adapters.nestjs": "^1.4.0",
     "@automock/core": "^1.4.0",
     "@automock/types": "^1.2.0",
     "@golevelup/ts-sinon": "^0.1.0"
@@ -41,12 +40,12 @@
   "devDependencies": {
     "@nestjs/common": "^8.3.1",
     "@nestjs/core": "^8.0.3",
-    "@nestjs/typeorm": "^8.0.3",
     "@types/sinon": "^10.x",
     "sinon": "^14.x",
     "typeorm": "^0.3.11"
   },
   "peerDependencies": {
+    "@types/sinon": "*",
     "sinon": "*"
   },
   "publishConfig": {

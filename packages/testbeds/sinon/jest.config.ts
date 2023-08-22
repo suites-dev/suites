@@ -8,7 +8,5 @@ export default async (): Promise<Config.InitialOptions> => {
     ...baseConfig,
     name: 'sinon',
     displayName: 'sinon',
-    collectCoverageFrom: ['src/**/*.ts', 'test/**/*.ts'],
-    coveragePathIgnorePatterns: ['index.ts', 'spec-assets-nestjs.ts'],
   };
 };

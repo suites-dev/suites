@@ -1,122 +1,67 @@
 import { DeepPartial, Type, MockFunction, StubbedInstance } from '@automock/types';
+import {
+  IdentifierMetadata,
+  ConstantValue,
+  InjectableIdentifier,
+  AutomockDependenciesAdapter,
+} from '@automock/common';
 import { UnitReference } from './unit-reference';
-import { UnitMocker } from './unit-mocker';
-import { UnitTestBed } from '../types';
-import { PrimitiveValue } from '@automock/common';
-
-/**
- * Represents an override configuration for a mocked dependency.
- */
-export interface MockOverride<TDep, TClass> {
-  /**
-   * Specifies the value to be used for the mocked dependency.
-   *
-   * @param value - The value for the mocked dependency.
-   * @returns A `TestBedBuilder` instance for chaining further configuration.
-   * @template TValue - The type of the value.
-   */
-  using<TValue extends PrimitiveValue>(value: TValue): TestBedBuilder<TClass>;
-
-  /**
-   * Specifies the mock implementation to be used for the mocked dependency.
-   *
-   * @param mockImplementation - The mock implementation for the mocked dependency.
-   * @returns A `TestBedBuilder` instance for chaining further configuration.
-   * @template TImpl - The type of the mock implementation.
-   */
-  using<TImpl extends DeepPartial<TDep>>(mockImplementation: TImpl): TestBedBuilder<TClass>;
-
-  /**
-   * Specifies the mock implementation or value to be used for the mocked dependency.
-   *
-   * @param mockImplementationOrValue - The mock implementation or value.
-   * @returns A `TestBedBuilder` instance for chaining further configuration.
-   * @template TImpl - The type of the mock implementation or value.
-   */
-  using<TImpl extends DeepPartial<TDep> | PrimitiveValue>(
-    mockImplementationOrValue: TImpl
-  ): TestBedBuilder<TClass>;
-}
-
-export interface TestBedBuilder<TClass> {
-  /**
-   * Declares a dependency to be mocked using its type.
-   *
-   * @param type - The type of the dependency to be mocked.
-   * @returns A MockOverride instance for further configuration.
-   * @template TDependency - The type of the dependency.
-   */
-  mock<TDependency>(type: Type<TDependency>): MockOverride<TDependency, TClass>;
-
-  /**
-   * Declares a dependency to be mocked using a token string.
-   *
-   * @param token - The token string representing the dependency to be mocked.
-   * @returns A MockOverride instance for further configuration.
-   * @template TDependency - The type of the dependency.
-   */
-  mock<TDependency>(token: string): MockOverride<TDependency, TClass>;
-
-  /**
-   * Declares a dependency to be mocked using either its type or a token string.
-   *
-   * @param typeOrToken - The type or token string representing the dependency to be mocked.
-   * @returns A MockOverride instance for further configuration.
-   * @template TDependency - The type of the dependency.
-   */
-  mock<TDependency>(typeOrToken: Type<TDependency> | string): MockOverride<TDependency, TClass>;
-
-  /**
-   * Compiles the unit and creates a new testing unit.
-   *
-   * @returns A UnitTestBed instance representing the compiled unit.
-   */
-  compile(): UnitTestBed<TClass>;
-}
+import { normalizeIdentifier, UnitMocker } from './unit-mocker';
+import { MockOverride, TestBedBuilder, UnitTestBed } from '../public-types';
+import { MocksContainer } from './mocks-container';
+import { IdentifierToMock, InvalidIdentifierError } from '../types';
 
 export class UnitBuilder {
-  private constructor(
-    public readonly mockFn: MockFunction<unknown>,
-    public readonly unitMocker: UnitMocker
-  ) {}
-
   public static create<TClass>(
     mockFn: MockFunction<unknown>,
-    dependenciesMocker: UnitMocker
+    unitMocker: UnitMocker,
+    adapter: AutomockDependenciesAdapter
   ): (targetClass: Type<TClass>) => TestBedBuilder<TClass> {
     return (targetClass: Type<TClass>): TestBedBuilder<TClass> => {
-      const builderFactory = new this(mockFn, dependenciesMocker);
-      const injectablesToOverride = new Map<
-        Type | string,
-        PrimitiveValue | StubbedInstance<unknown>
-      >();
+      const identifiersToMocks: IdentifierToMock[] = [];
+      const dependenciesContainer = adapter.reflect(targetClass);
 
       return {
         mock<TDependency>(
-          typeOrToken: string | Type<TDependency>
+          identifier: InjectableIdentifier,
+          metadata?: IdentifierMetadata
         ): MockOverride<TDependency, TClass> {
+          const dependency = dependenciesContainer.resolve<never>(identifier, metadata);
+
+          if (!dependency) {
+            const message = mockDependencyNotFoundError(identifier, metadata);
+            throw new InvalidIdentifierError(message);
+          }
+
           return {
-            using: (mockImplementationOrValue: DeepPartial<TDependency> | PrimitiveValue) => {
-              if (isPrimitive(mockImplementationOrValue)) {
-                injectablesToOverride.set(typeOrToken, mockImplementationOrValue as PrimitiveValue);
+            using: (mockImplementationOrValue: DeepPartial<TDependency> | ConstantValue) => {
+              if (isConstantValue(mockImplementationOrValue)) {
+                identifiersToMocks.push([
+                  normalizeIdentifier(identifier, metadata),
+                  mockImplementationOrValue as ConstantValue,
+                ]);
+
                 return this;
               }
 
-              injectablesToOverride.set(
-                typeOrToken,
-                builderFactory.mockFn(mockImplementationOrValue) as StubbedInstance<TDependency>
-              );
+              identifiersToMocks.push([
+                normalizeIdentifier(identifier, metadata),
+                mockFn(mockImplementationOrValue) as StubbedInstance<TDependency>,
+              ]);
+
               return this;
             },
           };
         },
         compile(): UnitTestBed<TClass> {
-          const { mocks, unit } =
-            builderFactory.unitMocker.applyMocksToUnit<TClass>(targetClass)(injectablesToOverride);
+          const { container, instance } = unitMocker.applyMocksToUnit<TClass>(targetClass)(
+            new MocksContainer(identifiersToMocks),
+            dependenciesContainer
+          );
 
           return {
-            unit,
-            unitRef: new UnitReference(mocks),
+            unit: instance,
+            unitRef: new UnitReference(container),
           };
         },
       };
@@ -124,7 +69,7 @@ export class UnitBuilder {
   }
 }
 
-function isPrimitive(value: unknown): value is PrimitiveValue {
+function isConstantValue(value: unknown): value is ConstantValue {
   return (
     Array.isArray(value) ||
     typeof value === 'string' ||
@@ -133,4 +78,24 @@ function isPrimitive(value: unknown): value is PrimitiveValue {
     typeof value === 'symbol' ||
     value === null
   );
+}
+
+function mockDependencyNotFoundError(
+  identifier: Type | string | symbol,
+  metadata: IdentifierMetadata | undefined
+): string {
+  const identifierName =
+    typeof identifier === 'string' || typeof identifier === 'symbol'
+      ? String(identifier)
+      : identifier.name;
+  const metadataMsg = metadata ? `, with metadata ${metadata}` : '';
+  const details = identifierName + metadataMsg;
+
+  return `The dependency associated with the specified token or identifier ('${details}') could not be located within the
+current testing context. This issue pertains to the usage of the TestBedBuilder API.
+Please ensure accurate spelling and correspondence between the provided token or identifier and the corresponding 
+injection configuration. If you are utilizing a custom token, it is essential to confirm its proper registration
+within the DI container.
+    
+Refer to the docs for further information: https://autmock.dev/docs`;
 }

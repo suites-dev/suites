@@ -1,12 +1,12 @@
 import 'reflect-metadata';
-import { DependenciesReflector } from '@automock/common';
+import { AutomockDependenciesAdapter } from '@automock/common';
 import { ReflectorFactory } from './class-reflector';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
 import { ParamsTokensReflector } from './params-token-resolver';
 import { PropertyReflectionStrategies } from './property-reflection-strategies.static';
 
-const DependenciesReflector: DependenciesReflector = ((
+const DependenciesReflector: AutomockDependenciesAdapter = ((
   classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
 ) => {
@@ -16,4 +16,4 @@ const DependenciesReflector: DependenciesReflector = ((
   ClassCtorReflector(Reflect, ParamsTokensReflector)
 );
 
-export = DependenciesReflector;
+export default DependenciesReflector;

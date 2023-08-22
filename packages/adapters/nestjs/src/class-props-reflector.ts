@@ -1,4 +1,4 @@
-import { ClassPropsInjectables } from '@automock/common';
+import { ClassInjectable } from '@automock/common';
 import { Type } from '@automock/types';
 import { PROPERTY_DEPS_METADATA } from '@nestjs/common/constants';
 import { MetadataReflector, NestJSInjectable, ReflectedProperty } from './types';
@@ -10,8 +10,8 @@ export function ClassPropsReflector(
   reflector: MetadataReflector,
   reflectionStrategies: ReadonlyArray<PropertyReflectionStrategy>
 ) {
-  function reflectInjectables(targetClass: Type): ClassPropsInjectables {
-    const classProperties = reflectProperties(targetClass)(reflector);
+  function reflectInjectables(targetClass: Type): ClassInjectable<never>[] {
+    const classProperties = reflectProperties(targetClass);
     const classInstance = Object.create(targetClass.prototype);
 
     return classProperties.map(({ key, type }) => {
@@ -32,23 +32,21 @@ export function ClassPropsReflector(
       for (const strategy of reflectionStrategies) {
         if (strategy.condition(reflectedType, type)) {
           const result = strategy.exec(reflectedType, type);
-          return { ...result, property: key };
+          return { ...result, type: 'PROPERTY', property: { key } } as ClassInjectable<never>;
         }
       }
 
       return {
-        property: key,
-        typeOrToken: type as Type,
+        type: 'PROPERTY',
+        identifier: type as Type,
         value: type as Type,
-      };
+        property: { key },
+      } as ClassInjectable;
     });
   }
 
-  function reflectProperties(
-    targetClass: Type
-  ): (reflector: MetadataReflector) => ReflectedProperty[] {
-    return (reflector: MetadataReflector) =>
-      reflector.getMetadata(PROPERTY_DEPS_METADATA, targetClass) || [];
+  function reflectProperties(targetClass: Type): ReflectedProperty[] {
+    return reflector.getMetadata(PROPERTY_DEPS_METADATA, targetClass) || [];
   }
 
   return { reflectInjectables };

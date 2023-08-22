@@ -1,7 +1,7 @@
 import { SELF_DECLARED_DEPS_METADATA, PARAMTYPES_METADATA } from '@nestjs/common/constants';
 import { Type } from '@automock/types';
+import { ClassInjectable } from '@automock/common';
 import { MetadataReflector, NestJSInjectable } from './types';
-import { ClassCtorInjectables } from '@automock/common/src';
 import { CustomToken, ParamsTokensReflector } from './params-token-resolver';
 
 export type ClassCtorReflector = ReturnType<typeof ClassCtorReflector>;
@@ -10,7 +10,7 @@ export function ClassCtorReflector(
   reflector: MetadataReflector,
   paramsTokensReflector: ParamsTokensReflector
 ) {
-  function reflectInjectables(targetClass: Type): ClassCtorInjectables {
+  function reflectInjectables(targetClass: Type): ClassInjectable[] | never {
     const paramTypes = reflectParamTypes(targetClass);
     const paramTokens = reflectParamTokens(targetClass);
     const tokensIndexes = paramTokens.map(({ index }) => index);
@@ -26,7 +26,8 @@ export function ClassCtorReflector(
 
       if (isToken) {
         try {
-          return resolveParamTokenCb(typeOrUndefined, paramIndex);
+          const resolved = resolveParamTokenCb(typeOrUndefined, paramIndex);
+          return { ...resolved, type: 'PARAM' };
         } catch (error) {
           throw error;
         }
@@ -36,7 +37,11 @@ export function ClassCtorReflector(
         throw error;
       }
 
-      return [typeOrUndefined, typeOrUndefined] as [Type, Type];
+      return {
+        type: 'PARAM',
+        identifier: typeOrUndefined as Type,
+        value: typeOrUndefined as Type,
+      } as ClassInjectable<never>;
     });
   }
 

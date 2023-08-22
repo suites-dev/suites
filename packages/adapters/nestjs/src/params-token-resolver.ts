@@ -1,5 +1,5 @@
 import { Type } from '@automock/types';
-import { UndefinedDependency, UndefinedDependencySymbol } from '@automock/common';
+import { ClassInjectable, UndefinedDependency } from '@automock/common';
 import { CustomInjectableToken, NestJSInjectable } from './types';
 
 export interface CustomToken {
@@ -10,10 +10,7 @@ export interface CustomToken {
 export type ParamsTokensReflector = {
   resolveDependencyValue(
     tokens: CustomToken[]
-  ): (
-    typeOrUndefined: NestJSInjectable | undefined,
-    index: number
-  ) => [string | Type, Type | UndefinedDependencySymbol];
+  ): (typeOrUndefined: NestJSInjectable, index: number) => Omit<ClassInjectable, 'type'>;
 };
 
 export const ParamsTokensReflector = (function (): ParamsTokensReflector {
@@ -33,11 +30,8 @@ export const ParamsTokensReflector = (function (): ParamsTokensReflector {
   ): (
     typeOrUndefined: NestJSInjectable,
     tokenIndexInCtor: number
-  ) => [string | Type, Type | UndefinedDependencySymbol] {
-    return (
-      dependencyType: Type,
-      index: number
-    ): [string | Type, Type | UndefinedDependencySymbol] => {
+  ) => Omit<ClassInjectable, 'type'> {
+    return (dependencyType: Type, index: number): Omit<ClassInjectable, 'type'> => {
       const token = lookupTokenInParams(tokens, index);
 
       if (!token) {
@@ -48,23 +42,30 @@ export const ParamsTokensReflector = (function (): ParamsTokensReflector {
       const refIsAType = typeof ref !== 'string';
 
       if (refIsAType) {
-        return [
-          ref as Type,
-          typeof dependencyType === 'undefined' ? UndefinedDependency : (ref as Type),
-        ];
+        return {
+          identifier: ref as Type,
+          value: typeof dependencyType === 'undefined' ? UndefinedDependency : (ref as Type),
+        };
       }
 
       if (!dependencyType && typeof token === 'string') {
-        return [token, UndefinedDependency];
+        return {
+          identifier: token,
+          value: UndefinedDependency,
+        };
       } else if (!dependencyType && typeof ref !== 'string') {
-        return [ref, UndefinedDependency];
+        return {
+          identifier: ref,
+          value: UndefinedDependency,
+        };
       }
 
-      return [ref, dependencyType];
+      return {
+        identifier: ref,
+        value: dependencyType,
+      };
     };
   }
 
-  return {
-    resolveDependencyValue,
-  };
+  return { resolveDependencyValue };
 })();

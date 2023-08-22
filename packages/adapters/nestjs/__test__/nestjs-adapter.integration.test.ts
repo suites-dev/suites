@@ -1,7 +1,6 @@
 import {
   ClassWithUndefinedDependency,
   ClassWithUndefinedDependencyProps,
-  ClassWithUndefinedRefDependency,
   ConstructorBasedInjectionClass,
   ConstructorCombinedWithPropsClass,
   DependencyFive,
@@ -11,12 +10,7 @@ import {
   DependencyTwo,
   PropsBasedMainClass,
 } from './integration.assets';
-import {
-  ClassCtorInjectables,
-  ClassDependenciesMap,
-  ClassPropsInjectables,
-  UndefinedDependency,
-} from '@automock/common';
+import { UndefinedDependency, WithoutMetadata } from '@automock/common';
 import { ParamsTokensReflector } from '../src/params-token-resolver';
 import { ReflectorFactory } from '../src/class-reflector';
 import { ClassPropsReflector } from '../src/class-props-reflector';
@@ -31,116 +25,170 @@ describe('NestJS Automock Adapter Integration Test', () => {
   );
 
   describe('reflecting a class with constructor based injection', () => {
-    const classDependencies = reflectorFactory.reflectDependencies(ConstructorBasedInjectionClass);
+    const classDependencies = reflectorFactory.reflect(ConstructorBasedInjectionClass);
 
     it('should return a map of the class dependencies', () => {
-      expect(classDependencies.constructor).toStrictEqual<ClassCtorInjectables>([
-        [DependencyOne, DependencyOne],
-        [DependencyTwo, DependencyTwo],
-        [DependencyThree, DependencyThree],
-        ['SOME_TOKEN_FROM_REF', DependencyFive],
-        [DependencySix, UndefinedDependency],
-        ['CUSTOM_TOKEN', Object],
-        ['CUSTOM_TOKEN_SECOND', UndefinedDependency],
-        ['ANOTHER_CUSTOM_TOKEN', String],
-        ['LITERAL_VALUE_ARR', Array],
-        ['LITERAL_VALUE_STR', String],
+      expect(classDependencies.list()).toStrictEqual<WithoutMetadata[]>([
+        {
+          identifier: DependencyOne,
+          value: DependencyOne,
+          type: 'PARAM',
+        },
+        {
+          identifier: DependencyTwo,
+          value: DependencyTwo,
+          type: 'PARAM',
+        },
+        {
+          identifier: DependencyThree,
+          value: DependencyThree,
+          type: 'PARAM',
+        },
+        {
+          identifier: 'SOME_TOKEN_FROM_REF',
+          value: DependencyFive,
+          type: 'PARAM',
+        },
+        {
+          identifier: DependencySix,
+          value: UndefinedDependency,
+          type: 'PARAM',
+        },
+        {
+          identifier: 'CUSTOM_TOKEN',
+          value: Object,
+          type: 'PARAM',
+        },
+        {
+          identifier: 'CUSTOM_TOKEN_SECOND',
+          value: UndefinedDependency,
+          type: 'PARAM',
+        },
+        {
+          identifier: 'ANOTHER_CUSTOM_TOKEN',
+          value: String,
+          type: 'PARAM',
+        },
+        {
+          identifier: 'LITERAL_VALUE_ARR',
+          value: Array,
+          type: 'PARAM',
+        },
+        {
+          identifier: 'LITERAL_VALUE_STR',
+          value: String,
+          type: 'PARAM',
+        },
       ]);
     });
   });
 
   describe('reflecting a class with property based injection', () => {
-    const classDependencies = reflectorFactory.reflectDependencies(PropsBasedMainClass);
+    const classDependencies = reflectorFactory.reflect(PropsBasedMainClass);
 
     it('should return an array of tuples with the class dependencies', () => {
-      expect(classDependencies.properties).toStrictEqual<ClassPropsInjectables>([
+      expect(classDependencies.list()).toStrictEqual<WithoutMetadata[]>([
         {
-          property: 'dependencyOne',
-          typeOrToken: DependencyOne,
+          type: 'PROPERTY',
+          identifier: DependencyOne,
           value: DependencyOne,
+          property: { key: 'dependencyOne' },
         },
         {
-          property: 'dependencyTwo',
-          typeOrToken: DependencyTwo,
+          type: 'PROPERTY',
+          identifier: DependencyTwo,
           value: DependencyTwo,
+          property: { key: 'dependencyTwo' },
         },
         {
-          property: 'dependencyThree',
-          typeOrToken: DependencyThree,
+          type: 'PROPERTY',
+          identifier: DependencyThree,
           value: DependencyThree,
+          property: { key: 'dependencyThree' },
         },
         {
-          property: 'dependencySix',
-          typeOrToken: DependencySix,
+          type: 'PROPERTY',
+          identifier: DependencySix,
           value: UndefinedDependency,
+          property: { key: 'dependencySix' },
         },
         {
-          property: 'dependencyFour',
-          typeOrToken: 'CUSTOM_TOKEN',
+          type: 'PROPERTY',
+          identifier: 'CUSTOM_TOKEN',
           value: Object,
+          property: { key: 'dependencyFour' },
         },
         {
-          property: 'dependencyMissingWithToken',
-          typeOrToken: DependencyFive,
+          type: 'PROPERTY',
+          identifier: DependencyFive,
           value: DependencyFive,
+          property: { key: 'dependencyMissingWithToken' },
         },
         {
-          property: 'dependencyUndefinedWithToken',
-          typeOrToken: 'CUSTOM_TOKEN_SECOND',
+          type: 'PROPERTY',
+          identifier: 'CUSTOM_TOKEN_SECOND',
           value: UndefinedDependency,
+          property: { key: 'dependencyUndefinedWithToken' },
         },
         {
-          property: 'literalValueArray',
-          typeOrToken: 'LITERAL_VALUE_ARR',
+          type: 'PROPERTY',
+          identifier: 'LITERAL_VALUE_ARR',
           value: Array,
+          property: { key: 'literalValueArray' },
         },
         {
-          property: 'literalValueString',
-          typeOrToken: 'LITERAL_VALUE_STR',
+          type: 'PROPERTY',
+          identifier: 'LITERAL_VALUE_STR',
           value: String,
+          property: { key: 'literalValueString' },
         },
       ]);
     });
   });
 
   describe('reflecting a class with constructor and properties combined', () => {
-    const classDependencies = reflectorFactory.reflectDependencies(
-      ConstructorCombinedWithPropsClass
-    );
+    const classDependencies = reflectorFactory.reflect(ConstructorCombinedWithPropsClass).list();
 
     it('should return an array of tuples with the class dependencies', () => {
-      expect(classDependencies).toEqual<ClassDependenciesMap>({
-        constructor: [
-          [DependencyOne, DependencyOne],
-          [DependencyTwo, DependencyTwo],
-        ],
-        properties: [
-          {
-            property: 'dependencyFour',
-            typeOrToken: 'CUSTOM_TOKEN',
-            value: Object,
-          },
-          {
-            property: 'literalValueString',
-            typeOrToken: 'LITERAL_VALUE_STR',
-            value: String,
-          },
-          {
-            property: 'dependencyThree',
-            typeOrToken: DependencyThree,
-            value: DependencyThree,
-          },
-        ],
-      });
+      expect(classDependencies).toEqual<WithoutMetadata[]>([
+        {
+          identifier: DependencyOne,
+          value: DependencyOne,
+          type: 'PARAM',
+        },
+        {
+          identifier: DependencyTwo,
+          value: DependencyTwo,
+          type: 'PARAM',
+        },
+        {
+          type: 'PROPERTY',
+          identifier: 'CUSTOM_TOKEN',
+          value: Object,
+          property: { key: 'dependencyFour' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: 'LITERAL_VALUE_STR',
+          value: String,
+          property: { key: 'literalValueString' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: DependencyThree,
+          value: DependencyThree,
+          property: { key: 'dependencyThree' },
+        },
+      ]);
     });
   });
 
   describe('reflecting classes with undefined constructor dependencies', () => {
-    it.each([
-      [ClassWithUndefinedDependency],
-      [ClassWithUndefinedDependencyProps],
-    ])('should fail with an error indicating that the dependency is not defined', (type: Type) => {
-      expect(() => reflectorFactory.reflectDependencies(type)).toThrow();
-    });
+    it.each([[ClassWithUndefinedDependency], [ClassWithUndefinedDependencyProps]])(
+      'should fail with an error indicating that the dependency is not defined',
+      (type: Type) => {
+        expect(() => reflectorFactory.reflect(type)).toThrow();
+      }
+    );
   });
 });

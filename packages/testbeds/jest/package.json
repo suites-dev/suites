@@ -25,7 +25,7 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "test": "yarn node_modules/.bin/jest",
+    "test": "yarn jest --passWithNoTest",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
@@ -33,7 +33,6 @@
     "README.md"
   ],
   "dependencies": {
-    "@automock/adapters.nestjs": "^1.4.0",
     "@automock/core": "^1.4.0",
     "@automock/types": "^1.2.0",
     "jest-mock-extended": "^2.0.9"
@@ -41,12 +40,11 @@
   "devDependencies": {
     "@nestjs/common": "^8.3.1",
     "@nestjs/core": "^8.0.3",
-    "@nestjs/typeorm": "^8.0.3",
     "jest": "^27.5.1",
     "typeorm": "^0.3.11"
   },
   "peerDependencies": {
-    "jest": ">= 25.x"
+    "jest": "*"
   },
   "publishConfig": {
     "access": "public"

@@ -24,7 +24,7 @@ jobs:
 
       - uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
@@ -45,7 +45,7 @@ jobs:
 
       - uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ['sinon', 'adapters.nestjs', 'core']
+        project: ["sinon", "adapters.nestjs", "core"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -67,11 +67,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.18.0'
+          node-version: "16.18.0"
 
       - uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
@@ -87,7 +87,7 @@ jobs:
         uses: dorny/test-reporter@v1
         if: always()
         with:
-          reporter: 'jest-junit'
+          reporter: "jest-junit"
           name: Tests Results (${{ matrix.project }})
           path: test-reports/${{ matrix.project }}.xml
           fail-on-error: false
@@ -107,7 +107,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jestVersion: ['^26.0.0', '^27.0.0', '^28.0.0', '^29.0.0']
+        jestVersion: ["^26.0.0", "^27.0.0", "^28.0.0", "^29.0.0"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -115,18 +115,18 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.18.0'
+          node-version: "16.18.0"
 
       - uses: actions/cache@v2
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
         run: yarn --frozen-lockfile
 
       - name: Specific Jest version
-        run: cd packages/testbeds/jest && yarn add jest@${{ matrix.jestVersion }}
+        run: cd packages/testbeds/jest && yarn add -D jest@${{ matrix.jestVersion }}
 
       - name: Specific Jest version types
         run: yarn add @types/jest@${{ matrix.jestVersion }} --ignore-workspace-root-check
@@ -141,7 +141,7 @@ jobs:
         uses: dorny/test-reporter@v1
         if: always()
         with:
-          reporter: 'jest-junit'
+          reporter: "jest-junit"
           name: Tests Results (jest ${{ matrix.jestVersion }})
           path: test-reports/jest${{ matrix.jestVersion }}.xml
           fail-on-error: false

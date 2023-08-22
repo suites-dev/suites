@@ -1,6 +1,6 @@
 import { AutomockTestBuilder, TestBedBuilder } from '@automock/core';
 import { Type } from '@automock/types';
-import { mock } from 'jest-mock-extended';
+import { createMock } from '@golevelup/ts-jest';
 
 export class TestBed {
   /**
@@ -10,6 +10,6 @@ export class TestBed {
    * @return TestBedBuilder
    */
   public static create<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
-    return AutomockTestBuilder<TClass>(mock)(targetClass);
+    return AutomockTestBuilder<TClass>(createMock)(targetClass);
   }
 }

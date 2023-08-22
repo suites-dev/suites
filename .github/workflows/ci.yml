@@ -103,7 +103,7 @@ jobs:
           verbose: true
 
   test-jest:
-    name: Test
+    name: Test (jest)
     runs-on: ubuntu-latest
     strategy:
       matrix:

@@ -126,7 +126,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Specific Jest version
-        run: yarn add jest@${{ matrix.jestVersion }}
+        run: cd packages/testbeds/jest && yarn add jest@${{ matrix.jestVersion }}
 
       - name: Test
         run: yarn jest --selectProjects jest --coverage --verbose

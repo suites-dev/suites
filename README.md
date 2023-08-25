@@ -4,9 +4,10 @@
 [![npm downloads](https://img.shields.io/npm/dm/@automock/sinon.svg?label=%40automock%2Fsinon)](https://npmjs.org/package/@automock/sinon "View this project on npm")
 
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)
-[![ci](https://github.com/omermorad/jest-unit/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
-[![e2e](https://github.com/omermorad/jest-unit/actions/workflows/e2e.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
+[![ci](https://github.com/automock/automock/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
+[![e2e](https://github.com/automock/automock/actions/workflows/e2e.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
 
+<br />
 
 <p align="center">
   <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
@@ -21,14 +22,17 @@ allowing you to focus on writing test cases instead of mock setup.</strong>
 
 Specially designed for Inversion of Control (IoC) and Dependency Injection (DI) scenarios, Automock seamlessly
 integrates automatic mocking into various DI and testing frameworks. Automock's adaptability ensures a seamless and
-effective testing experience, empowers you to isolate and test individual components with ease, enhancing the efficiency
-and reliability of your unit testing process.
+effective testing experience, empowers you to isolate and test individual components with ease, enhancing efficiency
+and reliability of your unit testing journey.
+
+### [↗️ Documentation](https://automock.dev/docs)  | [↗️ API Reference](https://automock.dev/api-reference)
 
 ## :package: Installation
 
-**Automock offers seamless integration both for Jest and Sinon.** Regardless of the
-chosen testing framework, it provides the same API, maintaining a consistent and unified experience for users across
-different environments.
+To fully integrate Automock into your testing and dependency injection framework, **you'll need to install two packages:
+Automock package for your chosen testing framework, and the corresponding adapter for your DI framework.**
+
+Install the corresponding package for your testing framework:
 
 ```bash
 npm i -D @automock/jest
@@ -38,9 +42,33 @@ npm i -D @automock/jest
 npm i -D @automock/sinon
 ```
 
+Install the corresponding package for your DI framework:
+
+| DI Framework Adapter | Jest (`@automock/jest`)   | Sinon (`@automock/sinon`) |
+|   :---   | :---: | :---: |
+| NestJS | :white_check_mark: | :white_check_mark: |
+| Inversify (Beta) | :white_check_mark: | :white_check_mark: |
+| Ts.ED | _WIP_ | _WIP_ |
+| TypeDI | _Soon_ | _Soon_ |
+
 No further configuration is required.
 
-## :computer: Usage Example
+## :arrows_counterclockwise: Migrating from v1.x to v2.0
+
+Upgrading to Automock v2.0 brings a host of improvements designed to enhance your testing experience.
+The NestJS adapter came pre-bundled in v1.x. In v2.0, you'll need to install it manually:
+
+```bash
+npm i -D @automock/adapters.nestjs
+```
+
+> For a detailed list of changes, it's recommended reading Automock's [v2.0 Release Notes](https://github.com/automock/automock/releases/tag/v2.0.0).
+
+That's about it. :smile_cat:
+
+<p align="right"><a href="https://automock.dev/docs/migrating">↗️ Migration guide</a></p>
+
+## :computer: Quick Example
 
 Take a look at the following example (using Jest, but the same applies for Sinon):
 
@@ -81,48 +109,15 @@ describe('User Service Unit Spec', () => {
 });
 ```
 
-**Both property injection and constructor injection are supported.** Whether your classes rely on dependencies injected
-through properties or constructor parameters, Automock handles both scenarios seamlessly. This flexibility allows you to
-write unit tests for a wide range of classes, ensuring that all dependencies are effectively mocked and isolated during
-testing, regardless of the injection method used.
+In this example, Automock simplifies the creation of mock objects and stubs for the `Database` dependency. By utilizing
+the `TestBed`, you can create an instance of the `UserService` class with automatically generated mock objects for its
+dependencies.
 
-**[:books: For more examples and for API reference visit our docs page](https://github.com/automock/automock/blob/master/docs/automock.md)**
+During the test, you can directly access the automatically created mock object for the `Database` dependency (database).
+By stubbing the `getUsers()` method of the database mock object, you can define its behavior and ensure it resolves with
+a specific set of mock users.
 
-## :bulb: Philosophy
-
-**We think that creating high-quality unit tests ought to be a breeze. We created Automock to remove the human element
-from the otherwise tedious and error-prone process of creating mock objects manually. The following tenets form the
-basis of our philosophy:**
-
-✨ **Productivity** \
-Automock aims to save developers valuable time and effort by automating the process of creating mock objects. It
-eliminates the need for manual mock setup and reduces boilerplate code, enabling you to focus on writing meaningful test
-cases and improving code quality.
-
-:rocket: **Simplicity** \
-The library provides an intuitive and easy-to-use API, making it accessible to developers of all skill levels. By
-automating mock object creation, Automock simplifies the testing process, reducing complexity and making unit testing
-more approachable.
-
-🔧 **Maintainability** \
-By generating mock objects that closely resemble the original dependencies, Automock promotes code maintainability. The
-generated mocks retain the same type information as the real objects, ensuring type safety and allowing you to leverage
-TypeScript's powerful static type checking capabilities. This approach enhances code readability, reduces the risk of
-errors, and makes it easier to refactor and maintain tests over time.
-
-📐 **Consistent Syntax and Test Structure.** \
-Automock promotes a uniform test syntax and test structure, ensuring consistency and coherence across your unit tests.
-By adhering to established conventions and guidelines, you can establish a standardized approach to writing tests.
-
-## :bookmark_tabs: Acknowledgments
-
-Automock is built upon the fundamentals and principles of unit tests, particularly inspired by Martin Fowler's blog
-posts on unit tests. Fowler advocates for creating "solitary" unit tests that concentrate on testing a single unit of
-code in isolation, independently of its dependencies. This approach aligns with Automock's objective of providing a
-simple and effective solution for automatically mocking class dependencies during unit testing.
-
-If you're interested in learning more about unit tests, we encourage you to explore Martin Fowler's blog post on the
-topic: https://martinfowler.com/bliki/UnitTest.html
+<p align="right"><a href="https://automock.dev/docs/getting-started/examples">↗️ For a full Step-by-Step example</a></p>
 
 ## :scroll: License
 

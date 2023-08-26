@@ -1,7 +1,7 @@
 {
   "name": "@automock/core",
   "private": false,
-  "version": "1.4.0",
+  "version": "2.0.0-dev.0",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
@@ -38,8 +38,8 @@
     "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {
-    "@automock/common": "^2.2.0",
-    "@automock/types": "^1.2.0",
+    "@automock/common": "^3.0.0-dev.0",
+    "@automock/types": "^2.0.0-dev.0",
     "@types/lodash.isequal": "^4.5.6",
     "lodash.isequal": "^4.5.0"
   }

@@ -10,7 +10,12 @@ export default async (): Promise<Config.InitialOptions> => {
     transform: {
       '^.+\\.(t|j)s$': 'ts-jest',
     },
-    coveragePathIgnorePatterns: ['/node_modules/', 'spec-assets.ts', 'spec-assets.js'],
+    coveragePathIgnorePatterns: [
+      '/node_modules/',
+      'spec-assets.ts',
+      'testbed-factory.ts',
+      '__test__/**/*.ts',
+    ],
     testPathIgnorePatterns: ['/node_modules/'],
     coverageDirectory: './coverage',
     coverageReporters: ['text', ['cobertura', { file: 'coverage-report.xml' }]],

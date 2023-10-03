@@ -20,12 +20,28 @@
 allowing you to focus on writing test cases instead of mock setup.</strong>
 </p>
 
-Specially designed for Inversion of Control (IoC) and Dependency Injection (DI) scenarios, Automock seamlessly
+### [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference)
+
+Specially designed for Inversion of Control and Dependency Injection scenarios, Automock seamlessly
 integrates automatic mocking into various DI and testing frameworks. Automock's adaptability ensures a seamless and
-effective testing experience, empowers you to isolate and test individual components with ease, enhancing efficiency
+effective testing experience empowers you to isolate and test individual components with ease, enhancing efficiency
 and reliability of your unit testing journey.
 
-### [↗️ Documentation](https://automock.dev/docs)  | [↗️ API Reference](https://automock.dev/api-reference)
+## Automock's Core Capabilities
+🚀 **Zero-Setup Mocking** - Dive straight into testing without the hassle. Automatically generate mock
+objects, eliminate manual setup, and reduce boilerplate code.
+
+🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type information as real objects.
+Write tests with confidence, knowing that type mismatches will be caught.
+
+🔄 **Consistent Test Architecture** - Achieve a uniform approach to unit testing.
+Your tests will follow a consistent syntax and structure, making them easier to read and maintain.
+
+📈 **Optimized Performance** - Lightning-fast execution for all your unit tests. Automock's lightweight design
+ensures that your tests run smoothly and efficiently.
+
+🌐 **Community & Support** - Join a growing community of developers. Benefit from regular updates, comprehensive
+documentation, and responsive support to ensure you get the most out of Automock.
 
 ## :package: Installation
 

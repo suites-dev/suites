@@ -15,23 +15,9 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "types": [
-      "node",
-      "jest"
-    ],
-    "lib": [
-      "es6",
-      "es2015.reflect"
-    ],
+    "types": ["node", "jest"],
+    "lib": ["es6", "es2015.reflect"],
     "allowSyntheticDefaultImports": true
   },
-  "exclude": [
-    "e2e",
-    "index.ts",
-    "node_modules",
-    "dist",
-    "__test__",
-    "env",
-    "coverage"
-  ]
+  "exclude": ["e2e", "index.ts", "node_modules", "dist", "__test__", "env", "coverage"]
 }

@@ -4,7 +4,7 @@ import { MocksContainer } from './services/mocks-container';
 
 export type IdentifierToMock = [
   Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },
-  StubbedInstance<unknown> | ConstantValue
+  StubbedInstance<unknown> | ConstantValue,
 ];
 
 export interface MockedUnit<TClass> {
@@ -21,7 +21,11 @@ export const AutomockErrorCode = {
 export type AutomockErrorCode = (typeof AutomockErrorCode)[keyof typeof AutomockErrorCode];
 
 export class AutomockError extends Error {
-  public constructor(public readonly code: AutomockErrorCode, title: string, message: string) {
+  public constructor(
+    public readonly code: AutomockErrorCode,
+    title: string,
+    message: string
+  ) {
     super(`${title} (code ${code.toString()})\n${message}`);
     this.name = 'AutomockError';
 

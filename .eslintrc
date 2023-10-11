@@ -1,22 +1,16 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "prettier"
-  ],
+  "plugins": ["prettier"],
   "parserOptions": {
     "ecmaVersion": 8
   },
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [
-        ".ts"
-      ]
+      "@typescript-eslint/parser": [".ts"]
     },
     "import/resolver": {
       "node": {
-        "extensions": [
-          ".ts"
-        ]
+        "extensions": [".ts"]
       },
       "typescript": {
         "alwaysTryTypes": true
@@ -24,22 +18,8 @@
     },
     "import/extensions": 0
   },
-  "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
   "rules": {
-    "prettier/prettier": [
-      2,
-      {
-        "trailingComma": "es5",
-        "singleQuote": true,
-        "printWidth": 100,
-        "tabWidth": 2,
-        "semi": true,
-        "endOfLine": "auto"
-      }
-    ],
     "no-useless-constructor": "off",
     "react/forbid-prop-types": 0,
     "no-unused-expressions": 0,
@@ -60,7 +40,10 @@
     "camelcase": "off",
     "consistent-return": 0,
     "import/prefer-default-export": 0,
-    "lines-between-class-members": "off"
+    "lines-between-class-members": "off",
+
+    // TODO: consider turning this rule on
+    "@typescript-eslint/no-unsafe-declaration-merging": "off"
   },
   "env": {
     "jest": true

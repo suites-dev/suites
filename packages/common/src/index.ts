@@ -47,7 +47,7 @@ export type WithMetadata<Metadata extends IdentifierMetadata> = {
  */
 export type ClassInjectable<
   Metadata extends IdentifierMetadata = never,
-  TIdentifier extends InjectableIdentifier = InjectableIdentifier
+  TIdentifier extends InjectableIdentifier = InjectableIdentifier,
 > = TIdentifier extends Type ? WithoutMetadata : WithMetadata<Metadata>;
 
 /**

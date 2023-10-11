@@ -7,34 +7,21 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 **Note:** Version bump only for package @automock/jest
 
-
-
-
-
 ## [1.3.1](https://github.com/automock/automock/compare/@automock/jest@1.3.0...@automock/jest@1.3.1) (2023-07-30)
 
 **Note:** Version bump only for package @automock/jest
 
-
-
-
-
 # [1.3.0](https://github.com/omermorad/automock/compare/@automock/jest@1.2.3...@automock/jest@1.3.0) (2023-07-29)
-
 
 ### Features
 
-* **core,adapters.nestjs,common:** support property injection strategy ([#75](https://github.com/omermorad/automock/issues/75)) ([ce4c08d](https://github.com/omermorad/automock/commit/ce4c08dde68d63f95b766fa0b942d7794069d0bf))
-
-
-
-
+- **core,adapters.nestjs,common:** support property injection strategy ([#75](https://github.com/omermorad/automock/issues/75)) ([ce4c08d](https://github.com/omermorad/automock/commit/ce4c08dde68d63f95b766fa0b942d7794069d0bf))
 
 ## [1.2.2](https://github.com/omermorad/automock/compare/@automock/jest@1.2.1...@automock/jest@1.2.2) (2023-07-25)
 
 ### Dependencies
 
-* **jest:** bump `@automock/core` to version 1.2.2 ([0a4eb6c8](https://github.com/omermorad/automock/commit/0a4eb6c80026973e82dfbb256e46734293a267ad))
+- **jest:** bump `@automock/core` to version 1.2.2 ([0a4eb6c8](https://github.com/omermorad/automock/commit/0a4eb6c80026973e82dfbb256e46734293a267ad))
 
 ## [1.2.1](https://github.com/omermorad/automock/compare/@automock/jest@1.2.0...@automock/jest@1.2.1) (2023-06-24)
 

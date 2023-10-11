@@ -22,18 +22,19 @@ To fully integrate Automock into your testing and dependency injection (DI) fram
 packages: `@automock/sinon`, and the corresponding DI framework adapter.**
 
 Install the Sinon package
+
 ```bash
 npm i -D @automock/sinon
-````
+```
 
 And for your DI framework, install the appropriate Automock adapter:
 
-|   DI Framework Adapter                                 |   Sinon (`@automock/sinon`)                   |
-|--------------------------------------------------------|-----------------------------------------------|
-|   NestJS Adapter (`@automock/adapters.nestjs`)         | :white_check_mark:                            |
-|   Inversify Adapter (`@automock/adapters.inversify`)   | :white_check_mark: (Beta)                     |
-|   Ts.ED Adapter (`@automock/adapters.tsed`)            | Soon                                          |
-|   TypeDI Adapter (`@automock/adapters.typedi`)         | Soon                                          |
+| DI Framework Adapter                               | Sinon (`@automock/sinon`) |
+| -------------------------------------------------- | ------------------------- |
+| NestJS Adapter (`@automock/adapters.nestjs`)       | :white_check_mark:        |
+| Inversify Adapter (`@automock/adapters.inversify`) | :white_check_mark: (Beta) |
+| Ts.ED Adapter (`@automock/adapters.tsed`)          | Soon                      |
+| TypeDI Adapter (`@automock/adapters.typedi`)       | Soon                      |
 
 ## :bulb: Quick Example
 
@@ -72,7 +73,10 @@ describe('User Service Unit Spec', () => {
   });
 
   it('should return users from the database', async () => {
-    const mockUsers: User[] = [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }];
+    const mockUsers: User[] = [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Jane' },
+    ];
     database.getUsers.resolves(mockUsers);
 
     const users = await userService.getAllUsers();
@@ -82,7 +86,6 @@ describe('User Service Unit Spec', () => {
   });
 });
 ```
-
 
 In this example, Automock simplifies the creation of mock objects and stubs for the `Database` dependency. By utilizing
 the `TestBed`, you can create an instance of the `UserService` class with automatically generated mock objects for its

@@ -8,14 +8,7 @@
     "sourceMap": false,
     "incremental": false,
     "moduleResolution": "node",
-    "types": [
-      "mocha",
-      "node",
-      "jest"
-    ],
-    "lib": [
-      "es6",
-      "es2015.reflect"
-    ]
+    "types": ["mocha", "node", "jest"],
+    "lib": ["es6", "es2015.reflect"]
   }
 }

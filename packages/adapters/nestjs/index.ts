@@ -1,3 +1,3 @@
 import DependenciesReflector from './src';
 
-export = DependenciesReflector
+export = DependenciesReflector;

@@ -110,7 +110,7 @@ provide default values or behavior for the methods of the mocked dependency.
 ### `.mock<TDependency>(token: string): MockOverride<TDependency, TClass>`
 
 The `.mock(token)` method is used to declare a dependency to be mocked using a token string. It takes the `token`
-parameter, which represents the token string representing the dependency to be mocked. 
+parameter, which represents the token string representing the dependency to be mocked.
 
 When using `.mock()` method with a token, the type of the dependency is not known at compile time. To specify the type,
 use the generic argument like .mock<SomeType>('MY_TOKEN'). This provides better type safety and ensures that the mocked
@@ -128,7 +128,6 @@ const { unit, unitRef } = TestBed.create
 ```
 
 > :bulb: The `using()` method allows you to provide default values or behavior for the methods of the mocked dependency, read more in the `MockOverride` API Reference
-
 
 ### `.compile(): UnitTestBed<TClass>`
 
@@ -245,7 +244,7 @@ under the `models.animal` namespace:
 ```typescript
 export class ClassWithModels {
   public constructor(private models: PrismaService) {}
-  
+
   public async findUsers(): Promise<User[]> {
     return this.models.user.find();
   }
@@ -294,7 +293,7 @@ import { TestBed } from '@automock/core';
 class UserService {
   public constructor(
     @Inject('DATABASE_1') private readonly database1: Database,
-    @Inject('DATABASE_2') private readonly database2: Database,
+    @Inject('DATABASE_2') private readonly database2: Database
   ) {}
 
   public async getUsers() {

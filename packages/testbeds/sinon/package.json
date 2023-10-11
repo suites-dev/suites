@@ -34,15 +34,12 @@
   ],
   "dependencies": {
     "@automock/core": "^2.0.0-dev.0",
-    "@automock/types": "^2.0.0-dev.0",
-    "@golevelup/ts-sinon": "^0.1.0"
+    "@automock/types": "^2.0.0-dev.0"
   },
   "devDependencies": {
-    "@nestjs/common": "^8.3.1",
-    "@nestjs/core": "^8.0.3",
-    "@types/sinon": "^10.x",
-    "sinon": "^14.x",
-    "typeorm": "^0.3.11"
+    "@golevelup/ts-sinon": "^0.1.0",
+    "@types/sinon": "^10.0.19",
+    "sinon": "^14.0.2"
   },
   "peerDependencies": {
     "@types/sinon": "*",

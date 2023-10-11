@@ -29,14 +29,16 @@
     "index.js"
   ],
   "dependencies": {
-    "@automock/common": "^3.0.0-dev.0"
+    "@automock/common": "^3.0.0-dev.0",
+    "reflect-metadata": "^0.1.13"
   },
   "peerDependencies": {
     "@nestjs/common": "*"
   },
   "devDependencies": {
     "@automock/types": "^2.0.0-dev.0",
-    "@nestjs/common": "^8.3.1"
+    "@nestjs/common": "^10.2.7",
+    "rxjs": "^7.8.1"
   },
   "publishConfig": {
     "access": "public"

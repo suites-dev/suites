@@ -13,7 +13,7 @@
     "chai-as-promised": "^7.1.1",
     "mocha": "^10.2.0",
     "sinon": "*",
-    "ts-mocha": "10.0.0"
+    "ts-mocha": "^10.0.0"
   },
   "scripts": {
     "test": "ts-mocha **/*.e2e.test.ts"

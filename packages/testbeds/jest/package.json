@@ -7,7 +7,7 @@
     "mock",
     "jest",
     "auto-mock",
-    "reflection"
+    "dependency-injection"
   ],
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "test": "yarn jest --passWithNoTest",
+    "test": "yarn jest",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
@@ -34,17 +34,18 @@
   ],
   "dependencies": {
     "@automock/core": "^2.0.0-dev.0",
-    "@automock/types": "^2.0.0-dev.0",
-    "@golevelup/ts-jest": "^0.4.0"
+    "@automock/types": "^2.0.0-dev.0"
   },
   "devDependencies": {
     "@nestjs/common": "^8.3.1",
     "@nestjs/core": "^8.0.3",
-    "jest": "^27.5.1",
-    "typeorm": "^0.3.11"
+    "jest": "^27.x"
   },
   "peerDependencies": {
-    "jest": "*"
+    "jest": "^26 || ^27 || ^28 || ^29"
+  },
+  "engines": {
+    "node": "^14 || ^16 || ^18 || ^20"
   },
   "publishConfig": {
     "access": "public"

@@ -7,7 +7,7 @@
     "mock",
     "sinon",
     "auto-mock",
-    "reflection"
+    "dependency-injection"
   ],
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "test": "yarn node_modules/.bin/jest",
+    "test": "yarn jest",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
@@ -34,19 +34,20 @@
   ],
   "dependencies": {
     "@automock/core": "^2.0.0-dev.0",
-    "@automock/types": "^2.0.0-dev.0",
-    "@golevelup/ts-sinon": "^0.1.0"
+    "@automock/types": "^2.0.0-dev.0"
   },
   "devDependencies": {
     "@nestjs/common": "^8.3.1",
     "@nestjs/core": "^8.0.3",
     "@types/sinon": "^10.x",
-    "sinon": "^14.x",
-    "typeorm": "^0.3.11"
+    "sinon": "^14.x"
   },
   "peerDependencies": {
-    "@types/sinon": "*",
-    "sinon": "*"
+    "@types/sinon": "9 - 10",
+    "sinon": "10 - 16"
+  },
+  "engines": {
+    "node": "^14 || ^16 || ^18 || ^20"
   },
   "publishConfig": {
     "access": "public"

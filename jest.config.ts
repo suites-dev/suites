@@ -8,7 +8,12 @@ export default async (): Promise<Config.InitialOptions> => {
     moduleFileExtensions: ['js', 'json', 'ts'],
     testRegex: '.(spec|test).ts$',
     transform: {
-      '^.+\\.(t|j)s$': 'ts-jest',
+      '^.+\\.(t|j)s$': [
+        'ts-jest',
+        {
+          isolatedModules: true,
+        },
+      ],
     },
     coveragePathIgnorePatterns: [
       '/node_modules/',
@@ -22,11 +27,6 @@ export default async (): Promise<Config.InitialOptions> => {
     testEnvironment: 'node',
     reporters: ['default', 'jest-junit'],
     testResultsProcessor: 'jest-junit',
-    globals: {
-      'ts-jest': {
-        isolatedModules: true,
-      },
-    },
     projects: [
       '<rootDir>/packages/core',
       '<rootDir>/packages/adapters/nestjs',

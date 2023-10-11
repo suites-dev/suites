@@ -6,7 +6,7 @@ export default async (): Promise<Config.InitialOptions> => {
 
   return {
     ...baseConfig,
-    name: 'core',
+    id: 'core',
     displayName: 'core',
     collectCoverageFrom: ['src/**/*.ts', '__test__/**/*.ts'],
     coveragePathIgnorePatterns: [
@@ -15,7 +15,7 @@ export default async (): Promise<Config.InitialOptions> => {
       'invalid-adapter.ts',
       'test-adapter.ts',
       'main.ts',
-      'types.ts'
+      'types.ts',
     ],
   };
 };

@@ -6,7 +6,7 @@ export default async (): Promise<Config.InitialOptions> => {
 
   return {
     ...baseConfig,
-    name: 'jest',
+    id: 'jest',
     displayName: 'jest',
   };
 };

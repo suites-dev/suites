@@ -5,6 +5,9 @@ import {
   Foo,
   Logger,
   NestJSTestClass,
+  SymbolToken,
+  SymbolTokenSecond,
+  TestClassFive,
   TestClassFour,
   TestClassOne,
   TestClassThree,
@@ -22,13 +25,18 @@ describe('Automock Jest / NestJS E2E Test Ctor', () => {
         async foo(): Promise<string> {
           return 'foo-from-test';
         },
+        bar(): string {
+          return 'bar';
+        },
       })
-      .mock<string>('PRIMITIVE_VALUE')
+      .mock<string>('CONSTANT_VALUE')
       .using('arbitrary-string')
       .mock('UNDEFINED')
       .using({ method: () => 456 })
       .mock<Logger>('LOGGER')
       .using({ log: () => 'baz-from-test' })
+      .mock<TestClassFive>(SymbolToken)
+      .using({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;
@@ -41,22 +49,35 @@ describe('Automock Jest / NestJS E2E Test Ctor', () => {
     });
 
     test('then successfully resolve the dependencies of the tested classes', () => {
-      expect(() => unitRef.get(TestClassOne).foo).toBeDefined();
-      expect(() => unitRef.get(TestClassTwo)).toBeDefined();
-      expect(() => unitRef.get(Foo)).toBeDefined();
       expect(() => unitRef.get<{ log: () => void }>('LOGGER')).toBeDefined();
-      expect(() => unitRef.get(TestClassThree)).toBeDefined();
+      expect(() => unitRef.get('UNDEFINED')).toBeDefined();
       expect(() => unitRef.get('UNDEFINED_SECOND')).toBeDefined();
       expect(() => unitRef.get(TestClassFour)).toBeDefined();
+      expect(() => unitRef.get(TestClassThree)).toBeDefined();
+      expect(() => unitRef.get(Foo)).toBeDefined();
+      expect(() => unitRef.get(TestClassTwo)).toBeDefined();
+      expect(() => unitRef.get('CONSTANT_VALUE')).toBeDefined();
+      expect(() => unitRef.get(TestClassOne)).toBeDefined();
+      expect(() => unitRef.get(SymbolToken)).toBeDefined();
+      expect(() => unitRef.get(SymbolTokenSecond)).toBeDefined();
+    });
+
+    test('call the unit instance method', async () => {
+      const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+
+      testClassTwo.bar.mockResolvedValue('context');
+
+      const result = await unit.test();
+      expect(result).toBe('context-baz-from-test-bar');
     });
 
     test('then do not return the actual reflected dependencies of the injectable class', () => {
-      // Indeed, they all need to be overwritten
       expect(() => unitRef.get(TestClassOne)).not.toBeInstanceOf(TestClassOne);
       expect(() => unitRef.get(TestClassTwo)).not.toBeInstanceOf(TestClassTwo);
+      expect(() => unitRef.get(SymbolToken)).not.toBeInstanceOf(TestClassFive);
     });
 
-    test('then hard-mock the implementation of TestClassOne using the "foo" (partial impl function)', async () => {
+    test('then mock the implementation of the dependencies', async () => {
       const testClassOne: jest.Mocked<TestClassOne> = unitRef.get(TestClassOne);
       const logger = unitRef.get<Logger>('LOGGER');
 
@@ -69,7 +90,11 @@ describe('Automock Jest / NestJS E2E Test Ctor', () => {
       expect(logger.log).toBeDefined();
     });
 
-    test('then all the un-override classes/dependencies should be stubs', () => {
+    test('then treat duplicate identifiers as the same reference', async () => {
+      await expect(unit.testDuplicateIdentifier()).resolves.toBe('foo-from-test<>foo-from-test');
+    });
+
+    test('then all the unoverride classes/dependencies should be stubs as well', () => {
       const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       expect(testClassTwo.bar.getMockName).toBeDefined();

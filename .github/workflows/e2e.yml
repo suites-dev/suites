@@ -11,16 +11,20 @@ jobs:
   build:
     name: Build, Prepare and Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        e2e-project: ['e2e/jest/nestjs', 'e2e/sinon/nestjs']
+        node-version: [16.x, 18.x, 20.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.target_branch }}
 
-      - name: Use Node 16.x
+      - name: Use Node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: ${{ matrix.node-version }}
 
       - uses: actions/cache@v2
         with:
@@ -36,26 +40,30 @@ jobs:
       - name: Pack
         run: lerna exec -- npm pack
 
-      - name: Move
-        run: lerna exec -- mv "*.tgz" $PWD/e2e/tarballs
+      - name: Move Tarballs
+        run: |
+          mkdir -p $PWD/e2e/tarballs
+          lerna exec -- mv "*.tgz" $PWD/e2e/tarballs
+
+      - name: Extract & Copy Tarballs
+        run: |
+          for file in $PWD/e2e/tarballs/automock-*.tgz; do
+            [[ $file =~ automock-(.+)-[0-9]+\.[0-9]+\.[0-9]+(-dev\.[0-9]+)?\.tgz ]]
+            new_name="${BASH_REMATCH[1]}.tgz"
+
+            mv "$file" $PWD/e2e/tarballs/$new_name
+          done
+
+          cp -r "$PWD/e2e/tarballs" "$PWD/e2e/jest/nestjs"
+          cp -r "$PWD/e2e/tarballs" "$PWD/e2e/sinon/nestjs"
+
+          rm -rf "$PWD/e2e/sinon/nestjs/tarballs/jest.tgz"
+          rm -rf "$PWD/e2e/jest/nestjs/tarballs/sinon.tgz"
 
       - name: Install Packages in E2E
-        run: npm install
-        working-directory: e2e
-
-      - name: Copy
-        run: |
-          rm -rf node_modules/@automock
-          mkdir -p node_modules/@automock
-
-          for file in ./tarballs/*.tgz; do
-              newname=$(echo "$file" | sed -E 's/automock-|-[0-9]+\.[0-9]+\.[0-9]+//g' | sed 's/\.tgz$//')
-              mkdir -p "$newname"
-              tar --wildcards -xzvf "$file" -C "$newname" --no-same-owner --strip-components=1 "package/*"
-              mv "$newname" ./node_modules/@automock
-          done
-        working-directory: e2e
+        run: npm install --no-package-lock --no-cache
+        working-directory: ${{ matrix.e2e-project }}
 
       - name: Test e2e
         run: npm run test
-        working-directory: e2e
+        working-directory: ${{ matrix.e2e-project }}

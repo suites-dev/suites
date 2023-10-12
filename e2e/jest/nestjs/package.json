@@ -3,9 +3,20 @@
   "private": true,
   "version": "1.0.0",
   "dependencies": {
-    "@automock/adapters.nestjs": "*"
+    "@automock/adapters.nestjs": "file:tarballs/adapters.nestjs.tgz",
+    "@automock/core": "file:tarballs/core.tgz",
+    "@automock/common": "file:tarballs/common.tgz",
+    "@automock/types": "file:tarballs/types.tgz",
+    "@automock/jest": "file:tarballs/jest.tgz"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.5.2",
+    "jest": "*",
+    "ts-jest": "*",
+    "ts-node": "*",
+    "typescript": "^4.x"
   },
   "scripts": {
-    "test": "exit 0;"
+    "test": "jest && tsc --noEmit"
   }
 }

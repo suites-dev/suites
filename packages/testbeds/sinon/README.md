@@ -5,41 +5,70 @@
 <h1 align="center">Automock</h1>
 
 <p align="center">
-<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for class
-dependencies, allowing you to focus on writing test cases instead of mock setup.</strong>
+<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for<br>class dependencies,
+allowing you to focus on writing test cases instead of mock setup.</strong>
 </p>
 
-### :books: [Documentation](https://automock.dev/docs/introduction/intro/) | :book: [API Reference](https://automock.dev/api-reference/category/api-reference/)
+### [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference)
 
-Specially designed for Inversion of Control (IoC) and Dependency Injection (DI) scenarios, Automock seamlessly
+Specially designed for Inversion of Control and Dependency Injection scenarios, Automock seamlessly
 integrates automatic mocking into various DI and testing frameworks. Automock's adaptability ensures a seamless and
-effective testing experience, empowers you to isolate and test individual components with ease, enhancing the efficiency
+effective testing experience empowers you to isolate and test individual components with ease, enhancing efficiency
 and reliability of your unit testing journey.
+
+## Automock's Core Capabilities
+🚀 **Zero-Setup Mocking** - Dive straight into testing without the hassle. Automatically generate mock
+objects, eliminate manual setup, and reduce boilerplate code.
+
+🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type information as real objects.
+Write tests with confidence, knowing that type mismatches will be caught.
+
+🔄 **Consistent Test Architecture** - Achieve a uniform approach to unit testing.
+Your tests will follow a consistent syntax and structure, making them easier to read and maintain.
+
+📈 **Optimized Performance** - Lightning-fast execution for all your unit tests. Automock's lightweight design
+ensures that your tests run smoothly and efficiently.
+
+🌐 **Community & Support** - Join a growing community of developers. Benefit from regular updates, comprehensive
+documentation, and responsive support to ensure you get the most out of Automock.
 
 ## :package: Installation
 
-To fully integrate Automock into your testing and dependency injection (DI) frameworks, **you'll need to install two
+To fully integrate Automock into your testing and dependency injection framework, **you'll need to install two
 packages: `@automock/sinon`, and the corresponding DI framework adapter.**
 
-Install the Sinon package
+1. Install Automock's Sinon package:
 ```bash
-npm i -D @automock/sinon
+$ npm i -D @automock/sinon
 ````
 
-And for your DI framework, install the appropriate Automock adapter:
+2. And for your DI framework, install the appropriate Automock adapter:
 
 |   DI Framework Adapter                                 |   Sinon (`@automock/sinon`)                   |
 |--------------------------------------------------------|-----------------------------------------------|
 |   NestJS Adapter (`@automock/adapters.nestjs`)         | :white_check_mark:                            |
 |   Inversify Adapter (`@automock/adapters.inversify`)   | :white_check_mark: (Beta)                     |
-|   Ts.ED Adapter (`@automock/adapters.tsed`)            | Soon                                          |
-|   TypeDI Adapter (`@automock/adapters.typedi`)         | Soon                                          |
 
-## :bulb: Quick Example
+No further configuration is required.
 
-Take a look at the following example (using Jest, but the same applies for Sinon), Automock streamlines the test
-creation process by automating the creation of mock objects and stubs, reducing boilerplate code and eliminating the
-manual setup effort.
+## :arrows_counterclockwise: Migrating from v1.x to v2.0
+
+Upgrading to Automock v2.0 brings a host of improvements designed to enhance your testing experience.
+The NestJS adapter came pre-bundled in v1.x. In v2.0, you'll need to install it manually:
+
+```bash
+$ npm i -D @automock/adapters.nestjs
+```
+
+> For a detailed list of changes, it's recommended reading Automock's [v2.0 Release Notes](https://github.com/automock/automock/releases/tag/v2.0.0).
+
+That's about it. :smile_cat:
+
+<p align="right"><a href="https://automock.dev/docs/migrating">↗️ Migration guide</a></p>
+
+## :computer: Quick Example
+
+Take a look at the following example (using Jest, but the same applies for Sinon):
 
 ```typescript
 class Database {
@@ -91,6 +120,8 @@ dependencies.
 During the test, you can directly access the automatically created mock object for the `Database` dependency (database).
 By stubbing the `getUsers()` method of the database mock object, you can define its behavior and ensure it resolves with
 a specific set of mock users.
+
+<p align="right"><a href="https://automock.dev/docs/getting-started/examples">↗️ For a full Step-by-Step example</a></p>
 
 ## :scroll: License
 

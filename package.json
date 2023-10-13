@@ -34,7 +34,7 @@
     "@manypkg/cli": "^0.20.0",
     "@types/jest": "^27.5.2",
     "@types/lodash.clonedeep": "^4.5.6",
-    "@types/node": "^16.18.0",
+    "@types/node": "^20.8.5",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "eslint": "7.14.0",

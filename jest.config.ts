@@ -15,12 +15,7 @@ export default async (): Promise<Config.InitialOptions> => {
         },
       ],
     },
-    coveragePathIgnorePatterns: [
-      '/node_modules/',
-      'spec-assets.ts',
-      'testbed-factory.ts',
-      '__test__/**/*.ts',
-    ],
+    coveragePathIgnorePatterns: ['/node_modules/', 'spec-assets.ts', 'testbed-factory.ts'],
     testPathIgnorePatterns: ['/node_modules/'],
     coverageDirectory: './coverage',
     coverageReporters: ['text', ['cobertura', { file: 'coverage-report.xml' }]],

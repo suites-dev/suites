@@ -6,11 +6,13 @@
   "types": "index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/omermorad/automock.git"
+    "url": "https://github.com/automock/automock.git",
+    "directory": "packages/types"
   },
   "bugs": {
-    "url": "https://github.com/omermorad/automock/issues"
+    "url": "https://github.com/automock/automock/issues"
   },
+  "homepage": "https://automock.dev",
   "contributors": [
     {
       "name": "Omer Morad",

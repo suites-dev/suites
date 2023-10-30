@@ -6,13 +6,14 @@
   "keywords": [
     "mock",
     "sinon",
-    "auto-mock",
-    "reflection"
+    "dependency-injection"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/automock/automock.git"
+    "url": "https://github.com/automock/automock.git",
+    "directory": "packages/testbeds/sinon"
   },
+  "homepage": "https://automock.dev",
   "bugs": {
     "url": "https://github.com/automock/automock/issues"
   },

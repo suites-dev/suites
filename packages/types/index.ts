@@ -3,13 +3,7 @@ export interface Type<T = any> {
 }
 
 export type DeepPartial<Type> = {
-  [Prop in keyof Type]?: Type[Prop] extends Array<infer U>
-    ? Array<DeepPartial<U>>
-    : Type[Prop] extends ReadonlyArray<infer U>
-    ? ReadonlyArray<DeepPartial<U>>
-    : unknown extends Type[Prop]
-    ? Type[Prop]
-    : DeepPartial<Type[Prop]>;
+  [Prop in keyof Type]?: unknown extends Type[Prop] ? Type[Prop] : DeepPartial<Type[Prop]>;
 };
 
 export type ArgsType<T> = T extends (...args: infer A) => any ? A : never;
@@ -26,7 +20,7 @@ type StubbedMember<T> = T extends (...args: infer Args) => infer ReturnValue
   ? Stub<ReturnValue, ArgsType<T>>
   : T;
 
-export type StubbedInstance<TClass> = TClass & {
+export type StubbedInstance<TClass> = {
   [Prop in keyof TClass]: StubbedMember<TClass[Prop]>;
 };
 

@@ -2,7 +2,7 @@
 
 import { Type as TypeFromTypes } from '@automock/types';
 import { UnitReference } from '@automock/core';
-import { createMock } from '@golevelup/ts-sinon';
+import { mock } from './mock.static';
 import { SinonStubbedInstance } from 'sinon';
 export * from './testbed-factory';
 
@@ -62,4 +62,4 @@ export interface UnitTestBed<TClass> {
 /**
  * @deprecated Will be removed in the next major version.
  */
-export type MockFunction = typeof createMock;
+export type MockFunction = typeof mock;

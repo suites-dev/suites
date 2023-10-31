@@ -1,14 +1,10 @@
-import type { Config } from '@jest/types';
-import base from '../../../jest.config';
+import { Config } from '@jest/types';
+import baseConfig from '../../../jest.base.config';
 
-export default async (): Promise<Config.InitialOptions> => {
-  const baseConfig = (await base()) as Config.InitialOptions;
-
-  return {
-    ...baseConfig,
-    name: 'sinon',
-    displayName: 'sinon',
-    collectCoverageFrom: ['src/**/*.ts', 'test/**/*.ts'],
-    coveragePathIgnorePatterns: ['index.ts', 'spec-assets-nestjs.ts'],
-  };
+const config: Partial<Config.InitialOptions> = {
+  ...baseConfig,
+  id: 'sinon',
+  displayName: 'sinon',
 };
+
+export default config;

@@ -1,14 +1,19 @@
-import type { Config } from '@jest/types';
-import base from '../../jest.config';
+import type { Config } from 'jest';
+import baseConfig from '../../jest.base.config';
 
-export default async (): Promise<Config.InitialOptions> => {
-  const baseConfig = (await base()) as Config.InitialOptions;
-
-  return {
-    ...baseConfig,
-    name: 'core',
-    displayName: 'core',
-    collectCoverageFrom: ['src/**/*.ts', '__test__/**/*.ts'],
-    coveragePathIgnorePatterns: ['index.ts', 'integration.assets.ts'],
-  };
+const config: Config = {
+  ...baseConfig,
+  id: 'core',
+  displayName: 'core',
+  collectCoverageFrom: ['src/**/*.ts', '__test__/**/*.ts'],
+  coveragePathIgnorePatterns: [
+    'index.ts',
+    'integration.assets.ts',
+    'invalid-adapter.ts',
+    'test-adapter.ts',
+    'main.ts',
+    'types.ts',
+  ],
 };
+
+export default config;

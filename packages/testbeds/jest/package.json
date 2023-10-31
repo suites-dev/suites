@@ -4,15 +4,16 @@
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
-    "mock",
+    "mocking",
     "jest",
-    "auto-mock",
-    "reflection"
+    "dependency-injection"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/automock/automock.git"
+    "url": "https://github.com/automock/automock.git",
+    "directory": "packages/testbeds/jest"
   },
+  "homepage": "https://automock.dev",
   "bugs": {
     "url": "https://github.com/automock/automock/issues"
   },

@@ -2,7 +2,6 @@
 
 import { Type as TypeFromTypes } from '@automock/types';
 import { MockOverride, TestBedBuilder, UnitReference } from '@automock/core';
-import { mock } from 'jest-mock-extended';
 
 export * from './testbed-factory';
 
@@ -68,8 +67,3 @@ export interface UnitTestBed<TClass> {
    */
   unitRef: UnitReference;
 }
-
-/**
- * @deprecated Will be removed in the next major version.
- */
-export type MockFunction = typeof mock;

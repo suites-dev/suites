@@ -49,7 +49,8 @@
     "typeorm": "^0.3.11"
   },
   "peerDependencies": {
-    "sinon": "*"
+    "@types/sinon": "9 - 10",
+    "sinon": "10 - 16"
   },
   "publishConfig": {
     "access": "public"

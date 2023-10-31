@@ -5,7 +5,6 @@ import { MockOverride, TestBedBuilder, UnitReference } from '@automock/core';
 import { mock } from 'jest-mock-extended';
 
 export * from './testbed-factory';
-export * from './reflectable.decorator';
 
 /**
  * @deprecated Use `TestBedBuilder` from `@automock/core` instead of `TestBedResolver` from `@automock/jest`.

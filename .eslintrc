@@ -26,20 +26,9 @@
   },
   "extends": [
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:prettier/recommended"
   ],
   "rules": {
-    "prettier/prettier": [
-      2,
-      {
-        "trailingComma": "es5",
-        "singleQuote": true,
-        "printWidth": 100,
-        "tabWidth": 2,
-        "semi": true,
-        "endOfLine": "auto"
-      }
-    ],
     "no-useless-constructor": "off",
     "react/forbid-prop-types": 0,
     "no-unused-expressions": 0,
@@ -52,6 +41,7 @@
     ],
     "global-require": 0,
     "new-cap": "off",
+    "@typescript-eslint/no-unsafe-declaration-merging": "off",
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/explicit-function-return-type": 0,
@@ -63,6 +53,7 @@
     "lines-between-class-members": "off"
   },
   "env": {
+    "node": true,
     "jest": true
   }
 }

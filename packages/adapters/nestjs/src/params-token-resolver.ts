@@ -1,70 +1,88 @@
 import { Type } from '@automock/types';
-import { UndefinedDependency, UndefinedDependencySymbol } from '@automock/common';
-import { CustomInjectableToken, NestJSInjectable } from './types';
+import {
+  ClassInjectable,
+  InjectableIdentifier,
+  UndefinedDependency,
+  UndefinedTokenError,
+} from '@automock/common';
+import { NestInjectableIdentifier } from './types';
 
-export interface CustomToken {
+export interface NestCustomToken {
   index: number;
-  param: NestJSInjectable;
+  param: NestInjectableIdentifier;
 }
 
 export type ParamsTokensReflector = {
   resolveDependencyValue(
-    tokens: CustomToken[]
+    tokens: NestCustomToken[]
   ): (
-    typeOrUndefined: NestJSInjectable | undefined,
+    typeOrUndefined: NestInjectableIdentifier | undefined,
     index: number
-  ) => [string | Type, Type | UndefinedDependencySymbol];
+  ) => Omit<ClassInjectable, 'type'>;
 };
 
 export const ParamsTokensReflector = (function (): ParamsTokensReflector {
-  function lookupTokenInParams(tokens: CustomToken[], index: number): NestJSInjectable | undefined {
+  function lookupTokenInParams(
+    tokens: NestCustomToken[],
+    index: number
+  ): NestInjectableIdentifier | undefined {
     const record = tokens.find((token) => token.index === index);
     return record?.param;
   }
 
   function resolveReferenceCallbackFromToken(
-    token: CustomInjectableToken | Type
-  ): Type | string | undefined {
-    return typeof token === 'object' && 'forwardRef' in token ? token.forwardRef() : token;
+    token: NestInjectableIdentifier
+  ): InjectableIdentifier {
+    return (
+      typeof token === 'object' && 'forwardRef' in token ? token.forwardRef() : token
+    ) as InjectableIdentifier;
   }
 
   function resolveDependencyValue(
-    tokens: CustomToken[]
+    tokens: NestCustomToken[]
   ): (
-    typeOrUndefined: NestJSInjectable,
+    typeOrUndefined: NestInjectableIdentifier | undefined,
     tokenIndexInCtor: number
-  ) => [string | Type, Type | UndefinedDependencySymbol] {
-    return (
-      dependencyType: Type,
-      index: number
-    ): [string | Type, Type | UndefinedDependencySymbol] => {
+  ) => Omit<ClassInjectable, 'type'> {
+    return (dependencyType: Type, index: number): Omit<ClassInjectable, 'type'> => {
       const token = lookupTokenInParams(tokens, index);
 
       if (!token) {
-        throw new Error(`No token found at index: ${index}`);
+        throw new UndefinedTokenError(`Automock encountered an error while attempting to detect a token for the
+dependency at index [${index}].
+This issue is commonly caused by either improper parameter decoration or a problem during the reflection of
+the parameter type. In some cases, this error may arise due to circular dependencies. If this is the case,
+please ensure that the circular dependency is resolved, or consider using 'forwardRef()' to address it.`);
       }
 
       const ref = resolveReferenceCallbackFromToken(token);
       const refIsAType = typeof ref !== 'string';
 
       if (refIsAType) {
-        return [
-          ref as Type,
-          typeof dependencyType === 'undefined' ? UndefinedDependency : (ref as Type),
-        ];
+        return {
+          identifier: ref as Type,
+          value: typeof dependencyType === 'undefined' ? UndefinedDependency : (ref as Type),
+        };
       }
 
       if (!dependencyType && typeof token === 'string') {
-        return [token, UndefinedDependency];
+        return {
+          identifier: token,
+          value: UndefinedDependency,
+        };
       } else if (!dependencyType && typeof ref !== 'string') {
-        return [ref, UndefinedDependency];
+        return {
+          identifier: ref,
+          value: UndefinedDependency,
+        };
       }
 
-      return [ref, dependencyType];
+      return {
+        identifier: ref,
+        value: dependencyType,
+      };
     };
   }
 
-  return {
-    resolveDependencyValue,
-  };
+  return { resolveDependencyValue };
 })();

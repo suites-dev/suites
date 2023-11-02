@@ -1,12 +1,11 @@
-import { Type } from '@automock/types';
+import { InjectableIdentifier, InjectableReflectedType } from '@automock/common';
 
-export type ForwardRefToken = { forwardRef: () => Type | string | undefined };
-export type CustomInjectableToken = ForwardRefToken | string | Type;
-export type NestJSInjectable = Type | CustomInjectableToken | undefined;
+export type ForwardRefToken = { forwardRef: () => InjectableReflectedType };
+export type NestInjectableIdentifier = ForwardRefToken | InjectableIdentifier;
 
 export type MetadataReflector = typeof Reflect;
 
 export interface ReflectedProperty {
   key: string;
-  type: NestJSInjectable;
+  type: NestInjectableIdentifier;
 }

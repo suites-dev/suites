@@ -1,24 +1,38 @@
 import { Type } from '@automock/types';
-import { UndefinedDependency, UndefinedDependencySymbol } from '@automock/common';
-import { ForwardRefToken, NestJSInjectable } from './types';
+import {
+  InjectableIdentifier,
+  InjectableReflectedType,
+  InjectableFinalValue,
+  UndefinedDependency,
+} from '@automock/common';
+import { ForwardRefToken, NestInjectableIdentifier } from './types';
 
 export interface StrategyReturnType {
-  typeOrToken: string | Type;
-  value: Type | UndefinedDependencySymbol;
+  identifier: InjectableIdentifier;
+  value: InjectableFinalValue;
 }
 
 export interface PropertyReflectionStrategy {
-  condition: (reflectedType: NestJSInjectable, type: NestJSInjectable) => boolean;
-  exec: (reflectedType: NestJSInjectable, type: NestJSInjectable) => StrategyReturnType;
+  condition: (
+    reflectedType: InjectableReflectedType,
+    identifier: NestInjectableIdentifier
+  ) => boolean;
+  exec: (
+    reflectedType: InjectableReflectedType,
+    identifier: NestInjectableIdentifier
+  ) => StrategyReturnType;
 }
 
 export const PropertyReflectionStrategies: ReadonlyArray<PropertyReflectionStrategy> = [
   {
-    condition: (reflectedType: NestJSInjectable, type: NestJSInjectable): boolean => {
-      return typeof type === 'object' && 'forwardRef' in type;
+    condition: (
+      _reflectedType: InjectableReflectedType,
+      identifier: NestInjectableIdentifier
+    ): boolean => {
+      return typeof identifier === 'object' && 'forwardRef' in identifier;
     },
-    exec: (reflectedType: NestJSInjectable, type: NestJSInjectable) => {
-      const forwardRefToken: string | Type | undefined = (type as ForwardRefToken).forwardRef();
+    exec: (reflectedType: InjectableReflectedType, identifier: NestInjectableIdentifier) => {
+      const forwardRefToken = (identifier as ForwardRefToken).forwardRef();
 
       if (typeof forwardRefToken === 'undefined') {
         throw new Error('Token is undefined');
@@ -26,56 +40,59 @@ export const PropertyReflectionStrategies: ReadonlyArray<PropertyReflectionStrat
 
       if (typeof forwardRefToken === 'string') {
         return {
-          typeOrToken: forwardRefToken as string,
-          value: typeof type === 'undefined' ? UndefinedDependency : (type as Type),
+          identifier: forwardRefToken as string,
+          value: typeof identifier === 'undefined' ? UndefinedDependency : (identifier as Type),
         };
       }
 
       return {
-        typeOrToken: forwardRefToken as Type,
+        identifier: forwardRefToken as Type,
         value: typeof reflectedType === 'undefined' ? UndefinedDependency : forwardRefToken,
       };
     },
   },
   {
-    condition: (reflectedType: undefined, type: NestJSInjectable): boolean => {
-      return !reflectedType && typeof type === 'string';
+    condition: (reflectedType: undefined, identifier: NestInjectableIdentifier): boolean => {
+      return !reflectedType && typeof identifier === 'string';
     },
-    exec: (reflectedType: NestJSInjectable, type: string) => {
+    exec: (_reflectedType: InjectableReflectedType, type: string) => {
       return {
-        typeOrToken: type,
+        identifier: type,
         value: UndefinedDependency,
       };
     },
   },
   {
-    condition: (reflectedType: undefined, type: Type): boolean => {
-      return !reflectedType && typeof type !== 'string';
+    condition: (reflectedType: undefined, identifier: Type): boolean => {
+      return !reflectedType && typeof identifier !== 'string';
     },
-    exec: (reflectedType: NestJSInjectable, type: Type) => {
+    exec: (reflectedType: InjectableReflectedType, type: Type) => {
       return {
-        typeOrToken: type,
-        value: !type ? UndefinedDependency : type,
+        identifier: type,
+        value: UndefinedDependency,
       };
     },
   },
   {
-    condition: (reflectedType: Type, type: string): boolean => {
-      return typeof type === 'string';
+    condition: (_reflectedType: InjectableReflectedType, identifier: string): boolean => {
+      return typeof identifier === 'string';
     },
-    exec: (reflectedType: Type, type: string) => {
+    exec: (reflectedType: InjectableReflectedType, identifier: string) => {
       return {
-        typeOrToken: type,
-        value: reflectedType,
+        identifier,
+        value: reflectedType as InjectableFinalValue,
       };
     },
   },
   {
-    condition: (reflectedType: undefined, type: undefined): boolean => {
-      return !reflectedType && !type;
+    condition: (
+      reflectedType: undefined,
+      identifier: NestInjectableIdentifier | undefined
+    ): boolean => {
+      return !reflectedType && !identifier;
     },
     exec: () => {
-      throw new Error(`Failed`);
+      throw new Error('Failed');
     },
   },
 ];

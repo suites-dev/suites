@@ -1,7 +1,6 @@
 import {
   ClassWithUndefinedDependency,
   ClassWithUndefinedDependencyProps,
-  ClassWithUndefinedRefDependency,
   ConstructorBasedInjectionClass,
   ConstructorCombinedWithPropsClass,
   DependencyFive,
@@ -10,137 +9,224 @@ import {
   DependencyThree,
   DependencyTwo,
   PropsBasedMainClass,
-} from './integration.assets';
-import {
-  ClassCtorInjectables,
-  ClassDependenciesMap,
-  ClassPropsInjectables,
-  UndefinedDependency,
-} from '@automock/common';
-import { ParamsTokensReflector } from '../src/params-token-resolver';
-import { ReflectorFactory } from '../src/class-reflector';
-import { ClassPropsReflector } from '../src/class-props-reflector';
-import { ClassCtorReflector } from '../src/class-ctor-reflector';
+} from './assets/integration.assets';
+import { InjectableIdentifier, UndefinedDependency, WithoutMetadata } from '@automock/common';
 import { Type } from '@automock/types';
-import { PropertyReflectionStrategies } from '../src/property-reflection-strategies.static';
+import NestJSAutomockDependenciesAdapter from '../src';
 
 describe('NestJS Automock Adapter Integration Test', () => {
-  const reflectorFactory = ReflectorFactory(
-    ClassPropsReflector(Reflect, PropertyReflectionStrategies),
-    ClassCtorReflector(Reflect, ParamsTokensReflector)
-  );
+  const dependenciesAdapter = NestJSAutomockDependenciesAdapter;
 
   describe('reflecting a class with constructor based injection', () => {
-    const classDependencies = reflectorFactory.reflectDependencies(ConstructorBasedInjectionClass);
+    const injectablesContainer = dependenciesAdapter.inspect(ConstructorBasedInjectionClass);
 
-    it('should return a map of the class dependencies', () => {
-      expect(classDependencies.constructor).toStrictEqual<ClassCtorInjectables>([
-        [DependencyOne, DependencyOne],
-        [DependencyTwo, DependencyTwo],
-        [DependencyThree, DependencyThree],
-        ['SOME_TOKEN_FROM_REF', DependencyFive],
-        [DependencySix, UndefinedDependency],
-        ['CUSTOM_TOKEN', Object],
-        ['CUSTOM_TOKEN_SECOND', UndefinedDependency],
-        ['ANOTHER_CUSTOM_TOKEN', String],
-        ['LITERAL_VALUE_ARR', Array],
-        ['LITERAL_VALUE_STR', String],
-      ]);
-    });
-  });
-
-  describe('reflecting a class with property based injection', () => {
-    const classDependencies = reflectorFactory.reflectDependencies(PropsBasedMainClass);
-
-    it('should return an array of tuples with the class dependencies', () => {
-      expect(classDependencies.properties).toStrictEqual<ClassPropsInjectables>([
+    it('should list the dependencies in the dependencies container corresponding to the class injectables', () => {
+      expect(injectablesContainer.list()).toStrictEqual<WithoutMetadata[]>([
         {
-          property: 'dependencyOne',
-          typeOrToken: DependencyOne,
+          identifier: DependencyOne,
           value: DependencyOne,
+          type: 'PARAM',
         },
         {
-          property: 'dependencyTwo',
-          typeOrToken: DependencyTwo,
+          identifier: DependencyTwo,
           value: DependencyTwo,
+          type: 'PARAM',
         },
         {
-          property: 'dependencyThree',
-          typeOrToken: DependencyThree,
+          identifier: DependencyThree,
           value: DependencyThree,
+          type: 'PARAM',
         },
         {
-          property: 'dependencySix',
-          typeOrToken: DependencySix,
-          value: UndefinedDependency,
-        },
-        {
-          property: 'dependencyFour',
-          typeOrToken: 'CUSTOM_TOKEN',
-          value: Object,
-        },
-        {
-          property: 'dependencyMissingWithToken',
-          typeOrToken: DependencyFive,
+          identifier: 'SOME_TOKEN_FROM_REF',
           value: DependencyFive,
+          type: 'PARAM',
         },
         {
-          property: 'dependencyUndefinedWithToken',
-          typeOrToken: 'CUSTOM_TOKEN_SECOND',
+          identifier: DependencySix,
           value: UndefinedDependency,
+          type: 'PARAM',
         },
         {
-          property: 'literalValueArray',
-          typeOrToken: 'LITERAL_VALUE_ARR',
-          value: Array,
+          identifier: 'CUSTOM_TOKEN',
+          value: Object,
+          type: 'PARAM',
         },
         {
-          property: 'literalValueString',
-          typeOrToken: 'LITERAL_VALUE_STR',
+          identifier: 'CUSTOM_TOKEN_SECOND',
+          value: UndefinedDependency,
+          type: 'PARAM',
+        },
+        {
+          identifier: 'ANOTHER_CUSTOM_TOKEN',
           value: String,
+          type: 'PARAM',
+        },
+        {
+          identifier: 'LITERAL_VALUE_ARR',
+          value: Array,
+          type: 'PARAM',
+        },
+        {
+          identifier: 'LITERAL_VALUE_STR',
+          value: String,
+          type: 'PARAM',
         },
       ]);
     });
-  });
 
-  describe('reflecting a class with constructor and properties combined', () => {
-    const classDependencies = reflectorFactory.reflectDependencies(
-      ConstructorCombinedWithPropsClass
-    );
-
-    it('should return an array of tuples with the class dependencies', () => {
-      expect(classDependencies).toEqual<ClassDependenciesMap>({
-        constructor: [
-          [DependencyOne, DependencyOne],
-          [DependencyTwo, DependencyTwo],
-        ],
-        properties: [
-          {
-            property: 'dependencyFour',
-            typeOrToken: 'CUSTOM_TOKEN',
-            value: Object,
-          },
-          {
-            property: 'literalValueString',
-            typeOrToken: 'LITERAL_VALUE_STR',
-            value: String,
-          },
-          {
-            property: 'dependencyThree',
-            typeOrToken: DependencyThree,
-            value: DependencyThree,
-          },
-        ],
+    describe('resolving dependencies from the container by identifiers and metadata keys and values', () => {
+      it.each([
+        [DependencyOne],
+        [DependencyTwo],
+        [DependencyThree],
+        ['SOME_TOKEN_FROM_REF'],
+        [DependencySix],
+        ['CUSTOM_TOKEN'],
+        ['CUSTOM_TOKEN_SECOND'],
+        ['ANOTHER_CUSTOM_TOKEN'],
+        ['LITERAL_VALUE_ARR'],
+        ['LITERAL_VALUE_STR'],
+      ])('%p should be defined', (identifier: InjectableIdentifier) => {
+        const dependency = injectablesContainer.resolve(identifier);
+        expect(dependency).toBeDefined();
       });
     });
   });
 
-  describe('reflecting classes with undefined constructor dependencies', () => {
-    it.each([
-      [ClassWithUndefinedDependency],
-      [ClassWithUndefinedDependencyProps],
-    ])('should fail with an error indicating that the dependency is not defined', (type: Type) => {
-      expect(() => reflectorFactory.reflectDependencies(type)).toThrow();
+  describe('reflecting a class with property based injection', () => {
+    const injectablesContainer = dependenciesAdapter.inspect(PropsBasedMainClass);
+
+    it('should list the dependencies in the dependencies container corresponding to the class injectables', () => {
+      expect(injectablesContainer.list()).toStrictEqual<WithoutMetadata[]>([
+        {
+          type: 'PROPERTY',
+          identifier: DependencyOne,
+          value: DependencyOne,
+          property: { key: 'dependencyOne' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: DependencyTwo,
+          value: DependencyTwo,
+          property: { key: 'dependencyTwo' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: DependencyThree,
+          value: DependencyThree,
+          property: { key: 'dependencyThree' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: DependencySix,
+          value: UndefinedDependency,
+          property: { key: 'dependencySix' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: 'CUSTOM_TOKEN',
+          value: Object,
+          property: { key: 'dependencyFour' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: DependencyFive,
+          value: UndefinedDependency,
+          property: { key: 'dependencyMissingWithToken' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: 'CUSTOM_TOKEN_SECOND',
+          value: UndefinedDependency,
+          property: { key: 'dependencyUndefinedWithToken' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: 'LITERAL_VALUE_ARR',
+          value: Array,
+          property: { key: 'literalValueArray' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: 'LITERAL_VALUE_STR',
+          value: String,
+          property: { key: 'literalValueString' },
+        },
+      ]);
     });
+
+    describe('resolving dependencies from the container by identifiers and metadata keys and values', () => {
+      it.each([
+        [DependencyOne],
+        [DependencyTwo],
+        [DependencyThree],
+        [DependencySix],
+        ['CUSTOM_TOKEN'],
+        [DependencyFive],
+        ['CUSTOM_TOKEN_SECOND'],
+        ['LITERAL_VALUE_ARR'],
+        ['LITERAL_VALUE_STR'],
+      ])('%p should be defined', (identifier: InjectableIdentifier) => {
+        const dependency = injectablesContainer.resolve(identifier);
+        expect(dependency).toBeDefined();
+      });
+    });
+  });
+
+  describe('reflecting a class with constructor and properties combined', () => {
+    const injectablesContainer = dependenciesAdapter.inspect(ConstructorCombinedWithPropsClass);
+
+    it('should list the dependencies in the dependencies container corresponding to the class injectables', () => {
+      expect(injectablesContainer.list()).toEqual<WithoutMetadata[]>([
+        {
+          identifier: DependencyOne,
+          value: DependencyOne,
+          type: 'PARAM',
+        },
+        {
+          identifier: DependencyTwo,
+          value: DependencyTwo,
+          type: 'PARAM',
+        },
+        {
+          type: 'PROPERTY',
+          identifier: 'CUSTOM_TOKEN',
+          value: Object,
+          property: { key: 'dependencyFour' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: 'LITERAL_VALUE_STR',
+          value: String,
+          property: { key: 'literalValueString' },
+        },
+        {
+          type: 'PROPERTY',
+          identifier: DependencyThree,
+          value: DependencyThree,
+          property: { key: 'dependencyThree' },
+        },
+      ]);
+    });
+
+    describe('resolving dependencies from the container by identifiers and metadata keys and values', () => {
+      it.each([['CUSTOM_TOKEN'], ['LITERAL_VALUE_STR'], [DependencyThree]])(
+        '%p should be defined',
+        (identifier: InjectableIdentifier) => {
+          const dependency = injectablesContainer.resolve(identifier);
+          expect(dependency).toBeDefined();
+        }
+      );
+    });
+  });
+
+  describe('reflecting classes with undefined constructor dependencies', () => {
+    it.each([[ClassWithUndefinedDependency], [ClassWithUndefinedDependencyProps]])(
+      'should fail with an error indicating that the dependency is not defined',
+      (type: Type) => {
+        expect(() => dependenciesAdapter.inspect(type)).toThrow();
+      }
+    );
   });
 });

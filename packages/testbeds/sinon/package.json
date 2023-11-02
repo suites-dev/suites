@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@nestjs/common": "^8.3.1",
-    "@nestjs/core": "^8.0.3",
+    "@nestjs/core": "^10.2.8",
     "@nestjs/typeorm": "^8.0.3",
     "@types/sinon": "^10.x",
     "sinon": "^14.x",

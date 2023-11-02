@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@automock/types": "^1.2.0",
-    "@nestjs/common": "^8.3.1"
+    "@nestjs/common": "^10.2.8"
   },
   "publishConfig": {
     "access": "public"

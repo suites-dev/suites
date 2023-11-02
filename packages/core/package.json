@@ -34,8 +34,12 @@
     "index.js",
     "README.md"
   ],
+  "dependencies": {
+    "lodash.isequal": "^4.5.0"
+  },
   "devDependencies": {
     "@automock/common": "^2.2.0",
-    "@automock/types": "^1.2.0"
+    "@automock/types": "^1.2.0",
+    "@types/lodash.isequal": "^4.5.6"
   }
 }

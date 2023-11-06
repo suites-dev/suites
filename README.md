@@ -15,7 +15,7 @@
 
 <h1 align="center">Automock</h1>
 
-### [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference) &nbsp;&nbsp; [↗️ Example](https://automock.dev/docs/getting-started/examples)
+### [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference) &nbsp;&nbsp; [Example](#computer-quick-example)
 
 **Automock streamlines the unit testing process by auto-generating mock objects for class dependencies within dependency
 injection environments. With compatibility across various DI and testing frameworks, you can focus on
@@ -83,9 +83,8 @@ That's about it. :smile_cat:
 
 Take a look at the following example (using Jest, but the same applies for Sinon):
 
+Consider the following `UserService` class:
 ```typescript
-import { TestBed } from '@automock/jest';
-
 export class Database {
   async getUsers(): Promise<User[]> { ... }
 }
@@ -97,6 +96,12 @@ export class UserService {
     return this.database.getUsers();
   }
 }
+```
+
+Let's creaft a unit test for this class:
+```typescript
+import { TestBed } from '@automock/jest';
+import { Database, UserService } from './user.service'; 
 
 describe('User Service Unit Spec', () => {
   let userService: UserService;

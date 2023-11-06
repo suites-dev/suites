@@ -5,7 +5,6 @@
 
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)
 [![ci](https://github.com/automock/automock/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
-[![e2e](https://github.com/automock/automock/actions/workflows/e2e.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
 
 <br />
 
@@ -64,21 +63,6 @@ $ npm i -D @automock/sinon
 
 No further configuration is required.
 
-## :arrows_counterclockwise: Migrating from v1.x to v2.0
-
-The NestJS adapter came pre-bundled in v1.x. In v2.0, you'll need to install it manually:
-
-```bash
-$ npm i -D @automock/adapters.nestjs
-```
-
-> For a detailed list of changes read Automock's [v2.0 Release Notes](https://github.
-> com/automock/automock/releases/tag/v2.0.0).
-
-That's about it. :smile_cat:
-
-<p align="right"><a href="https://automock.dev/docs/migrating">↗️ Migration guide</a></p>
-
 ## :computer: Quick Example
 
 Take a look at the following example (using Jest, but the same applies for Sinon):
@@ -125,15 +109,29 @@ describe('User Service Unit Spec', () => {
 });
 ```
 
-In this example, Automock simplifies the creation of mock objects and stubs for the `Database` dependency. By utilizing
-the `TestBed`, you can create an instance of the `UserService` class with automatically generated mock objects for its
-dependencies.
+In this example, Automock streamlines the process of creating mock objects and stubs for the `Database` dependency.
+With the use of the `TestBed`, an instance of the `UserService` class can be created with mock objects automatically
+generated for its dependencies. 
 
-During the test, you can directly access the automatically created mock object for the `Database` dependency (database).
-By stubbing the `getUsers()` method of the database mock object, you can define its behavior and ensure it resolves with
+During the test, we have direct access to the automatically generated mock object for the `Database` dependency (database).
+By stubbing the `getUsers()` method of the database mock object, we can define its behavior and make sure it resolves with
 a specific set of mock users.
 
 <p align="right"><a href="https://automock.dev/docs/getting-started/examples">↗️ For a full Step-by-Step example</a></p>
+
+## :arrows_counterclockwise: Migrating from v1.x to v2.0
+
+The NestJS adapter came pre-bundled in v1.x. In v2.0, you'll need to install it manually:
+
+```bash
+$ npm i -D @automock/adapters.nestjs
+```
+
+> For a detailed list of changes read Automock's [v2.0 Release Notes](https://github.com/automock/automock/releases/tag/v2.0.0).
+
+That's about it. :smile_cat:
+
+<p align="right"><a href="https://automock.dev/docs/migrating">↗️ Migration guide</a></p>
 
 ## :scroll: License
 

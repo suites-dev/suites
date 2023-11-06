@@ -82,7 +82,7 @@ export class UserService {
 }
 ```
 
-Let's creaft a unit test for this class:
+Let's create a unit test for this class:
 ```typescript
 import { TestBed } from '@automock/jest';
 import { Database, UserService } from './user.service'; 

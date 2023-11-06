@@ -32,10 +32,10 @@
   ],
   "dependencies": {
     "@automock/common": "^2.2.0",
+    "@automock/types": "^1.2.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@automock/types": "^1.2.0",
     "@nestjs/common": "^10.2.7",
     "rxjs": "^7.8.1"
   },

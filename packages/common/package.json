@@ -33,7 +33,7 @@
     "dist",
     "README.md"
   ],
-  "devDependencies": {
+  "dependencies": {
     "@automock/types": "^1.2.0"
   },
   "config": {

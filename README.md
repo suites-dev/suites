@@ -17,9 +17,9 @@
 
 ### [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference) &nbsp;&nbsp; [↗️ Example](https://automock.dev/docs/getting-started/examples)
 
-Automock streamlines the unit testing process by auto-generating mock objects for class dependencies within dependency
-injection environments. With compatibility across various DI and testing frameworks, Automock allows you to focus on
-crafting test cases instead of manual mock configurations, enhancing your unit testing journey.
+**Automock streamlines the unit testing process by auto-generating mock objects for class dependencies within dependency
+injection environments. With compatibility across various DI and testing frameworks, you can focus on
+crafting test cases instead of manual mock configurations, enhancing your unit testing journey.**
 
 ## Automock's Core Features
 

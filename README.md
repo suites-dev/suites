@@ -10,24 +10,19 @@
 <br />
 
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
+  <img width="200" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
 </p>
 
 <h1 align="center">Automock</h1>
 
-<p align="center">
-<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for<br>class dependencies,
-allowing you to focus on writing test cases instead of mock setup.</strong>
-</p>
+### [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference) &nbsp;&nbsp; [↗️ Example](https://automock.dev/docs/getting-started/examples)
 
-### [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference)
+Automock streamlines the unit testing process by auto-generating mock objects for class dependencies within dependency
+injection environments. With compatibility across various DI and testing frameworks, Automock allows you to focus on
+crafting test cases instead of manual mock configurations, enhancing your unit testing journey.
 
-Specially designed for Inversion of Control and Dependency Injection scenarios, Automock seamlessly
-integrates automatic mocking into various DI and testing frameworks. Automock's adaptability ensures a seamless and
-effective testing experience empowers you to isolate and test individual components with ease, enhancing efficiency
-and reliability of your unit testing journey.
+## Automock's Core Features
 
-## Automock's Core Capabilities
 🚀 **Zero-Setup Mocking** - Dive straight into testing without the hassle. Automatically generate mock
 objects, eliminate manual setup, and reduce boilerplate code.
 
@@ -37,10 +32,10 @@ Write tests with confidence, knowing that type mismatches will be caught.
 🔄 **Consistent Test Architecture** - Achieve a uniform approach to unit testing.
 Your tests will follow a consistent syntax and structure, making them easier to read and maintain.
 
-📈 **Optimized Performance** - Lightning-fast execution for all your unit tests. Automock's lightweight design
-ensures that your tests run smoothly and efficiently.
+📈 **Optimized Performance** - By bypassing the DI container load, Automock's design ensures your unit tests run
+significantly faster. This lets you focus on development without unnecessary waits.
 
-🌐 **Community & Support** - Join a growing community of developers. Benefit from regular updates, comprehensive
+🌐 **Community & Support** - Join a growing community of developers. Regular updates, comprehensive
 documentation, and responsive support to ensure you get the most out of Automock.
 
 ## :package: Installation
@@ -48,37 +43,37 @@ documentation, and responsive support to ensure you get the most out of Automock
 To fully integrate Automock into your testing and dependency injection framework, **you'll need to install two packages:
 Automock package for your chosen testing framework, and the corresponding adapter for your DI framework.**
 
-Install the corresponding package for your testing framework:
+1. Install the corresponding package for your testing framework:
 
 ```bash
-npm i -D @automock/jest
+$ npm i -D @automock/jest
 ```
+
+For **Sinon**:
 
 ```bash
-npm i -D @automock/sinon
+$ npm i -D @automock/sinon
 ```
 
-Install the corresponding package for your DI framework:
+2. And for your DI framework, install the appropriate Automock adapter (as a dev dependency):
 
-| DI Framework Adapter | Jest (`@automock/jest`)   | Sinon (`@automock/sinon`) |
-|   :---   | :---: | :---: |
-| NestJS | :white_check_mark: | :white_check_mark: |
-| Inversify (Beta) | :white_check_mark: | :white_check_mark: |
-| Ts.ED | _WIP_ | _WIP_ |
-| TypeDI | _Soon_ | _Soon_ |
+| DI Framework | Package Name                   |
+|--------------|--------------------------------|
+| NestJS       | `@automock/adapters.nestjs`    |
+| Inversify    | `@automock/adapters.inversify` |
 
 No further configuration is required.
 
 ## :arrows_counterclockwise: Migrating from v1.x to v2.0
 
-Upgrading to Automock v2.0 brings a host of improvements designed to enhance your testing experience.
 The NestJS adapter came pre-bundled in v1.x. In v2.0, you'll need to install it manually:
 
 ```bash
-npm i -D @automock/adapters.nestjs
+$ npm i -D @automock/adapters.nestjs
 ```
 
-> For a detailed list of changes, it's recommended reading Automock's [v2.0 Release Notes](https://github.com/automock/automock/releases/tag/v2.0.0).
+> For a detailed list of changes read Automock's [v2.0 Release Notes](https://github.
+> com/automock/automock/releases/tag/v2.0.0).
 
 That's about it. :smile_cat:
 
@@ -91,11 +86,11 @@ Take a look at the following example (using Jest, but the same applies for Sinon
 ```typescript
 import { TestBed } from '@automock/jest';
 
-class Database {
-  getUsers(): Promise<User[]> { ... }
+export class Database {
+  async getUsers(): Promise<User[]> { ... }
 }
 
-class UserService {
+export class UserService {
   constructor(private database: Database) {}
 
   async getAllUsers(): Promise<User[]> {

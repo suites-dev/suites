@@ -1,21 +1,18 @@
 {
   "name": "@automock/common",
   "private": false,
-  "version": "2.2.0",
+  "version": "3.0.0",
   "license": "MIT",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
-  "keywords": [
-    "mock",
-    "auto-mock",
-    "reflection"
-  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/omermorad/automock.git"
+    "url": "https://github.com/automock/automock.git",
+    "directory": "packages/common"
   },
+  "homepage": "https://automock.dev",
   "bugs": {
-    "url": "https://github.com/omermorad/automock/issues"
+    "url": "https://github.com/automock/automock/issues"
   },
   "contributors": [
     {
@@ -23,6 +20,9 @@
       "email": "omer.moradd@gmail.com"
     }
   ],
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
@@ -33,8 +33,8 @@
     "dist",
     "README.md"
   ],
-  "devDependencies": {
-    "@automock/types": "^1.2.0"
+  "dependencies": {
+    "@automock/types": "^2.0.0"
   },
   "config": {
     "publishConfig": "public"

@@ -1,83 +1,59 @@
 import { Type } from '@automock/types';
-import { TestBedBuilder, UnitBuilder, UnitReference, UnitTestBed } from '../src';
+import { TestBedBuilder, UnitReference, UnitTestBed } from '../src';
+import { UnitBuilder } from '../src/services/testbed-builder';
 import { UnitMocker } from '../src/services/unit-mocker';
 import {
-  DependencyFive,
-  DependencyFourToken,
-  DependencyOne,
-  DependencyThree,
-  DependencyTwo,
-  MainClass,
-} from './integration.assets';
-import { DependenciesReflector, UndefinedDependency } from '@automock/common';
+  ArbitraryClassFive,
+  ArbitraryClassFour,
+  ArbitraryClassOne,
+  ArbitraryClassTwo,
+  ClassUnderTest,
+  FakeAdapter,
+} from './assets/integration.assets';
 
-describe('TestBedBuilder Integration Test', () => {
-  let underTest: TestBedBuilder<MainClass>;
+const MockedFromBuilder = Symbol.for('MockedFromBuilder');
+const MockedFromMocker = Symbol.for('MockFromMocker');
+const symbolIdentifier = Symbol.for('TOKEN_METADATA');
+
+describe('Builder Integration Test', () => {
+  let underTest: TestBedBuilder<ClassUnderTest>;
+  const loggerMock = { warn: jest.fn() } as Partial<Console>;
 
   // It's a mark for a function that mocks the mock function, don't be confused by the name
-  const mockFunctionMockOfBuilder = jest.fn(() => '__MOCKED_FROM_BUILDER__');
-  const mockFunctionMockOfMocker = jest.fn(() => '__MOCKED_FROM_MOCKER__');
-
-  const reflectorMock: DependenciesReflector = {
-    reflectDependencies: () => {
-      return {
-        constructor: [
-          [DependencyOne, DependencyOne],
-          // Repeat on the same dependency twice, as it can be returned from the reflector (@since 1.2.2)
-          [DependencyTwo, DependencyTwo],
-          [DependencyTwo, DependencyTwo],
-          [DependencyThree, UndefinedDependency],
-          // Repeat on the same dependency twice, as it can be returned from the reflector (@since 1.2.2)
-          ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
-          ['DEPENDENCY_FOUR_TOKEN', DependencyFourToken],
-          ['STRING_TOKEN', 'ANY STRING'],
-          ['TOKEN_WITH_UNDEFINED', UndefinedDependency],
-        ],
-        properties: [
-          {
-            property: 'arbitraryFive',
-            typeOrToken: DependencyFive,
-            value: DependencyFive,
-          },
-          {
-            property: 'arbitraryFive',
-            typeOrToken: DependencyTwo,
-            value: UndefinedDependency,
-          },
-          {
-            property: 'arbitraryArray',
-            typeOrToken: 'INJECTED_ARRAY',
-            value: Array,
-          },
-        ],
-      };
-    },
-  };
-
-  const unitMockerMock = new UnitMocker(reflectorMock, mockFunctionMockOfMocker, {
-    warn: () => undefined,
-  } as Console);
+  const mockFunctionMockOfBuilder = jest.fn(() => MockedFromBuilder);
+  const mockFunctionMockOfMocker = jest.fn(() => MockedFromMocker);
 
   beforeAll(() => {
-    underTest = UnitBuilder.create<MainClass>(mockFunctionMockOfBuilder, unitMockerMock)(MainClass);
+    underTest = UnitBuilder.create<ClassUnderTest>(
+      mockFunctionMockOfBuilder,
+      new UnitMocker(mockFunctionMockOfMocker),
+      FakeAdapter,
+      loggerMock as Console
+    )(ClassUnderTest);
   });
 
   describe('creating a testbed builder with some mock overrides', () => {
-    let unitTestBed: UnitTestBed<MainClass>;
+    let unitTestBed: UnitTestBed<ClassUnderTest>;
 
     beforeAll(() => {
       unitTestBed = underTest
-        .mock(DependencyOne)
+        .mock(ArbitraryClassTwo)
         .using({
-          print: () => 'dependency-one-overridden',
+          print: () => 'overridden',
         })
-        .mock(DependencyTwo)
+        .mock(ArbitraryClassFour)
         .using({
-          print: () => 'dependency-two-overridden',
+          print: () => 'overridden',
         })
-        .mock<DependencyFourToken>('DEPENDENCY_FOUR_TOKEN')
+        .mock('ANOTHER_TOKEN')
         .using({
-          print: () => 'dependency-four-overridden',
+          print: () => 'overridden',
+        })
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        .mock(symbolIdentifier, { key: 'value' })
+        .using({
+          print: () => 'overridden',
         })
         .mock<string>('STRING_TOKEN')
         .using('ARBITRARY_STRING')
@@ -86,34 +62,45 @@ describe('TestBedBuilder Integration Test', () => {
         .compile();
     });
 
-    test('return an instance of a unit test bed with corresponding properties', () => {
-      expect(unitTestBed.unit).toBeDefined();
-      expect(unitTestBed.unitRef).toBeDefined();
-    });
-
-    test('return an instance of the unit and a unit reference', () => {
-      expect(unitTestBed.unit).toBeInstanceOf(MainClass);
-      expect(unitTestBed.unitRef).toBeInstanceOf(UnitReference);
-    });
-
     describe('override the dependencies from the builder, and leave the rest for the dependencies mocked', () => {
       it.each([
-        [DependencyOne.name, '__MOCKED_FROM_BUILDER__', DependencyOne],
-        [DependencyTwo.name, '__MOCKED_FROM_BUILDER__', DependencyTwo],
-        [DependencyTwo.name, '__MOCKED_FROM_BUILDER__', DependencyTwo],
-        [DependencyThree.name, '__MOCKED_FROM_MOCKER__', DependencyThree],
-        ['custom token with function', '__MOCKED_FROM_BUILDER__', 'DEPENDENCY_FOUR_TOKEN'],
-        ['custom token with undefined symbol', 'SOME_VALUE', 'TOKEN_WITH_UNDEFINED'],
-        ['property custom token with injected array', '__MOCKED_FROM_MOCKER__', 'INJECTED_ARRAY'],
-        [DependencyFive.name, '__MOCKED_FROM_MOCKER__', DependencyFive],
-        ['custom token with primitive value', 'ARBITRARY_STRING', 'STRING_TOKEN'],
+        [ArbitraryClassOne.name, undefined, MockedFromMocker, ArbitraryClassOne],
+        [ArbitraryClassTwo.name, undefined, MockedFromBuilder, ArbitraryClassTwo],
+        [ArbitraryClassFive.name, undefined, MockedFromMocker, ArbitraryClassFive],
+        [
+          'custom string-based token with metadata',
+          { metadataKey: 'value' },
+          MockedFromMocker,
+          'ArbitraryClassSix',
+        ],
+        [ArbitraryClassFour.name, undefined, MockedFromBuilder, ArbitraryClassFour],
+        ['custom string-based token with function', undefined, MockedFromBuilder, 'ANOTHER_TOKEN'],
+        ['custom token with undefined value', undefined, 'SOME_VALUE', 'TOKEN_WITH_UNDEFINED'],
+        ['custom symbol-based token', { key: 'value' }, MockedFromBuilder, symbolIdentifier],
+        [ArbitraryClassFive.name, undefined, MockedFromMocker, ArbitraryClassFive],
+        ['custom token with constant value', undefined, 'ARBITRARY_STRING', 'STRING_TOKEN'],
       ])(
-        'should return a stubbed instance for %p, mocked from %p',
-        (name: string, expectedResult: Type | string, dependency: Type | string) => {
-          const stubbedInstance = unitTestBed.unitRef.get(dependency);
+        'should return a mock or a value for %p, with metadata %p mocked from %p',
+        (
+          name: string,
+          metadata: undefined | unknown,
+          expectedResult: Type | string | symbol,
+          dependency: Type | string | symbol
+        ) => {
+          const stubbedInstance = unitTestBed.unitRef.get(dependency as never, metadata as never);
           expect(stubbedInstance).toEqual(expectedResult);
         }
       );
+    });
+
+    it('should return an instance of the unit and a unit reference', () => {
+      expect(unitTestBed.unit).toBeInstanceOf(ClassUnderTest);
+      expect(unitTestBed.unitRef).toBeInstanceOf(UnitReference);
+    });
+
+    it('should log a warning indicating the dependency was not found when mocking missing dependency', () => {
+      underTest.mock('does-not-exists').using({}).compile();
+      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
     });
   });
 });

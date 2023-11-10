@@ -1,6 +1,6 @@
 import { AutomockTestBuilder, TestBedBuilder } from '@automock/core';
 import { Type } from '@automock/types';
-import { mock } from 'jest-mock-extended';
+import { mock } from './mock.static';
 
 export class TestBed {
   /**

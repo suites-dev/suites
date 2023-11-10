@@ -4,45 +4,94 @@
 
 <h1 align="center">Automock</h1>
 
-<p align="center">
-<strong>Automock simplifies the process of writing unit tests by automatically creating mock objects for class
-dependencies, allowing you to focus on writing test cases instead of mock setup.</strong>
-</p>
+### [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference) &nbsp;&nbsp; [↗️ Example](https://automock.dev/docs/getting-started/examples)
 
-<br>
+**Automock streamlines the unit testing process by auto-generating mock objects for class dependencies within
+dependency injection environments. With compatibility across various DI and testing frameworks, Automock allows you
+to focus on crafting test cases instead of manual mock configurations, enhancing your unit testing journey.**
 
-Specially designed for Inversion of Control (IoC) and Dependency Injection (DI) scenarios, Automock seamlessly
-integrates automatic mocking into various DI and testing frameworks. Automock's adaptability ensures a seamless and
-effective testing experience, empowers you to isolate and test individual components with ease, enhancing the efficiency
-and reliability of your unit testing process.
+## Automock's Core Features
+
+🚀 **Zero-Setup Mocking** - Dive straight into testing without the hassle. Automatically generate mock
+objects, eliminate manual setup, and reduce boilerplate code.
+
+🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type information as real objects.
+Write tests with confidence, knowing that type mismatches will be caught.
+
+🔄 **Consistent Test Architecture** - Achieve a uniform approach to unit testing.
+Your tests will follow a consistent syntax and structure, making them easier to read and maintain.
+
+📈 **Optimized Performance** - By bypassing the DI container load, Automock's design ensures your unit tests run 
+significantly faster. This lets you focus on development without unnecessary waits.
+
+🌐 **Community & Support** - Join a growing community of developers. Regular updates, comprehensive
+documentation, and responsive support to ensure you get the most out of Automock.
 
 ## :package: Installation
 
+To fully integrate Automock into your testing and dependency injection framework, **you need to install two
+packages: `@automock/sinon`, and the corresponding DI framework adapter.**
+
+1. Install Automock's Sinon package:
 ```bash
-npm i -D @automock/sinon
+$ npm i -D @automock/sinon
+````
+
+2. And for your DI framework, install the appropriate Automock adapter (as a dev dependency):
+
+| DI Framework | Package Name                   |
+|--------------|--------------------------------|
+| NestJS       | `@automock/adapters.nestjs`    |
+| Inversify    | `@automock/adapters.inversify` |
+
+For example:
+```bash
+$ npm i -D @automock/sinon @automock/adapters.nestjs
 ```
 
-## :computer: Usage Example
+No further configuration is required.
 
-Take a look at the following example (Combining Mocha and Chai):
+## :arrows_counterclockwise: Migrating from v1.x to v2.0
 
+The NestJS adapter came pre-bundled in v1.x. In v2.0, you'll need to install it manually:
+
+```bash
+$ npm i -D @automock/adapters.nestjs
+```
+
+> For a detailed list of changes read Automock's [v2.0 Release Notes](https://github.com/automock/automock/releases/tag/v2.0.0).
+
+That's about it. :smile_cat:
+
+<p align="right"><a href="https://automock.dev/docs/migrating">↗️ Migration guide</a></p>
+
+## :computer: Quick Example
+
+Take a look at the following example:
+
+Consider the following `UserService` class:
 ```typescript
-import { TestBed } from '@automock/sinon';
-import { SinonStubbedInstance } from 'sinon';
-import { expect } from 'chai';
-import { before } from 'mocha';
-
-class Database {
-  getUsers(): Promise<User[]> { ... }
+export class Database {
+  async getUsers(): Promise<User[]> { ... }
 }
 
-class UserService {
+export class UserService {
   constructor(private database: Database) {}
 
   async getAllUsers(): Promise<User[]> {
     return this.database.getUsers();
   }
 }
+```
+
+Let's create a unit test for this class:
+
+```typescript
+import { TestBed } from '@automock/sinon';
+import { Database, UserService } from './user.service';
+import { SinonStubbedInstance } from 'sinon';
+import { expect } from 'chai';
+import { before } from 'mocha';
 
 describe('User Service Unit Spec', () => {
   let userService: UserService;
@@ -66,22 +115,15 @@ describe('User Service Unit Spec', () => {
 });
 ```
 
-**Both property injection and constructor injection are supported.** Whether your classes rely on dependencies injected
-through properties or constructor parameters, Automock handles both scenarios seamlessly. This flexibility allows you to
-write unit tests for a wide range of classes, ensuring that all dependencies are effectively mocked and isolated during
-testing, regardless of the injection method used.
+In this example, Automock streamlines the process of creating mock objects and stubs for the `Database` dependency.
+With the use of the `TestBed`, an instance of the `UserService` class can be created with mock objects automatically
+generated for its dependencies.
 
-**[:books: For more examples and for API reference visit our docs page](https://github.com/automock/automock/blob/master/docs/automock.md)**
+During the test, we have direct access to the automatically generated mock object for the `Database` dependency (database).
+By stubbing the `getUsers()` method of the database mock object, we can define its behavior and make sure it resolves with
+a specific set of mock users.
 
-## :bookmark_tabs: Acknowledgments
-
-Automock is built upon the fundamentals and principles of unit tests, particularly inspired by Martin Fowler's blog
-posts on unit tests. Fowler advocates for creating "solitary" unit tests that concentrate on testing a single unit of
-code in isolation, independently of its dependencies. This approach aligns with Automock's objective of providing a
-simple and effective solution for automatically mocking class dependencies during unit testing.
-
-If you're interested in learning more about unit tests, we encourage you to explore Martin Fowler's blog post on the
-topic: https://martinfowler.com/bliki/UnitTest.html
+<p align="right"><a href="https://automock.dev/docs/getting-started/examples">↗️ For a full Step-by-Step example</a></p>
 
 ## :scroll: License
 

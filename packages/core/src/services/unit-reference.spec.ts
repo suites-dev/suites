@@ -1,37 +1,62 @@
-import { StubbedInstance, Type } from '@automock/types';
 import { UnitReference } from './unit-reference';
+import { MocksContainer } from './mocks-container';
+import { ConstantValue, InjectableIdentifier } from '@automock/common';
+import { StubbedInstance } from '@automock/types';
 
-class ClassType {}
-class ClassTypeStubbedInstanceFake {}
-class ClassFromTokenFake {}
+class DependencyOne {}
+class DependencyOneStubbed {}
+class DependencyTwoStubbed {}
+
+const DependencyOneSymbol = Symbol('DependencyOneSymbol');
+const DependencyTwoSymbol = Symbol('DependencyTwoSymbol');
+const ConstantValueSymbol = Symbol('ConstantValueSymbol');
 
 describe('Unit Reference Unit Spec', () => {
-  let underTest: UnitReference;
+  let unitReference: UnitReference;
 
   beforeAll(() => {
-    const dependenciesMapMock = new Map<Type | string, StubbedInstance<unknown>>([
-      ['token', ClassFromTokenFake],
-      [ClassType, ClassTypeStubbedInstanceFake],
+    const mocksContainer = new MocksContainer([
+      // Types
+      [{ identifier: DependencyOne }, DependencyOneStubbed],
+      [{ identifier: 'DEPENDENCY_ONE' }, DependencyOneStubbed],
+      [{ identifier: DependencyOneSymbol }, DependencyOneStubbed],
+      // Constants
+      [{ identifier: 'CONSTANT_VALUE' }, ['1', '2', '3']],
+      [{ identifier: ConstantValueSymbol }, [1, 2, 3]],
+      // With Metadata
+      [{ identifier: 'DEPENDENCY_TWO', metadata: { dependency: 'two' } }, DependencyTwoStubbed],
+      [{ identifier: DependencyTwoSymbol, metadata: { dependency: 'two' } }, DependencyTwoStubbed],
     ]);
 
-    underTest = new UnitReference(dependenciesMapMock);
+    unitReference = new UnitReference(mocksContainer);
   });
 
-  test('return the corresponding class in the dependencies map when using a constructable type', () => {
-    const reference = underTest.get(ClassType);
+  it.each([
+    [DependencyOne, DependencyOneStubbed],
+    ['DEPENDENCY_ONE', DependencyOneStubbed],
+    [DependencyOneSymbol, DependencyOneStubbed],
+    ['CONSTANT_VALUE', ['1', '2', '3']],
+    [ConstantValueSymbol, [1, 2, 3]],
+  ])(
+    'should return the corresponding class or value using unique identifier with no metadata',
+    (identifier: InjectableIdentifier, value: StubbedInstance<unknown> | ConstantValue) => {
+      expect(unitReference.get(identifier)).toEqual(value);
+    }
+  );
 
-    expect(reference).toBe(ClassTypeStubbedInstanceFake);
+  it('should return the corresponding class or value using unique identifier with metadata combined', () => {
+    expect(
+      unitReference.get<DependencyTwoStubbed>('DEPENDENCY_TWO', {
+        dependency: 'two',
+      })
+    ).toEqual(DependencyTwoStubbed);
+
+    expect(
+      unitReference.get<DependencyTwoStubbed>(DependencyTwoSymbol, { dependency: 'two' })
+    ).toEqual(DependencyTwoStubbed);
   });
 
-  test('return the corresponding class in the dependencies map when using a token string', () => {
-    expect(underTest.get('token')).toBe(ClassFromTokenFake);
-  });
-
-  test('throw an error if the the dependency not found in the map of the dependencies mocks', () => {
-    expect(() => underTest.get('not-exist')).toThrowError(
-      Error(
-        "It's weird; Automock cannot find the given dependency reference, make sure you've provided a valid type or token."
-      )
-    );
+  it('should throw an error indicating the dependency not found in case the identifier is missing', () => {
+    expect(() => unitReference.get('does-not-exist')).toThrowError();
   });
 });

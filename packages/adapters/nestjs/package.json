@@ -1,15 +1,17 @@
 {
   "name": "@automock/adapters.nestjs",
   "private": false,
-  "version": "1.4.0",
+  "version": "2.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/omermorad/automock.git"
+    "url": "https://github.com/automock/automock.git",
+    "directory": "packages/adapters/nestjs"
   },
+  "homepage": "https://automock.dev",
   "bugs": {
-    "url": "https://github.com/omermorad/automock/issues"
+    "url": "https://github.com/automock/automock/issues"
   },
   "contributors": [
     {
@@ -20,7 +22,7 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "test": "yarn jest --passWithNoTests",
+    "test": "yarn jest",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
@@ -29,14 +31,16 @@
     "index.js"
   ],
   "dependencies": {
-    "@automock/common": "^2.2.0"
-  },
-  "peerDependencies": {
-    "@nestjs/common": ">= 8.x"
+    "@automock/common": "^3.0.0",
+    "@automock/types": "^2.0.0",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@automock/types": "^1.2.0",
-    "@nestjs/common": "^8.3.1"
+    "@nestjs/common": "^10.2.7",
+    "rxjs": "^7.8.1"
+  },
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },
   "publishConfig": {
     "access": "public"

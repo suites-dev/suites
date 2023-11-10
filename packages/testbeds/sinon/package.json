@@ -1,18 +1,19 @@
 {
   "name": "@automock/sinon",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
     "mock",
     "sinon",
-    "auto-mock",
-    "reflection"
+    "dependency-injection"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/automock/automock.git"
+    "url": "https://github.com/automock/automock.git",
+    "directory": "packages/testbeds/sinon"
   },
+  "homepage": "https://automock.dev",
   "bugs": {
     "url": "https://github.com/automock/automock/issues"
   },
@@ -22,6 +23,9 @@
       "email": "omer.moradd@gmail.com"
     }
   ],
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
@@ -33,21 +37,16 @@
     "README.md"
   ],
   "dependencies": {
-    "@automock/adapters.nestjs": "^1.4.0",
-    "@automock/core": "^1.4.0",
-    "@automock/types": "^1.2.0",
-    "@golevelup/ts-sinon": "^0.1.0"
+    "@automock/core": "^2.0.0",
+    "@automock/types": "^2.0.0"
   },
   "devDependencies": {
-    "@nestjs/common": "^8.3.1",
-    "@nestjs/core": "^8.0.3",
-    "@nestjs/typeorm": "^8.0.3",
-    "@types/sinon": "^10.x",
-    "sinon": "^14.x",
-    "typeorm": "^0.3.11"
+    "@types/sinon": "^10.0.19",
+    "sinon": "^16.1.0"
   },
   "peerDependencies": {
-    "sinon": "*"
+    "@types/sinon": "9 - 10",
+    "sinon": "10 - 16"
   },
   "publishConfig": {
     "access": "public"

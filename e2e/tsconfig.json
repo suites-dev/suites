@@ -9,7 +9,6 @@
     "incremental": false,
     "moduleResolution": "node",
     "types": [
-      "mocha",
       "node",
       "jest"
     ],

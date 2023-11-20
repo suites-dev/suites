@@ -6,7 +6,7 @@ const config: Config = {
   id: 'adapters.nestjs',
   displayName: 'adapters.nestjs',
   collectCoverageFrom: ['src/**/*.ts'],
-  coveragePathIgnorePatterns: ['index.ts', '__test__/**/*.ts'],
+  coveragePathIgnorePatterns: ['index.ts', '__test__/assets/integration.assets.ts'],
 };
 
 export default config;

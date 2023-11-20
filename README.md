@@ -19,13 +19,13 @@ crafting test cases instead of manual mock configurations, enhancing your unit t
 
 ## Core Features
 
-🚀 **Zero-Setup Mocking** - Automatically generate mock objects, eliminate manual setup, and reduce boilerplate code.
+🚀 **Zero-Setup Mocking** - Automatically generate mock objects, eliminate manual setup, reduce boilerplate code.
 
-🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type information as real objects.
+🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects.
 
 🔄 **Consistent Test Architecture** - Tests will follow a consistent syntax and structure, making them easier to read and maintain.
 
-📈 **Optimized Performance** - By bypassing the DI container load, Automock's ensures your unit tests run significantly faster.
+📈 **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster.
 
 🌐 **Community & Support** - Join a growing community of developers.
 

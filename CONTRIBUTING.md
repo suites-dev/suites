@@ -56,8 +56,8 @@ yarn test
 
 ### Reporting Issues and Bugs
 
-Discover a bug? First, check our [Issue Tracker](#). If it's a new issue, create a detailed report including steps to
-reproduce, expected outcomes, and actual results.
+Discover a bug? First, check our [Issue Tracker](https://github.com/automock/automock/issues). If it's a new issue,
+create a detailed report including steps to reproduce, expected outcomes, and actual results.
 
 ### Feature Requests
 

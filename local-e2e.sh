@@ -16,5 +16,16 @@ done
 cp -r "$PWD/e2e/tarballs" "$PWD/e2e/jest/nestjs"
 cp -r "$PWD/e2e/tarballs" "$PWD/e2e/sinon/nestjs"
 
+cp -r "$PWD/e2e/tarballs" "$PWD/e2e/jest/inversifyjs"
+cp -r "$PWD/e2e/tarballs" "$PWD/e2e/sinon/inversifyjs"
+
 rm -rf "$PWD/e2e/sinon/nestjs/tarballs/jest.tgz"
 rm -rf "$PWD/e2e/jest/nestjs/tarballs/sinon.tgz"
+rm -rf "$PWD/e2e/sinon/inversifyjs/tarballs/jest.tgz"
+rm -rf "$PWD/e2e/jest/inversifyjs/tarballs/sinon.tgz"
+
+rm -rf "$PWD/e2e/sinon/nestjs/tarballs/adapters.inversify.tgz"
+rm -rf "$PWD/e2e/jest/nestjs/tarballs/adapters.inversify.tgz"
+
+rm -rf "$PWD/e2e/sinon/inversifyjs/tarballs/adapters.nestjs.tgz"
+rm -rf "$PWD/e2e/jest/inversifyjs/tarballs/adapters.nestjs.tgz"

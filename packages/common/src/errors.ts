@@ -4,6 +4,9 @@ export const AutomockErrorCode = {
   ADAPTER_ERROR: 'ER021',
   UNDEFINED_DEPENDENCY: 'ER30',
   UNDEFINED_TOKEN: 'ER31',
+  CAN_NOT_FIND_ENTRY_PROCESS: 'ER40',
+  CAN_NOT_PARSE_PACKAGE_JSON: 'ER41',
+  CAN_NOT_FIND_PACKAGE_JSON: 'ER42',
 };
 
 export type AutomockErrorCode = (typeof AutomockErrorCode)[keyof typeof AutomockErrorCode];

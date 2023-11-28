@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "types": ["@automock/adapters.inversify"]
+  },
+  "include": [
+    "*e2e.test.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

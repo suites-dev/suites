@@ -14,6 +14,7 @@ export class PackageResolver {
     const adapters = Object.keys(this.adapters);
 
     const automockAdapterPath = this.packageReader.resolveAutomockAdapter();
+
     if (automockAdapterPath) {
       return this.resolveAutomockAdapter(automockAdapterPath);
     }

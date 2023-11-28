@@ -30,6 +30,7 @@ function createTestbedBuilder<TClass>(
       require,
       main: require.main,
     };
+
     const packageReader = new PackageReader(adapters, nodeRequire, path, fs);
     const packageResolver = new PackageResolver(adapters, nodeRequire, packageReader);
 

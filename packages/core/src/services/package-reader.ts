@@ -17,11 +17,7 @@ export class PackageReader {
   ) {}
 
   public resolveAutomockAdapter(): AutomockAdapter | undefined {
-    const packageJsonContent = this.findAutomockAdapter();
-    if (packageJsonContent?.endsWith('undefined')) {
-      return undefined;
-    }
-    return packageJsonContent;
+    return this.findAutomockAdapter();
   }
 
   private getDependenciesFromPackageJson(): PackageJson | never {
@@ -37,6 +33,7 @@ export class PackageReader {
 
     if (this.fs.existsSync(packageJsonPath)) {
       let packageJson;
+
       try {
         packageJson = JSON.parse(this.fs.readFileSync(packageJsonPath, 'utf8'));
       } catch (error) {
@@ -44,6 +41,7 @@ export class PackageReader {
           `Failed to parse the package.json file. Reason: ${error}`
         );
       }
+
       return {
         dependencies: Object.keys(packageJson?.dependencies || {}),
         devDependencies: Object.keys(packageJson?.devDependencies || {}),
@@ -61,9 +59,14 @@ export class PackageReader {
       ...packageJsonDependencies.dependencies,
       ...packageJsonDependencies.devDependencies,
     ];
+
     const foundAdapter = Object.values(this.adapters).find((adapter: AutomockAdapter) =>
       mergedDependencies.includes(adapter)
     );
+
+    if (typeof foundAdapter === 'undefined') {
+      return undefined;
+    }
 
     return `${this.require!.main!.filename}/${foundAdapter}`;
   }
@@ -73,4 +76,5 @@ interface PackageJson {
   dependencies: string[];
   devDependencies: string[];
 }
+
 type FileSystem = typeof fs;

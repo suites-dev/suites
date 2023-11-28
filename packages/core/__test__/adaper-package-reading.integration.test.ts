@@ -63,9 +63,7 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
         });
 
         it(`should successfully resolve the adapter`, () => {
-          expect(automockPackageConfig).toEqual(
-            `${require.main?.filename}/${adapters[adapterName]}`
-          );
+          expect(automockPackageConfig).toEqual(adapters[adapterName].split('.')[1]);
         });
       }
     );

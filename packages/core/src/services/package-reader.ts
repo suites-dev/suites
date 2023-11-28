@@ -60,7 +60,7 @@ export class PackageReader {
       ...packageJsonDependencies.devDependencies,
     ];
 
-    const foundAdapter = Object.values(this.adapters).find((adapter: AutomockAdapter) =>
+    const foundAdapter = Object.values(this.adapters).find((adapter) =>
       mergedDependencies.includes(adapter)
     );
 
@@ -68,7 +68,7 @@ export class PackageReader {
       return undefined;
     }
 
-    return `${this.require!.main!.filename}/${foundAdapter}`;
+    return foundAdapter.split('.')[1];
   }
 }
 

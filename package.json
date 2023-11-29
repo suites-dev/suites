@@ -26,7 +26,7 @@
     "lint": "yarn lerna run lint --parallel"
   },
   "dependencies": {
-    "@manypkg/cli": "^0.21.0",
+    "@manypkg/cli": "^0.21.1",
     "@types/jest": "29.1.0",
     "@types/node": "^20.8.5",
     "@types/sinon": "^10.0.19",

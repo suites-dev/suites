@@ -5,7 +5,7 @@ const config: Config = {
   ...baseConfig,
   id: 'adapters.inversify',
   displayName: 'adapters.inversify',
-  collectCoverageFrom: ['src/**/*.ts', '__test__/**/*.ts'],
+  collectCoverageFrom: ['src/**/*.ts'],
   coveragePathIgnorePatterns: ['index.ts', '__test__/integration.assets.ts'],
 };
 

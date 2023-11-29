@@ -47,7 +47,10 @@ declare module '@automock/core' {
      * @param metadata the identifier metadata if exists.
      * @returns The mocked object corresponding to the provided type identifier.
      */
-    get<TDependency>(type: Type<TDependency>, metadata: IdentifierMetadata | undefined): UnitReferenceCore['get'];
+    get<TDependency>(
+      type: Type<TDependency>,
+      metadata: IdentifierMetadata | undefined
+    ): UnitReferenceCore['get'];
 
     /**
      * Retrieves a reference to the mocked object of a dependency corresponding to a string-based token.
@@ -57,7 +60,7 @@ declare module '@automock/core' {
      * @param metadata the identifier metadata if exists.
      * @returns The mocked object corresponding to the provided string-based token.
      */
-    get<TDependency>(token: string, metadata: IdentifierMetadata | undefined): UnitReferenceCore['get'];
+    get(token: string, metadata: IdentifierMetadata | undefined): UnitReferenceCore['get'];
 
     /**
      * Retrieves a reference to the mocked object of a dependency corresponding to a symbol-based token.
@@ -68,7 +71,7 @@ declare module '@automock/core' {
      * @param metadata the identifier metadata if exists.
      * @returns The mocked object corresponding to the provided symbol-based token.
      */
-    get<TDependency>(token: symbol, metadata: IdentifierMetadata | undefined): UnitReferenceCore['get'];
+    get(token: symbol, metadata: IdentifierMetadata | undefined): UnitReferenceCore['get'];
 
     /**
      * Retrieves a mocked object or a constant value of a dependency using its type, string, or symbol token.
@@ -82,7 +85,10 @@ declare module '@automock/core' {
      * @param metadata the identifier metadata if exists.
      * @returns The mocked object corresponding to the provided identifier.
      */
-    get<TDependency>(identifier: Type<TDependency> | string | symbol, metadata: IdentifierMetadata | undefined): UnitReferenceCore['get'];
+    get<TDependency>(
+      identifier: Type<TDependency> | string | symbol,
+      metadata: IdentifierMetadata | undefined
+    ): UnitReferenceCore['get'];
   }
 
   export interface TestBedBuilder<TClass> {
@@ -95,7 +101,10 @@ declare module '@automock/core' {
      * @template TDependency The type of the dependency being mocked.
      * @returns MockOverride instance for further configuration.
      */
-    mock<TDependency>(type: Type<TDependency>, metadata: IdentifierMetadata | undefined): MockOverride<TDependency, TClass>;
+    mock<TDependency>(
+      type: Type<TDependency>,
+      metadata: IdentifierMetadata | undefined
+    ): MockOverride<TDependency, TClass>;
 
     /**
      * Declares a dependency to be mocked using a string-based token.
@@ -106,7 +115,10 @@ declare module '@automock/core' {
      * @template TDependency The type of the dependency being mocked.
      * @returns MockOverride instance for further configuration.
      */
-    mock<TDependency>(token: string, metadata: IdentifierMetadata | undefined): MockOverride<TDependency, TClass>;
+    mock<TDependency>(
+      token: string,
+      metadata: IdentifierMetadata | undefined
+    ): MockOverride<TDependency, TClass>;
 
     /**
      * Declares a dependency to be mocked using a symbol-based token.
@@ -117,6 +129,9 @@ declare module '@automock/core' {
      * @template TDependency The type of the dependency being mocked.
      * @returns MockOverride instance for further configuration.
      */
-    mock<TDependency>(token: symbol, metadata: IdentifierMetadata | undefined): MockOverride<TDependency, TClass>;
+    mock<TDependency>(
+      token: symbol,
+      metadata: IdentifierMetadata | undefined
+    ): MockOverride<TDependency, TClass>;
   }
 }

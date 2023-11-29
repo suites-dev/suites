@@ -89,7 +89,7 @@ function mockDependencyNotFoundMessage(
     typeof identifier === 'string' || typeof identifier === 'symbol'
       ? String(identifier)
       : identifier.name;
-  const metadataMsg = metadata ? `, with metadata ${metadata}` : '';
+  const metadataMsg = metadata ? `, with metadata [${JSON.stringify(metadata)}]` : '';
   const details = identifierName + metadataMsg;
 
   return `Automock Warning (${AutomockErrorCode.IDENTIFIER_NOT_FOUND}): The provided dependency identifier '${details}' does not match any

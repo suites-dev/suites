@@ -1,10 +1,5 @@
 import { AutomockAdapter } from '../main';
-import {
-  CannotFindEntryProcessError,
-  CannotFindPackageJsonError,
-  CannotParsePackageJsonError,
-} from './errors';
-import { NodeRequire } from './types';
+import { AdapterResolvingFailureReason, AdapterResolvingFailure, NodeRequire } from './types';
 import path from 'path';
 import * as fs from 'fs';
 
@@ -18,39 +13,6 @@ export class PackageReader {
 
   public resolveAutomockAdapter(): AutomockAdapter | undefined {
     return this.findAutomockAdapter();
-  }
-
-  private getDependenciesFromPackageJson(): PackageJson | never {
-    if (this.require!.main === undefined) {
-      throw new CannotFindEntryProcessError(
-        `An error occurred while attempting to find the entry process for the application. Please check for potential issues in the application's configuration or setup.`
-      );
-    }
-
-    const currentDirPath = this.path.dirname(this.require.main.filename);
-    const projectPath = currentDirPath.match(/^(.*?)(?:\/node_modules|$)/)?.at(1) || '';
-    const packageJsonPath = this.path.join(projectPath, 'package.json');
-
-    if (this.fs.existsSync(packageJsonPath)) {
-      let packageJson;
-
-      try {
-        packageJson = JSON.parse(this.fs.readFileSync(packageJsonPath, 'utf8'));
-      } catch (error) {
-        throw new CannotParsePackageJsonError(
-          `Failed to parse the package.json file. Reason: ${error}`
-        );
-      }
-
-      return {
-        dependencies: Object.keys(packageJson?.dependencies || {}),
-        devDependencies: Object.keys(packageJson?.devDependencies || {}),
-      };
-    }
-
-    throw new CannotFindPackageJsonError(
-      `Failed to find the package.json file. Please check for potential issues in the application's configuration or setup.`
-    );
   }
 
   private findAutomockAdapter(): AutomockAdapter | undefined {
@@ -68,7 +30,34 @@ export class PackageReader {
       return undefined;
     }
 
-    return foundAdapter.split('.')[1];
+    return foundAdapter.split('.')[1]; //regex
+  }
+
+  private getDependenciesFromPackageJson(): PackageJson | never {
+    if (this.require!.main === undefined) {
+      throw new AdapterResolvingFailure(AdapterResolvingFailureReason.CAN_NOT_FIND_ENTRY_PROCESS);
+    }
+
+    const currentDirPath = this.path.dirname(this.require.main.filename);
+    const projectPath = currentDirPath.match(/^(.*?)(?:\/node_modules|$)/)?.at(1) || '';
+    const packageJsonPath = this.path.join(projectPath, 'package.json');
+
+    if (this.fs.existsSync(packageJsonPath)) {
+      let packageJson;
+
+      try {
+        packageJson = JSON.parse(this.fs.readFileSync(packageJsonPath, 'utf8'));
+      } catch (error) {
+        throw new AdapterResolvingFailure(AdapterResolvingFailureReason.CAN_NOT_PARSE_PACKAGE_JSON);
+      }
+
+      return {
+        dependencies: Object.keys(packageJson?.dependencies || {}),
+        devDependencies: Object.keys(packageJson?.devDependencies || {}),
+      };
+    }
+
+    throw new AdapterResolvingFailure(AdapterResolvingFailureReason.CAN_NOT_FIND_PACKAGE_JSON);
   }
 }
 

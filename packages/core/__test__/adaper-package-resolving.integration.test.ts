@@ -1,9 +1,10 @@
+import * as fs from 'fs';
+import path from 'path';
 import { PackageReader } from '../src/services/package-reader';
 import { PackageResolver } from '../src/services/package-resolver';
 import { NodeRequire } from '../src/services/types';
 import { AutomockAdapter } from '../src';
-import * as fs from 'fs';
-import path from 'path';
+
 import Mocked = jest.Mocked;
 
 describe('Automock Adapter Package Resolving Integration Test', () => {

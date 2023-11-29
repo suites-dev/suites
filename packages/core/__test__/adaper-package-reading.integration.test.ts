@@ -1,13 +1,10 @@
-import { AutomockAdapter } from '../src';
-import {
-  CannotFindEntryProcessError,
-  CannotFindPackageJsonError,
-  CannotParsePackageJsonError,
-} from '../src/services/errors';
-import { PackageReader } from '../src/services/package-reader';
-import { NodeRequire } from '../src/services/types';
 import * as fs from 'fs';
-import path from 'path';
+import * as path from 'path';
+import { AdapterNotFoundError } from '@automock/common';
+import { AutomockAdapter } from '../src';
+import { PackageReader } from '../src/services/package-reader';
+import { AdapterResolvingFailureReason, NodeRequire } from '../src/services/types';
+
 import Mocked = jest.Mocked;
 
 describe('Automock Adapter Package Resolving Integration Test', () => {
@@ -147,9 +144,7 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
 
     it('Should throw an error', () => {
       expect(() => packageReader.resolveAutomockAdapter()).toThrowError(
-        new CannotFindPackageJsonError(
-          `Failed to find the package.json file. Please check for potential issues in the application's configuration or setup.`
-        )
+        new AdapterNotFoundError(AdapterResolvingFailureReason.CAN_NOT_FIND_PACKAGE_JSON)
       );
     });
   });
@@ -194,7 +189,7 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
 
     it('Should throw an error', () => {
       expect(() => packageReader.resolveAutomockAdapter()).toThrowError(
-        new CannotParsePackageJsonError(
+        new AdapterNotFoundError(
           `Failed to parse the package.json file. Reason: ${mockParsingError}`
         )
       );
@@ -226,7 +221,7 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
 
     it('Should throw an error', () => {
       expect(() => packageReader.resolveAutomockAdapter()).toThrowError(
-        new CannotFindEntryProcessError(
+        new AdapterNotFoundError(
           `An error occurred while attempting to find the entry process for the application. Please check for potential issues in the application's configuration or setup.`
         )
       );

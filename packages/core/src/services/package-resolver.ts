@@ -1,7 +1,7 @@
 import { AutomockDependenciesAdapter } from '@automock/common';
 import { PackageReader } from './package-reader';
 import { AutomockAdapter } from '../main';
-import { NodeRequire } from './types';
+import { AdapterResolvingFailureReason, AdapterResolvingFailure, NodeRequire } from './types';
 
 export class PackageResolver {
   public constructor(
@@ -24,7 +24,7 @@ export class PackageResolver {
     );
 
     if (!adapterName) {
-      throw new Error('Adapter not found');
+      throw new AdapterResolvingFailure(AdapterResolvingFailureReason.NO_COMPATIBLE_ADAPTER_FOUND);
     }
 
     return this.resolveAutomockAdapter(adapterName);
@@ -36,7 +36,7 @@ export class PackageResolver {
     const adapter = this.require.require(this.adapters[adapterName]);
 
     if (!Object.prototype.hasOwnProperty.call(adapter, 'default')) {
-      throw new Error('Adapter has no default export');
+      throw new AdapterResolvingFailure(AdapterResolvingFailureReason.NO_DEFAULT_EXPORT);
     }
 
     return this.require.require(this.adapters[adapterName]).default as AutomockDependenciesAdapter;

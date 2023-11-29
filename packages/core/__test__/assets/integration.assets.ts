@@ -7,7 +7,7 @@ import {
   WithMetadata,
 } from '@automock/common';
 import { Type } from '@automock/types';
-import { normalizeIdentifier } from '../../src/normalize-identifier.stastic';
+import { normalizeIdentifier } from '../../src/normalize-identifier.static';
 
 interface Printer {
   print(): string;

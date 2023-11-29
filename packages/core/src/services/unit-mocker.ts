@@ -1,7 +1,7 @@
 import { Type, MockFunction } from '@automock/types';
 import { InjectablesRegistry, WithMetadata } from '@automock/common';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
-import { normalizeIdentifier } from '../normalize-identifier.stastic';
+import { normalizeIdentifier } from '../normalize-identifier.static';
 
 export interface MockedUnit<TClass> {
   container: MocksContainer;

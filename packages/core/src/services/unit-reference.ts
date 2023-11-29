@@ -116,5 +116,5 @@ Please ensure accurate spelling and correspondence between the provided token or
 injection configuration. If you are utilizing a custom token, it is essential to confirm its proper registration
 within the DI container.
 
-Refer to the docs for further information: https://autmock.dev/docs`;
+Refer to the docs for further information: https://automock.dev/docs`;
 }

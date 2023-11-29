@@ -9,7 +9,7 @@ import { UnitReference } from './unit-reference';
 import { UnitMocker } from './unit-mocker';
 import { MockOverride, TestBedBuilder, UnitTestBed } from '../public-types';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
-import { normalizeIdentifier } from '../normalize-identifier.stastic';
+import { normalizeIdentifier } from '../normalize-identifier.static';
 import { AutomockErrorCode } from '@automock/common';
 
 export class UnitBuilder {

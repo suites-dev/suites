@@ -68,4 +68,31 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
       );
     });
   });
+
+  describe('Could not resolving an adapter', () => {
+    let adapters: Record<AutomockAdapter, string>;
+    let nodeRequire: NodeRequire;
+
+    beforeAll(() => {
+      nodeRequire = {
+        main: {
+          filename: 'test',
+        },
+      } as never;
+      adapters = {};
+      packageResolver = new PackageResolver(
+        adapters,
+        nodeRequire,
+        new PackageReader(adapters, nodeRequire, path, fs)
+      );
+
+      packageReader.resolveAutomockAdapter.mockReturnValueOnce(undefined);
+    });
+
+    it('should failed resolving the adapter package and throw an error', () => {
+      expect(() => packageResolver.resolveCorrespondingAdapter()).toThrow(
+        new AdapterResolvingFailure(AdapterResolvingFailureReason.NO_COMPATIBLE_ADAPTER_FOUND)
+      );
+    });
+  });
 });

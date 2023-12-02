@@ -6,11 +6,9 @@ export interface NodeRequire {
   require(path: string): { default: AutomockDependenciesAdapter };
 }
 
-export class FailureResultBoundary<Reason> extends Error {
-  readonly reason: Reason;
-
-  constructor(reason: Reason) {
-    super();
+export class FailureResultBoundary<Reason extends string> extends Error {
+  public constructor(public readonly reason: Reason) {
+    super(reason);
     this.reason = reason;
   }
 }

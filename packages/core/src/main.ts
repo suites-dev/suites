@@ -1,3 +1,5 @@
+import path from 'path';
+import * as fs from 'fs';
 import { MockFunction, Type } from '@automock/types';
 import { TestBedBuilder } from './public-types';
 import { PackageResolver } from './services/package-resolver';
@@ -5,8 +7,6 @@ import { UnitMocker } from './services/unit-mocker';
 import { UnitBuilder } from './services/testbed-builder';
 import { PackageReader } from './services/package-reader';
 import { AdapterResolvingFailure, NodeRequire } from './services/types';
-import path from 'path';
-import * as fs from 'fs';
 import { handleAdapterError } from './adapter-error-handler.static';
 
 export const AutomockAdapter = {

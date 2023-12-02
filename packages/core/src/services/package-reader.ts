@@ -1,7 +1,7 @@
-import { AutomockAdapter } from '../main';
-import { AdapterResolvingFailureReason, AdapterResolvingFailure, NodeRequire } from './types';
 import path from 'path';
 import * as fs from 'fs';
+import { AutomockAdapter } from '../main';
+import { AdapterResolvingFailureReason, AdapterResolvingFailure, NodeRequire } from './types';
 
 export class PackageReader {
   public constructor(
@@ -30,7 +30,12 @@ export class PackageReader {
       return undefined;
     }
 
-    return foundAdapter.split('.')[1]; //regex
+    let adapterName: string | undefined;
+    const match = foundAdapter.match(/\.([^\.]+)$/);
+    if (match) {
+      adapterName = match[1];
+    }
+    return adapterName;
   }
 
   private getDependenciesFromPackageJson(): PackageJson | never {

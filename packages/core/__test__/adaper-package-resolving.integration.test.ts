@@ -2,7 +2,11 @@ import * as fs from 'fs';
 import path from 'path';
 import { PackageReader } from '../src/services/package-reader';
 import { PackageResolver } from '../src/services/package-resolver';
-import { NodeRequire } from '../src/services/types';
+import {
+  AdapterResolvingFailure,
+  AdapterResolvingFailureReason,
+  NodeRequire,
+} from '../src/services/types';
 import { AutomockAdapter } from '../src';
 
 import Mocked = jest.Mocked;
@@ -60,7 +64,7 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
 
     it('should failed resolving the adapter package and throw an error', () => {
       expect(() => packageResolver.resolveCorrespondingAdapter()).toThrow(
-        new Error('Adapter has no default export')
+        new AdapterResolvingFailure(AdapterResolvingFailureReason.NO_DEFAULT_EXPORT)
       );
     });
   });

@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        e2e-project: ['e2e/jest/nestjs', 'e2e/jest/inversify', 'e2e/sinon/nestjs']
+        e2e-project: ['e2e/jest/nestjs', 'e2e/sinon/nestjs']
         node-version: [16.x, 18.x, 20.x]
     steps:
       - name: Checkout

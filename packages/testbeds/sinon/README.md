@@ -1,31 +1,33 @@
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
+  <img width="200" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
 </p>
+
 
 <h1 align="center">Automock</h1>
 
-### [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference) &nbsp;&nbsp; [↗️ Example](https://automock.dev/docs/getting-started/examples)
+<p align="center">
+<strong>Automock enhances unit testing by automatically generating mock objects for class dependencies and creating a virtual
+test environment. This results in faster test execution and a more organized test suite structure, allowing developers
+to concentrate on crafting better test cases and improving their testing experience.</strong>
+</p>
 
-**Automock streamlines the unit testing process by auto-generating mock objects for class dependencies within
-dependency injection environments. With compatibility across various DI and testing frameworks, Automock allows you
-to focus on crafting test cases instead of manual mock configurations, enhancing your unit testing journey.**
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)
+[![ci](https://github.com/automock/automock/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
 
-## Automock's Core Features
+[↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference)
 
-🚀 **Zero-Setup Mocking** - Dive straight into testing without the hassle. Automatically generate mock
-objects, eliminate manual setup, and reduce boilerplate code.
+## Core Features
 
-🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type information as real objects.
-Write tests with confidence, knowing that type mismatches will be caught.
+🚀 **Zero-Setup Mocking** - Automatically generate mock objects, eliminate manual setup, reduce boilerplate code.
 
-🔄 **Consistent Test Architecture** - Achieve a uniform approach to unit testing.
-Your tests will follow a consistent syntax and structure, making them easier to read and maintain.
+🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects.
 
-📈 **Optimized Performance** - By bypassing the DI container load, Automock's design ensures your unit tests run 
-significantly faster. This lets you focus on development without unnecessary waits.
+📄 **Consistent Tests Structure** - Test suites will follow a consistent syntax and structure, making them easier to 
+read and maintain.
 
-🌐 **Community & Support** - Join a growing community of developers. Regular updates, comprehensive
-documentation, and responsive support to ensure you get the most out of Automock.
+📈 **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster.
+
+🌐 **Community & Support** - Join a growing community of developers.
 
 ## :package: Installation
 
@@ -51,25 +53,12 @@ $ npm i -D @automock/sinon @automock/adapters.nestjs
 
 No further configuration is required.
 
-## :arrows_counterclockwise: Migrating from v1.x to v2.0
-
-The NestJS adapter came pre-bundled in v1.x. In v2.0, you'll need to install it manually:
-
-```bash
-$ npm i -D @automock/adapters.nestjs
-```
-
-> For a detailed list of changes read Automock's [v2.0 Release Notes](https://github.com/automock/automock/releases/tag/v2.0.0).
-
-That's about it. :smile_cat:
-
-<p align="right"><a href="https://automock.dev/docs/migrating">↗️ Migration guide</a></p>
-
 ## :computer: Quick Example
 
 Take a look at the following example:
 
 Consider the following `UserService` class:
+
 ```typescript
 export class Database {
   async getUsers(): Promise<User[]> { ... }
@@ -88,8 +77,8 @@ Let's create a unit test for this class:
 
 ```typescript
 import { TestBed } from '@automock/sinon';
-import { Database, UserService } from './user.service';
 import { SinonStubbedInstance } from 'sinon';
+import { Database, UserService } from './user.service';
 import { expect } from 'chai';
 import { before } from 'mocha';
 
@@ -115,13 +104,21 @@ describe('User Service Unit Spec', () => {
 });
 ```
 
-In this example, Automock streamlines the process of creating mock objects and stubs for the `Database` dependency.
 With the use of the `TestBed`, an instance of the `UserService` class can be created with mock objects automatically
-generated for its dependencies.
+generated for its dependencies. During the test, we have direct access to the automatically generated mock object for
+the `Database` dependency (database). By stubbing the `getUsers()` method of the database mock object, we can define
+its behavior and make sure it resolves with a specific set of mock users.
 
-During the test, we have direct access to the automatically generated mock object for the `Database` dependency (database).
-By stubbing the `getUsers()` method of the database mock object, we can define its behavior and make sure it resolves with
-a specific set of mock users.
+**Automock improves upon the existing unit testing procedures of DI frameworks by creating a virtual DI container. There
+is an array of advantages to this change:**
+
+* **Speed:** By simulating the actual DI container in the testing environment, Automock speeds up execution times.
+
+* **Efficiency:** Developers are therefore able to focus on writing the test logic instead of grappling with the
+  complexities of test setup.
+
+* **Isolation:** Each test runs independently with mock implementations automatically provided, creating a
+  streamlined and interference-free testing environment.
 
 <p align="right"><a href="https://automock.dev/docs/getting-started/examples">↗️ For a full Step-by-Step example</a></p>
 

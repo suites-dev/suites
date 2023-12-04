@@ -65,8 +65,7 @@ export interface AutomockDependenciesAdapter {
 /**
  * @since 3.0.0
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IdentifierMetadata {}
+export type IdentifierMetadata = Record<string | symbol, never>;
 
 /**
  * @since 3.0.0

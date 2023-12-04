@@ -1,11 +1,11 @@
 import { LazyServiceIdentifer } from 'inversify';
 import { Type } from '@automock/types';
-import { InjectableIdentifier, WithMetadata } from '@automock/common';
+import { IdentifierMetadata, InjectableIdentifier, WithMetadata } from '@automock/common';
 import { INVERSIFY_PRESERVED_KEYS, InversifyInjectableMetadata } from './types';
 
 export type IdentifierObject = {
   identifier: InjectableIdentifier;
-  metadata: undefined | Pick<WithMetadata<{ key: string; value: unknown }>, 'metadata'>;
+  metadata: undefined | Pick<WithMetadata<IdentifierMetadata>, 'metadata'>;
 };
 
 export type IdentifierBuilder = ReturnType<typeof IdentifierBuilder>;

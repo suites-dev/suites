@@ -29,9 +29,7 @@
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
-    "dist",
-    "index.d.ts",
-    "index.js"
+    "dist"
   ],
   "dependencies": {
     "lodash.isequal": "^4.5.0"

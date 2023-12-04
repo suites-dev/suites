@@ -9,6 +9,7 @@ import {
 } from '@automock/common';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
+import { IdentifierMetadata } from './types';
 
 export type DependenciesAdapter = (
   classPropsReflector: ClassPropsReflector,
@@ -27,7 +28,7 @@ export function DependenciesAdapter(
     return {
       resolve(
         identifier: InjectableIdentifier,
-        metadata: Record<string, unknown> | undefined
+        metadata: IdentifierMetadata | undefined
       ): ClassInjectable | undefined {
         // If there is one identifier, it is enough to match, no need to check metadata
         const injectables = allInjectables.filter(

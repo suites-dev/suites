@@ -15,8 +15,8 @@ export type LazyServiceIdentifierToken = { unwrap: () => Type | string | undefin
 
 export type MetadataReflector = typeof Reflect;
 
-export type InversifyInjectableIdentifierMetadata = ClassInjectable<
-  Record<string | symbol, unknown>
->;
+export type InversifyInjectableIdentifierMetadata = ClassInjectable<Record<string | symbol, never>>;
 
 export const INVERSIFY_PRESERVED_KEYS: readonly string[] = ['inject', 'multi_inject'] as const;
+
+export type IdentifierMetadata = Record<string | symbol, unknown>;

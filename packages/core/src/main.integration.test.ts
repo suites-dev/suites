@@ -8,11 +8,7 @@ const mockFunction = jest.fn();
 const targetClass = class TClass {};
 
 describe('Main Integration Test', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('when adapter is found, should return TestBedBuilder', () => {
+  it('when package.json is not parse-able, should throw', () => {
     jest.spyOn(require, 'resolve').mockReturnValueOnce('mocked-adapter');
     jest.spyOn(require('fs'), 'existsSync').mockResolvedValueOnce(false);
 
@@ -34,7 +30,7 @@ describe('Main Integration Test', () => {
   });
 
   it('when no default export is found, should throw', () => {
-    jest.spyOn(require, 'resolve').mockReturnValueOnce('mocked-adapter');
+    jest.spyOn(Object.prototype, 'hasOwnProperty').mockImplementation(() => false);
     jest.spyOn(require('fs'), 'existsSync').mockReturnValueOnce(true);
     jest.spyOn(require('fs'), 'readFileSync').mockReturnValueOnce(JSON.stringify({}));
 

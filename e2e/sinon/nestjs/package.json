@@ -13,6 +13,8 @@
     "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/chai-as-promised": "^7.1.8",
     "@types/sinon": "*",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",

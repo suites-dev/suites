@@ -80,13 +80,13 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
       testClassTwo.bar.resolves('context');
 
       const result = await unit.test();
-      expect(result).toBe('context-baz-from-test-bar');
+      expect(result).to.equal('context-baz-from-test-bar');
     });
 
     it('then do not return the actual reflected dependencies of the injectable class', () => {
-      expect(() => unitRef.get(TestClassOne)).not.toBeInstanceOf(TestClassOne);
-      expect(() => unitRef.get(TestClassTwo)).not.toBeInstanceOf(TestClassTwo);
-      expect(() => unitRef.get(SymbolToken)).not.toBeInstanceOf(TestClassFive);
+      expect(() => unitRef.get(TestClassOne)).not.to.be.instanceof(TestClassOne);
+      expect(() => unitRef.get(TestClassTwo)).not.to.be.instanceof(TestClassTwo);
+      expect(() => unitRef.get(SymbolToken)).not.to.be.instanceof(TestClassFive);
     });
 
     it('then mock the implementation of the dependencies', async () => {
@@ -96,14 +96,16 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
       // The original 'foo' method in TestClassOne return value should be changed
       // according to the passed flag; here, always return the same value
       // because we mock the implementation of foo permanently
-      await expect(testClassOne.foo(true)).resolves.toBe('foo-from-test');
-      await expect(testClassOne.foo(false)).resolves.toBe('foo-from-test');
+      await expect(testClassOne.foo(true)).to.eventually.equal('foo-from-test');
+      await expect(testClassOne.foo(false)).to.eventually.equal('foo-from-test');
 
-      expect(logger.log).to.be.defined;
+      expect(logger.log).not.to.be.undefined;
     });
 
     it('then treat duplicate identifiers as the same reference', async () => {
-      await expect(unit.testDuplicateIdentifier()).resolves.toBe('foo-from-test<>foo-from-test');
+      await expect(unit.testDuplicateIdentifier()).to.eventually.equal(
+        'foo-from-test<>foo-from-test'
+      );
     });
 
     it('then mock the undefined reflected values and tokens', () => {
@@ -114,12 +116,12 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
 
       testClassFour.doSomething.returns('mocked');
 
-      expect(testClassFour.doSomething()).toBe('mocked');
-      expect(undefinedValue.method()).toBe(456);
+      expect(testClassFour.doSomething()).to.equal('mocked');
+      expect(undefinedValue.method()).to.equal(456);
     });
 
-    test('then throw an error when trying to resolve not existing dependency', () => {
-      expect(() => unitRef.get(ClassThatIsNotInjected)).toThrow();
+    it('then throw an error when trying to resolve not existing dependency', () => {
+      expect(() => unitRef.get(ClassThatIsNotInjected)).to.throw;
     });
   });
 });

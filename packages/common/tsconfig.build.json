@@ -7,6 +7,7 @@
     "target": "es6"
   },
   "exclude": [
+    "typings.d.ts",
     "index.ts",
     "node_modules",
     "__test__",

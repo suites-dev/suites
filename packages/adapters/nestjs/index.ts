@@ -1,3 +1,6 @@
+import 'reflect-metadata';
 import DependenciesReflector from './src';
 
-export = DependenciesReflector;
+export * from './src';
+
+export default DependenciesReflector;

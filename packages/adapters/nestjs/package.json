@@ -20,15 +20,15 @@
     }
   ],
   "scripts": {
+    "postinstall": "node postinstall.js",
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
     "test": "yarn jest",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
-    "dist",
-    "index.d.ts",
-    "index.js"
+    "postinstall.js",
+    "dist"
   ],
   "dependencies": {
     "@automock/common": "^3.0.0",

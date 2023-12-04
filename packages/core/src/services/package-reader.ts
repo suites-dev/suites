@@ -55,7 +55,6 @@ export class PackageReader {
       } catch (error) {
         throw new AdapterResolvingFailure(AdapterResolvingFailureReason.CAN_NOT_PARSE_PACKAGE_JSON);
       }
-
       return {
         dependencies: Object.keys(packageJson?.dependencies || {}),
         devDependencies: Object.keys(packageJson?.devDependencies || {}),

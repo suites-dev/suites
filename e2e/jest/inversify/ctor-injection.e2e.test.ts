@@ -27,9 +27,7 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
     )
       .mock(TestClassOne)
       .using({
-        async foo(): Promise<string> {
-          return 'foo-from-test';
-        },
+        foo: jest.fn().mockResolvedValue('foo-from-test'),
         bar(): string {
           return 'bar';
         },

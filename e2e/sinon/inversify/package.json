@@ -1,0 +1,25 @@
+{
+  "name": "automock-sinon-inversify",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "@automock/adapters.inversify": "file:tarballs/adapters.inversify.tgz",
+    "@automock/core": "file:tarballs/core.tgz",
+    "@automock/common": "file:tarballs/common.tgz",
+    "@automock/types": "file:tarballs/types.tgz",
+    "@automock/sinon": "file:tarballs/sinon.tgz"
+  },
+  "scripts": {
+    "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts"
+  },
+  "devDependencies": {
+    "@types/sinon": "*",
+    "inversify": "^6.0.2",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^10.2.0",
+    "sinon": "*",
+    "ts-mocha": "10.0.0",
+    "typescript": "^5.x"
+  }
+}

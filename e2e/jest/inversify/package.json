@@ -9,6 +9,9 @@
     "@automock/types": "file:tarballs/types.tgz",
     "@automock/jest": "file:tarballs/jest.tgz"
   },
+  "scripts": {
+    "test": "jest && tsc --noEmit"
+  },
   "devDependencies": {
     "inversify": "^6.0.2",
     "@types/jest": "^29.0.1",
@@ -16,8 +19,5 @@
     "ts-jest": "*",
     "ts-node": "*",
     "typescript": "^5.x"
-  },
-  "scripts": {
-    "test": "jest && tsc --noEmit"
   }
 }

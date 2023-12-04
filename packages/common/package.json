@@ -3,7 +3,7 @@
   "private": false,
   "version": "3.0.0",
   "license": "MIT",
-  "types": "dist/index.d.ts",
+  "types": "typings.d.ts",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
@@ -31,7 +31,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "typings.d.ts"
   ],
   "dependencies": {
     "@automock/types": "^2.0.0"

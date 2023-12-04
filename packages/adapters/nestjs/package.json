@@ -26,9 +26,7 @@
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
-    "dist",
-    "index.d.ts",
-    "index.js"
+    "dist"
   ],
   "dependencies": {
     "@automock/common": "^3.0.0",

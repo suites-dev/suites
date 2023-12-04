@@ -16,4 +16,5 @@ const NestJSAutomockDependenciesAdapter: AutomockDependenciesAdapter = ((
   ClassCtorReflector(Reflect, ParamsTokensReflector)
 );
 
+export { IdentifierMetadata } from './types';
 export default NestJSAutomockDependenciesAdapter;

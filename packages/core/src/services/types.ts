@@ -13,15 +13,27 @@ export class FailureResultBoundary<Reason extends string> extends Error {
   }
 }
 
-export const AdapterResolvingFailureReason = {
-  CAN_NOT_FIND_ENTRY_PROCESS: 'CAN_NOT_FIND_ENTRY_PROCESS',
-  CAN_NOT_PARSE_PACKAGE_JSON: 'CAN_NOT_PARSE_PACKAGE_JSON',
-  CAN_NOT_FIND_PACKAGE_JSON: 'CAN_NOT_FIND_PACKAGE_JSON',
+export const AdapterResolutionFailureReason = {
+  CANNOT_FIND_ENTRY_PROCESS: 'CANNOT_FIND_ENTRY_PROCESS',
+  CANNOT_PARSE_PACKAGE_JSON: 'CANNOT_PARSE_PACKAGE_JSON',
+  CANNOT_FIND_PACKAGE_JSON: 'CANNOT_FIND_PACKAGE_JSON',
   NO_DEFAULT_EXPORT: 'NO_DEFAULT_EXPORT',
   NO_COMPATIBLE_ADAPTER_FOUND: 'NO_COMPATIBLE_ADAPTER_FOUND',
 };
 
 export type AdapterResolvingFailureReason =
-  (typeof AdapterResolvingFailureReason)[keyof typeof AdapterResolvingFailureReason];
+  (typeof AdapterResolutionFailureReason)[keyof typeof AdapterResolutionFailureReason];
 
-export class AdapterResolvingFailure extends FailureResultBoundary<AdapterResolvingFailureReason> {}
+export class AdapterResolutionFailure extends FailureResultBoundary<AdapterResolvingFailureReason> {}
+
+export const AutomockAdapter = {
+  NestJS: 'nestjs',
+  Inversify: 'inversify',
+};
+
+export type AutomockAdapter = (typeof AutomockAdapter)[keyof typeof AutomockAdapter];
+
+export const AutomockAdapters: Record<AutomockAdapter, string> = {
+  [AutomockAdapter.NestJS]: '@automock/adapters.nestjs',
+  [AutomockAdapter.Inversify]: '@automock/adapters.inversify',
+} as const;

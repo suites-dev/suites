@@ -1,7 +1,18 @@
 import path from 'path';
 import * as fs from 'fs';
-import { AutomockAdapter } from '../main';
-import { AdapterResolvingFailureReason, AdapterResolvingFailure, NodeRequire } from './types';
+import {
+  AdapterResolutionFailureReason,
+  AdapterResolutionFailure,
+  NodeRequire,
+  AutomockAdapter,
+} from './types';
+
+type FileSystem = typeof fs;
+
+interface PackageJsonDependencies {
+  dependencies: string[];
+  devDependencies: string[];
+}
 
 export class PackageReader {
   public constructor(
@@ -38,9 +49,9 @@ export class PackageReader {
     return adapterName;
   }
 
-  private getDependenciesFromPackageJson(): PackageJson | never {
+  private getDependenciesFromPackageJson(): PackageJsonDependencies | never {
     if (this.require!.main === undefined) {
-      throw new AdapterResolvingFailure(AdapterResolvingFailureReason.CAN_NOT_FIND_ENTRY_PROCESS);
+      throw new AdapterResolutionFailure(AdapterResolutionFailureReason.CANNOT_FIND_ENTRY_PROCESS);
     }
 
     const currentDirPath = this.path.dirname(this.require.main.filename);
@@ -53,21 +64,17 @@ export class PackageReader {
       try {
         packageJson = JSON.parse(this.fs.readFileSync(packageJsonPath, 'utf8'));
       } catch (error) {
-        throw new AdapterResolvingFailure(AdapterResolvingFailureReason.CAN_NOT_PARSE_PACKAGE_JSON);
+        throw new AdapterResolutionFailure(
+          AdapterResolutionFailureReason.CANNOT_PARSE_PACKAGE_JSON
+        );
       }
+
       return {
         dependencies: Object.keys(packageJson?.dependencies || {}),
         devDependencies: Object.keys(packageJson?.devDependencies || {}),
       };
     }
 
-    throw new AdapterResolvingFailure(AdapterResolvingFailureReason.CAN_NOT_FIND_PACKAGE_JSON);
+    throw new AdapterResolutionFailure(AdapterResolutionFailureReason.CANNOT_FIND_PACKAGE_JSON);
   }
 }
-
-interface PackageJson {
-  dependencies: string[];
-  devDependencies: string[];
-}
-
-type FileSystem = typeof fs;

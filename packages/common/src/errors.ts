@@ -1,7 +1,14 @@
 export const AutomockErrorCode = {
   IDENTIFIER_NOT_FOUND: 'ER010',
+  /**
+   * @deprecated Use `ADAPTER_RESOLUTION_ERROR` instead
+   */
   ADAPTER_NOT_FOUND: 'ER020',
+  /**
+   * @deprecated Use `ADAPTER_RESOLUTION_ERROR` instead
+   */
   ADAPTER_ERROR: 'ER021',
+  ADAPTER_RESOLUTION_ERROR: 'ER022',
   UNDEFINED_DEPENDENCY: 'ER30',
   UNDEFINED_TOKEN: 'ER31',
 };
@@ -26,10 +33,20 @@ export class IdentifierNotFoundError extends AutomockError {
   }
 }
 
+/**
+ * @deprecated Use `AdapterResolutionError` instead
+ */
 export class AdapterNotFoundError extends AutomockError {
   public constructor(message: string) {
     super(AutomockErrorCode.ADAPTER_NOT_FOUND, 'No compatible adapter found', message);
     this.name = 'AdapterNotFoundError';
+  }
+}
+
+export class AdapterResolutionError extends AutomockError {
+  public constructor(message: string) {
+    super(AutomockErrorCode.ADAPTER_RESOLUTION_ERROR, 'Adapter resolution error', message);
+    this.name = 'AdapterResolutionError';
   }
 }
 

@@ -6,19 +6,8 @@ import { PackageResolver } from './services/package-resolver';
 import { UnitMocker } from './services/unit-mocker';
 import { UnitBuilder } from './services/testbed-builder';
 import { PackageReader } from './services/package-reader';
-import { AdapterResolvingFailure, NodeRequire } from './services/types';
+import { AdapterResolutionFailure, AutomockAdapters, NodeRequire } from './services/types';
 import { handleAdapterError } from './adapter-error-handler.static';
-
-export const AutomockAdapter = {
-  NestJS: 'nestjs',
-  Inversify: 'inversify',
-};
-export type AutomockAdapter = (typeof AutomockAdapter)[keyof typeof AutomockAdapter];
-
-export const AutomockAdapters: Record<AutomockAdapter, string> = {
-  [AutomockAdapter.NestJS]: '@automock/adapters.nestjs',
-  [AutomockAdapter.Inversify]: '@automock/adapters.inversify',
-} as const;
 
 function createTestbedBuilder<TClass>(
   mockFn: MockFunction<unknown>,
@@ -39,7 +28,7 @@ function createTestbedBuilder<TClass>(
 
     return UnitBuilder.create<TClass>(mockFn, unitMocker, adapter, console);
   } catch (error: unknown) {
-    if (error instanceof AdapterResolvingFailure) {
+    if (error instanceof AdapterResolutionFailure) {
       handleAdapterError(error);
     }
 

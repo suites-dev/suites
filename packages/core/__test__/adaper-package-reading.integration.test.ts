@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { AutomockAdapter } from '../src';
 import { PackageReader } from '../src/services/package-reader';
 import {
-  AdapterResolvingFailure,
-  AdapterResolvingFailureReason,
+  AdapterResolutionFailure,
+  AdapterResolutionFailureReason,
+  AutomockAdapter,
   NodeRequire,
 } from '../src/services/types';
 
@@ -17,52 +17,29 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
 
   describe('Resolving an adapter with default export', () => {
     describe.each([[AutomockAdapter.NestJS], [AutomockAdapter.Inversify]])(
-      'When adapter %s is available',
+      'when adapter %s is available',
       (adapterName) => {
         let automockPackageConfig: AutomockAdapter | undefined;
         let adapters: Record<AutomockAdapter, string>;
         let require: NodeRequire;
 
         beforeEach(() => {
-          require = {
-            resolve: jest.fn(),
-            require: jest.fn(),
-            main: {
-              filename: 'test',
-            },
-          } as never;
-
-          path = {
-            dirname: jest.fn(),
-            join: jest.fn(),
-          } as never;
-
-          fileSystem = {
-            existsSync: jest.fn(),
-            readFileSync: jest.fn(),
-          } as never;
-
-          adapters = {
-            [adapterName]: `@automock/adapters.${adapterName}`,
-          };
+          require = { resolve: jest.fn(), require: jest.fn(), main: { filename: 'test' } } as never;
+          path = { dirname: jest.fn(), join: jest.fn() } as never;
+          fileSystem = { existsSync: jest.fn(), readFileSync: jest.fn() } as never;
+          adapters = { [adapterName]: `@automock/adapters.${adapterName}` };
           packageReader = new PackageReader(adapters, require, path, fileSystem);
 
           path.dirname.mockReturnValueOnce('mock-package.json');
           fileSystem.existsSync.mockReturnValueOnce(true);
           fileSystem.readFileSync.mockReturnValueOnce(
-            Buffer.from(
-              JSON.stringify({
-                dependencies: {
-                  [adapters[adapterName]]: 'version.10',
-                },
-              })
-            )
+            Buffer.from(JSON.stringify({ dependencies: { [adapters[adapterName]]: 'version.10' } }))
           );
 
           automockPackageConfig = packageReader.resolveAutomockAdapter();
         });
 
-        it(`should successfully resolve the adapter`, () => {
+        it('should successfully resolve the adapter', () => {
           expect(automockPackageConfig).toEqual(adapters[adapterName].split('.')[1]);
         });
       }
@@ -78,9 +55,7 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
       require = {
         resolve: jest.fn(),
         require: jest.fn(),
-        main: {
-          filename: 'test',
-        },
+        main: { filename: 'test' },
       } as never;
 
       path = {
@@ -92,12 +67,11 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
         existsSync: jest.fn(),
         readFileSync: jest.fn(),
       } as never;
+
       path.dirname.mockReturnValueOnce('mock-package.json');
       fileSystem.existsSync.mockReturnValueOnce(true);
 
-      adapters = {
-        adapterName: `@automock/adapters.adapterName`,
-      };
+      adapters = { adapterName: '@automock/adapters.adapterName' };
       packageReader = new PackageReader(adapters, require, path, fileSystem);
 
       fileSystem.readFileSync.mockReturnValueOnce(
@@ -113,12 +87,12 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
       automockPackageConfig = packageReader.resolveAutomockAdapter();
     });
 
-    it('Should not resolve the adapter', () => {
-      expect(automockPackageConfig).not.toBeDefined();
+    it('should not resolve the adapter', () => {
+      expect(automockPackageConfig).toBeUndefined();
     });
   });
 
-  describe('Resolving a non existing package JSON', () => {
+  describe('Resolving a non existing package.json file', () => {
     let require: NodeRequire;
 
     beforeEach(() => {
@@ -145,14 +119,14 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
       packageReader = new PackageReader({}, require, path, fileSystem);
     });
 
-    it('Should throw an error', () => {
+    it('should throw an error', () => {
       expect(() => packageReader.resolveAutomockAdapter()).toThrowError(
-        new AdapterResolvingFailure(AdapterResolvingFailureReason.CAN_NOT_FIND_PACKAGE_JSON)
+        new AdapterResolutionFailure(AdapterResolutionFailureReason.CANNOT_FIND_PACKAGE_JSON)
       );
     });
   });
 
-  describe('Cannot parse package JSON', () => {
+  describe('cannot parse package.json file JSON', () => {
     let adapters: Record<AutomockAdapter, string>;
     let require: NodeRequire;
     let mockParsingError: Error;
@@ -190,14 +164,14 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
       packageReader = new PackageReader(adapters, require, path, fileSystem);
     });
 
-    it('Should throw an error', () => {
+    it('should throw an error', () => {
       expect(() => packageReader.resolveAutomockAdapter()).toThrowError(
-        new AdapterResolvingFailure(AdapterResolvingFailureReason.CAN_NOT_PARSE_PACKAGE_JSON)
+        new AdapterResolutionFailure(AdapterResolutionFailureReason.CANNOT_PARSE_PACKAGE_JSON)
       );
     });
   });
 
-  describe('When entry process is not defined', () => {
+  describe('when the entry process is not defined', () => {
     let require: NodeRequire;
 
     beforeEach(() => {
@@ -220,9 +194,9 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
       packageReader = new PackageReader({}, require, path, fileSystem);
     });
 
-    it('Should throw an error', () => {
+    it('should throw an error', () => {
       expect(() => packageReader.resolveAutomockAdapter()).toThrowError(
-        new AdapterResolvingFailure(AdapterResolvingFailureReason.CAN_NOT_FIND_ENTRY_PROCESS)
+        new AdapterResolutionFailure(AdapterResolutionFailureReason.CANNOT_FIND_ENTRY_PROCESS)
       );
     });
   });

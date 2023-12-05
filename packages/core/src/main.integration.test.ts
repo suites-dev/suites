@@ -1,21 +1,18 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { AdapterNotFoundError } from '@automock/common/src/errors';
-import { AutomockTestBuilder } from '.';
-import { MapErrorToMessage } from './adapter-error-handler.static';
-import { AdapterResolvingFailureReason } from './services/types';
+import { AdapterResolutionError } from '@automock/common';
+import { AutomockTestBuilder } from './main';
 
 const mockFunction = jest.fn();
 const targetClass = class TClass {};
 
 describe('Main Integration Test', () => {
-  it('when package.json is not parse-able, should throw', () => {
+  test('when package.json is not parseable, then throw an error', () => {
     jest.spyOn(require, 'resolve').mockReturnValueOnce('mocked-adapter');
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     jest.spyOn(require('fs'), 'existsSync').mockResolvedValueOnce(false);
 
     expect(() => AutomockTestBuilder(mockFunction)(targetClass)).toThrowError(
-      new AdapterNotFoundError(
-        MapErrorToMessage[AdapterResolvingFailureReason.CAN_NOT_PARSE_PACKAGE_JSON]
-      )
+      AdapterResolutionError
     );
   });
 
@@ -23,9 +20,7 @@ describe('Main Integration Test', () => {
     jest.spyOn(require, 'resolve').mockReturnValueOnce('mocked-adapter');
 
     expect(() => AutomockTestBuilder(mockFunction)(targetClass)).toThrowError(
-      new AdapterNotFoundError(
-        MapErrorToMessage[AdapterResolvingFailureReason.CAN_NOT_FIND_PACKAGE_JSON]
-      )
+      AdapterResolutionError
     );
   });
 
@@ -35,7 +30,7 @@ describe('Main Integration Test', () => {
     jest.spyOn(require('fs'), 'readFileSync').mockReturnValueOnce(JSON.stringify({}));
 
     expect(() => AutomockTestBuilder(mockFunction)(targetClass)).toThrowError(
-      new AdapterNotFoundError(MapErrorToMessage[AdapterResolvingFailureReason.NO_DEFAULT_EXPORT])
+      AdapterResolutionError
     );
   });
 });

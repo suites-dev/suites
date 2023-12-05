@@ -42,7 +42,7 @@ export class PackageReader {
     }
 
     let adapterName: string | undefined;
-    const match = foundAdapter.match(/\.([^\.]+)$/);
+    const match = foundAdapter.match(/^@automock\/adapters\.([a-zA-Z0-9_]+)$/);
     if (match) {
       adapterName = match[1];
     }

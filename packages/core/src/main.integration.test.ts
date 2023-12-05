@@ -8,7 +8,6 @@ const targetClass = class TClass {};
 describe('Main Integration Test', () => {
   test('when package.json is not parseable, then throw an error', () => {
     jest.spyOn(require, 'resolve').mockReturnValueOnce('mocked-adapter');
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     jest.spyOn(require('fs'), 'existsSync').mockResolvedValueOnce(false);
 
     expect(() => AutomockTestBuilder(mockFunction)(targetClass)).toThrowError(

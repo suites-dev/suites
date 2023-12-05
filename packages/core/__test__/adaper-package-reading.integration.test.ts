@@ -28,6 +28,7 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
           path = { dirname: jest.fn(), join: jest.fn() } as never;
           fileSystem = { existsSync: jest.fn(), readFileSync: jest.fn() } as never;
           adapters = { [adapterName]: `@automock/adapters.${adapterName}` };
+
           packageReader = new PackageReader(adapters, require, path, fileSystem);
 
           path.dirname.mockReturnValueOnce('mock-package.json');
@@ -52,21 +53,9 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
     let require: NodeRequire;
 
     beforeEach(() => {
-      require = {
-        resolve: jest.fn(),
-        require: jest.fn(),
-        main: { filename: 'test' },
-      } as never;
-
-      path = {
-        dirname: jest.fn(),
-        join: jest.fn(),
-      } as never;
-
-      fileSystem = {
-        existsSync: jest.fn(),
-        readFileSync: jest.fn(),
-      } as never;
+      require = { resolve: jest.fn(), require: jest.fn(), main: { filename: 'test' } } as never;
+      path = { dirname: jest.fn(), join: jest.fn() } as never;
+      fileSystem = { existsSync: jest.fn(), readFileSync: jest.fn() } as never;
 
       path.dirname.mockReturnValueOnce('mock-package.json');
       fileSystem.existsSync.mockReturnValueOnce(true);
@@ -96,22 +85,9 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
     let require: NodeRequire;
 
     beforeEach(() => {
-      require = {
-        resolve: jest.fn(),
-        require: jest.fn(),
-        main: {
-          filename: 'test',
-        },
-      } as never;
-
-      path = {
-        dirname: jest.fn(),
-        join: jest.fn(),
-      } as never;
-
-      fileSystem = {
-        existsSync: jest.fn(),
-      } as never;
+      require = { resolve: jest.fn(), require: jest.fn(), main: { filename: 'test' } } as never;
+      path = { dirname: jest.fn(), join: jest.fn() } as never;
+      fileSystem = { existsSync: jest.fn() } as never;
 
       path.dirname.mockReturnValueOnce('mock-package.json');
       fileSystem.existsSync.mockReturnValueOnce(false);
@@ -132,28 +108,12 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
     let mockParsingError: Error;
 
     beforeEach(() => {
-      require = {
-        resolve: jest.fn(),
-        require: jest.fn(),
-        main: {
-          filename: 'test',
-        },
-      } as never;
-
-      path = {
-        dirname: jest.fn(),
-        join: jest.fn(),
-      } as never;
-
-      fileSystem = {
-        existsSync: jest.fn(),
-        readFileSync: jest.fn(),
-      } as never;
+      require = { resolve: jest.fn(), require: jest.fn(), main: { filename: 'test' } } as never;
+      path = { dirname: jest.fn(), join: jest.fn() } as never;
+      fileSystem = { existsSync: jest.fn(), readFileSync: jest.fn() } as never;
 
       mockParsingError = new Error('Mock Parsing Error');
-      adapters = {
-        adapterName: `@automock/adapters.adapterName`,
-      };
+      adapters = { adapterName: `@automock/adapters.adapterName` };
 
       path.dirname.mockReturnValueOnce('mock-package.json');
       fileSystem.existsSync.mockReturnValueOnce(true);
@@ -175,21 +135,9 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
     let require: NodeRequire;
 
     beforeEach(() => {
-      require = {
-        resolve: jest.fn(),
-        require: jest.fn(),
-        main: undefined,
-      } as never;
-
-      path = {
-        dirname: jest.fn(),
-        join: jest.fn(),
-      } as never;
-
-      fileSystem = {
-        existsSync: jest.fn(),
-        readFileSync: jest.fn(),
-      } as never;
+      require = { resolve: jest.fn(), require: jest.fn(), main: undefined } as never;
+      path = { dirname: jest.fn(), join: jest.fn() } as never;
+      fileSystem = { existsSync: jest.fn(), readFileSync: jest.fn() } as never;
 
       packageReader = new PackageReader({}, require, path, fileSystem);
     });

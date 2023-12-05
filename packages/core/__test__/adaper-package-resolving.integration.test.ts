@@ -20,7 +20,6 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
 
     beforeAll(() => {
       nodeRequire = { resolve: require.resolve, require, main: require.main };
-
       packageReader = { resolveAutomockAdapter: jest.fn(), fs, path } as never;
 
       packageReader.resolveAutomockAdapter.mockReturnValueOnce('test');

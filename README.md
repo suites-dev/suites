@@ -5,9 +5,10 @@
 <h1 align="center">Automock</h1>
 
 <p align="center">
-<strong>Automock streamlines the unit testing process by auto-generating mock objects for class dependencies within dependency
-injection environments. With compatibility across various DI and testing frameworks, you can focus on
-crafting test cases instead of manual mock configurations, enhancing your unit testing journey.</strong>
+<strong>Automock elevates unit testing by auto-generating mocks for class dependencies and creating a virtual DI container,
+ensuring faster execution and a consistent test suite structure. Compatible with various DI and testing
+frameworks, it allows developers to focus on crafting better test cases, moving away from manual mock setup and 
+towards a better testing experience.</strong>
 </p>
 
 [![npm downloads](https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest)](https://npmjs.org/package/@automock/jest "View this project on npm")
@@ -23,7 +24,8 @@ crafting test cases instead of manual mock configurations, enhancing your unit t
 
 🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects.
 
-🔄 **Consistent Test Architecture** - Tests will follow a consistent syntax and structure, making them easier to read and maintain.
+📄 **Consistent Tests Structure** - Test suites will follow a consistent syntax and structure, making them easier to 
+read and maintain.
 
 📈 **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster.
 

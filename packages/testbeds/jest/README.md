@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
+  <img width="200" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
 </p>
 
 
@@ -7,9 +7,9 @@
 
 <p align="center">
 <strong>Automock elevates unit testing by auto-generating mocks for class dependencies and creating a virtual DI container,
-ensuring faster execution and a consistent test suite structure. Its compatibility with various DI and testing
-frameworks allows developers to focus on crafting better test cases, moving away from manual mock setup and towards a
-smoother testing experience.</strong>
+ensuring faster execution and a consistent test suite structure. Compatible with various DI and testing
+frameworks, it allows developers to focus on crafting better test cases, moving away from manual mock setup and 
+towards a better testing experience.</strong>
 </p>
 
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)
@@ -23,7 +23,8 @@ smoother testing experience.</strong>
 
 🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects.
 
-🔄 **Consistent Test Architecture** - Tests will follow a consistent syntax and structure, making them easier to read and maintain.
+📄 **Consistent Tests Structure** - Test suites will follow a consistent syntax and structure, making them easier to 
+read and maintain.
 
 📈 **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster.
 

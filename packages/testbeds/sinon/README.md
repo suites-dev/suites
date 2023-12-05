@@ -1,14 +1,15 @@
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/omermorad/automock/master/logo.png" alt="Logo" />
+  <img width="200" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
 </p>
 
 
 <h1 align="center">Automock</h1>
 
 <p align="center">
-<strong>Automock streamlines the unit testing process by auto-generating mock objects for class dependencies within dependency
-injection environments. With compatibility across various DI and testing frameworks, you can focus on
-crafting test cases instead of manual mock configurations, enhancing your unit testing journey.</strong>
+<strong>Automock elevates unit testing by auto-generating mocks for class dependencies and creating a virtual DI container,
+ensuring faster execution and a consistent test suite structure. Compatible with various DI and testing
+frameworks, it allows developers to focus on crafting better test cases, moving away from manual mock setup and 
+towards a better testing experience.</strong>
 </p>
 
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)
@@ -22,7 +23,8 @@ crafting test cases instead of manual mock configurations, enhancing your unit t
 
 🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects.
 
-🔄 **Consistent Test Architecture** - Tests will follow a consistent syntax and structure, making them easier to read and maintain.
+📄 **Consistent Tests Structure** - Test suites will follow a consistent syntax and structure, making them easier to 
+read and maintain.
 
 📈 **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster.
 
@@ -76,8 +78,8 @@ Let's create a unit test for this class:
 
 ```typescript
 import { TestBed } from '@automock/sinon';
-import { Database, UserService } from './user.service';
 import { SinonStubbedInstance } from 'sinon';
+import { Database, UserService } from './user.service';
 import { expect } from 'chai';
 import { before } from 'mocha';
 

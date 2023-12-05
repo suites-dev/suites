@@ -6,9 +6,10 @@
 <h1 align="center">Automock</h1>
 
 <p align="center">
-<strong>Automock streamlines the unit testing process by auto-generating mock objects for class dependencies within dependency
-injection environments. With compatibility across various DI and testing frameworks, you can focus on
-crafting test cases instead of manual mock configurations, enhancing your unit testing journey.</strong>
+<strong>Automock elevates unit testing by auto-generating mocks for class dependencies and creating a virtual DI container,
+ensuring faster execution and a consistent test suite structure. Its compatibility with various DI and testing
+frameworks allows developers to focus on crafting better test cases, moving away from manual mock setup and towards a
+smoother testing experience.</strong>
 </p>
 
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)

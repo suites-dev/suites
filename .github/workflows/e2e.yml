@@ -58,18 +58,21 @@ jobs:
 
       - name: Setup and Test
         run: |
-          framework=${{ matrix.e2e-project%/* }}
-          library=${{ matrix.e2e-project#*/ }}
-          cp -r "$PWD/e2e/tarballs" "$PWD/e2e/$library/$framework"
+          IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
+          echo "FRAMEWORK=$framework" >> $GITHUB_ENV
+          echo "LIBRARY=$library" >> $GITHUB_ENV
+      - name: Execute Test
+        run: |
+          cp -r "$PWD/e2e/tarballs" "$PWD/e2e/$LIBRARY/$FRAMEWORK"
           
-          # Remove the unnecessary tarballs based on the framework and library
-          if [ "$library" = "jest" ]; then
-            rm -rf "$PWD/e2e/$library/$framework/tarballs/sinon.tgz"
-          elif [ "$library" = "sinon" ]; then
-            rm -rf "$PWD/e2e/$library/$framework/tarballs/jest.tgz"
+          # Remove the unnecessary tarballs based on the library
+          if [ "$LIBRARY" = "jest" ]; then
+            rm -rf "$PWD/e2e/$LIBRARY/$FRAMEWORK/tarballs/sinon.tgz"
+          elif [ "$LIBRARY" = "sinon" ]; then
+            rm -rf "$PWD/e2e/$LIBRARY/$FRAMEWORK/tarballs/jest.tgz"
           fi
 
-          rm -rf "$PWD/e2e/$library/$framework/node_modules"
-          npm install --prefix "$PWD/e2e/$library/$framework" --no-cache --no-package-lock
-          npm test --prefix "$PWD/e2e/$library/$framework"
+          rm -rf "$PWD/e2e/$LIBRARY/$FRAMEWORK/node_modules"
+          npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
+          npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"
         working-directory: ${{ github.workspace }}

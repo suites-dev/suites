@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        e2e-project: ['e2e/jest/nestjs', 'e2e/jest/inversify', 'e2e/sinon/nestjs']
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'jest/inversify', 'sinon/inversify']
         node-version: [16.x, 18.x, 20.x]
     steps:
       - name: Checkout
@@ -40,30 +40,36 @@ jobs:
       - name: Pack
         run: lerna exec -- npm pack
 
-      - name: Move Tarballs
+      - name: Prepare Tarballs
         run: |
           mkdir -p $PWD/e2e/tarballs
           lerna exec -- mv "*.tgz" $PWD/e2e/tarballs
 
-      - name: Extract & Copy Tarballs
+      - name: Rename Tarballs
         run: |
           for file in $PWD/e2e/tarballs/automock-*.tgz; do
             [[ $file =~ automock-(.+)-[0-9]+\.[0-9]+\.[0-9]+(-dev\.[0-9]+)?\.tgz ]]
             new_name="${BASH_REMATCH[1]}.tgz"
-
-            mv "$file" $PWD/e2e/tarballs/$new_name
+            mv "$file" "$PWD/e2e/tarballs/$new_name"
           done
 
-          cp -r "$PWD/e2e/tarballs" "$PWD/e2e/jest/nestjs"
-          cp -r "$PWD/e2e/tarballs" "$PWD/e2e/sinon/nestjs"
+      - name: Remove Source Code
+        run: rm -rf packages
 
-          rm -rf "$PWD/e2e/sinon/nestjs/tarballs/jest.tgz"
-          rm -rf "$PWD/e2e/jest/nestjs/tarballs/sinon.tgz"
+      - name: Setup and Test
+        run: |
+          framework=${{ matrix.e2e-project%/* }}
+          library=${{ matrix.e2e-project#*/ }}
+          cp -r "$PWD/e2e/tarballs" "$PWD/e2e/$library/$framework"
+          
+          # Remove the unnecessary tarballs based on the framework and library
+          if [ "$library" = "jest" ]; then
+            rm -rf "$PWD/e2e/$library/$framework/tarballs/sinon.tgz"
+          elif [ "$library" = "sinon" ]; then
+            rm -rf "$PWD/e2e/$library/$framework/tarballs/jest.tgz"
+          fi
 
-      - name: Install Packages in E2E
-        run: npm install --no-package-lock --no-cache
-        working-directory: ${{ matrix.e2e-project }}
-
-      - name: Test e2e
-        run: npm run test
-        working-directory: ${{ matrix.e2e-project }}
+          rm -rf "$PWD/e2e/$library/$framework/node_modules"
+          npm install --prefix "$PWD/e2e/$library/$framework" --no-cache --no-package-lock
+          npm test --prefix "$PWD/e2e/$library/$framework"
+        working-directory: ${{ github.workspace }}

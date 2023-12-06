@@ -2,29 +2,32 @@ import { AdapterResolutionError } from '@automock/common';
 import { AdapterResolutionFailure, AdapterResolutionFailureReason } from './services/types';
 
 export function handleAdapterError(error: AdapterResolutionFailure) {
-  const template = (errorMessage: string) => `
-Automock encountered an error while resolving the adapter required for seamless integration with your dependency injection framework:
-${errorMessage}
+  const constructError = (errorMessage: string) => `
+Automock encountered an error while attempting to resolve the adapter required for integration with your framework; ${errorMessage}
 For detailed information, please refer to the documentation: https://automock.dev/docs`;
 
   if (MapErrorToMessage[error.reason]) {
-    throw new AdapterResolutionError(template(MapErrorToMessage[error.reason]));
+    throw new AdapterResolutionError(
+      constructError(`${MapErrorToMessage[error.reason]} (${error.reason})`)
+    );
   }
 
   throw new AdapterResolutionError(
-    template(MapErrorToMessage[AdapterResolutionFailureReason.NO_COMPATIBLE_ADAPTER_FOUND])
+    constructError(MapErrorToMessage[AdapterResolutionFailureReason.NO_COMPATIBLE_ADAPTER_FOUND])
   );
 }
 
 export const MapErrorToMessage = {
   [AdapterResolutionFailureReason.CANNOT_FIND_ENTRY_PROCESS]: `
-Automock encountered an issue while trying to locate the entry process for the adapter. Please ensure that the adapter is correctly installed.`,
+Cannot locate the entry process`,
   [AdapterResolutionFailureReason.CANNOT_PARSE_PACKAGE_JSON]: `
-An error occurred while parsing the package.json file for the adapter.`,
+Error parsing package.json file`,
   [AdapterResolutionFailureReason.CANNOT_FIND_PACKAGE_JSON]: `
-Automock couldn't find any package.json file associated with the adapter.`,
+Cannot locate any package.json file`,
   [AdapterResolutionFailureReason.NO_DEFAULT_EXPORT]: `
-The installed adapter was found, but it doesn't have a default export.`,
+There seems to be an issue with importing the corresponding framework adapter
+A runtime error has occurred. Please report this issue to us at https://github.com/automock/automock/issues`,
   [AdapterResolutionFailureReason.NO_COMPATIBLE_ADAPTER_FOUND]: `
-It appears that you haven't installed a compatible adapter package. Please install the appropriate adapter for your dependency injection framework.`,
+It appears that a compatible adapter package has not been installed.
+Please ensure that you have installed the correct adapter for your dependency injection framework`,
 };

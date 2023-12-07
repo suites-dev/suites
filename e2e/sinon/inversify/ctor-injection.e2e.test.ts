@@ -6,7 +6,7 @@ import {
   ClassThatIsNotInjected,
   Foo,
   Logger,
-  NestJSTestClass,
+  InversifyJSTestClass,
   SymbolToken,
   SymbolTokenSecond,
   TestClassFive,
@@ -14,6 +14,7 @@ import {
   TestClassOne,
   TestClassThree,
   TestClassTwo,
+  Bar,
 } from './e2e-assets';
 import { SinonStubbedInstance } from 'sinon';
 import { expect } from 'chai';
@@ -23,12 +24,14 @@ import * as chaiAsPromised from 'chai-as-promised';
 import sinon = require('sinon');
 chai.use(chaiAsPromised);
 
-describe('Automock Sinon / NestJS E2E Test Ctor', () => {
-  let unit: NestJSTestClass;
+describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
+  let unit: InversifyJSTestClass;
   let unitRef: UnitReference;
 
   before(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.create<NestJSTestClass>(NestJSTestClass)
+    const { unitRef: ref, unit: underTest } = TestBed.create<InversifyJSTestClass>(
+      InversifyJSTestClass
+    )
       .mock(TestClassOne)
       .using({
         foo: sinon.stub().resolves('foo-from-test'),
@@ -36,12 +39,14 @@ describe('Automock Sinon / NestJS E2E Test Ctor', () => {
           return 'bar';
         },
       })
-      .mock<string>('CONSTANT_VALUE')
-      .using('arbitrary-string')
-      .mock('UNDEFINED')
-      .using({ method: () => 456 })
       .mock<Logger>('LOGGER')
       .using({ log: () => 'baz-from-test' })
+      .mock('UNDEFINED')
+      .using({ method: () => 456 })
+      .mock<Bar>('BarToken', { name: 'someTarget' })
+      .using({})
+      .mock<string>('CONSTANT_VALUE')
+      .using('arbitrary-string')
       .mock<TestClassFive>(SymbolToken)
       .using({ doSomething: () => 'mocked' })
       .compile();
@@ -52,14 +57,14 @@ describe('Automock Sinon / NestJS E2E Test Ctor', () => {
 
   describe('when compiling the builder and turning into testing unit', () => {
     it('then the unit should an instance of the class under test', () => {
-      expect(unit).to.be.instanceof(NestJSTestClass);
+      expect(unit).to.be.instanceof(InversifyJSTestClass);
     });
 
     it('then successfully resolve the dependencies of the tested classes', () => {
       expect(() => unitRef.get<{ log: () => void }>('LOGGER')).not.to.be.undefined;
       expect(() => unitRef.get('UNDEFINED')).not.to.be.undefined;
       expect(() => unitRef.get('UNDEFINED_SECOND')).not.to.be.undefined;
-      expect(() => unitRef.get(TestClassFour)).not.to.be.undefined;
+      expect(() => unitRef.get(TestClassFour, { canThrow: true })).not.to.be.undefined;
       expect(() => unitRef.get(TestClassThree)).not.to.be.undefined;
       expect(() => unitRef.get(Foo)).not.to.be.undefined;
       expect(() => unitRef.get(TestClassTwo)).not.to.be.undefined;
@@ -86,10 +91,21 @@ describe('Automock Sinon / NestJS E2E Test Ctor', () => {
 
     it('then mock the implementation of the dependencies', async () => {
       const testClassOne: SinonStubbedInstance<TestClassOne> = unitRef.get(TestClassOne);
-      testClassOne.foo.withArgs(true).resolves('foo-from-test');
+      const logger = unitRef.get<Logger>('LOGGER');
 
+      // The original 'foo' method in TestClassOne return value should be changed
+      // according to the passed flag; here, always return the same value
+      // because we mock the implementation of foo permanently
       await expect(testClassOne.foo(true)).to.eventually.equal('foo-from-test');
       await expect(testClassOne.foo(false)).to.eventually.equal('foo-from-test');
+
+      expect(logger.log).not.to.be.undefined;
+    });
+
+    it('then treat duplicate identifiers as the same reference', async () => {
+      await expect(unit.testDuplicateIdentifier()).to.eventually.equal(
+        'foo-from-test<>foo-from-test'
+      );
     });
 
     it('then mock the undefined reflected values and tokens', () => {

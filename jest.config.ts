@@ -6,6 +6,7 @@ const config: Config.InitialOptions = {
   projects: [
     '<rootDir>/packages/core',
     '<rootDir>/packages/adapters/nestjs',
+    '<rootDir>/packages/adapters/inversify',
     '<rootDir>/packages/testbeds/jest',
     '<rootDir>/packages/testbeds/sinon',
   ],

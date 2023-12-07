@@ -1,13 +1,29 @@
+import { AutomockDependenciesAdapter, ClassInjectable } from '@automock/common';
 import { DependenciesAdapter } from './dependencies-adapter';
-import { ClassInjectable } from '@automock/common';
+import { IdentifierMetadata } from './types';
 
-class TargetClassToReflect {}
-class ArbitraryClassAsIdentifier {}
+const classPropsReflector = { reflectInjectables: jest.fn() };
+const classCtorReflector = { reflectInjectables: jest.fn() };
 
-const InjectablesFixture = [
+const dependenciesAdapter: AutomockDependenciesAdapter = DependenciesAdapter(
+  classPropsReflector,
+  classCtorReflector
+);
+
+const targetClass = class TargetClassToReflect {};
+const arbitraryClassAsIdentifier = class ArbitraryClassAsIdentifier {};
+const metadata: IdentifierMetadata = { metadataKey: 'arbitrary' };
+
+const injectablesFixture: ClassInjectable[] = [
   {
     identifier: 'Interface',
-    metadata: { metadataKey: 'arbitrary' },
+    metadata: { metadataKey: 'arbitrary' } as never,
+    value: Object,
+    type: 'PARAM',
+  },
+  {
+    identifier: 'Interface',
+    metadata: { metadataKey: 'anotherOne' } as never,
     value: Object,
     type: 'PARAM',
   },
@@ -17,98 +33,71 @@ const InjectablesFixture = [
     type: 'PARAM',
   },
   {
-    identifier: ArbitraryClassAsIdentifier,
-    metadata: { metadataKey: 'arbitrary' },
+    identifier: arbitraryClassAsIdentifier,
+    metadata: { metadataKey: 'arbitrary' } as never,
     value: Object,
     type: 'PARAM',
   },
   {
-    identifier: ArbitraryClassAsIdentifier,
+    identifier: arbitraryClassAsIdentifier,
     value: Object,
     type: 'PARAM',
   },
   {
     identifier: 'IdentifierWithMetadata',
-    metadata: { tagged: 'value' },
+    metadata: { tagged: 'value' } as never,
     value: Object,
     type: 'PARAM',
   },
 ];
 
 describe('Dependencies Adapter Unit Spec', () => {
-  const reflectorFactory = DependenciesAdapter(
-    { reflectInjectables: () => [] },
-    {
-      reflectInjectables: () => InjectablesFixture as ClassInjectable[],
-    }
-  );
+  beforeEach(() => {
+    classPropsReflector.reflectInjectables.mockReturnValue([]);
+    classCtorReflector.reflectInjectables.mockReset();
+  });
 
-  describe('resolving by identifier and/or metadata', () => {
-    const container = reflectorFactory.inspect(TargetClassToReflect);
+  it('should return undefined if no matching injectables are found', () => {
+    classCtorReflector.reflectInjectables.mockReturnValue([]);
+    const result = dependenciesAdapter.inspect(targetClass).resolve('Interface', metadata as never);
 
-    describe('extended string identifier object, one with metadata and the other without', () => {
-      it('should return the specific injectable when identifying with no metadata', () => {
-        expect(container.resolve('Interface')).toEqual({
-          identifier: 'Interface',
-          value: Object,
-          type: 'PARAM',
-        });
-      });
+    expect(result).toBeUndefined();
+  });
 
-      test('and it should return another injectable, only the metadata object is different, when identifying with metadata object', () => {
-        expect(container.resolve('Interface', { metadataKey: 'arbitrary' })).toEqual({
-          identifier: 'Interface',
-          metadata: { metadataKey: 'arbitrary' },
-          value: Object,
-          type: 'PARAM',
-        });
-      });
-    });
+  it('should return the injectable if only one matching injectable is found and no metadata is provided', () => {
+    classCtorReflector.reflectInjectables.mockReturnValue(injectablesFixture);
+    const result = dependenciesAdapter.inspect(targetClass).resolve('Interface');
 
-    describe('extended class identifier object, one with metadata and the other without', () => {
-      it('should return the specific injectable when identifying with no metadata', () => {
-        expect(container.resolve(ArbitraryClassAsIdentifier)).toEqual({
-          identifier: ArbitraryClassAsIdentifier,
-          value: Object,
-          type: 'PARAM',
-        });
-      });
+    expect(result).toEqual(injectablesFixture[2]);
+  });
 
-      test('and it should return another injectable, only the metadata object is different, when identifying with metadata object', () => {
-        expect(container.resolve(ArbitraryClassAsIdentifier, { metadataKey: 'arbitrary' })).toEqual(
-          {
-            identifier: ArbitraryClassAsIdentifier,
-            metadata: { metadataKey: 'arbitrary' },
-            value: Object,
-            type: 'PARAM',
-          }
-        );
-      });
-    });
+  it('should return the injectable with matching metadata if metadata is provided', () => {
+    classCtorReflector.reflectInjectables.mockReturnValue(injectablesFixture);
+    const result = dependenciesAdapter.inspect(targetClass).resolve('Interface', metadata as never);
 
-    describe('existing identifier with and without specifying metadata', () => {
-      const subjectInjectable = {
-        identifier: 'IdentifierWithMetadata',
-        metadata: { tagged: 'value' },
-        value: Object,
-        type: 'PARAM',
-      };
+    expect(result).toEqual(injectablesFixture[0]);
+  });
 
-      it('should resolve the injectable by identifier and metadata together', () => {
-        expect(container.resolve('IdentifierWithMetadata', { tagged: 'value' })).toEqual(
-          subjectInjectable
-        );
-      });
+  it('should return undefined if no injectable with matching metadata is found', () => {
+    classCtorReflector.reflectInjectables.mockReturnValue(injectablesFixture);
+    const result = dependenciesAdapter
+      .inspect(targetClass)
+      .resolve('Interface', { metadataKey: 'other' } as never);
 
-      test('and it should return the same injectable as well when the metadata is not specified', () => {
-        expect(container.resolve('IdentifierWithMetadata')).toEqual(subjectInjectable);
-      });
+    expect(result).toBeUndefined();
+  });
 
-      test('and it should return undefined if there is only injectable that corresponds to the identifier, and the metadata is wrong', () => {
-        expect(
-          container.resolve('IdentifierWithMetadata', { notExisting: 'value' })
-        ).toBeUndefined();
-      });
-    });
+  it('should return the injectable with matching identifier and no metadata if metadata is not provided', () => {
+    classCtorReflector.reflectInjectables.mockReturnValue(injectablesFixture);
+    const result = dependenciesAdapter.inspect(targetClass).resolve(arbitraryClassAsIdentifier);
+
+    expect(result).toEqual(injectablesFixture[4]);
+  });
+
+  it('should return the injectable if there is exactly one, even no metadata provided', () => {
+    classCtorReflector.reflectInjectables.mockReturnValue(injectablesFixture);
+    const result = dependenciesAdapter.inspect(targetClass).resolve('IdentifierWithMetadata');
+
+    expect(result).toEqual(injectablesFixture[5]);
   });
 });

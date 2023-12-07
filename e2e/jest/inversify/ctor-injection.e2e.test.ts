@@ -36,7 +36,7 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
       .using({ log: () => 'baz-from-test' })
       .mock('UNDEFINED')
       .using({ method: () => 456 })
-      .mock<Bar>('BarToken', { targetName: 'someTarget' })
+      .mock<Bar>('BarToken', { name: 'someTarget' })
       .using({})
       .mock<string>('CONSTANT_VALUE')
       .using('arbitrary-string')

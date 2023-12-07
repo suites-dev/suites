@@ -30,19 +30,30 @@ export function DependenciesAdapter(
         identifier: InjectableIdentifier,
         metadata: IdentifierMetadata | undefined
       ): ClassInjectable | undefined {
-        // If there is one identifier, it is enough to match, no need to check metadata
         const injectables = allInjectables.filter(
           ({ identifier: injectableIdentifier }) => injectableIdentifier === identifier
         );
+
+        if (injectables.length === 0) {
+          return undefined;
+        }
 
         if (injectables.length === 1 && !metadata) {
           return injectables[0];
         }
 
-        // If there are more than one injectable with the same identifier, we need to check metadata as well
-        return injectables.find(({ metadata: injectableMetadata }) =>
-          isEqual(injectableMetadata, metadata)
+        if (metadata) {
+          return injectables.find(({ metadata: injectableMetadata }) =>
+            isEqual(injectableMetadata, metadata)
+          );
+        }
+
+        const foundInjectable = injectables.find(
+          ({ identifier: injectableIdentifier, metadata: injectableMetadata }) =>
+            identifier === injectableIdentifier && typeof injectableMetadata === 'undefined'
         );
+
+        return foundInjectable ? foundInjectable : undefined;
       },
       list(): ClassInjectable[] {
         return allInjectables;

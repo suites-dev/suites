@@ -31,17 +31,32 @@ export class MocksContainer {
       ([{ identifier: injectableIdentifier }]) => injectableIdentifier === identifier
     );
 
+    if (identifiers.length === 0) {
+      return undefined;
+    }
+
     if (identifiers.length === 1 && !metadata) {
       return identifiers[0][1] as StubbedInstance<TDependency> | ConstantValue;
     }
 
     // If there are more than one injectable with the same identifier, we need to check the metadata as well
-    const identifierToMock = identifiers.find(([{ metadata: injectableMetadata }]) =>
-      isEqual(injectableMetadata, metadata)
+    if (metadata) {
+      const identifierToMock = identifiers.find(([{ metadata: injectableMetadata }]) =>
+        isEqual(injectableMetadata, metadata)
+      );
+
+      return identifierToMock
+        ? (identifierToMock[1] as StubbedInstance<TDependency> | ConstantValue)
+        : undefined;
+    }
+
+    const foundIdentifier = this.identifierToMocksTuples.find(
+      ([{ identifier: injectableIdentifier, metadata }]) =>
+        injectableIdentifier === identifier && typeof metadata === 'undefined'
     );
 
-    return identifierToMock
-      ? (identifierToMock[1] as StubbedInstance<TDependency> | ConstantValue)
+    return foundIdentifier
+      ? (foundIdentifier[1] as StubbedInstance<TDependency> | ConstantValue)
       : undefined;
   }
 

@@ -2,40 +2,64 @@ import { IdentifierToMock, MocksContainer } from './mocks-container';
 
 class ArbitraryClassAsIdentifier {}
 
-const IdentifiersToMocksFixture: IdentifierToMock[] = [
-  [{ identifier: ArbitraryClassAsIdentifier, metadata: { metadataKey: 'arbitrary' } }, '__DEP1__'],
-  [{ identifier: 'Interface' }, '__DEP2__'],
-  [{ identifier: 'Interface', metadata: { metadataKey: 'arbitrary' } }, '__DEP3__'],
-];
-
 describe('Mocks Container Unit Spec', () => {
-  const mocksContainer = new MocksContainer(IdentifiersToMocksFixture);
+  it('should return the corresponding value when the identifier matches a single identifier and metadata is not provided', () => {
+    const identifierToMocksTuples: IdentifierToMock[] = [
+      [{ identifier: ArbitraryClassAsIdentifier }, 'mock1'],
+      [{ identifier: 'dependency2' }, 'mock2'],
+    ];
+    const mocksContainer = new MocksContainer(identifierToMocksTuples);
 
-  describe('when there are two identifiers that are the same, one with metadata and one without', () => {
-    it('should return the mock value corresponds to an identifier that has no metadata', () => {
-      expect(mocksContainer.resolve('Interface')).toBe('__DEP2__');
-    });
+    const result = mocksContainer.resolve(ArbitraryClassAsIdentifier);
 
-    test('and it should return another, distinct mock value that corresponds to the same base identifier but with no metadata', () => {
-      expect(mocksContainer.resolve('Interface', { metadataKey: 'arbitrary' })).toBe('__DEP3__');
-    });
+    expect(result).toBe('mock1');
   });
 
-  describe('when there is one mock value corresponds to an identifier, and has metadata', () => {
-    it('should return a mock value when resolving the mock by identifier and metadata', () => {
-      expect(mocksContainer.resolve(ArbitraryClassAsIdentifier, { metadataKey: 'arbitrary' })).toBe(
-        '__DEP1__'
-      );
-    });
+  it('should return the value of the first matching identifier when the identifier matches multiple identifiers and metadata is not provided', () => {
+    const identifierToMocksTuples: IdentifierToMock[] = [
+      [{ identifier: 'dependency1' }, 'mock1'],
+      [{ identifier: 'dependency1' }, 'mock2'],
+    ];
 
-    test('and it should return the exact same mock value when a metadata is not specified', () => {
-      expect(mocksContainer.resolve(ArbitraryClassAsIdentifier)).toBe('__DEP1__');
-    });
+    const mocksContainer = new MocksContainer(identifierToMocksTuples);
 
-    test('and it should return undefined if there is only one mock value that corresponds to the identifier, and the metadata is wrong', () => {
-      expect(
-        mocksContainer.resolve(ArbitraryClassAsIdentifier, { notExisting: 'value' })
-      ).toBeUndefined();
-    });
+    const result = mocksContainer.resolve('dependency1');
+
+    expect(result).toBe('mock1');
+  });
+
+  it('should return undefined when the identifier does not match any identifier', () => {
+    const identifierToMocksTuples: IdentifierToMock[] = [
+      [{ identifier: 'dependency1' }, 'mock1'],
+      [{ identifier: 'dependency2' }, 'mock2'],
+    ];
+    const mocksContainer = new MocksContainer(identifierToMocksTuples);
+
+    const result = mocksContainer.resolve('dependency3');
+
+    expect(result).toBeUndefined();
+  });
+
+  it('should return undefined when the identifier matches a single identifier but metadata does not match', () => {
+    const identifierToMocksTuples: IdentifierToMock[] = [
+      [{ identifier: 'dependency1', metadata: { metadataKey: 'arbitrary' } }, 'mock1'],
+    ];
+    const mocksContainer = new MocksContainer(identifierToMocksTuples);
+
+    const result = mocksContainer.resolve('dependency1', { metadataKey: 'arbitraryWrong' });
+
+    expect(result).toBeUndefined();
+  });
+
+  it('should return undefined when the identifier matches multiple identifiers but metadata does not match any of them', () => {
+    const identifierToMocksTuples: IdentifierToMock[] = [
+      [{ identifier: 'dependency1', metadata: 'metadata1' }, 'mock1'],
+      [{ identifier: 'dependency1', metadata: 'metadata2' }, 'mock2'],
+    ];
+    const mocksContainer = new MocksContainer(identifierToMocksTuples);
+
+    const result = mocksContainer.resolve('dependency1', { metadataKey: 'arbitrary' });
+
+    expect(result).toBeUndefined();
   });
 });

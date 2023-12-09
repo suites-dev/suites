@@ -5,10 +5,8 @@
 <h1 align="center">Automock</h1>
 
 <p align="center">
-<strong>Automock elevates unit testing by auto-generating mocks for class dependencies and creating a virtual DI container,
-ensuring faster execution and a consistent test suite structure. Compatible with various DI and testing
-frameworks, it allows developers to focus on crafting better test cases, moving away from manual mock setup and 
-towards a better testing experience.</strong>
+<strong>Automock optimizes the unit testing process within dependency injection frameworks by providing a virtual, isolated environment and automated mock
+generation, enabling developers to create efficient test suites and enhance their overall testing experience.</strong>
 </p>
 
 [![npm downloads](https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest)](https://npmjs.org/package/@automock/jest "View this project on npm")
@@ -17,6 +15,12 @@ towards a better testing experience.</strong>
 [![ci](https://github.com/automock/automock/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
 
 [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference)
+
+<p>
+<strong>If you find Automock useful, we would be grateful if you could give us a star 🤩</strong><br />
+Every star we receive is greatly appreciated and makes a meaningful impact on our self-funded project.
+It's a valuable contribution that helps us grow and improve. Thanks a lot for your support! 🌟 
+</p>
 
 ## Core Features
 
@@ -30,8 +34,6 @@ read and maintain.
 📈 **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster.
 
 🌐 **Community & Support** - Join a growing community of developers.
-
-<br />
 
 ## Quick Example
 

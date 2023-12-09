@@ -1,7 +1,7 @@
 {
   "name": "@automock/adapters.nestjs",
   "private": false,
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "repository": {
@@ -20,19 +20,19 @@
     }
   ],
   "scripts": {
+    "postinstall": "node postinstall.js",
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
     "test": "yarn jest",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
-    "dist",
-    "index.d.ts",
-    "index.js"
+    "postinstall.js",
+    "dist"
   ],
   "dependencies": {
-    "@automock/common": "^3.0.0",
-    "@automock/types": "^2.0.0",
+    "@automock/common": "^3.1.0",
+    "@automock/types": "^2.0.1",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {

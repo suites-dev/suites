@@ -6,7 +6,6 @@ import {
   InjectableIdentifier,
 } from '@automock/common';
 import { StubbedInstance } from '@automock/types';
-import { normalizeIdentifier } from '../normalize-identifier.stastic';
 
 export type IdentifierToMock = [
   Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },
@@ -27,14 +26,38 @@ export class MocksContainer {
     identifier: InjectableIdentifier,
     metadata?: IdentifierMetadata
   ): StubbedInstance<TDependency> | ConstantValue | undefined {
-    const found = this.identifierToMocksTuples.find(([identifierObj]) => {
-      const subject = normalizeIdentifier(identifier, metadata);
-      const toFind = normalizeIdentifier(identifierObj.identifier, identifierObj.metadata);
+    // If there is one identifier, it is enough to match, no need to check metadata
+    const identifiers = this.identifierToMocksTuples.filter(
+      ([{ identifier: injectableIdentifier }]) => injectableIdentifier === identifier
+    );
 
-      return isEqual(toFind, subject);
-    });
+    if (identifiers.length === 0) {
+      return undefined;
+    }
 
-    return found ? (found[1] as StubbedInstance<TDependency> | ConstantValue) : undefined;
+    if (identifiers.length === 1 && !metadata) {
+      return identifiers[0][1] as StubbedInstance<TDependency> | ConstantValue;
+    }
+
+    // If there are more than one injectable with the same identifier, we need to check the metadata as well
+    if (metadata) {
+      const identifierToMock = identifiers.find(([{ metadata: injectableMetadata }]) =>
+        isEqual(injectableMetadata, metadata)
+      );
+
+      return identifierToMock
+        ? (identifierToMock[1] as StubbedInstance<TDependency> | ConstantValue)
+        : undefined;
+    }
+
+    const foundIdentifier = this.identifierToMocksTuples.find(
+      ([{ identifier: injectableIdentifier, metadata }]) =>
+        injectableIdentifier === identifier && typeof metadata === 'undefined'
+    );
+
+    return foundIdentifier
+      ? (foundIdentifier[1] as StubbedInstance<TDependency> | ConstantValue)
+      : undefined;
   }
 
   public list() {

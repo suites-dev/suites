@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/automock/automock/compare/@automock/common@3.0.0...@automock/common@3.1.0) (2023-12-09)
+
+### Features
+
+- **common:** identifier metadata type resolution ([f748e1f](https://github.com/automock/automock/commit/f748e1ff9c8d92199db3c13bc920d94c2e4c99dc))
+
 # [3.0.0](https://github.com/automock/automock/compare/@automock/common@2.2.0...@automock/common@3.0.0) (2023-11-10)
 
 ### Code Refactoring

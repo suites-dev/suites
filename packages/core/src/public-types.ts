@@ -1,4 +1,4 @@
-import { ConstantValue } from '@automock/common';
+import { ConstantValue, IdentifierMetadata } from '@automock/common';
 import { DeepPartial, Type } from '@automock/types';
 import { UnitReference } from './services/unit-reference';
 
@@ -70,6 +70,20 @@ export interface TestBedBuilder<TClass> {
   mock<TDependency>(type: Type<TDependency>): MockOverride<TDependency, TClass>;
 
   /**
+   * Declares a dependency to be mocked using its type along with a corresponding metadata object.
+   *
+   * @since 2.1.0
+   * @param type The type of the dependency.
+   * @param identifierMetadata the identifier metadata.
+   * @template TDependency The type of the dependency being mocked.
+   * @returns MockOverride instance for further configuration.
+   */
+  mock<TDependency>(
+    type: Type<TDependency>,
+    identifierMetadata: IdentifierMetadata
+  ): MockOverride<TDependency, TClass>;
+
+  /**
    * Declares a dependency to be mocked using a string-based token.
    *
    * @since 1.1.0
@@ -80,6 +94,21 @@ export interface TestBedBuilder<TClass> {
   mock<TDependency>(token: string): MockOverride<TDependency, TClass>;
 
   /**
+   * Declares a dependency to be mocked using a string-based token along with a corresponding
+   * metadata object.
+   *
+   * @since 2.1.0
+   * @param token The token string representing the dependency to be mocked.
+   * @param identifierMetadata the identifier metadata.
+   * @template TDependency The type of the dependency being mocked.
+   * @returns MockOverride instance for further configuration.
+   */
+  mock<TDependency>(
+    token: string,
+    identifierMetadata: IdentifierMetadata
+  ): MockOverride<TDependency, TClass>;
+
+  /**
    * Declares a dependency to be mocked using a symbol-based token.
    *
    * @since 2.0.0
@@ -88,6 +117,37 @@ export interface TestBedBuilder<TClass> {
    * @returns MockOverride instance for further configuration.
    */
   mock<TDependency>(token: symbol): MockOverride<TDependency, TClass>;
+
+  /**
+   * Declares a dependency to be mocked using a symbol-based token along with a corresponding
+   * metadata object.
+   *
+   * @since 2.1.0
+   * @param token - The token symbol representing the dependency to be mocked.
+   * @param identifierMetadata the identifier metadata if exists.
+   * @template TDependency The type of the dependency being mocked.
+   * @returns MockOverride instance for further configuration.
+   */
+  mock<TDependency>(
+    token: symbol,
+    identifierMetadata: IdentifierMetadata
+  ): MockOverride<TDependency, TClass>;
+
+  /**
+   * Declares a dependency to be mocked using a symbol-based token along with a corresponding
+   * metadata object.
+   *
+   * @since 2.1.0
+   * @param identifier The identifier representing the dependency. It can be of type
+   * `Type<TDependency>`, `string`, or `symbol`.
+   * @param identifierMetadata the identifier metadata if exists.
+   * @template TDependency The type of the dependency being mocked.
+   * @returns MockOverride instance for further configuration.
+   */
+  mock<TDependency>(
+    identifier: Type<TDependency> | string | symbol,
+    identifierMetadata?: IdentifierMetadata
+  ): MockOverride<TDependency, TClass>;
 
   /**
    * Finalizes the mocking setup and creates a new UnitTestBed.

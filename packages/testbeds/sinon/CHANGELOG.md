@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/automock/automock/compare/@automock/sinon@2.0.0...@automock/sinon@2.1.0) (2023-12-09)
+
+### Features
+
+- **sinon:** unit reference overload methods for identifier metadata ([4f952f0](https://github.com/automock/automock/commit/4f952f0a8063926afbb20a998f1da8b248610838))
+
 # [2.0.0](https://github.com/automock/automock/compare/@automock/sinon@1.4.0...@automock/sinon@2.0.0) (2023-11-10)
 
 ### Code Refactoring

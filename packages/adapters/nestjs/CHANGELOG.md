@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/automock/automock/compare/@automock/adapters.nestjs@2.0.0...@automock/adapters.nestjs@2.1.0) (2023-12-09)
+
+### Features
+
+- **adapters.nestjs:** add post install script ([e397886](https://github.com/automock/automock/commit/e397886ff6f92aaf5214c2700e54fed42e7c81a7))
+- **adapters.nestjs:** export identifier metadata to align with common ([12e4ad4](https://github.com/automock/automock/commit/12e4ad4c3f2911591cf104e8b6fdcba0e7d6c74d))
+
 # [2.0.0](https://github.com/automock/automock/compare/@automock/adapters.nestjs@1.4.0...@automock/adapters.nestjs@2.0.0) (2023-11-10)
 
 ### Features

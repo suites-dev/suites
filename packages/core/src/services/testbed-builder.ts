@@ -9,7 +9,7 @@ import { UnitReference } from './unit-reference';
 import { UnitMocker } from './unit-mocker';
 import { MockOverride, TestBedBuilder, UnitTestBed } from '../public-types';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
-import { normalizeIdentifier } from '../normalize-identifier.stastic';
+import { normalizeIdentifier } from '../normalize-identifier.static';
 import { AutomockErrorCode } from '@automock/common';
 
 export class UnitBuilder {
@@ -89,7 +89,7 @@ function mockDependencyNotFoundMessage(
     typeof identifier === 'string' || typeof identifier === 'symbol'
       ? String(identifier)
       : identifier.name;
-  const metadataMsg = metadata ? `, with metadata ${metadata}` : '';
+  const metadataMsg = metadata ? `, with metadata [${JSON.stringify(metadata)}]` : '';
   const details = identifierName + metadataMsg;
 
   return `Automock Warning (${AutomockErrorCode.IDENTIFIER_NOT_FOUND}): The provided dependency identifier '${details}' does not match any

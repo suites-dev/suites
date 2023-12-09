@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { UnitReference } from '@automock/core';
 import { TestBed } from '@automock/sinon';
 import {

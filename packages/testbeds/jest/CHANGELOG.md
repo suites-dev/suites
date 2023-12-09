@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/automock/automock/compare/@automock/jest@2.0.0...@automock/jest@2.1.0) (2023-12-09)
+
+### Features
+
+- **jest:** unit reference overload methods for identifier metadata ([f8c77cf](https://github.com/automock/automock/commit/f8c77cfcc4877e7ef39677f9e5e0c46956d75cb2))
+
 # [2.0.0](https://github.com/automock/automock/compare/@automock/jest@1.4.0...@automock/jest@2.0.0) (2023-11-10)
 
 ### Code Refactoring

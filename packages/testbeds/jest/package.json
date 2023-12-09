@@ -1,6 +1,6 @@
 {
   "name": "@automock/jest",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
@@ -37,8 +37,8 @@
     "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },
   "dependencies": {
-    "@automock/core": "^2.0.0",
-    "@automock/types": "^2.0.0"
+    "@automock/core": "^2.1.0",
+    "@automock/types": "^2.0.1"
   },
   "devDependencies": {
     "jest": "29.1.0",

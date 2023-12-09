@@ -25,6 +25,22 @@ export interface UnitReference {
   get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;
 
   /**
+   * Retrieves a reference to the mocked object of a dependency corresponding to its type identifier
+   * and metadata object.
+   *
+   * @since 2.1.0
+   * @template TDependency The type of the dependency being retrieved.
+   * @param type The type representing the dependency.
+   * @param identifierMetadata A metadata object that corresponds to the type identifier.
+   * @returns StubbedInstance<TDependency> The mocked object corresponding to the provided
+   * symbol-based token.
+   */
+  get<TDependency>(
+    type: Type<TDependency>,
+    identifierMetadata: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+
+  /**
    * Retrieves a reference to the mocked object of a dependency corresponding to a string-based token.
    *
    * @since 2.0.0
@@ -35,6 +51,22 @@ export interface UnitReference {
   get<TDependency>(token: string): StubbedInstance<TDependency>;
 
   /**
+   * Retrieves a reference to the mocked object of a dependency corresponding to a string-based
+   * token and an identifier metadata object.
+   *
+   * @since 2.1.0
+   * @template TDependency The type of the dependency being retrieved.
+   * @param token The symbol-based token representing the dependency.
+   * @param identifierMetadata An accompanying metadata object for the token identifier.
+   * @returns StubbedInstance<TDependency> The mocked object corresponding to the provided
+   * symbol-based token.
+   */
+  get<TDependency>(
+    token: string,
+    identifierMetadata: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+
+  /**
    * Retrieves a reference to the mocked object of a dependency corresponding to a symbol-based token.
    *
    * @since 2.0.0
@@ -43,6 +75,21 @@ export interface UnitReference {
    * @returns The mocked object corresponding to the provided symbol-based token.
    */
   get<TDependency>(token: symbol): StubbedInstance<TDependency>;
+
+  /**
+   * Retrieves a reference to the mocked object of a dependency corresponding to a symbol-based
+   * token and an identifier metadata object.
+   *
+   * @since 2.1.0
+   * @template TDependency The type of the dependency being retrieved.
+   * @param token The symbol-based token representing the dependency.
+   * @param identifierMetadata An accompanying metadata object for the token identifier.
+   * @returns StubbedInstance<TDependency> The mocked object corresponding to the provided symbol-based token.
+   */
+  get<TDependency>(
+    token: symbol,
+    identifierMetadata: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
 
   /**
    * Retrieves a constant value corresponding to a string-based token.
@@ -63,6 +110,24 @@ export interface UnitReference {
    * @returns The constant value corresponding to the provided symbol-based token.
    */
   get<TValue extends ConstantValue>(token: symbol): TValue;
+
+  /**
+   * Retrieves a mocked object or a constant value of a dependency using its type, string, or symbol token.
+   *
+   * This method provides flexibility in retrieving dependencies by allowing various identifier types.
+   * Depending on the identifier and the setup, it can return either a mocked object or a constant value.
+   *
+   * @since 2.1.0
+   * @template TDependency The type of the dependency being retrieved.
+   * @template TValue The type of the constant value that might be returned.
+   * @param identifier The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
+   * @param identifierMetadata A corresponding metadata object for the token identifier.
+   * @returns StubbedInstance<TDependency> The mocked instance corresponding to the provided identifier and metadata if exists.
+   */
+  get<TDependency>(
+    identifier: Type<TDependency> | string | symbol,
+    identifierMetadata?: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
 
   /**
    * Retrieves a mocked object or a constant value of a dependency using its type, string, or symbol token.
@@ -116,5 +181,5 @@ Please ensure accurate spelling and correspondence between the provided token or
 injection configuration. If you are utilizing a custom token, it is essential to confirm its proper registration
 within the DI container.
 
-Refer to the docs for further information: https://autmock.dev/docs`;
+Refer to the docs for further information: https://automock.dev/docs`;
 }

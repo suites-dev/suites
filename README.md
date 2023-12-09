@@ -4,7 +4,7 @@
 
 <h1 align="center">Automock</h1>
 
-<p align="center">
+<p>
 <strong>Automock optimizes the unit testing process within dependency injection frameworks by providing a virtual, isolated environment and automated mock
 generation, enabling developers to create efficient test suites and enhance their overall testing experience.</strong>
 </p>

@@ -1,7 +1,7 @@
 {
   "name": "@automock/common",
   "private": false,
-  "version": "3.0.0",
+  "version": "3.1.0",
   "license": "MIT",
   "types": "typings.d.ts",
   "main": "dist/index.js",
@@ -35,7 +35,7 @@
     "typings.d.ts"
   ],
   "dependencies": {
-    "@automock/types": "^2.0.0"
+    "@automock/types": "^2.0.1"
   },
   "config": {
     "publishConfig": "public"

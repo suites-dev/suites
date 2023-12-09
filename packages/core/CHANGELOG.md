@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/automock/automock/compare/@automock/core@2.0.0...@automock/core@2.1.0) (2023-12-09)
+
+### Bug Fixes
+
+- **core:** fix typo in adapter error ([0dc5fdb](https://github.com/automock/automock/commit/0dc5fdb980e4eb32a75753b43c13f657a4df2d7e))
+- **core:** stringify identifier metadata in logger warning ([0ef0b92](https://github.com/automock/automock/commit/0ef0b9237b2ae02aa3c8ff9a9c25a071a4b3fa1a))
+- **core:** typo in unit reference error message ([b444356](https://github.com/automock/automock/commit/b4443562718e89619673500367e8480a24689933))
+
+### Features
+
+- **core:** add identifier metadata object in proper interfaces ([f664206](https://github.com/automock/automock/commit/f664206b4a46d56faaf17f597fb2506c16ff9cde))
+- **core:** change mock container resolving strategy ([e3708e7](https://github.com/automock/automock/commit/e3708e779d4efd143e9805ecff04458fb8e38da8))
+
 # [2.0.0](https://github.com/automock/automock/compare/@automock/core@1.4.0...@automock/core@2.0.0) (2023-11-10)
 
 ### Code Refactoring

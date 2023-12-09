@@ -1,6 +1,6 @@
 {
   "name": "@automock/sinon",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
@@ -37,8 +37,8 @@
     "README.md"
   ],
   "dependencies": {
-    "@automock/core": "^2.0.0",
-    "@automock/types": "^2.0.0"
+    "@automock/core": "^2.1.0",
+    "@automock/types": "^2.0.1"
   },
   "devDependencies": {
     "@types/sinon": "^10.0.19",

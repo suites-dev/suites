@@ -1,14 +1,13 @@
 {
-  "name": "@automock/common",
+  "name": "@automock/adapters.tsyringe",
   "private": false,
-  "version": "3.1.0",
+  "version": "2.1.0",
   "license": "MIT",
-  "types": "typings.d.ts",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/automock/automock.git",
-    "directory": "packages/common"
+    "directory": "packages/adapters/tsyringe"
   },
   "homepage": "https://automock.dev",
   "bugs": {
@@ -20,25 +19,29 @@
       "email": "omer.moradd@gmail.com"
     }
   ],
-  "engines": {
-    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
-  },
   "scripts": {
+    "postinstall": "node postinstall.js",
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "watch": "yarn tsc -p tsconfig.build.json --watch",
     "test": "yarn jest",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
-    "dist",
-    "README.md",
-    "typings.d.ts"
+    "postinstall.js",
+    "dist"
   ],
   "dependencies": {
-    "@automock/types": "^2.0.1"
+    "@automock/common": "^3.1.0",
+    "@automock/types": "^2.0.1",
+    "reflect-metadata": "^0.1.13"
   },
-  "config": {
-    "publishConfig": "public"
+  "devDependencies": {
+    "tsyringe": "^4.0.0"
+  },
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ['jest', 'sinon', 'core', 'adapters.nestjs', 'adapters.inversify']
+        project: ['jest', 'sinon', 'core', 'adapters.nestjs', 'adapters.inversify', 'adapters.tsyringe']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -99,7 +99,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest,sinon,adapters.nestjs,core
+          flags: jest,sinon,adapters.nestjs,adapters.inversify,adapters.tsyringe,core
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           directory: coverage

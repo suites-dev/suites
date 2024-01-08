@@ -1,14 +1,17 @@
 {
-  "extends": "../../tsconfig.build.json",
+  "extends": "../../../tsconfig.build.json",
   "compilerOptions": {
     "rootDir": "src",
     "baseUrl": ".",
     "outDir": "dist",
     "target": "es6",
-    "incremental": false
+    "skipLibCheck": true
   },
+  "include": [
+    "./src/**/*.ts",
+    "src/types/index.ts"
+  ],
   "exclude": [
-    "typings.d.ts",
     "index.ts",
     "node_modules",
     "__test__",

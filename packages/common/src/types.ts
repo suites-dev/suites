@@ -7,6 +7,12 @@ export const UndefinedDependency: unique symbol = Symbol('UndefinedDependency');
 export type UndefinedDependencySymbol = typeof UndefinedDependency;
 
 /**
+ * @since 3.2.0
+ */
+export const NonExistingDependency: unique symbol = Symbol('NonExistingDependency');
+export type NonExistingDependencySymbol = typeof NonExistingDependency;
+
+/**
  * @since 3.0.0
  */
 export type ConstantValue = unknown[] | string | number | boolean | symbol | null;
@@ -24,7 +30,14 @@ export type InjectableReflectedType = ConstantValue | Type | undefined;
 /**
  * @since 3.0.0
  */
-export type InjectableFinalValue = ConstantValue | Type | UndefinedDependencySymbol;
+export type InjectableFinalValue =
+  | ConstantValue
+  | Type
+  | UndefinedDependencySymbol
+  /**
+   * @since 3.2.0
+   */
+  | NonExistingDependencySymbol;
 
 /**
  * @since 3.0.0
@@ -59,7 +72,9 @@ export type ClassInjectable<
  * @since 3.0.0
  */
 export interface AutomockDependenciesAdapter {
-  inspect(targetClass: Type): InjectablesRegistry;
+  inspect(
+    targetClass: Type
+  ): InjectablesRegistry & { scope?: 'REQUEST' | 'SINGLETON' | 'TRANSIENT' };
 }
 
 /**
@@ -71,6 +86,7 @@ export type IdentifierMetadata = Record<string | symbol, never>;
  * @since 3.0.0
  */
 export interface InjectablesRegistry {
+  readonly scope?: 'REQUEST' | 'SINGLETON' | 'TRANSIENT';
   resolve<T extends IdentifierMetadata>(
     identifier: InjectableIdentifier,
     metadata?: IdentifierMetadata

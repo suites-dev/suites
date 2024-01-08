@@ -10,7 +10,7 @@ const NestJSAutomockDependenciesAdapter: AutomockDependenciesAdapter = ((
   classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
 ) => {
-  return DependenciesAdapter(classPropsReflector, classCtorReflector);
+  return DependenciesAdapter(Reflect, classPropsReflector, classCtorReflector);
 })(
   ClassPropsReflector(Reflect, PropertyReflectionStrategies),
   ClassCtorReflector(Reflect, ParamsTokensReflector)

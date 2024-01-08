@@ -55,7 +55,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest,sinon,adapters.nestjs,core
+          flags: jest,sinon,adapters.nestjs,adapters.inversify,adapters.tsyringe,core
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           directory: coverage

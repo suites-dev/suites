@@ -81,9 +81,8 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Test
-        run: yarn jest --selectProjects ${{ matrix.project }} --coverage --verbose
+        run: yarn lerna exec yarn test --scope ${{ matrix.project }}
         env:
-          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.project }}
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
 
       - name: Tests Results
@@ -99,7 +98,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest,sinon,adapters.nestjs,core
+          flags: jest,sinon,adapters.nestjs,adapters.inversify,core
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           directory: coverage

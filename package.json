@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "yarn lerna run build",
-    "test": "yarn jest --config jest.base.config.ts",
+    "test": "yarn lerna exec yarn test",
     "lint": "yarn lerna run lint --parallel"
   },
   "dependencies": {

@@ -29,7 +29,7 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "test": "yarn node_modules/.bin/jest",
+    "test": "jest",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [

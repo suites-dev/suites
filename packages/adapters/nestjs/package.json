@@ -23,7 +23,7 @@
     "postinstall": "node postinstall.js",
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "test": "yarn jest",
+    "test": "jest --coverage --verbose",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [

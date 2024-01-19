@@ -15,7 +15,7 @@ jobs:
         node-version: [16.x, 18.x, 20.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use Node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -80,11 +80,16 @@ jobs:
       - name: Yarn
         run: yarn --frozen-lockfile
 
+      - name: Create Coverage Directory
+        run: mkdir -p ${{ github.workspace }}/coverage
+
       - name: Test
-        run: yarn jest --selectProjects ${{ matrix.project }} --coverage --verbose
+        run: yarn lerna exec yarn test --scope @automock/${{ matrix.project }}
         env:
-          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.project }}
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
+          JEST_JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
+          COVERAGE_DIR: ${{ github.workspace }}/coverage
+          COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 
       - name: Tests Results
         uses: dorny/test-reporter@v1
@@ -92,15 +97,15 @@ jobs:
         with:
           reporter: 'jest-junit'
           name: Tests Results (${{ matrix.project }})
-          path: test-reports/${{ matrix.project }}.xml
+          path: ${{ github.workspace }}/test-reports/${{ matrix.project }}.xml
           fail-on-error: false
 
       - name: Upload Report to Codecov
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest,sinon,adapters.nestjs,core
+          flags: ${{ matrix.project }}
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          directory: coverage
+          files: ${{ github.workspace }}/coverage/coverage-${{ matrix.project }}.xml
           verbose: true

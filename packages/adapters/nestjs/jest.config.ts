@@ -1,8 +1,9 @@
 import type { Config } from 'jest';
 import baseConfig from '../../../jest.base.config';
+import process from 'process';
 
 const config: Config = {
-  ...baseConfig,
+  ...baseConfig(process.env.COVERAGE_DIR),
   id: 'adapters.nestjs',
   displayName: 'adapters.nestjs',
   collectCoverageFrom: ['src/**/*.ts'],

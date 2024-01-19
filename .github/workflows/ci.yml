@@ -81,7 +81,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Test
-        run: yarn lerna exec yarn test --scope ${{ matrix.project }}
+        run: yarn lerna exec yarn test --scope @automock/${{ matrix.project }}
         env:
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
 

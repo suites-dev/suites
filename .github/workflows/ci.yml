@@ -85,6 +85,8 @@ jobs:
         env:
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
           JEST_JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
+          COVERAGE_DIR: ${{ github.workspace }}/coverage
+          COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 
       - name: Tests Results
         uses: dorny/test-reporter@v1
@@ -99,8 +101,9 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: codecov-umbrella
-          flags: jest,sinon,adapters.nestjs,adapters.inversify,core
+          flags: ${{ matrix.project }}
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          directory: coverage
+          directory: ${{ github.workspace }}/coverage/${{ matrix.project }}
+          files: coverage-${{ matrix.project }}.xml
           verbose: true

@@ -21,9 +21,18 @@ const config: Config.InitialOptions = {
     'testbed-factory.ts',
   ],
   testPathIgnorePatterns: ['/node_modules/', '/e2e/'],
-  coverageDirectory: './coverage',
   testEnvironment: 'node',
-  coverageReporters: ['text', ['cobertura', { file: 'coverage-report.xml' }]],
+  coverageDirectory: './coverage',
+  coverageReporters: [
+    'text',
+    [
+      'cobertura',
+      {
+        file: process.env.COVERAGE_FILE || 'coverage-report.xml',
+        projectRoot: process.env.COVERAGE_DIR || '<rootDir>',
+      },
+    ],
+  ],
   reporters: ['default', 'jest-junit'],
   testResultsProcessor: 'jest-junit',
 };

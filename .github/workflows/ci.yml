@@ -104,6 +104,6 @@ jobs:
           flags: ${{ matrix.project }}
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          directory: ${{ github.workspace }}/coverage/${{ matrix.project }}
+          directory: ${{ github.workspace }}/coverage
           files: coverage-${{ matrix.project }}.xml
           verbose: true

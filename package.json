@@ -60,7 +60,7 @@
   "jest-junit": {
     "outputDirectory": "test-reports",
     "ancestorSeparator": " › ",
-    "uniqueOutputName": "false",
+    "uniqueOutputName": "true",
     "suiteNameTemplate": "{filepath}",
     "classNameTemplate": "{classname}",
     "titleTemplate": "{title}"

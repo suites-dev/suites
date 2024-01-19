@@ -91,7 +91,7 @@ jobs:
         with:
           reporter: 'jest-junit'
           name: Tests Results (${{ matrix.project }})
-          path: test-reports/${{ matrix.project }}.xml
+          path: ${{ github.workspace }}/test-reports/${{ matrix.project }}.xml
           fail-on-error: false
 
       - name: Upload Report to Codecov

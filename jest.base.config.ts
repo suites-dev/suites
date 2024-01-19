@@ -22,14 +22,13 @@ const config: (coverageDir?: string) => Config.InitialOptions = (coverageDir?: s
   ],
   testPathIgnorePatterns: ['/node_modules/', '/e2e/'],
   testEnvironment: 'node',
-  coverageDirectory: './coverage',
+  coverageDirectory: coverageDir || '<rootDir>',
   coverageReporters: [
     'text',
     [
       'cobertura',
       {
         file: process.env.COVERAGE_FILE || 'coverage-report.xml',
-        projectRoot: coverageDir || '<rootDir>',
       },
     ],
   ],

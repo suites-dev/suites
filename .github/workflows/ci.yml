@@ -100,9 +100,6 @@ jobs:
           path: ${{ github.workspace }}/test-reports/${{ matrix.project }}.xml
           fail-on-error: false
 
-      - name: List
-        run: ls -l ${{ github.workspace }}/coverage
-
       - name: Upload Report to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -110,6 +107,5 @@ jobs:
           flags: ${{ matrix.project }}
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          directory: ${{ github.workspace }}/coverage/
-          files: ./coverage-${{ matrix.project }}.xml
+          files: ${{ github.workspace }}/coverage/coverage-${{ matrix.project }}.xml
           verbose: true

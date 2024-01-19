@@ -2,7 +2,7 @@ import type { Config } from 'jest';
 import baseConfig from '../../../jest.base.config';
 
 const config: Config = {
-  ...baseConfig,
+  ...baseConfig(process.env.COVERAGE_DIR),
   id: 'adapters.inversify',
   displayName: 'adapters.inversify',
   collectCoverageFrom: ['src/**/*.ts'],

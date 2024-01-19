@@ -80,6 +80,9 @@ jobs:
       - name: Yarn
         run: yarn --frozen-lockfile
 
+      - name: Create Coverage Directory
+        run: mkdir -p ${{ github.workspace }}/coverage
+
       - name: Test
         run: yarn lerna exec yarn test --scope @automock/${{ matrix.project }}
         env:

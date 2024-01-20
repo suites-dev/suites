@@ -58,8 +58,7 @@ jobs:
           --no-git-reset \
           --exact \
           --force-publish \
-          --dist-tag e2e \
-          --registry http://localhost:4873
+          --dist-tag e2e
 
       - name: Remove Source Code
         run: rm -rf packages

@@ -1,13 +1,13 @@
 {
   "name": "suites-sinon-nestjs",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "dependencies": {
-    "@suites/adapters.nestjs": "file:tarballs/adapters.nestjs.tgz",
-    "@suites/core": "file:tarballs/core.tgz",
-    "@suites/common": "file:tarballs/common.tgz",
-    "@suites/types": "file:tarballs/types.tgz",
-    "@suites/sinon": "file:tarballs/sinon.tgz"
+    "@suites/adapters.nestjs": "e2e",
+    "@suites/core": "e2e",
+    "@suites/common": "e2e",
+    "@suites/types": "e2e",
+    "@suites/sinon": "e2e"
   },
   "scripts": {
     "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts"
@@ -15,11 +15,11 @@
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/chai-as-promised": "^7.1.8",
-    "@types/sinon": "*",
+    "@types/sinon": "e2e",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "mocha": "^10.2.0",
-    "sinon": "*",
+    "sinon": "e2e",
     "ts-mocha": "10.0.0",
     "typescript": "^4.x"
   }

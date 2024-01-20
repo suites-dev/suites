@@ -3,11 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "dependencies": {
-    "@suites/adapters.inversify": "file:tarballs/adapters.inversify.tgz",
-    "@suites/core": "file:tarballs/core.tgz",
-    "@suites/common": "file:tarballs/common.tgz",
-    "@suites/types": "file:tarballs/types.tgz",
-    "@suites/sinon": "file:tarballs/sinon.tgz"
+    "@suites/adapters.inversify": "e2e",
+    "@suites/core": "e2e",
+    "@suites/common": "e2e",
+    "@suites/types": "e2e",
+    "@suites/sinon": "e2e"
   },
   "scripts": {
     "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts"
@@ -15,12 +15,12 @@
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/chai-as-promised": "^7.1.8",
-    "@types/sinon": "*",
+    "@types/sinon": "e2e",
     "inversify": "^6.0.2",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "mocha": "^10.2.0",
-    "sinon": "*",
+    "sinon": "e2e",
     "ts-mocha": "10.0.0",
     "typescript": "^5.x"
   }

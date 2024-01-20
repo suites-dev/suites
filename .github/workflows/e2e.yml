@@ -16,6 +16,8 @@ jobs:
         image: verdaccio/verdaccio:5
         ports:
           - 4873:4873
+        env:
+          NPMTOKEN: verdaccio-auth-token
     strategy:
       matrix:
         e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify']
@@ -32,7 +34,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: http://localhost:4873
           scope: '@suites'
-          always-auth: false
+          always-auth: true
+          token: 'verdaccio-auth-token'
 
       - uses: actions/cache@v2
         with:

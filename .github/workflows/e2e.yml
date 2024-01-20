@@ -6,7 +6,6 @@ on:
       target_branch:
         description: 'E2E Target Branch'
         required: true
-        default: 'chore/e2e-to-registry'
 
 jobs:
   build:
@@ -14,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        e2e-project: [ 'jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify' ]
-        node-version: [ 16.x, 18.x, 20.x ]
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'jest/inversify', 'sinon/inversify']
+        node-version: [16.x, 18.x, 20.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,9 +35,6 @@ jobs:
           registry-url: http://localhost:4873
           scope: '@suites'
           always-auth: false
-
-#      - name: Registry Login
-#        run: npx npm-cli-login -s @suites -u test -p 1234 -e test@domain.test -r http://localhost:4873
 
       - name: Yarn
         run: yarn --frozen-lockfile
@@ -66,10 +62,8 @@ jobs:
           IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
           echo "FRAMEWORK=$framework" >> $GITHUB_ENV
           echo "LIBRARY=$library" >> $GITHUB_ENV
-        working-directory: e2e
 
       - name: Execute Test
         run: |
           npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
           npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"
-        working-directory: e2e

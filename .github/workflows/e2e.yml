@@ -38,19 +38,11 @@ jobs:
           always-auth: true
           token: 'verdaccio-auth-token'
 
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-
       - name: Yarn
         run: yarn --frozen-lockfile
 
       - name: Build
         run: yarn build
-
-      - name: Registry Login
-        run: npx npm-cli-login -s @suites -u test -p 1234 -e test@domain.test -r http://localhost:4873
 
       - name: Publish Packages
         run: |

@@ -1,13 +1,13 @@
 {
-  "name": "automock-sinon-nestjs",
+  "name": "suites-sinon-nestjs",
   "private": true,
   "version": "1.0.0",
   "dependencies": {
-    "@automock/adapters.nestjs": "file:tarballs/adapters.nestjs.tgz",
-    "@automock/core": "file:tarballs/core.tgz",
-    "@automock/common": "file:tarballs/common.tgz",
-    "@automock/types": "file:tarballs/types.tgz",
-    "@automock/sinon": "file:tarballs/sinon.tgz"
+    "@suites/adapters.nestjs": "file:tarballs/adapters.nestjs.tgz",
+    "@suites/core": "file:tarballs/core.tgz",
+    "@suites/common": "file:tarballs/common.tgz",
+    "@suites/types": "file:tarballs/types.tgz",
+    "@suites/sinon": "file:tarballs/sinon.tgz"
   },
   "scripts": {
     "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts"

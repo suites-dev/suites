@@ -1,4 +1,4 @@
-name: Automock E2E
+name: Suites E2E
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'jest/inversify', 'sinon/inversify']
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
         node-version: [16.x, 18.x, 20.x]
     steps:
       - name: Checkout
@@ -47,8 +47,8 @@ jobs:
 
       - name: Rename Tarballs
         run: |
-          for file in $PWD/e2e/tarballs/automock-*.tgz; do
-            [[ $file =~ automock-(.+)-[0-9]+\.[0-9]+\.[0-9]+(-dev\.[0-9]+)?\.tgz ]]
+          for file in $PWD/e2e/tarballs/suites-*.tgz; do
+            [[ $file =~ suites-(.+)-[0-9]+\.[0-9]+\.[0-9]+(-dev\.[0-9]+)?\.tgz ]]
             new_name="${BASH_REMATCH[1]}.tgz"
             mv "$file" "$PWD/e2e/tarballs/$new_name"
           done

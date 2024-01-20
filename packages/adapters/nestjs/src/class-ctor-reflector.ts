@@ -1,6 +1,6 @@
 import { SELF_DECLARED_DEPS_METADATA, PARAMTYPES_METADATA } from '@nestjs/common/constants';
-import { Type } from '@automock/types';
-import { ClassInjectable, UndefinedDependencyError } from '@automock/common';
+import { Type } from '@suites/types';
+import { ClassInjectable, UndefinedDependencyError } from '@suites/common';
 import { MetadataReflector, NestInjectableIdentifier } from './types';
 import { NestCustomToken, ParamsTokensReflector } from './params-token-resolver';
 
@@ -19,7 +19,7 @@ export function ClassCtorReflector(
     return paramTypes.map((typeOrUndefined, paramIndex) => {
       const isToken = tokensIndexes.includes(paramIndex);
       const error =
-        new UndefinedDependencyError(`Automock encountered an error while attempting to detect a token or type for the
+        new UndefinedDependencyError(`Suites encountered an error while attempting to detect a token or type for the
 dependency at index [${paramIndex}] in the class '${targetClass.name}'.
 This issue is commonly caused by either improper parameter decoration or a problem during the reflection of
 the parameter type. In some cases, this error may arise due to circular dependencies. If this is the case,

@@ -1,5 +1,5 @@
-import { Type, MockFunction } from '@automock/types';
-import { InjectablesRegistry, WithMetadata } from '@automock/common';
+import { Type, MockFunction } from '@suites/types';
+import { InjectablesRegistry, WithMetadata } from '@suites/common';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
 import { normalizeIdentifier } from '../normalize-identifier.static';
 

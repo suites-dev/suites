@@ -1,4 +1,4 @@
-import { Type } from '@automock/types';
+import { Type } from '@suites/types';
 import { TestBedBuilder, UnitReference, UnitTestBed } from '../src';
 import { UnitBuilder } from '../src/services/testbed-builder';
 import { UnitMocker } from '../src/services/unit-mocker';

@@ -1,5 +1,5 @@
-import { ClassInjectable } from '@automock/common';
-import { Type } from '@automock/types';
+import { ClassInjectable } from '@suites/common';
+import { Type } from '@suites/types';
 import { interfaces } from 'inversify';
 
 import Metadata = interfaces.Metadata;

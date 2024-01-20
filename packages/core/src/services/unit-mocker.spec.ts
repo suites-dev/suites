@@ -3,7 +3,7 @@ import {
   InjectablesRegistry,
   UndefinedDependency,
   WithMetadata,
-} from '@automock/common';
+} from '@suites/common';
 import { MockedUnit, UnitMocker } from './unit-mocker';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
 

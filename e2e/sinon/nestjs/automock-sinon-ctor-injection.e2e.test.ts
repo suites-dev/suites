@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
-import { UnitReference } from '@automock/core';
-import { TestBed } from '@automock/sinon';
+import { UnitReference } from '@suites/core';
+import { TestBed } from '@suites/sinon';
 import {
   ClassThatIsNotInjected,
   Foo,

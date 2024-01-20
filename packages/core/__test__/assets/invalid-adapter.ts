@@ -1,4 +1,4 @@
-import { AutomockDependenciesAdapter, InjectablesRegistry } from '@automock/common';
+import { AutomockDependenciesAdapter, InjectablesRegistry } from '@suites/common';
 
 export = {
   inspect(): InjectablesRegistry {

@@ -1,16 +1,16 @@
-import { DeepPartial, Type, MockFunction, StubbedInstance } from '@automock/types';
+import { DeepPartial, Type, MockFunction, StubbedInstance } from '@suites/types';
 import {
   IdentifierMetadata,
   ConstantValue,
   InjectableIdentifier,
   AutomockDependenciesAdapter,
-} from '@automock/common';
+} from '@suites/common';
 import { UnitReference } from './unit-reference';
 import { UnitMocker } from './unit-mocker';
 import { MockOverride, TestBedBuilder, UnitTestBed } from '../public-types';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
 import { normalizeIdentifier } from '../normalize-identifier.static';
-import { AutomockErrorCode } from '@automock/common';
+import { AutomockErrorCode } from '@suites/common';
 
 export class UnitBuilder {
   public static create<TClass>(
@@ -95,5 +95,5 @@ function mockDependencyNotFoundMessage(
   return `Automock Warning (${AutomockErrorCode.IDENTIFIER_NOT_FOUND}): The provided dependency identifier '${details}' does not match any
 existing dependencies in the current testing context. Please review your identifier and
 ensure it corresponds to the expected configuration.
-Refer to the docs for further information: https://automock.dev/docs`;
+Refer to the docs for further information: https://suites.dev/docs`;
 }

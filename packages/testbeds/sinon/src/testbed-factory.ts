@@ -1,5 +1,5 @@
-import { AutomockTestBuilder, TestBedBuilder } from '@automock/core';
-import { Type } from '@automock/types';
+import { AutomockTestBuilder, TestBedBuilder } from '@suites/core';
+import { Type } from '@suites/types';
 import { mock } from './mock.static';
 
 export class TestBed {

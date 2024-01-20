@@ -1,10 +1,10 @@
-import { Type } from '@automock/types';
+import { Type } from '@suites/types';
 import {
   InjectableIdentifier,
   InjectableReflectedType,
   InjectableFinalValue,
   UndefinedDependency,
-} from '@automock/common';
+} from '@suites/common';
 import { ForwardRefToken, NestInjectableIdentifier } from './types';
 
 export interface StrategyReturnType {

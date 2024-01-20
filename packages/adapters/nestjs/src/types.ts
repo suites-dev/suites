@@ -1,4 +1,4 @@
-import { InjectableIdentifier, InjectableReflectedType } from '@automock/common';
+import { InjectableIdentifier, InjectableReflectedType } from '@suites/common';
 
 export type ForwardRefToken = { forwardRef: () => InjectableReflectedType };
 export type NestInjectableIdentifier = ForwardRefToken | InjectableIdentifier;

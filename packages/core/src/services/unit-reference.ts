@@ -1,17 +1,17 @@
-import { StubbedInstance, Type } from '@automock/types';
+import { StubbedInstance, Type } from '@suites/types';
 import {
   ConstantValue,
   IdentifierMetadata,
   InjectableIdentifier,
   IdentifierNotFoundError,
-} from '@automock/common';
+} from '@suites/common';
 import { MocksContainer } from './mocks-container';
 
 /**
  * Provides a reference to mock objects that have been mocked for testing
  * purposes within the test environment.
  *
- * @see https://automock.dev/api-reference/api/unitreference-api
+ * @see https://suites.dev/api-reference/api/unitreference-api
  */
 export interface UnitReference {
   /**
@@ -181,5 +181,5 @@ Please ensure accurate spelling and correspondence between the provided token or
 injection configuration. If you are utilizing a custom token, it is essential to confirm its proper registration
 within the DI container.
 
-Refer to the docs for further information: https://automock.dev/docs`;
+Refer to the docs for further information: https://suites.dev/docs`;
 }

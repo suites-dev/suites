@@ -1,19 +1,19 @@
 {
-  "name": "automock-monorepo",
+  "name": "suites-monorepo",
   "private": true,
   "version": "0.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/automock/automock.git"
+    "url": "https://github.com/suites-dev/suites.git"
   },
   "engines": {
     "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },
   "bugs": {
-    "url": "https://github.com/automock/automock/issues"
+    "url": "https://github.com/suites-dev/suites.git"
   },
-  "homepage": "https://automock.dev",
+  "homepage": "https://suites.dev",
   "contributors": [
     {
       "name": "Omer Morad",

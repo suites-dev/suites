@@ -1,12 +1,12 @@
 import isEqual from 'lodash.isequal';
-import { Type } from '@automock/types';
+import { Type } from '@suites/types';
 import {
   AutomockDependenciesAdapter,
   ClassInjectable,
   InjectablesRegistry,
   InjectableIdentifier,
   WithMetadata,
-} from '@automock/common';
+} from '@suites/common';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
 import { IdentifierMetadata } from './types';

@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
+  <img width="200" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
 </p>
 
 
@@ -8,10 +8,10 @@
 **Automock optimizes the unit testing process by providing a virtual, isolated environment and automated mock
 generation, enabling developers to create efficient test suites and enhance their overall testing experience.**
 
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)
-[![ci](https://github.com/automock/automock/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/suites-dev/suites/master.svg?style=flat-square)](https://codecov.io/gh/suites-dev/suites)
+[![ci](https://github.com/suites-dev/suites/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/suites-dev/suites/actions)
 
-[↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference)
+[↗️ Documentation](https://suites.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://suites.dev/api-reference)
 
 ## Core Features
 
@@ -29,23 +29,23 @@ read and maintain.
 ## :package: Installation
 
 To fully integrate Automock into your testing and dependency injection framework, **you need to install two
-packages: `@automock/jest`, and the corresponding DI framework adapter.**
+packages: `@suites/jest`, and the corresponding DI framework adapter.**
 
 1. Install Automock's Jest package:
 ```bash
-$ npm i -D @automock/jest
+$ npm i -D @suites/jest
 ````
 
 2. And for your DI framework, install the appropriate Automock adapter (as a dev dependency):
 
 | DI Framework | Package Name                   |
 |--------------|--------------------------------|
-| NestJS       | `@automock/adapters.nestjs`    |
-| Inversify    | `@automock/adapters.inversify` |
+| NestJS       | `@suites/adapters.nestjs`    |
+| Inversify    | `@suites/adapters.inversify` |
 
 For example:
 ```bash
-$ npm i -D @automock/jest @automock/adapters.nestjs
+$ npm i -D @suites/jest @suites/adapters.nestjs
 ```
 
 No further configuration is required.
@@ -73,7 +73,7 @@ export class UserService {
 Let's create a unit test for this class:
 
 ```typescript
-import { TestBed } from '@automock/jest';
+import { TestBed } from '@suites/jest';
 import { Database, UserService } from './user.service'; 
 
 describe('User Service Unit Spec', () => {
@@ -114,7 +114,7 @@ is an array of advantages to this change:**
 * **Isolation:** Each test runs independently with mock implementations automatically provided, creating a
   streamlined and interference-free testing environment.
 
-<p align="right"><a href="https://automock.dev/docs/getting-started/examples">↗️ For a full Step-by-Step example</a></p>
+<p align="right"><a href="https://suites.dev/docs/getting-started/examples">↗️ For a full Step-by-Step example</a></p>
 
 ## :scroll: License
 

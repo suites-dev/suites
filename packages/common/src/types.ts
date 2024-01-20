@@ -1,4 +1,4 @@
-import { Type } from '@automock/types';
+import { Type } from '@suites/types';
 
 /**
  * @since 2.2.0

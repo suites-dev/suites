@@ -1,4 +1,4 @@
-import { AutomockDependenciesAdapter, ClassInjectable } from '@automock/common';
+import { AutomockDependenciesAdapter, ClassInjectable } from '@suites/common';
 import { DependenciesAdapter } from './dependencies-adapter';
 import { IdentifierMetadata } from './types';
 

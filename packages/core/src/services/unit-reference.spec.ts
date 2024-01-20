@@ -1,7 +1,7 @@
 import { UnitReference } from './unit-reference';
 import { MocksContainer } from './mocks-container';
-import { ConstantValue, InjectableIdentifier } from '@automock/common';
-import { StubbedInstance } from '@automock/types';
+import { ConstantValue, InjectableIdentifier } from '@suites/common';
+import { StubbedInstance } from '@suites/types';
 
 class DependencyOne {}
 class DependencyOneStubbed {}

@@ -4,8 +4,8 @@ import {
   ConstantValue,
   IdentifierMetadata,
   InjectableIdentifier,
-} from '@automock/common';
-import { StubbedInstance } from '@automock/types';
+} from '@suites/common';
+import { StubbedInstance } from '@suites/types';
 
 export type IdentifierToMock = [
   Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },

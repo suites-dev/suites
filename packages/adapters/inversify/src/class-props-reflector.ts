@@ -1,5 +1,5 @@
-import { ClassInjectable, UndefinedDependency, UndefinedDependencyError } from '@automock/common';
-import { Type } from '@automock/types';
+import { ClassInjectable, UndefinedDependency, UndefinedDependencyError } from '@suites/common';
+import { Type } from '@suites/types';
 import { METADATA_KEY } from 'inversify';
 import {
   InversifyInjectableIdentifierMetadata,

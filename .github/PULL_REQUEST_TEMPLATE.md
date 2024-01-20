@@ -1,7 +1,7 @@
 ## PR Checklist
 Please check if your PR fulfills the following requirements:
 
-- [ ] The pull request title follows the semantic commits guidelines: https://github.com/automock/automock/blob/master/CONTRIBUTING.md#commit-guidelines
+- [ ] The pull request title follows the semantic commits guidelines: https://github.com/suites-dev/suites/blob/master/CONTRIBUTING.md#commit-guidelines
 - [ ] Tests for the changes have been added (for bug fixes / features)
 
 ## PR Type

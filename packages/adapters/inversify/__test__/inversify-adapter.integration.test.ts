@@ -20,7 +20,7 @@ import {
   IdentifierMetadata,
   InjectableIdentifier,
   UndefinedDependency,
-} from '@automock/common';
+} from '@suites/common';
 import { InversifyInjectableIdentifierMetadata } from '../src/types';
 import InversifyAutomockDependenciesAdapter from '../src';
 

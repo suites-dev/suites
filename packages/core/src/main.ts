@@ -1,5 +1,5 @@
-import { MockFunction, Type } from '@automock/types';
-import { AdapterNotFoundError } from '@automock/common';
+import { MockFunction, Type } from '@suites/types';
+import { AdapterNotFoundError } from '@suites/common';
 import { TestBedBuilder } from './public-types';
 import { AutomockAdapters, PackageResolver } from './services/package-resolver';
 import { UnitMocker } from './services/unit-mocker';
@@ -23,7 +23,7 @@ function createTestbedBuilder<TClass>(
     throw new AdapterNotFoundError(`Automock requires an adapter to seamlessly integrate with different dependency injection frameworks.
 It seems that you haven't installed an appropriate adapter package. To resolve this issue, please install
 one of the available adapters that matches your dependency injection framework.
-Refer to the docs for further information: https://automock.dev/docs`);
+Refer to the docs for further information: https://suites.dev/docs`);
   }
 }
 

@@ -10,8 +10,8 @@ import {
   DependencyTwo,
   PropsBasedMainClass,
 } from './assets/integration.assets';
-import { InjectableIdentifier, UndefinedDependency, WithoutMetadata } from '@automock/common';
-import { Type } from '@automock/types';
+import { InjectableIdentifier, UndefinedDependency, WithoutMetadata } from '@suites/common';
+import { Type } from '@suites/types';
 import NestJSAutomockDependenciesAdapter from '../src';
 
 describe('NestJS Automock Adapter Integration Test', () => {

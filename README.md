@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
+  <img width="200" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
 </p>
 
 <h1 align="center">Automock</h1>
@@ -9,10 +9,14 @@
 generation, enabling developers to create efficient test suites and enhance their overall testing experience.</strong>
 </p>
 
-[![npm downloads](https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest)](https://npmjs.org/package/@automock/jest "View this project on npm")
-[![npm downloads](https://img.shields.io/npm/dm/@automock/sinon.svg?label=%40automock%2Fsinon)](https://npmjs.org/package/@automock/sinon "View this project on npm")
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)
-[![ci](https://github.com/automock/automock/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/suites-dev/suites/master.svg?style=flat-square)](https://codecov.io/gh/suites-dev/suites)
+[![ci](https://github.com/suites-dev/suites/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/suites-dev/suites/actions)
+[![e2e](https://github.com/suites-dev/suites/actions/workflows/e2e.yml/badge.svg?branch=master)](https://github.com/suites-dev/suites/actions)
+[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+
+[![npm downloads](https://img.shields.io/npm/dm/@suites/jest.svg?label=%40automock%2Fjest)](https://npmjs.org/package/@suites/jest "View this project on npm")
+[![npm downloads](https://img.shields.io/npm/dm/@suites/sinon.svg?label=%40automock%2Fsinon)](https://npmjs.org/package/@suites/sinon "View this project on npm")
+[![npm downloads](https://img.shields.io/npm/dm/@suites/core.svg?label=%40automock%2Fcore)](https://npmjs.org/package/@suites/core "View this project on npm")
 
 [↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference)
 
@@ -50,7 +54,7 @@ export class UserService {
 
 Let's create a unit test for this class using Automock:
 ```typescript
-import { TestBed } from '@automock/jest';
+import { TestBed } from '@suites/jest';
 import { Database, UserService } from './user.service'; 
 
 describe('User Service Unit Spec', () => {
@@ -97,22 +101,14 @@ Automock package for your chosen testing framework, and the corresponding adapte
 
 1. Install the corresponding package for your testing framework:
 
-```bash
-$ npm i -D @automock/jest
-```
+**Jest:** `$ npm i -D @suites/jest` \
+**Sinon:** `$ npm i -D @suites/sinon` \
+**Vitest:** `$ npm i -D @suites/vitest`
 
-For **Sinon**:
+2. And for your DI framework, install the appropriate Automock adapter:
 
-```bash
-$ npm i -D @automock/sinon
-```
-
-2. And for your DI framework, install the appropriate Automock adapter (as a dev dependency):
-
-| DI Framework | Package Name                   |
-|--------------|--------------------------------|
-| NestJS       | `@automock/adapters.nestjs`    |
-| Inversify    | `@automock/adapters.inversify` |
+**NestJS:** `$ npm i -D @suites/nestjs` \
+**InversifyJS:** `$ npm i -D @suites/inversify`
 
 No further configuration is required.
 

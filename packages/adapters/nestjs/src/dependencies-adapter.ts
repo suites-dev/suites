@@ -1,9 +1,5 @@
 import { Type } from '@suites/types';
-import {
-  AutomockDependenciesAdapter,
-  ClassInjectable,
-  InjectablesRegistry,
-} from '@suites/common';
+import { AutomockDependenciesAdapter, ClassInjectable, InjectablesRegistry } from '@suites/common';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
 

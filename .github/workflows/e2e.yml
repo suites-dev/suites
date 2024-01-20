@@ -14,14 +14,6 @@ jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
-    services:
-      verdaccio:
-        image: verdaccio/verdaccio
-        ports:
-          - 4873:4873
-        options: >-
-          --name verdaccio
-          --mount type=bind,source=config.yaml,target=/verdaccio/conf/config.yaml
     strategy:
       matrix:
         e2e-project: [ 'jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify' ]
@@ -31,6 +23,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.target_branch }}
+
+      - name: Run Verdaccio Docker
+        run: |
+          docker run -d --name verdaccio \
+          -p 4873:4873 \
+          -v ${{ github.workspace }}/config.yaml:/verdaccio/conf/config.yaml \
+          -v /path/to/your/storage:/verdaccio/storage \
+          verdaccio/verdaccio
 
       - name: Setup Node ${{ matrix.node-version }}
         uses: actions/setup-node@v4

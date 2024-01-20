@@ -6,8 +6,9 @@ uplinks:
 
 packages:
   '@suites/*':
-    access: $all
-    publish: $authenticated
+    access: $anonymous
+    publish: $anonymous
+    proxy: npmjs
 
   '**':
     access: $authenticated
@@ -16,7 +17,9 @@ packages:
 
 auth:
   htpasswd:
-    file: /verdaccio/conf/htpasswd
+    file: ./htpasswd
+    algorithm: bcrypt
+    rounds: 10
 
 logs:
   - {type: stdout, format: pretty, level: http}

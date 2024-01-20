@@ -26,7 +26,6 @@ jobs:
           docker run -d --name verdaccio \
           -p 4873:4873 \
           -v ${{ github.workspace }}/e2e/config.yaml:/verdaccio/conf/config.yaml \
-          -v /path/to/your/storage:/verdaccio/storage \
           verdaccio/verdaccio
 
       - name: Setup Node ${{ matrix.node-version }}
@@ -37,6 +36,9 @@ jobs:
           scope: '@suites'
           always-auth: true
           token: 'verdaccio-auth-token'
+
+      - name: Registry Login
+        run: npx npm-cli-login -s @suites -u test -p 1234 -e test@domain.test -r http://localhost:4873
 
       - name: Yarn
         run: yarn --frozen-lockfile

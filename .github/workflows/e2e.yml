@@ -50,14 +50,14 @@ jobs:
         run: |
           yarn lerna publish from-package --yes \
           --no-git-tag-version \
-          --no-push \ 
+          --no-push \
           --no-verify-access \
           --no-verify-registry \
           --no-verify-version \
           --no-changelog \
           --no-commit-hooks \
           --no-git-reset \
-          -exact \
+          --exact \
           --force-publish \
           --dist-tag e2e \
           --registry http://localhost:4873

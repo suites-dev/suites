@@ -28,7 +28,7 @@ jobs:
         run: |
           docker run -d --name verdaccio \
           -p 4873:4873 \
-          -v ${{ github.workspace }}/config.yaml:/verdaccio/conf/config.yaml \
+          -v ${{ github.workspace }}/e2e/config.yaml:/verdaccio/conf/config.yaml \
           -v /path/to/your/storage:/verdaccio/storage \
           verdaccio/verdaccio
 

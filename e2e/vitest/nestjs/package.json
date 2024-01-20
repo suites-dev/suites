@@ -1,22 +1,21 @@
 {
-  "name": "suites-jest-nestjs",
+  "name": "suites-vitest-nestjs",
+  "type": "module",
   "private": true,
   "version": "0.0.0",
   "dependencies": {
     "@suites/adapters.nestjs": "e2e",
-    "@suites/core": "e2e",
-    "@suites/common": "e2e",
-    "@suites/types": "e2e",
-    "@suites/jest": "e2e"
+    "@suites/vitest": "e2e",
+    "@nestjs/common": "10.0.0",
+    "@nestjs/core": "10.0.0",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.11",
-    "jest": "e2e",
-    "ts-jest": "e2e",
-    "ts-node": "e2e",
-    "typescript": "^5.x"
+    "ts-node": "*",
+    "typescript": "^5.x",
+    "vitest": "*"
   },
   "scripts": {
-    "test": "jest && tsc --noEmit"
+    "test": "npx vitest && tsc --noEmit"
   }
 }

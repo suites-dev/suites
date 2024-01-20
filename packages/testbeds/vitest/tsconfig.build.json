@@ -1,10 +1,11 @@
 {
   "extends": "../../../tsconfig.build.json",
   "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
     "rootDir": "src",
     "baseUrl": "./",
     "outDir": "dist",
-    "target": "es6",
     "skipLibCheck": true
   },
   "exclude": [
@@ -12,6 +13,6 @@
     "node_modules",
     "test",
     "**/*.spec.ts",
-    "jest.config.ts"
+    "vitest.config.ts"
   ]
 }

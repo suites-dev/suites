@@ -1,6 +1,6 @@
+import { Mocked } from '@vitest/spy';
 import { Type } from '@suites/types';
 import { IdentifierMetadata } from '@suites/common';
-import { Mocked } from 'vitest';
 
 export * from './testbed-factory';
 

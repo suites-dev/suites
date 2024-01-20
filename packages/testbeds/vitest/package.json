@@ -36,7 +36,7 @@
     "README.md"
   ],
   "engines": {
-    "node": "^18.12.0 || >=20.0.0"
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },
   "dependencies": {
     "@suites/core": "^2.1.0",
@@ -47,5 +47,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "604c28d46817ccaf16aeba41713d5a270c96e3d5"
 }

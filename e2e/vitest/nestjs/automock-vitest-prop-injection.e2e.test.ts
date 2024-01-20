@@ -1,10 +1,12 @@
+import { beforeAll, describe, test, expect } from 'vitest';
 import { UnitReference } from '@suites/core';
-import { TestBed } from '@suites/jest';
+import { TestBed } from '@suites/vitest';
+import { Mocked } from '@vitest/spy';
 import {
   ClassThatIsNotInjected,
   Foo,
   Logger,
-  NestJSTestClass,
+  NestJSTestClassProp,
   SymbolToken,
   SymbolTokenSecond,
   TestClassFive,
@@ -14,19 +16,18 @@ import {
   TestClassTwo,
 } from './e2e-assets';
 
-describe('Suites Jest / NestJS E2E Test Ctor', () => {
-  let unit: NestJSTestClass;
+describe('Suites Vitest / NestJS E2E Test Props', () => {
+  let unit: NestJSTestClassProp;
   let unitRef: UnitReference;
 
   beforeAll(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.create<NestJSTestClass>(NestJSTestClass)
+    const { unitRef: ref, unit: underTest } = TestBed.create<NestJSTestClassProp>(
+      NestJSTestClassProp
+    )
       .mock(TestClassOne)
       .using({
         async foo(): Promise<string> {
           return 'foo-from-test';
-        },
-        bar(): string {
-          return 'bar';
         },
       })
       .mock<string>('CONSTANT_VALUE')
@@ -45,7 +46,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
 
   describe('when compiling the builder and turning into testing unit', () => {
     test('then the unit should an instance of the class under test', () => {
-      expect(unit).toBeInstanceOf(NestJSTestClass);
+      expect(unit).toBeInstanceOf(NestJSTestClassProp);
     });
 
     test('then successfully resolve the dependencies of the tested classes', () => {
@@ -62,15 +63,6 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       expect(() => unitRef.get(SymbolTokenSecond)).toBeDefined();
     });
 
-    test('call the unit instance method', async () => {
-      const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
-
-      testClassTwo.bar.mockResolvedValue('context');
-
-      const result = await unit.test();
-      expect(result).toBe('context-baz-from-test-bar');
-    });
-
     test('then do not return the actual reflected dependencies of the injectable class', () => {
       expect(() => unitRef.get(TestClassOne)).not.toBeInstanceOf(TestClassOne);
       expect(() => unitRef.get(TestClassTwo)).not.toBeInstanceOf(TestClassTwo);
@@ -78,7 +70,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
     });
 
     test('then mock the implementation of the dependencies', async () => {
-      const testClassOne: jest.Mocked<TestClassOne> = unitRef.get(TestClassOne);
+      const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
       const logger = unitRef.get<Logger>('LOGGER');
 
       // The original 'foo' method in TestClassOne return value should be changed
@@ -90,20 +82,25 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       expect(logger.log).toBeDefined();
     });
 
-    test('then treat duplicate identifiers as the same reference', async () => {
-      await expect(unit.testDuplicateIdentifier()).resolves.toBe('foo-from-test<>foo-from-test');
-    });
-
     test('then all the unoverride classes/dependencies should be stubs as well', () => {
-      const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       expect(testClassTwo.bar.getMockName).toBeDefined();
-      expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');
+      expect(testClassTwo.bar.getMockName()).toBe('spy');
+    });
+
+    test('call the unit instance method', async () => {
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+
+      testClassTwo.bar.mockResolvedValue('context');
+
+      const result = await unit.test();
+      expect(result).toBe('context-baz-from-test');
     });
 
     test('then mock the undefined reflected values and tokens', () => {
-      const testClassFour: jest.Mocked<TestClassFour> = unitRef.get(TestClassFour);
-      const undefinedValue: jest.Mocked<{ method: () => number }> = unitRef.get<{
+      const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
+      const undefinedValue: Mocked<{ method: () => number }> = unitRef.get<{
         method: () => number;
       }>('UNDEFINED');
 

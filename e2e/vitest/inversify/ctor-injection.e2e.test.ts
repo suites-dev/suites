@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
 import { UnitReference } from '@suites/core';
-import { TestBed } from '@suites/jest';
+import { TestBed } from '@suites/vitest';
 import {
   ClassThatIsNotInjected,
   Foo,
@@ -17,7 +17,7 @@ import {
   Bar,
 } from './e2e-assets';
 
-describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
+describe('Suites Vitest / InversifyJS E2E Test Ctor', () => {
   let unit: InversifyJSTestClass;
   let unitRef: UnitReference;
 
@@ -27,7 +27,7 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
     )
       .mock(TestClassOne)
       .using({
-        foo: jest.fn().mockResolvedValue('foo-from-test'),
+        foo: vi.fn().mockResolvedValue('foo-from-test'),
         bar(): string {
           return 'bar';
         },
@@ -83,7 +83,7 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     test('then mock the implementation of the dependencies', async () => {
-      const testClassOne: jest.Mocked<TestClassOne> = unitRef.get(TestClassOne);
+      const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
       const logger = unitRef.get<Logger>('LOGGER');
 
       // The original 'foo' method in TestClassOne return value should be changed

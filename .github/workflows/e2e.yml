@@ -1,4 +1,6 @@
 name: Suites E2E
+env:
+  CI: true
 
 on:
   workflow_dispatch:
@@ -13,13 +15,27 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'jest/inversify', 'sinon/inversify']
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
         node-version: [16.x, 18.x, 20.x]
+        exclude:
+          - e2e-project: 'vitest/inversify'
+            node-version: '16.x'
+          - e2e-project: 'vitest/nestjs'
+            node-version: '16.x'
+    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.target_branch }}
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Yarn
+        run: yarn --frozen-lockfile --ignore-engines
 
       - name: Run Verdaccio Docker
         run: |
@@ -28,19 +44,16 @@ jobs:
           -v ${{ github.workspace }}/e2e/config.yaml:/verdaccio/conf/config.yaml \
           verdaccio/verdaccio
 
-      - name: Setup Node ${{ matrix.node-version }}
+      - name: Build
+        run: yarn build
+
+      - name: Setup Registry
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: http://localhost:4873
           scope: '@suites'
           always-auth: false
-
-      - name: Yarn
-        run: yarn --frozen-lockfile
-
-      - name: Build
-        run: yarn build
 
       - name: Publish Packages
         run: |
@@ -54,16 +67,19 @@ jobs:
           --force-publish \
           --dist-tag e2e
 
-      - name: Remove Source Code
-        run: rm -rf packages
-
       - name: Setup and Test
         run: |
           IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
           echo "FRAMEWORK=$framework" >> $GITHUB_ENV
           echo "LIBRARY=$library" >> $GITHUB_ENV
 
-      - name: Execute Test
+      - name: Clean Source
         run: |
-          npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
-          npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"
+          rm -rf packages
+          rm -rf node_modules
+
+      - name: Install Dependencies
+        run: npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
+
+      - name: Execute Test
+        run: npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"

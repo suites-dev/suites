@@ -6,9 +6,6 @@ on:
       target_branch:
         description: 'E2E Target Branch'
         required: true
-defaults:
-  run:
-    working-directory: ./e2e
 
 jobs:
   build:
@@ -75,9 +72,10 @@ jobs:
           IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
           echo "FRAMEWORK=$framework" >> $GITHUB_ENV
           echo "LIBRARY=$library" >> $GITHUB_ENV
+        working-directory: e2e
 
       - name: Execute Test
         run: |
           npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
           npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"
-        working-directory: ${{ github.workspace }}
+        working-directory: e2e

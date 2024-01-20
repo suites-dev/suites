@@ -6,8 +6,8 @@ uplinks:
 
 packages:
   '@suites/*':
-    access: $anonymous
-    publish: $anonymous
+    access: $all
+    publish: $all
     proxy: npmjs
 
   '**':

@@ -6,6 +6,7 @@ on:
       target_branch:
         description: 'E2E Target Branch'
         required: true
+        default: 'chore/e2e-to-registry'
 
 jobs:
   build:
@@ -34,11 +35,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: http://localhost:4873
           scope: '@suites'
-          always-auth: true
-          token: 'verdaccio-auth-token'
+          always-auth: false
 
-      - name: Registry Login
-        run: npx npm-cli-login -s @suites -u test -p 1234 -e test@domain.test -r http://localhost:4873
+#      - name: Registry Login
+#        run: npx npm-cli-login -s @suites -u test -p 1234 -e test@domain.test -r http://localhost:4873
 
       - name: Yarn
         run: yarn --frozen-lockfile

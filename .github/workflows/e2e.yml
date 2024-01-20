@@ -6,6 +6,9 @@ on:
       target_branch:
         description: 'E2E Target Branch'
         required: true
+defaults:
+  run:
+    working-directory: ./e2e
 
 jobs:
   build:
@@ -18,11 +21,11 @@ jobs:
           - 4873:4873
         options: >-
           --name verdaccio
-          --mount type=bind,source=${{ github.workspace }}/e2e/config.yaml,target=/verdaccio/conf/config.yaml
+          --mount type=bind,source=config.yaml,target=/verdaccio/conf/config.yaml
     strategy:
       matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify']
-        node-version: [16.x, 18.x, 20.x]
+        e2e-project: [ 'jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify' ]
+        node-version: [ 16.x, 18.x, 20.x ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -74,7 +77,7 @@ jobs:
           echo "LIBRARY=$library" >> $GITHUB_ENV
 
       - name: Execute Test
-        run: |          
+        run: |
           npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
           npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"
         working-directory: ${{ github.workspace }}

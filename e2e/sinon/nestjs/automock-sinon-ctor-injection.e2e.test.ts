@@ -23,7 +23,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import sinon = require('sinon');
 chai.use(chaiAsPromised);
 
-describe('Automock Sinon / NestJS E2E Test Ctor', () => {
+describe('Suites Sinon / NestJS E2E Test Ctor', () => {
   let unit: NestJSTestClass;
   let unitRef: UnitReference;
 

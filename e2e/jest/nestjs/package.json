@@ -1,13 +1,13 @@
 {
   "name": "suites-jest-nestjs",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "dependencies": {
-    "@suites/adapters.nestjs": "file:tarballs/adapters.nestjs.tgz",
-    "@suites/core": "file:tarballs/core.tgz",
-    "@suites/common": "file:tarballs/common.tgz",
-    "@suites/types": "file:tarballs/types.tgz",
-    "@suites/jest": "file:tarballs/jest.tgz"
+    "@suites/adapters.nestjs": "e2e",
+    "@suites/core": "e2e",
+    "@suites/common": "e2e",
+    "@suites/types": "e2e",
+    "@suites/jest": "e2e"
   },
   "devDependencies": {
     "@types/jest": "^27.5.2",

@@ -17,7 +17,7 @@ import {
   Bar,
 } from './e2e-assets';
 
-describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
+describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
   let unit: InversifyJSTestClass;
   let unitRef: UnitReference;
 

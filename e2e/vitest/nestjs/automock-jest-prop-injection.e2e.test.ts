@@ -14,7 +14,7 @@ import {
   TestClassTwo,
 } from './e2e-assets';
 
-describe('Automock Jest / NestJS E2E Test Props', () => {
+describe('Suites Jest / NestJS E2E Test Props', () => {
   let unit: NestJSTestClassProp;
   let unitRef: UnitReference;
 

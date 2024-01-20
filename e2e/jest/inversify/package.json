@@ -1,13 +1,13 @@
 {
   "name": "suites-jest-inverisfy",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "dependencies": {
-    "@suites/adapters.inversify": "file:tarballs/adapters.inversify.tgz",
-    "@suites/core": "file:tarballs/core.tgz",
-    "@suites/common": "file:tarballs/common.tgz",
-    "@suites/types": "file:tarballs/types.tgz",
-    "@suites/jest": "file:tarballs/jest.tgz"
+    "@suites/adapters.inversify": "e2e",
+    "@suites/core": "e2e",
+    "@suites/common": "e2e",
+    "@suites/types": "e2e",
+    "@suites/jest": "e2e"
   },
   "scripts": {
     "test": "jest && tsc --noEmit"

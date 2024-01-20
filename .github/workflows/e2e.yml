@@ -17,7 +17,7 @@ jobs:
         ports:
           - 4873:4873
         env:
-          NPMTOKEN: verdaccio-auth-token
+          NPM_TOKEN: verdaccio-auth-token
     strategy:
       matrix:
         e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify']

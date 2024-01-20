@@ -15,12 +15,12 @@
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/chai-as-promised": "^7.1.8",
-    "@types/sinon": "e2e",
+    "@types/sinon": "*",
     "inversify": "^6.0.2",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "mocha": "^10.2.0",
-    "sinon": "e2e",
+    "sinon": "*",
     "ts-mocha": "10.0.0",
     "typescript": "^5.x"
   }

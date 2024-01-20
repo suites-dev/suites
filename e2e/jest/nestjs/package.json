@@ -10,11 +10,11 @@
     "@suites/jest": "e2e"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.11",
-    "jest": "e2e",
-    "ts-jest": "e2e",
-    "ts-node": "e2e",
-    "typescript": "^5.x"
+    "@types/jest": "^27.5.2",
+    "jest": "*",
+    "ts-jest": "*",
+    "ts-node": "*",
+    "typescript": "^4.x"
   },
   "scripts": {
     "test": "jest && tsc --noEmit"

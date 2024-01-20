@@ -1,0 +1,6 @@
+storage: /verdaccio/storage
+
+packages:
+  '@suites/*':
+    access: $all
+    publish: $authenticated

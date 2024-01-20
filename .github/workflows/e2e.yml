@@ -31,6 +31,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: http://localhost:4873
+          scope: '@suites'
+          always-auth: false
 
       - uses: actions/cache@v2
         with:

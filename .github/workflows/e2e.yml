@@ -78,10 +78,16 @@ jobs:
           rm -rf packages
           rm -rf node_modules
 
+      - name: Login
+        run: npx npm-cli-login -u test -p 1234 -e test@domain.test -r http://localhost:4873
+        working-directory: $PWD/e2e/$LIBRARY/$FRAMEWORK
+
       - name: Install Dependencies
         run: |
-          npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
-          npm install --dev --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-package-lock @types/node@${{ matrix.node-version }} 
+          npm install --no-cache --no-package-lock
+          npm install --dev --no-package-lock @types/node@${{ matrix.node-version }}
+        working-directory: $PWD/e2e/$LIBRARY/$FRAMEWORK
 
       - name: Execute Test
-        run: npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"
+        run: npm test
+        working-directory: $PWD/e2e/$LIBRARY/$FRAMEWORK

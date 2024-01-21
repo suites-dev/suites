@@ -1,13 +1,13 @@
 {
-  "name": "automock-sinon-inversify",
+  "name": "suites-sinon-inversify",
   "private": true,
   "version": "1.0.0",
   "dependencies": {
-    "@automock/adapters.inversify": "file:tarballs/adapters.inversify.tgz",
-    "@automock/core": "file:tarballs/core.tgz",
-    "@automock/common": "file:tarballs/common.tgz",
-    "@automock/types": "file:tarballs/types.tgz",
-    "@automock/sinon": "file:tarballs/sinon.tgz"
+    "@suites/adapters.inversify": "e2e",
+    "@suites/core": "e2e",
+    "@suites/common": "e2e",
+    "@suites/types": "e2e",
+    "@suites/sinon": "e2e"
   },
   "scripts": {
     "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts"

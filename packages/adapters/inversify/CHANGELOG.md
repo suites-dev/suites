@@ -7,4 +7,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-- **adapters.inversify:** add inversifyjs adapter initial package ([#206](https://github.com/automock/automock/issues/206)) ([f1b395b](https://github.com/automock/automock/commit/f1b395bf0cd7274fc8adebf1bab61d97920c2839))
+- **adapters.inversify:** add inversifyjs adapter initial package ([#206](https://github.com/suites-dev/suites/issues/206)) ([f1b395b](https://github.com/suites-dev/suites/commit/f1b395bf0cd7274fc8adebf1bab61d97920c2839))

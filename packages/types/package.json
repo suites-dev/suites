@@ -1,18 +1,18 @@
 {
-  "name": "@automock/types",
+  "name": "@suites/types",
   "private": false,
   "version": "2.0.1",
   "license": "MIT",
   "types": "index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/automock/automock.git",
+    "url": "https://github.com/suites-dev/suites.git",
     "directory": "packages/types"
   },
   "bugs": {
-    "url": "https://github.com/automock/automock/issues"
+    "url": "https://github.com/suites-dev/suites/issues"
   },
-  "homepage": "https://automock.dev",
+  "homepage": "https://suites.dev",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -22,7 +22,7 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "test": "yarn jest",
+    "test": "jest --passWithNoTests",
     "lint": "yarn eslint 'index.ts'"
   },
   "files": [

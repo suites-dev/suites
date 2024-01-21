@@ -1,8 +1,8 @@
-import { AutomockDependenciesAdapter } from '@automock/common';
+import { AutomockDependenciesAdapter } from '@suites/common';
 
 export const AutomockAdapters: Record<string, string> = {
-  nestjs: '@automock/adapters.nestjs',
-  inversify: '@automock/adapters.inversify',
+  nestjs: '@suites/adapters.nestjs',
+  inversify: '@suites/adapters.inversify',
 } as const;
 
 interface NodeRequire {

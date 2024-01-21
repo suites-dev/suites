@@ -1,4 +1,4 @@
-name: Automock E2E
+name: Suites E2E
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build, Prepare and Test
+    name: Build and Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -17,19 +17,24 @@ jobs:
         node-version: [16.x, 18.x, 20.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.target_branch }}
 
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Run Verdaccio Docker
+        run: |
+          docker run -d --name verdaccio \
+          -p 4873:4873 \
+          -v ${{ github.workspace }}/e2e/config.yaml:/verdaccio/conf/config.yaml \
+          verdaccio/verdaccio
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          registry-url: http://localhost:4873
+          scope: '@suites'
+          always-auth: false
 
       - name: Yarn
         run: yarn --frozen-lockfile
@@ -37,21 +42,17 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Pack
-        run: lerna exec -- npm pack
-
-      - name: Prepare Tarballs
+      - name: Publish Packages
         run: |
-          mkdir -p $PWD/e2e/tarballs
-          lerna exec -- mv "*.tgz" $PWD/e2e/tarballs
-
-      - name: Rename Tarballs
-        run: |
-          for file in $PWD/e2e/tarballs/automock-*.tgz; do
-            [[ $file =~ automock-(.+)-[0-9]+\.[0-9]+\.[0-9]+(-dev\.[0-9]+)?\.tgz ]]
-            new_name="${BASH_REMATCH[1]}.tgz"
-            mv "$file" "$PWD/e2e/tarballs/$new_name"
-          done
+          yarn lerna publish from-package --yes \
+          --no-git-tag-version \
+          --no-push \
+          --no-changelog \
+          --no-commit-hooks \
+          --no-git-reset \
+          --exact \
+          --force-publish \
+          --dist-tag e2e
 
       - name: Remove Source Code
         run: rm -rf packages
@@ -61,18 +62,8 @@ jobs:
           IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
           echo "FRAMEWORK=$framework" >> $GITHUB_ENV
           echo "LIBRARY=$library" >> $GITHUB_ENV
+
       - name: Execute Test
         run: |
-          cp -r "$PWD/e2e/tarballs" "$PWD/e2e/$LIBRARY/$FRAMEWORK"
-          
-          # Remove the unnecessary tarballs based on the library
-          if [ "$LIBRARY" = "jest" ]; then
-            rm -rf "$PWD/e2e/$LIBRARY/$FRAMEWORK/tarballs/sinon.tgz"
-          elif [ "$LIBRARY" = "sinon" ]; then
-            rm -rf "$PWD/e2e/$LIBRARY/$FRAMEWORK/tarballs/jest.tgz"
-          fi
-
-          rm -rf "$PWD/e2e/$LIBRARY/$FRAMEWORK/node_modules"
           npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
           npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"
-        working-directory: ${{ github.workspace }}

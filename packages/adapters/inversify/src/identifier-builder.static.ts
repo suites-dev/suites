@@ -1,6 +1,6 @@
 import { LazyServiceIdentifer } from 'inversify';
-import { Type } from '@automock/types';
-import { IdentifierMetadata, InjectableIdentifier, WithMetadata } from '@automock/common';
+import { Type } from '@suites/types';
+import { IdentifierMetadata, InjectableIdentifier, WithMetadata } from '@suites/common';
 import { INVERSIFY_PRESERVED_KEYS, InversifyInjectableMetadata } from './types';
 
 export type IdentifierObject = {

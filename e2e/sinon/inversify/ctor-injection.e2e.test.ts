@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
-import { UnitReference } from '@automock/core';
-import { TestBed } from '@automock/sinon';
+import { UnitReference } from '@suites/core';
+import { TestBed } from '@suites/sinon';
 import {
   ClassThatIsNotInjected,
   Foo,
@@ -24,7 +24,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import sinon = require('sinon');
 chai.use(chaiAsPromised);
 
-describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
+describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
   let unit: InversifyJSTestClass;
   let unitRef: UnitReference;
 

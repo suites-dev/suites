@@ -1,10 +1,10 @@
-import { Type } from '@automock/types';
+import { Type } from '@suites/types';
 import {
   ClassInjectable,
   InjectableIdentifier,
   UndefinedDependency,
   UndefinedTokenError,
-} from '@automock/common';
+} from '@suites/common';
 import { NestInjectableIdentifier } from './types';
 
 export interface NestCustomToken {

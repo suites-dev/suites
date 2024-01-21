@@ -1,4 +1,4 @@
-import { InjectableIdentifier } from '@automock/common';
+import { InjectableIdentifier } from '@suites/common';
 
 export function normalizeIdentifier(
   identifier: InjectableIdentifier,

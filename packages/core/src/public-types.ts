@@ -1,12 +1,12 @@
-import { ConstantValue, IdentifierMetadata } from '@automock/common';
-import { DeepPartial, Type } from '@automock/types';
+import { ConstantValue, IdentifierMetadata } from '@suites/common';
+import { DeepPartial, Type } from '@suites/types';
 import { UnitReference } from './services/unit-reference';
 
 /**
  * Represents the outcome when a `TestBedBuilder` is compiled.
  *
  * @template TClass The class type being tested.
- * @see https://automock.dev/api-reference/api/unittestbed-api
+ * @see https://suites.dev/api-reference/api/unittestbed-api
  */
 export interface UnitTestBed<TClass> {
   /**
@@ -30,7 +30,7 @@ export interface UnitTestBed<TClass> {
  *
  * @template TDependency The type of the dependency to be mocked.
  * @template TClass The type of the class under test.
- * @see https://automock.dev/api-reference/api/mockoverride-api
+ * @see https://suites.dev/api-reference/api/mockoverride-api
  */
 export interface MockOverride<TDependency, TClass> {
   /**
@@ -56,7 +56,7 @@ export interface MockOverride<TDependency, TClass> {
  * Provides methods to configure and finalize the `TestBed`.
  *
  * @template TClass The class type being tested.
- * @see https://automock.dev/api-reference/api/testbedbuilder-api
+ * @see https://suites.dev/api-reference/api/testbedbuilder-api
  */
 export interface TestBedBuilder<TClass> {
   /**

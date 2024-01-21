@@ -1,24 +1,24 @@
 /// <reference types="@types/sinon" />
 
-import { Type } from '@automock/types';
-import { IdentifierMetadata } from '@automock/common';
+import { Type } from '@suites/types';
+import { IdentifierMetadata } from '@suites/common';
 import { SinonStubbedInstance } from 'sinon';
 
 export * from './testbed-factory';
 
-declare module '@automock/core' {
+declare module '@suites/core' {
   /**
    * Provides a reference to mock objects that have been mocked for testing
    * purposes within the test environment.
    *
-   * Augmentation of the `@automock/core` module for the `StubbedInstance` type.
+   * Augmentation of the `@suites/core` module for the `StubbedInstance` type.
    * In this context, the `StubbedInstance` type is replaced by `SinonStubbedInstance`.
    *
    * Essentially, when you retrieve an instance using this interface, you're not getting
    * the original instance but a Sinon-mocked version of it, allowing for enhanced testing
    * capabilities like spying on method calls, faking return values, and more.
    *
-   * @see https://automock.dev/api-reference/api/unitreference-api
+   * @see https://suites.dev/api-reference/api/unitreference-api
    */
   export interface UnitReference {
     /**

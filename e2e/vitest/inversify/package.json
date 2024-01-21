@@ -1,7 +1,7 @@
 {
   "name": "suites-jest-inverisfy",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "dependencies": {
     "@suites/adapters.inversify": "e2e",
     "@suites/core": "e2e",
@@ -15,9 +15,9 @@
   "devDependencies": {
     "inversify": "^6.0.2",
     "@types/jest": "^29.0.1",
-    "jest": "*",
-    "ts-jest": "*",
-    "ts-node": "*",
+    "jest": "e2e",
+    "ts-jest": "e2e",
+    "ts-node": "e2e",
     "typescript": "^5.x"
   }
 }

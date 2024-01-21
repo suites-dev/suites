@@ -1,19 +1,19 @@
 {
-  "name": "automock-monorepo",
+  "name": "suites-monorepo",
   "private": true,
   "version": "0.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/automock/automock.git"
+    "url": "https://github.com/suites-dev/suites.git"
   },
   "engines": {
     "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },
   "bugs": {
-    "url": "https://github.com/automock/automock/issues"
+    "url": "https://github.com/suites-dev/suites.git"
   },
-  "homepage": "https://automock.dev",
+  "homepage": "https://suites.dev",
   "contributors": [
     {
       "name": "Omer Morad",
@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "yarn lerna run build",
-    "test": "yarn jest --config jest.base.config.ts",
+    "test": "yarn lerna exec yarn test",
     "lint": "yarn lerna run lint --parallel"
   },
   "dependencies": {
@@ -60,7 +60,7 @@
   "jest-junit": {
     "outputDirectory": "test-reports",
     "ancestorSeparator": " › ",
-    "uniqueOutputName": "false",
+    "uniqueOutputName": "true",
     "suiteNameTemplate": "{filepath}",
     "classNameTemplate": "{classname}",
     "titleTemplate": "{title}"

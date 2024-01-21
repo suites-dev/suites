@@ -1,4 +1,4 @@
-import { DeepPartial } from '@automock/types';
+import { DeepPartial } from '@suites/types';
 
 import Mocked = jest.Mocked;
 

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { AutomockDependenciesAdapter } from '@automock/common';
+import { AutomockDependenciesAdapter } from '@suites/common';
 import { DependenciesAdapter } from './dependencies-adapter';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';

@@ -1,17 +1,17 @@
 {
-  "name": "@automock/adapters.inversify",
+  "name": "@suites/adapters.inversify",
   "private": false,
   "version": "2.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/automock/automock.git",
+    "url": "https://github.com/suites-dev/suites.git",
     "directory": "packages/adapters/inversify"
   },
-  "homepage": "https://automock.dev",
+  "homepage": "https://suites.dev",
   "bugs": {
-    "url": "https://github.com/automock/automock/issues"
+    "url": "https://github.com/suites-dev/suites/issues"
   },
   "contributors": [
     {
@@ -23,7 +23,7 @@
     "postinstall": "node postinstall.js",
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "test": "yarn jest",
+    "test": "jest --coverage --verbose",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
@@ -31,8 +31,8 @@
     "dist"
   ],
   "dependencies": {
-    "@automock/common": "^3.1.0",
-    "@automock/types": "^2.0.1",
+    "@suites/common": "^3.1.0",
+    "@suites/types": "^2.0.1",
     "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {

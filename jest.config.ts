@@ -2,7 +2,7 @@ import { Config } from '@jest/types';
 import baseConfig from './jest.base.config';
 
 const config: Config.InitialOptions = {
-  ...baseConfig,
+  ...baseConfig(process.env.COVERAGE_DIR),
   projects: [
     '<rootDir>/packages/core',
     '<rootDir>/packages/adapters/nestjs',

@@ -79,7 +79,9 @@ jobs:
           rm -rf node_modules
 
       - name: Install Dependencies
-        run: npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
+        run: |
+          npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
+          npm install --dev --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-package-lock @types/node@${{ matrix.node-version }} 
 
       - name: Execute Test
         run: npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"

@@ -26,34 +26,6 @@ execute_with_emoji() {
   echo -e " ✅"
 }
 
-docker kill verdaccio
-docker rm verdaccio
-
-docker run -d --name verdaccio \
--p 4873:4873 \
--v "$PWD/e2e/config.yaml:/verdaccio/conf/config.yaml" \
-verdaccio/verdaccio
-
-sleep 3
-
-# Clean up and build
-#execute_with_emoji "🧪" "Cleaning up" yarn lerna exec rimraf dist && rm -rf packages/types/index.d.ts
-#echo "🚧" "Building"
-#yarn build
-
-npm config set registry http://localhost:4873
-
-yarn lerna publish from-package --yes \
-  --no-git-tag-version \
-  --no-push \
-  --registry http://localhost:4873 \
-  --no-changelog \
-  --no-commit-hooks \
-  --no-git-reset \
-  --exact \
-  --force-publish \
-  --dist-tag e2e
-
 # Function to setup and test for a specific framework and library
 setup_and_test() {
   framework=$1
@@ -72,6 +44,34 @@ setup_and_test() {
   printf "\n\n"
 }
 
+
+docker kill verdaccio
+docker rm verdaccio
+
+docker run -d --name verdaccio \
+-p 4873:4873 \
+-v "$PWD/e2e/config.yaml:/verdaccio/conf/config.yaml" \
+verdaccio/verdaccio
+
+sleep 3
+
+# Clean up and build
+execute_with_emoji "🧪" "Cleaning up" yarn lerna exec rimraf dist && rm -rf packages/types/index.d.ts
+echo "🚧" "Building"
+yarn build
+
+npm config set registry http://localhost:4873
+
+yarn lerna publish from-package --yes \
+  --no-git-tag-version \
+  --no-push \
+  --registry http://localhost:4873 \
+  --no-changelog \
+  --no-commit-hooks \
+  --no-git-reset \
+  --exact \
+  --force-publish \
+  --dist-tag e2e
 # Test Matrix
 #setup_and_test jest nestjs
 #setup_and_test sinon nestjs

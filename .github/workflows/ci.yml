@@ -102,7 +102,7 @@ jobs:
           JUNIT_OUTPUT_NAME: ${{ matrix.project }}
           JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
           COVERAGE_DIR: ${{ github.workspace }}/coverage/
-          COVERAGE_FILE: coverage-${{ matrix.project }}.xml
+          COVERAGE_FILE: coverage-${{ matrix.project }}
 
       - name: Tests Results
         uses: dorny/test-reporter@v1

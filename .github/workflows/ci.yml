@@ -31,7 +31,12 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Build
+        if: ${{ matrix.node-version }} != '16.x'
         run: yarn build
+
+      - name: Build
+        if: ${{ matrix.node-version }} == '16.x'
+        run: yarn build --ignore @suites/vitest
 
   lint:
     name: Lint

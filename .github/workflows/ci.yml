@@ -28,21 +28,21 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
-        if: ${{ matrix.node-version }} != '16.x'
+        if: ${{ matrix.node-version != '16.x' }}
         run: yarn --frozen-lockfile
 
       - name: Yarn
-        if: ${{ matrix.node-version }} == '16.x'
+        if: ${{ matrix.node-version == '16.x'  }}
         run: |
           rm -rf packages/testbeds/vitest
           yarn --frozen-lockfile --ignore-engines
 
       - name: Build
-        if: ${{ matrix.node-version }} != '16.x'
+        if: ${{ matrix.node-version != '16.x' }}
         run: yarn build
 
       - name: Build
-        if: ${{ matrix.node-version }} == '16.x'
+        if: ${{ matrix.node-version == '16.x' }}
         run: yarn build --ignore @suites/vitest
 
   lint:
@@ -84,7 +84,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.17.0'
+          node-version: '18.x'
 
       - uses: actions/cache@v2
         with:

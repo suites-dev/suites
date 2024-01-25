@@ -16,8 +16,9 @@ export default defineConfig({
         [
           'cobertura',
           {
-            projectRoot: process.env.COVERAGE_DIR,
-            file: process.env.COVERAGE_FILE || 'coverage-report.xml',
+            file:
+              (process.env.COVERAGE_DIR || '') +
+              (process.env.COVERAGE_FILE || 'coverage-report.xml'),
           },
         ],
       ],

@@ -101,8 +101,8 @@ jobs:
           JEST_JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
           JUNIT_OUTPUT_NAME: ${{ matrix.project }}
           JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
-          COVERAGE_DIR: ${{ github.workspace }}/coverage
-          COVERAGE_FILE: coverage-${{ matrix.project }}
+          COVERAGE_DIR: ${{ github.workspace }}/coverage/
+          COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 
       - name: Tests Results
         uses: dorny/test-reporter@v1

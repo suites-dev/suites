@@ -91,6 +91,7 @@ jobs:
       pull-requests: write
       id-token: write
       checks: write
+      statuses: write
     needs: [e2e]
     if: always()
     steps:

@@ -35,7 +35,6 @@ setup_and_test() {
   printf "\n"
   execute_with_emoji "💻" "Installing dependencies for $framework with $library" rm -rf "$PWD/e2e/$framework/$library/node_modules"
   echo "📦 Installing dependencies for $framework with $library"
-  npx npm-login-cli --registry http://localhost:4873 --prefix "$PWD/e2e/$framework/$library" --no-cache --no-package-lock
   npm install --registry http://localhost:4873 --prefix "$PWD/e2e/$framework/$library" --no-cache --no-package-lock
   execute_with_emoji "🏁" "Running tests for $framework with $library"
 

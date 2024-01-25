@@ -22,7 +22,6 @@ jobs:
             node-version: '16.x'
           - e2e-project: 'vitest/nestjs'
             node-version: '16.x'
-    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4

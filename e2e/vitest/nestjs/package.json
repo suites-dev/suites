@@ -4,19 +4,19 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@suites/adapters.nestjs": "e2e",
-    "@suites/vitest": "e2e",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
+    "@suites/adapters.nestjs": "e2e",
+    "@suites/vitest": "e2e",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "ts-node": "*",
-    "typescript": "^5.x",
-    "vitest": "*",
     "@swc/core": "^1.3.105",
     "@vitest/coverage-v8": "^1.2.1",
-    "unplugin-swc": "^1.4.4"
+    "ts-node": "*",
+    "typescript": "^5.x",
+    "unplugin-swc": "^1.4.4",
+    "vitest": "*"
   },
   "scripts": {
     "test": "npx vitest && tsc --noEmit"

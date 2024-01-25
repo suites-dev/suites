@@ -13,7 +13,6 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "types": ["vitest"],
     "lib": [
       "es6",
       "es2015.reflect"

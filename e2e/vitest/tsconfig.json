@@ -4,6 +4,11 @@
     "declaration": true,
     "module": "esnext",
     "target": "esnext",
-    "lib": ["esnext"]
+    "lib": [
+      "esnext"
+    ],
+    "types": [
+      "vitest"
+    ]
   }
 }

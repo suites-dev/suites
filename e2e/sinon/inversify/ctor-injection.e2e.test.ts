@@ -20,7 +20,7 @@ import { SinonStubbedInstance } from 'sinon';
 import { expect } from 'chai';
 import { before } from 'mocha';
 import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
+import chaiAsPromised from 'chai-as-promised';
 import sinon = require('sinon');
 chai.use(chaiAsPromised);
 

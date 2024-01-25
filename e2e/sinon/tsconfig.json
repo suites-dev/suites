@@ -1,8 +1,9 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "sourceMap": true,
-    "experimentalDecorators": true,
-    "allowJs": true
+    "types": [
+      "node",
+      "mocha"
+    ]
   }
 }

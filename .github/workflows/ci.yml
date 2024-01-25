@@ -27,15 +27,12 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Yarn
-        if: ${{ matrix.node-version != '16.x' }}
-        run: yarn --frozen-lockfile
+      - name: Remove Vitest If Needed
+        if: ${{ matrix.node-version == '16.x'  }}
+        run: rm -rf packages/testbeds/vitest
 
       - name: Yarn
-        if: ${{ matrix.node-version == '16.x'  }}
-        run: |
-          rm -rf packages/testbeds/vitest
-          yarn --frozen-lockfile --ignore-engines
+        run: yarn --frozen-lockfile
 
       - name: Build
         if: ${{ matrix.node-version != '16.x' }}
@@ -105,7 +102,7 @@ jobs:
           JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
           JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
           COVERAGE_DIR: ${{ github.workspace }}/coverage
-          COVERAGE_FILE: coverage-${{ matrix.project }}.xml
+          COVERAGE_FILE: coverage-${{ matrix.project }}
 
       - name: Tests Results
         uses: dorny/test-reporter@v1

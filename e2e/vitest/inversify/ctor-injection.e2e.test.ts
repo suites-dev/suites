@@ -103,7 +103,7 @@ describe('Suites Vitest / InversifyJS E2E Test Ctor', () => {
       const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       expect(testClassTwo.bar.getMockName).toBeDefined();
-      expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');
+      expect(testClassTwo.bar.getMockName()).toBe('spy');
     });
 
     test('then mock the undefined reflected values and tokens', () => {

@@ -29,6 +29,6 @@ export default defineConfig({
 });
 
 console.log('coverage route', {
-  projectRoot: process.env.COVERAGE_DIR || '',
   file: process.env.COVERAGE_FILE || 'coverage-report.xml',
+  projectRoot: process.env.COVERAGE_DIR || '',
 });

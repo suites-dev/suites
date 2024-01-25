@@ -13,6 +13,10 @@ jobs:
   e2e:
     name: Build and Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
     strategy:
       matrix:
         e2e-project: ['jest/nestjs', 'sinon/nestjs', 'jest/inversify', 'sinon/inversify']

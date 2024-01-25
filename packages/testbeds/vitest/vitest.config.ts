@@ -27,8 +27,3 @@ export default defineConfig({
     exclude: ['node_modules', 'dist', '**/node_modules/**'],
   },
 });
-
-console.log('coverage route', {
-  file: process.env.COVERAGE_FILE || 'coverage-report.xml',
-  projectRoot: process.env.COVERAGE_DIR || '',
-});

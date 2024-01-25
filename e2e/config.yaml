@@ -11,8 +11,8 @@ packages:
     proxy: npmjs
 
   '**':
-    access: $authenticated
-    publish: $authenticated
+    access: $all
+    publish: $all
     proxy: npmjs
 
 auth:

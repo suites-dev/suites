@@ -13,10 +13,6 @@ jobs:
   e2e:
     name: Build and Test
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      repository-projects: write
     strategy:
       matrix:
         e2e-project: ['jest/nestjs', 'sinon/nestjs', 'jest/inversify', 'sinon/inversify']
@@ -90,6 +86,11 @@ jobs:
   update-status:
     name: Update PR Status
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+      repository-projects: write
     needs: [e2e]
     if: always()
     steps:

@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import { beforeAll, describe, test, expect, vi } from 'vitest';
+import { Mocked } from '@vitest/spy';
 import { UnitReference } from '@suites/core';
 import { TestBed } from '@suites/vitest';
 import {
@@ -68,7 +70,7 @@ describe('Suites Vitest / InversifyJS E2E Test Ctor', () => {
     });
 
     test('call the unit instance method', async () => {
-      const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       testClassTwo.bar.mockResolvedValue('context');
 
@@ -100,15 +102,15 @@ describe('Suites Vitest / InversifyJS E2E Test Ctor', () => {
     });
 
     test('then all the unoverride classes/dependencies should be stubs as well', () => {
-      const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       expect(testClassTwo.bar.getMockName).toBeDefined();
       expect(testClassTwo.bar.getMockName()).toBe('spy');
     });
 
     test('then mock the undefined reflected values and tokens', () => {
-      const testClassFour: jest.Mocked<TestClassFour> = unitRef.get(TestClassFour);
-      const undefinedValue: jest.Mocked<{ method: () => number }> = unitRef.get<{
+      const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
+      const undefinedValue: Mocked<{ method: () => number }> = unitRef.get<{
         method: () => number;
       }>('UNDEFINED');
 

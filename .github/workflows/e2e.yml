@@ -91,6 +91,12 @@ jobs:
   update-status:
     name: Update PR Status
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+      checks: write
+      statuses: write
     needs: [e2e]
     if: always()
     steps:

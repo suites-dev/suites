@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitest/config';
 
 const coverageFile =
-  (process.env.COVERAGE_DIR || '') + (process.env.COVERAGE_FILE || 'coverage-report.xml');
+  (process.env.COVERAGE_DIR || '') + '/' + (process.env.COVERAGE_FILE || 'coverage-report.xml');
 
 console.log(coverageFile);
 

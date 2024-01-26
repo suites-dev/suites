@@ -12,12 +12,12 @@ export default defineConfig({
         '.xml',
     },
     coverage: {
+      reportsDirectory: process.env.COVERAGE_DIR || 'coverage',
       reporter: [
         'text',
         [
           'cobertura',
           {
-            projectRoot: process.env.PROJECT_ROOT || './',
             file: process.env.COVERAGE_FILE || 'coverage-report.xml',
           },
         ],

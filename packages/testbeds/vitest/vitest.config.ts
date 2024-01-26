@@ -12,6 +12,7 @@ export default defineConfig({
         '.xml',
     },
     coverage: {
+      exclude: ['**/*.spec.ts', '**/node_modules/**', '**/index.ts', '**/testbed-factory.ts'],
       reportsDirectory: process.env.COVERAGE_DIR || 'coverage',
       reporter: [
         'text',

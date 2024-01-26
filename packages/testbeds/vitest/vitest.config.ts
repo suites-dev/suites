@@ -1,9 +1,5 @@
 import { defineConfig } from 'vitest/config';
-
-const coverageFile =
-  (process.env.COVERAGE_DIR || '') + '/' + (process.env.COVERAGE_FILE || 'coverage-report.xml');
-
-console.log(coverageFile);
+import process from 'process';
 
 export default defineConfig({
   test: {
@@ -21,7 +17,8 @@ export default defineConfig({
         [
           'cobertura',
           {
-            file: coverageFile,
+            projectRoot: process.env.PROJECT_ROOT || './',
+            file: process.env.COVERAGE_FILE || 'coverage-report.xml',
           },
         ],
       ],

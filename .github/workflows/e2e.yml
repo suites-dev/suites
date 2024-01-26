@@ -28,13 +28,22 @@ jobs:
         with:
           ref: ${{ github.event.inputs.target_branch }}
 
+      - name: Remove Vitest If Needed
+        if: ${{ matrix.node-version == '16.x' }}
+        run: |
+          rm -rf packages/testbeds/vitest
+          git config --global user.email "ci@suites.dev"
+          git config --global user.name "Suites CI"
+          git add .
+          git commit -am "remove vitest temp"
+
       - name: Setup Node ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Yarn
-        run: yarn --frozen-lockfile --ignore-engines
+        run: yarn --frozen-lockfile
 
       - name: Run Verdaccio Docker
         run: |

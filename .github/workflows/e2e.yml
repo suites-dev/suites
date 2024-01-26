@@ -15,8 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'jest/inversify', 'sinon/inversify']
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
         node-version: [16.x, 18.x, 20.x]
+        exclude:
+          - e2e-project: 'vitest/inversify'
+            node-version: '16.x'
+          - e2e-project: 'vitest/nestjs'
+            node-version: '16.x'
     steps:
       - name: Checkout
         uses: actions/checkout@v4

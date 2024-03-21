@@ -1,11 +1,11 @@
-import { AutomockDependenciesAdapter, ClassInjectable } from '@suites/common';
+import { DependencyInjectionAdapter, ClassInjectable } from '@suites/types.di';
 import { DependenciesAdapter } from './dependencies-adapter';
 import { IdentifierMetadata } from './types';
 
 const classPropsReflector = { reflectInjectables: jest.fn() };
 const classCtorReflector = { reflectInjectables: jest.fn() };
 
-const dependenciesAdapter: AutomockDependenciesAdapter = DependenciesAdapter(
+const dependenciesAdapter: DependencyInjectionAdapter = DependenciesAdapter(
   classPropsReflector,
   classCtorReflector
 );

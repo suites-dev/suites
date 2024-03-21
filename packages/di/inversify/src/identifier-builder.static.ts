@@ -1,6 +1,6 @@
 import { LazyServiceIdentifer } from 'inversify';
-import { Type } from '@suites/types';
-import { IdentifierMetadata, InjectableIdentifier, WithMetadata } from '@suites/common';
+import { Type } from '@suites/types.common';
+import { IdentifierMetadata, InjectableIdentifier, WithMetadata } from '@suites/types.di';
 import { INVERSIFY_PRESERVED_KEYS, InversifyInjectableMetadata } from './types';
 
 export type IdentifierObject = {

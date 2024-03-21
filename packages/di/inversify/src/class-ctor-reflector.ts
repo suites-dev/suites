@@ -1,6 +1,6 @@
 import { METADATA_KEY } from 'inversify';
-import { Type } from '@suites/types';
-import { ClassInjectable, UndefinedDependency, UndefinedDependencyError } from '@suites/common';
+import { Type } from '@suites/types.common';
+import { ClassInjectable, UndefinedDependency, UndefinedDependencyError } from '@suites/types.di';
 import {
   InversifyInjectableIdentifierMetadata,
   InversifyInjectableMetadata,

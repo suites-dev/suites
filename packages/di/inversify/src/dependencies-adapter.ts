@@ -1,12 +1,12 @@
 import isEqual from 'lodash.isequal';
-import { Type } from '@suites/types';
+import { Type } from '@suites/types.common';
 import {
-  AutomockDependenciesAdapter,
+  DependencyInjectionAdapter,
   ClassInjectable,
-  InjectablesRegistry,
+  InjectableRegistry,
   InjectableIdentifier,
   WithMetadata,
-} from '@suites/common';
+} from '@suites/types.di';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
 import { IdentifierMetadata } from './types';
@@ -14,13 +14,13 @@ import { IdentifierMetadata } from './types';
 export type DependenciesAdapter = (
   classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
-) => AutomockDependenciesAdapter;
+) => DependencyInjectionAdapter;
 
 export function DependenciesAdapter(
   classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
-): AutomockDependenciesAdapter {
-  function inspect(targetClass: Type): InjectablesRegistry {
+): DependencyInjectionAdapter {
+  function inspect(targetClass: Type): InjectableRegistry {
     const ctorInjectables = classCtorReflector.reflectInjectables(targetClass);
     const propsInjectables = classPropsReflector.reflectInjectables(targetClass);
     const allInjectables = [...ctorInjectables, ...propsInjectables] as WithMetadata<never>[];

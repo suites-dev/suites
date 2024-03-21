@@ -16,11 +16,11 @@ import {
   SymbolToken,
 } from './assets/integration.assets';
 import {
-  InjectablesRegistry,
+  InjectableRegistry,
   IdentifierMetadata,
   InjectableIdentifier,
   UndefinedDependency,
-} from '@suites/common';
+} from '@suites/types.di';
 import { InversifyInjectableIdentifierMetadata } from '../src/types';
 import InversifyAutomockDependenciesAdapter from '../src';
 
@@ -28,7 +28,7 @@ describe('Inversify Automock Adapter Integration Test', () => {
   const dependenciesAdapter = InversifyAutomockDependenciesAdapter;
 
   describe('class constructor injection', () => {
-    let injectablesRegistry: InjectablesRegistry;
+    let injectablesRegistry: InjectableRegistry;
 
     beforeAll(() => {
       injectablesRegistry = dependenciesAdapter.inspect(ConstructorBasedInjectionClass);
@@ -147,7 +147,7 @@ describe('Inversify Automock Adapter Integration Test', () => {
   });
 
   describe('class properties injection', () => {
-    let injectablesRegistry: InjectablesRegistry;
+    let injectablesRegistry: InjectableRegistry;
 
     beforeAll(() => {
       injectablesRegistry = dependenciesAdapter.inspect(PropertiesBasedInjectionClass);

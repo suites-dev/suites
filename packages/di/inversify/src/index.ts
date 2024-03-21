@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import { AutomockDependenciesAdapter } from '@suites/common';
+import { DependencyInjectionAdapter } from '@suites/types.di';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
 import { IdentifierBuilder } from './identifier-builder.static';
 import { DependenciesAdapter } from './dependencies-adapter';
 
-const InversifyAutomockDependenciesAdapter: AutomockDependenciesAdapter = ((
+const InversifyAutomockDependenciesAdapter: DependencyInjectionAdapter = ((
   classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
 ) => {

@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const filePath = path.join(__dirname, '..', 'common', 'typings.d.ts');
+const filePath = path.join(__dirname, '..', 'types', 'di', 'typings.d.ts');
 const newContent =
-  "\nexport type IdentifierMetadata = import('@suites/adapters.inversify').IdentifierMetadata;\n";
+  "\nexport type IdentifierMetadata = import('@suites/di.inversify').IdentifierMetadata;\n";
 
 fs.readFile(filePath, 'utf8', function (err, data) {
   console.log('Suites: attempting to override @suites/common typings file');
@@ -21,6 +21,8 @@ fs.readFile(filePath, 'utf8', function (err, data) {
       return console.log(err);
     }
 
-    console.log('Suites: @suites/common typings file updated successfully with a proper adapter');
+    console.log(
+      'Suites: @suites/common typings file updated successfully with a proper di adapter'
+    );
   });
 });

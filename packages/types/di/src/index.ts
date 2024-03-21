@@ -1,4 +1,6 @@
-import { Type } from '@suites/types';
+import { Type, ConstantValue } from '@suites/types.common';
+
+export * from './errors';
 
 /**
  * @since 2.2.0
@@ -9,12 +11,7 @@ export type UndefinedDependencySymbol = typeof UndefinedDependency;
 /**
  * @since 3.0.0
  */
-export type ConstantValue = unknown[] | string | number | boolean | symbol | null;
-
-/**
- * @since 3.0.0
- */
-export type InjectableIdentifier = Type | string | symbol;
+export type InjectableIdentifier<TClass = unknown> = Type<TClass> | string | symbol;
 
 /**
  * @since 3.0.0
@@ -58,8 +55,8 @@ export type ClassInjectable<
 /**
  * @since 3.0.0
  */
-export interface AutomockDependenciesAdapter {
-  inspect(targetClass: Type): InjectablesRegistry;
+export interface DependencyInjectionAdapter {
+  inspect(targetClass: Type): InjectableRegistry;
 }
 
 /**
@@ -70,7 +67,7 @@ export type IdentifierMetadata = Record<string | symbol, never>;
 /**
  * @since 3.0.0
  */
-export interface InjectablesRegistry {
+export interface InjectableRegistry {
   resolve<T extends IdentifierMetadata>(
     identifier: InjectableIdentifier,
     metadata?: IdentifierMetadata

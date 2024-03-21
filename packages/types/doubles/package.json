@@ -1,43 +1,34 @@
 {
-  "name": "@suites/common",
+  "name": "@suites/types.doubles",
   "private": false,
-  "version": "3.1.0",
+  "version": "4.0.0",
   "license": "MIT",
-  "types": "typings.d.ts",
-  "main": "dist/index.js",
+  "types": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git",
-    "directory": "packages/common"
+    "directory": "packages/types/doubles"
   },
-  "homepage": "https://suites.dev",
   "bugs": {
     "url": "https://github.com/suites-dev/suites/issues"
   },
+  "homepage": "https://suites.dev",
   "contributors": [
     {
       "name": "Omer Morad",
       "email": "omer.moradd@gmail.com"
     }
   ],
-  "engines": {
-    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
-  },
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
     "test": "jest --passWithNoTests",
-    "lint": "yarn eslint '{src,test}/**/*.ts'"
+    "lint": "yarn eslint 'index.ts'"
   },
   "files": [
-    "dist",
-    "README.md",
-    "typings.d.ts"
+    "index.d.ts"
   ],
-  "dependencies": {
-    "@suites/types": "^2.0.1"
-  },
-  "config": {
-    "publishConfig": "public"
+  "publishConfig": {
+    "access": "public"
   }
 }

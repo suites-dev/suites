@@ -1,7 +1,5 @@
 import { beforeAll, describe, test, expect } from 'vitest';
-import { UnitReference } from '@suites/core';
-import { TestBed } from '@suites/vitest';
-import { Mocked } from '@vitest/spy';
+import { TestBed, Mocked, UnitReference } from '@suites/unit';
 import {
   ClassThatIsNotInjected,
   Foo,

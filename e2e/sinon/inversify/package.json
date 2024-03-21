@@ -3,8 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "dependencies": {
-    "@suites/adapters.inversify": "e2e",
-    "@suites/sinon": "e2e",
+    "@suites/di.inversify": "e2e",
+    "@suites/doubles.sinon": "e2e",
+    "@suites/unit": "e2e",
     "inversify": "^6.0.2",
     "reflect-metadata": "^0.1.13"
   },

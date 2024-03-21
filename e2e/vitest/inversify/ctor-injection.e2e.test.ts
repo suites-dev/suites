@@ -1,9 +1,7 @@
 import 'reflect-metadata';
 
 import { beforeAll, describe, test, expect, vi } from 'vitest';
-import { Mocked } from '@vitest/spy';
-import { UnitReference } from '@suites/core';
-import { TestBed } from '@suites/vitest';
+import { TestBed, Mocked, UnitReference } from '@suites/unit';
 import {
   ClassThatIsNotInjected,
   Foo,

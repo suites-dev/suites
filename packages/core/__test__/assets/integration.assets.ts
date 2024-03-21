@@ -1,12 +1,12 @@
 import isEqual from 'lodash.isequal';
 import {
-  AutomockDependenciesAdapter,
+  DependencyInjectionAdapter,
   ClassInjectable,
   IdentifierMetadata,
   UndefinedDependency,
   WithMetadata,
-} from '@suites/common';
-import { Type } from '@suites/types';
+} from '@suites/types.di';
+import { Type } from '@suites/types.common';
 import { normalizeIdentifier } from '../../src/normalize-identifier.static';
 
 interface Printer {
@@ -165,7 +165,7 @@ const classInjectables: ClassInjectable[] = [
   },
 ];
 
-export const FakeAdapter: AutomockDependenciesAdapter = {
+export const FakeAdapter: DependencyInjectionAdapter = {
   inspect: () => {
     return {
       list: () => classInjectables,

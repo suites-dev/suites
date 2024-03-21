@@ -1,7 +1,5 @@
-import { Type } from '@suites/types';
-import { TestBedBuilder, UnitReference, UnitTestBed } from '../src';
-import { UnitBuilder } from '../src/services/testbed-builder';
-import { UnitMocker } from '../src/services/unit-mocker';
+import { Type } from '@suites/types.common';
+import { UnitReference, UnitBuilder, UnitMocker } from '../src';
 import {
   ArbitraryClassFive,
   ArbitraryClassFour,
@@ -10,6 +8,7 @@ import {
   ClassUnderTest,
   FakeAdapter,
 } from './assets/integration.assets';
+import { TestBedBuilder, UnitTestBed } from '../src/types';
 
 const MockedFromBuilder = Symbol.for('MockedFromBuilder');
 const MockedFromMocker = Symbol.for('MockFromMocker');

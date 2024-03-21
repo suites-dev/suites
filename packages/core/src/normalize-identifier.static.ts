@@ -1,4 +1,4 @@
-import { InjectableIdentifier } from '@suites/common';
+import { InjectableIdentifier } from '@suites/types.di';
 
 export function normalizeIdentifier(
   identifier: InjectableIdentifier,

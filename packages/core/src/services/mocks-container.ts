@@ -1,11 +1,7 @@
 import isEqual from 'lodash.isequal';
-import {
-  ClassInjectable,
-  ConstantValue,
-  IdentifierMetadata,
-  InjectableIdentifier,
-} from '@suites/common';
-import { StubbedInstance } from '@suites/types';
+import { ClassInjectable, IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
+import { StubbedInstance } from '@suites/types.doubles';
+import { ConstantValue } from '@suites/types.common';
 
 export type IdentifierToMock = [
   Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },
@@ -14,7 +10,7 @@ export type IdentifierToMock = [
 
 export interface MocksContainer {
   resolve<TDependency = unknown>(
-    identifier: InjectableIdentifier,
+    identifier: InjectableIdentifier<TDependency>,
     metadata?: IdentifierMetadata
   ): StubbedInstance<TDependency> | ConstantValue;
 }
@@ -23,7 +19,7 @@ export class MocksContainer {
   public constructor(private readonly identifierToMocksTuples: IdentifierToMock[]) {}
 
   public resolve<TDependency = unknown>(
-    identifier: InjectableIdentifier,
+    identifier: InjectableIdentifier<TDependency>,
     metadata?: IdentifierMetadata
   ): StubbedInstance<TDependency> | ConstantValue | undefined {
     // If there is one identifier, it is enough to match, no need to check metadata

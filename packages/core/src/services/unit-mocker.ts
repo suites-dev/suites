@@ -1,7 +1,8 @@
-import { Type, MockFunction } from '@suites/types';
-import { InjectablesRegistry, WithMetadata } from '@suites/common';
+import { MockFunction } from '@suites/types.doubles';
+import { InjectableRegistry, WithMetadata } from '@suites/types.di';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
 import { normalizeIdentifier } from '../normalize-identifier.static';
+import { Type } from '@suites/types.common';
 
 export interface MockedUnit<TClass> {
   container: MocksContainer;
@@ -15,13 +16,13 @@ export class UnitMocker {
     targetClass: Type<TClass>
   ): (
     mockContainer: MocksContainer,
-    injectablesContainer: InjectablesRegistry
+    injectablesContainer: InjectableRegistry
   ) => MockedUnit<TClass> {
     const identifiersToMocks: IdentifierToMock[] = [];
 
     return (
       mocksContainer: MocksContainer,
-      injectablesContainer: InjectablesRegistry
+      injectablesContainer: InjectableRegistry
     ): MockedUnit<TClass> => {
       const allInjectables = injectablesContainer.list() as WithMetadata<never>[];
       const ctorInjectables = allInjectables.filter(({ type }) => type === 'PARAM');

@@ -1,7 +1,8 @@
+import { InjectableIdentifier } from '@suites/types.di';
+import { ConstantValue } from '@suites/types.common';
+import { StubbedInstance } from '@suites/types.doubles';
 import { UnitReference } from './unit-reference';
 import { MocksContainer } from './mocks-container';
-import { ConstantValue, InjectableIdentifier } from '@suites/common';
-import { StubbedInstance } from '@suites/types';
 
 class DependencyOne {}
 class DependencyOneStubbed {}

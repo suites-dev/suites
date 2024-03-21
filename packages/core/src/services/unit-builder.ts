@@ -1,34 +1,42 @@
-import { DeepPartial, Type, MockFunction, StubbedInstance } from '@suites/types';
+import { MockFunction, StubbedInstance } from '@suites/types.doubles';
 import {
   IdentifierMetadata,
-  ConstantValue,
   InjectableIdentifier,
-  AutomockDependenciesAdapter,
-} from '@suites/common';
+  DependencyInjectionAdapter,
+} from '@suites/types.di';
+import { Type, ConstantValue, DeepPartial, SuitesErrorCode } from '@suites/types.common';
 import { UnitReference } from './unit-reference';
 import { UnitMocker } from './unit-mocker';
-import { MockOverride, TestBedBuilder, UnitTestBed } from '../public-types';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
 import { normalizeIdentifier } from '../normalize-identifier.static';
-import { AutomockErrorCode } from '@suites/common';
+import { MockOverride, TestBedBuilder, UnitTestBed } from '../types';
+
+export interface UnitBuilder {
+  create<TClass>(
+    mockFn: MockFunction<unknown>,
+    unitMocker: UnitMocker,
+    adapter: DependencyInjectionAdapter,
+    logger: Console
+  ): (targetClass: Type<TClass>) => TestBedBuilder<TClass>;
+}
 
 export class UnitBuilder {
   public static create<TClass>(
     mockFn: MockFunction<unknown>,
     unitMocker: UnitMocker,
-    adapter: AutomockDependenciesAdapter,
+    adapter: DependencyInjectionAdapter,
     logger: Console
   ): (targetClass: Type<TClass>) => TestBedBuilder<TClass> {
     return (targetClass: Type<TClass>): TestBedBuilder<TClass> => {
       const identifiersToMocks: IdentifierToMock[] = [];
-      const dependenciesContainer = adapter.inspect(targetClass);
+      const dependencyContainer = adapter.inspect(targetClass);
 
       return {
         mock<TDependency>(
           identifier: InjectableIdentifier,
           metadata?: IdentifierMetadata
         ): MockOverride<TDependency, TClass> {
-          const dependency = dependenciesContainer.resolve<never>(identifier, metadata);
+          const dependency = dependencyContainer.resolve<never>(identifier, metadata);
 
           if (!dependency) {
             logger.warn(mockDependencyNotFoundMessage(identifier, metadata));
@@ -57,7 +65,7 @@ export class UnitBuilder {
         compile(): UnitTestBed<TClass> {
           const { container, instance } = unitMocker.applyMocksToUnit<TClass>(targetClass)(
             new MocksContainer(identifiersToMocks),
-            dependenciesContainer
+            dependencyContainer
           );
 
           return {
@@ -92,7 +100,7 @@ function mockDependencyNotFoundMessage(
   const metadataMsg = metadata ? `, with metadata [${JSON.stringify(metadata)}]` : '';
   const details = identifierName + metadataMsg;
 
-  return `Automock Warning (${AutomockErrorCode.IDENTIFIER_NOT_FOUND}): The provided dependency identifier '${details}' does not match any
+  return `Automock Warning (${SuitesErrorCode.IDENTIFIER_NOT_FOUND}): The provided dependency identifier '${details}' does not match any
 existing dependencies in the current testing context. Please review your identifier and
 ensure it corresponds to the expected configuration.
 Refer to the docs for further information: https://suites.dev/docs`;

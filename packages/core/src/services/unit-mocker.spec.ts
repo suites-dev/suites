@@ -1,9 +1,9 @@
 import {
   ClassInjectable,
-  InjectablesRegistry,
+  InjectableRegistry,
   UndefinedDependency,
   WithMetadata,
-} from '@suites/common';
+} from '@suites/types.di';
 import { MockedUnit, UnitMocker } from './unit-mocker';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
 
@@ -39,7 +39,7 @@ describe('Unit Mocker Unit Spec', () => {
   });
 
   describe('given that the adapter returns container with the following dependencies', () => {
-    const dependenciesContainer: InjectablesRegistry = {
+    const dependenciesContainer: InjectableRegistry = {
       list(): ClassInjectable[] {
         return [
           { identifier: ArbitraryClassOne, value: ArbitraryClassOne, type: 'PARAM' },

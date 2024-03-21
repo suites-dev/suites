@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ['doubles.jest', 'doubles.sinon', 'core', 'doubles.vitest', 'di.nestjs', 'di.inversify', 'unit']
+        project: ['doubles.jest', 'doubles.sinon', 'core.unit', 'doubles.vitest', 'di.nestjs', 'di.inversify', 'unit']
     steps:
       - name: Checkout
         uses: actions/checkout@v3

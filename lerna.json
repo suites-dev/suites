@@ -21,13 +21,15 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/adapters/*",
-    "packages/testbeds/*"
+    "packages/di/*",
+    "packages/doubles/*",
+    "packages/types/*"
   ],
   "npmClient": "yarn",
   "packages": [
     "packages/*",
-    "packages/adapters/*",
-    "packages/testbeds/*"
+    "packages/di/*",
+    "packages/doubles/*",
+    "packages/types/*"
   ]
 }

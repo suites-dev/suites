@@ -49,8 +49,9 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/adapters/*",
-    "packages/testbeds/*"
+    "packages/di/*",
+    "packages/doubles/*",
+    "packages/types/*"
   ],
   "lint-staged": {
     "*.ts": [

@@ -54,7 +54,7 @@ verdaccio/verdaccio
 sleep 3
 
 # Clean up and build
-execute_with_emoji "🧪" "Cleaning up" yarn lerna exec rimraf dist && rm -rf packages/types/index.d.ts
+execute_with_emoji "🧪" "Cleaning up" yarn lerna run prebuild
 echo "🚧" "Building"
 yarn build
 

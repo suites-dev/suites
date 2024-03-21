@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 
-import { UnitReference } from '@suites/core';
-import { TestBed } from '@suites/sinon';
+import { UnitReference, TestBed, Mocked, stub } from '@suites/unit/src/typings';
 import {
   ClassThatIsNotInjected,
   Foo,
@@ -16,12 +15,10 @@ import {
   TestClassTwo,
   Bar,
 } from './e2e-assets';
-import { SinonStubbedInstance } from 'sinon';
 import { expect } from 'chai';
 import { before } from 'mocha';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import sinon = require('sinon');
 chai.use(chaiAsPromised);
 
 describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
@@ -34,7 +31,7 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
     )
       .mock(TestClassOne)
       .using({
-        foo: sinon.stub().resolves('foo-from-test'),
+        foo: stub.resolves('foo-from-test'),
         bar(): string {
           return 'bar';
         },
@@ -75,7 +72,7 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     it('call the unit instance method', async () => {
-      const testClassTwo: SinonStubbedInstance<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       testClassTwo.bar.resolves('context');
 
@@ -90,7 +87,7 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     it('then mock the implementation of the dependencies', async () => {
-      const testClassOne: SinonStubbedInstance<TestClassOne> = unitRef.get(TestClassOne);
+      const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
       const logger = unitRef.get<Logger>('LOGGER');
 
       // The original 'foo' method in TestClassOne return value should be changed
@@ -109,8 +106,8 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     it('then mock the undefined reflected values and tokens', () => {
-      const testClassFour: SinonStubbedInstance<TestClassFour> = unitRef.get(TestClassFour);
-      const undefinedValue: SinonStubbedInstance<{ method: () => number }> = unitRef.get<{
+      const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
+      const undefinedValue: Mocked<{ method: () => number }> = unitRef.get<{
         method: () => number;
       }>('UNDEFINED');
 

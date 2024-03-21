@@ -1,6 +1,6 @@
-import { vi } from 'vitest';
-import { DeepPartial } from '@suites/types';
-import type { Mocked } from '@vitest/spy';
+import { DeepPartial } from '@suites/types.common';
+
+import Mocked = jest.Mocked;
 
 type PropertyType = string | number | symbol;
 
@@ -17,7 +17,7 @@ const createHandler = () => ({
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      target[property] = vi.fn();
+      target[property] = jest.fn();
     }
 
     if (target instanceof Date && typeof target[property as never] === 'function') {
@@ -44,7 +44,7 @@ const applyMockImplementation = (initialObject: DeepPartial<never>) => {
   return proxy;
 };
 
-export const mock = <T, MockedType extends Mocked<T> = Mocked<T>>(
+export const mock = <T, MockedType extends Mocked<T> & T = Mocked<T> & T>(
   mockImpl: Partial<T> = {} as Partial<T>
 ): MockedType => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

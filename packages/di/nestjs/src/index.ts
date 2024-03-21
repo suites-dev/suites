@@ -1,12 +1,12 @@
 import 'reflect-metadata';
-import { AutomockDependenciesAdapter } from '@suites/common';
+import { DependencyInjectionAdapter } from '@suites/types.di';
 import { DependenciesAdapter } from './dependencies-adapter';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
 import { ParamsTokensReflector } from './params-token-resolver';
 import { PropertyReflectionStrategies } from './property-reflection-strategies.static';
 
-const NestJSAutomockDependenciesAdapter: AutomockDependenciesAdapter = ((
+const NestJSDIAdapter: DependencyInjectionAdapter = ((
   classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
 ) => {
@@ -17,4 +17,4 @@ const NestJSAutomockDependenciesAdapter: AutomockDependenciesAdapter = ((
 );
 
 export { IdentifierMetadata } from './types';
-export default NestJSAutomockDependenciesAdapter;
+export default NestJSDIAdapter;

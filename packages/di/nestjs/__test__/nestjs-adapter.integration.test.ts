@@ -10,15 +10,15 @@ import {
   DependencyTwo,
   PropsBasedMainClass,
 } from './assets/integration.assets';
-import { InjectableIdentifier, UndefinedDependency, WithoutMetadata } from '@suites/common';
-import { Type } from '@suites/types';
-import NestJSAutomockDependenciesAdapter from '../src';
+import { InjectableIdentifier, UndefinedDependency, WithoutMetadata } from '@suites/types.di';
+import { Type } from '@suites/types.common';
+import NestJSDIAdapter from '../src';
 
 describe('NestJS Automock Adapter Integration Test', () => {
-  const dependenciesAdapter = NestJSAutomockDependenciesAdapter;
+  const dependencyInjectionAdapter = NestJSDIAdapter;
 
   describe('reflecting a class with constructor based injection', () => {
-    const injectablesContainer = dependenciesAdapter.inspect(ConstructorBasedInjectionClass);
+    const injectablesContainer = dependencyInjectionAdapter.inspect(ConstructorBasedInjectionClass);
 
     it('should list the dependencies in the dependencies container corresponding to the class injectables', () => {
       expect(injectablesContainer.list()).toStrictEqual<WithoutMetadata[]>([
@@ -95,7 +95,7 @@ describe('NestJS Automock Adapter Integration Test', () => {
   });
 
   describe('reflecting a class with property based injection', () => {
-    const injectablesContainer = dependenciesAdapter.inspect(PropsBasedMainClass);
+    const injectablesContainer = dependencyInjectionAdapter.inspect(PropsBasedMainClass);
 
     it('should list the dependencies in the dependencies container corresponding to the class injectables', () => {
       expect(injectablesContainer.list()).toStrictEqual<WithoutMetadata[]>([
@@ -175,7 +175,9 @@ describe('NestJS Automock Adapter Integration Test', () => {
   });
 
   describe('reflecting a class with constructor and properties combined', () => {
-    const injectablesContainer = dependenciesAdapter.inspect(ConstructorCombinedWithPropsClass);
+    const injectablesContainer = dependencyInjectionAdapter.inspect(
+      ConstructorCombinedWithPropsClass
+    );
 
     it('should list the dependencies in the dependencies container corresponding to the class injectables', () => {
       expect(injectablesContainer.list()).toEqual<WithoutMetadata[]>([
@@ -225,7 +227,7 @@ describe('NestJS Automock Adapter Integration Test', () => {
     it.each([[ClassWithUndefinedDependency], [ClassWithUndefinedDependencyProps]])(
       'should fail with an error indicating that the dependency is not defined',
       (type: Type) => {
-        expect(() => dependenciesAdapter.inspect(type)).toThrow();
+        expect(() => dependencyInjectionAdapter.inspect(type)).toThrow();
       }
     );
   });

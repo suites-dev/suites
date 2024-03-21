@@ -1,5 +1,5 @@
-import { ClassInjectable, InjectableReflectedType, UndefinedDependencyError } from '@suites/common';
-import { Type } from '@suites/types';
+import { ClassInjectable, InjectableReflectedType, UndefinedDependencyError } from '@suites/types.di';
+import { Type } from '@suites/types.common';
 import { PROPERTY_DEPS_METADATA } from '@nestjs/common/constants';
 import { MetadataReflector, ReflectedProperty } from './types';
 import { PropertyReflectionStrategy } from './property-reflection-strategies.static';

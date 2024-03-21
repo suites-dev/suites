@@ -3,14 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.1.0](https://github.com/suites-dev/suites/compare/@suites/adapters.nestjs@2.0.0...@suites/adapters.nestjs@2.1.0) (2023-12-09)
+# [2.1.0](https://github.com/suites-dev/suites/compare/@automock/adapters.nestjs@2.0.0...@automock/adapters.nestjs@2.1.0) (2023-12-09)
 
 ### Features
 
 - **adapters.nestjs:** add post install script ([e397886](https://github.com/suites-dev/suites/commit/e397886ff6f92aaf5214c2700e54fed42e7c81a7))
 - **adapters.nestjs:** export identifier metadata to align with common ([12e4ad4](https://github.com/suites-dev/suites/commit/12e4ad4c3f2911591cf104e8b6fdcba0e7d6c74d))
 
-# [2.0.0](https://github.com/suites-dev/suites/compare/@suites/adapters.nestjs@1.4.0...@suites/adapters.nestjs@2.0.0) (2023-11-10)
+# [2.0.0](https://github.com/suites-dev/suites/compare/@automock/adapters.nestjs@1.4.0...@automock/adapters.nestjs@2.0.0) (2023-11-10)
 
 ### Features
 
@@ -20,19 +20,19 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - **adapters.nestjs:** Modify export strategy: Shift from native literal export to default module export
 
-# [1.4.0](https://github.com/suites-dev/suites/compare/@suites/adapters.nestjs@1.3.1...@suites/adapters.nestjs@1.4.0) (2023-08-04)
+# [1.4.0](https://github.com/suites-dev/suites/compare/@automock/adapters.nestjs@1.3.1...@automock/adapters.nestjs@1.4.0) (2023-08-04)
 
 ### Features
 
 - **adapters.nestjs:** support undefined dependency reflection ([a9ccaa6](https://github.com/suites-dev/suites/commit/a9ccaa646289320d631b3f783ff9d51639b7dc1b))
 
-## [1.3.1](https://github.com/suites-dev/suites/compare/@suites/adapters.nestjs@1.3.0...@suites/adapters.nestjs@1.3.1) (2023-07-30)
+## [1.3.1](https://github.com/suites-dev/suites/compare/@automock/adapters.nestjs@1.3.0...@automock/adapters.nestjs@1.3.1) (2023-07-30)
 
 ### Bug Fixes
 
 - **adapters.nestjs:** fix broken reflection when initiate class ([#80](https://github.com/suites-dev/suites/issues/80)) ([5bb215a](https://github.com/suites-dev/suites/commit/5bb215ad169a49a81a37cb6203975572795bdc25))
 
-# [1.3.0](https://github.com/suites-dev/suites/compare/@suites/adapters.nestjs@1.2.1...@suites/adapters.nestjs@1.3.0) (2023-07-29)
+# [1.3.0](https://github.com/suites-dev/suites/compare/@automock/adapters.nestjs@1.2.1...@automock/adapters.nestjs@1.3.0) (2023-07-29)
 
 ### Features
 
@@ -52,4 +52,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # 1.1.0 (2023-06-02)
 
-**Note:** Version bump only for package @suites/nestjs
+**Note:** Version bump only for package @automock/nestjs

@@ -1,13 +1,13 @@
 {
-  "name": "@suites/adapters.nestjs",
+  "name": "@suites/di.nestjs",
   "private": false,
-  "version": "2.1.0",
+  "version": "3.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git",
-    "directory": "packages/adapters/nestjs"
+    "directory": "packages/di/nestjs"
   },
   "homepage": "https://suites.dev",
   "bugs": {
@@ -31,12 +31,12 @@
     "dist"
   ],
   "dependencies": {
-    "@suites/common": "^3.1.0",
-    "@suites/types": "^2.0.1",
+    "@suites/types.di": "^4.0.0",
+    "@suites/types.doubles": "^4.0.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@nestjs/common": "^10.2.7",
+    "@nestjs/common": "10.2.7",
     "rxjs": "^7.8.1"
   },
   "engines": {

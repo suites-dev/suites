@@ -1,10 +1,10 @@
-import { Type } from '@suites/types';
+import { Type } from '@suites/types.common';
 import {
   ClassInjectable,
   InjectableIdentifier,
   UndefinedDependency,
   UndefinedTokenError,
-} from '@suites/common';
+} from '@suites/types.di';
 import { NestInjectableIdentifier } from './types';
 
 export interface NestCustomToken {

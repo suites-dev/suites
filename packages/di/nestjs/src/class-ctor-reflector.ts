@@ -1,6 +1,6 @@
 import { SELF_DECLARED_DEPS_METADATA, PARAMTYPES_METADATA } from '@nestjs/common/constants';
-import { Type } from '@suites/types';
-import { ClassInjectable, UndefinedDependencyError } from '@suites/common';
+import { UndefinedDependencyError, ClassInjectable } from '@suites/types.di';
+import { Type } from '@suites/types.common';
 import { MetadataReflector, NestInjectableIdentifier } from './types';
 import { NestCustomToken, ParamsTokensReflector } from './params-token-resolver';
 

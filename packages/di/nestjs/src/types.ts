@@ -1,4 +1,4 @@
-import { InjectableIdentifier, InjectableReflectedType } from '@suites/common';
+import { InjectableIdentifier, InjectableReflectedType } from '@suites/types.di';
 
 export type ForwardRefToken = { forwardRef: () => InjectableReflectedType };
 export type NestInjectableIdentifier = ForwardRefToken | InjectableIdentifier;

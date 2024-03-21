@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const filePath = path.join(__dirname, '..', 'unit', 'typings.d.ts');
-const newContent = "export { TestBed } from './dist;'\nexport * from '@suites/doubles.sinon';\n";
+const filePath = path.join(__dirname, '..', 'unit.core', 'typings.d.ts');
+const newContent = "export { TestBed } from './dist';\nexport * from '@suites/doubles.sinon';\n";
 
 fs.readFile(filePath, 'utf8', function (err, data) {
   console.log('Suites: attempting to override @suites/unit typings file');

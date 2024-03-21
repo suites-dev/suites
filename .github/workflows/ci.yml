@@ -29,7 +29,7 @@ jobs:
 
       - name: Remove Vitest If Needed
         if: ${{ matrix.node-version == '16.x'  }}
-        run: rm -rf packages/testbeds/vitest
+        run: rm -rf packages/doubles/vitest
 
       - name: Yarn
         run: yarn --frozen-lockfile
@@ -40,7 +40,7 @@ jobs:
 
       - name: Build
         if: ${{ matrix.node-version == '16.x' }}
-        run: yarn build --ignore @suites/vitest
+        run: yarn build --ignore @suites/doubles.vitest
 
   lint:
     name: Lint

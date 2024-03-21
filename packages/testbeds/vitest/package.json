@@ -1,0 +1,53 @@
+{
+  "name": "@suites/vitest",
+  "version": "2.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "keywords": [
+    "mocking",
+    "mock",
+    "vitest",
+    "dependency-injection",
+    "testing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/testbeds/vitest"
+  },
+  "homepage": "https://suites.dev",
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites/issues"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "scripts": {
+    "prebuild": "yarn rimraf dist",
+    "build": "yarn tsc -p tsconfig.build.json",
+    "test": "VITE_CJS_IGNORE_WARNING=true yarn vitest run --coverage",
+    "lint": "yarn eslint '{src,test}/**/*.ts'"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": "^18.12.0 || >=20.0.0"
+  },
+  "dependencies": {
+    "@suites/core": "^2.1.0",
+    "@suites/types": "^2.0.1"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.0.4",
+    "vitest": "^1.1.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "604c28d46817ccaf16aeba41713d5a270c96e3d5"
+}

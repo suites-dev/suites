@@ -4,10 +4,10 @@
     "rootDir": "src",
     "baseUrl": ".",
     "outDir": "dist",
-    "target": "es6"
+    "target": "es6",
+    "skipLibCheck": true
   },
   "exclude": [
-    "typings.d.ts",
     "index.ts",
     "node_modules",
     "__test__",

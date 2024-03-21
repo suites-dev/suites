@@ -1,0 +1,43 @@
+{
+  "name": "@suites/unit",
+  "private": false,
+  "version": "3.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "typings.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/unit"
+  },
+  "homepage": "https://suites.dev",
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites/issues"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
+  "scripts": {
+    "prebuild": "yarn rimraf dist",
+    "build": "yarn tsc -p tsconfig.build.json",
+    "test": "jest --coverage --verbose",
+    "lint": "yarn eslint '{src,test}/**/*.ts'"
+  },
+  "files": [
+    "dist",
+    "typings.d.ts",
+    "README.md"
+  ],
+  "dependencies": {
+    "@suites/core.unit": "^4.0.0",
+    "@suites/types.common": "^4.0.0",
+    "@suites/types.di": "^4.0.0",
+    "@suites/types.doubles": "^4.0.0"
+  }
+}

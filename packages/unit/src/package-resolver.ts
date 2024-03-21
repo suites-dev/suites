@@ -1,22 +1,18 @@
-import { AutomockDependenciesAdapter } from '@suites/common';
+import { DependencyInjectionAdapter } from '@suites/types.di';
+import { MockFunction } from '@suites/types.doubles';
 
-export const AutomockAdapters: Record<string, string> = {
-  nestjs: '@suites/adapters.nestjs',
-  inversify: '@suites/adapters.inversify',
-} as const;
-
-interface NodeRequire {
+interface NodeRequire<TAdapter extends DependencyInjectionAdapter | MockFunction<unknown>> {
   resolve(path: string): string;
-  require(path: string): { default: AutomockDependenciesAdapter };
+  require(path: string): { default: TAdapter };
 }
 
-export class PackageResolver {
+export class PackageResolver<TAdapter extends DependencyInjectionAdapter | MockFunction<unknown>> {
   public constructor(
     private readonly adapters: Record<string, string>,
-    private readonly require: NodeRequire
+    private readonly require: NodeRequire<TAdapter>
   ) {}
 
-  public resolveCorrespondingAdapter(): AutomockDependenciesAdapter | never {
+  public resolveCorrespondingAdapter(): TAdapter | never {
     const resolvers = Object.keys(this.adapters);
 
     const adapterName = resolvers.find((resolverName: string) =>
@@ -33,7 +29,7 @@ export class PackageResolver {
       throw new Error('Adapter has no default export');
     }
 
-    return this.require.require(this.adapters[adapterName]).default as AutomockDependenciesAdapter;
+    return this.require.require(this.adapters[adapterName]).default as TAdapter;
   }
 
   private packageIsAvailable(path: string): boolean {

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const filePath = path.join(__dirname, '..', 'core.unit', 'typings.d.ts');
+const filePath = path.join(__dirname, '..', 'unit', 'typings.d.ts');
 const newContent = "export  { TestBed } from './dist';\nexport * from '@suites/doubles.vitest';\n";
 
 fs.readFile(filePath, 'utf8', function (err, data) {

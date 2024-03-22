@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { UnitReference, TestBed, Mocked } from '@suites/unit/src/typings';
+import { UnitReference, TestBed, Mocked } from '@suites/unit';
 import {
   ClassThatIsNotInjected,
   Foo,

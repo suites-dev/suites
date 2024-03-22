@@ -12,20 +12,20 @@ export class AdapterNotFoundError extends SuitesError {
   }
 }
 
-const SuitesDoublesAdapters: Record<string, string> = {
+const SuitesDoublesAdapters = {
   jest: '@suites/doubles.jest',
   sinon: '@suites/doubles.sinon',
   vitest: '@suites/doubles.vitest',
 } as const;
 
-export const SuitesDIAdapters: Record<string, string> = {
+export const SuitesDIAdapters = {
   nestjs: '@suites/di.nestjs',
   inversify: '@suites/di.inversify',
 } as const;
 
 function createTestbedBuilder<TClass>(
-  diAdapters: Record<string, string>,
-  doublesAdapters: Record<string, string>
+  diAdapters: typeof SuitesDIAdapters,
+  doublesAdapters: typeof SuitesDoublesAdapters
 ): (targetClass: Type<TClass>) => TestBedBuilder<TClass> | never {
   try {
     const diPackageResolver = new PackageResolver<DependencyInjectionAdapter>(diAdapters, {
@@ -52,5 +52,5 @@ Refer to the docs for further information: https://suites.dev/docs`);
 }
 
 export function TestBedBuilderFactory<TClass>(targetClass: Type<TClass>) {
-  return createTestbedBuilder<TClass>(SuitesDoublesAdapters, SuitesDIAdapters)(targetClass);
+  return createTestbedBuilder<TClass>(SuitesDIAdapters, SuitesDoublesAdapters)(targetClass);
 }

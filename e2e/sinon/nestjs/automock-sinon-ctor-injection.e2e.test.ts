@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { UnitReference, TestBed, Mocked, stub } from '@suites/unit';
+import { UnitReference, TestBed, Mocked } from '@suites/unit';
 import {
   ClassThatIsNotInjected,
   Foo,
@@ -18,6 +18,7 @@ import { expect } from 'chai';
 import { before } from 'mocha';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import { stub } from 'sinon';
 chai.use(chaiAsPromised);
 
 describe('Suites Sinon / NestJS E2E Test Ctor', () => {
@@ -28,7 +29,7 @@ describe('Suites Sinon / NestJS E2E Test Ctor', () => {
     const { unitRef: ref, unit: underTest } = TestBed.create<NestJSTestClass>(NestJSTestClass)
       .mock(TestClassOne)
       .using({
-        foo: stub.resolves('foo-from-test'),
+        foo: stub().resolves('foo-from-test'),
         bar(): string {
           return 'bar';
         },

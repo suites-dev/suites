@@ -31,7 +31,7 @@ jobs:
       - name: Remove Vitest If Needed
         if: ${{ matrix.node-version == '16.x' }}
         run: |
-          rm -rf packages/testbeds/vitest
+          rm -rf packages/doubles/vitest
           git config --global user.email "ci@suites.dev"
           git config --global user.name "Suites CI"
           git add .

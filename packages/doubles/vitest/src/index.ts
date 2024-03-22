@@ -3,6 +3,7 @@ import { Mocked as VitestMocked } from '@vitest/spy';
 import { UnitReference as CoreUnitReference } from '@suites/core.unit';
 import { Type } from '@suites/types.common';
 import { IdentifierMetadata } from '@suites/types.di';
+import { mock } from './mock.static';
 
 /**
  * Provides a reference to mock objects that have been mocked for testing
@@ -122,3 +123,5 @@ export interface UnitReference extends CoreUnitReference {
 export const stub = vi.fn();
 export * from './mock.static';
 export type Mocked<TType> = VitestMocked<TType>;
+
+export default mock;

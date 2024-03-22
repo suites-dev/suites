@@ -3,6 +3,7 @@
 import { Type } from '@suites/types.common';
 import { IdentifierMetadata } from '@suites/types.di';
 import { SinonStubbedInstance, stub as sinonStub } from 'sinon';
+import { mock } from './mock.static';
 
 /**
  * Provides a reference to mock objects that have been mocked for testing
@@ -122,3 +123,5 @@ export interface UnitReference {
 export const stub = sinonStub();
 export * from './mock.static';
 export type Mocked<TType> = SinonStubbedInstance<TType>;
+
+export default mock;

@@ -27,28 +27,40 @@ function createTestbedBuilder<TClass>(
   diAdapters: typeof SuitesDIAdapters,
   doublesAdapters: typeof SuitesDoublesAdapters
 ): (targetClass: Type<TClass>) => TestBedBuilder<TClass> | never {
+  let diAdapter: DependencyInjectionAdapter;
+  let doublesAdapter: MockFunction<unknown>;
+
   try {
     const diPackageResolver = new PackageResolver<DependencyInjectionAdapter>(diAdapters, {
       resolve: require.resolve,
       require,
     });
 
+    diAdapter = diPackageResolver.resolveCorrespondingAdapter();
+  } catch (error: unknown) {
+    throw new AdapterNotFoundError(`Suites requires an adapter to integrate with different dependency injection frameworks.
+It seems that you haven't installed an appropriate package. To resolve this issue, please install
+one of the available packages that matches your dependency injection framework.
+Refer to the docs for further information: https://suites.dev/docs`);
+  }
+
+  try {
     const doublesPackageResolver = new PackageResolver<MockFunction<unknown>>(doublesAdapters, {
       resolve: require.resolve,
       require,
     });
 
-    const diAdapter = diPackageResolver.resolveCorrespondingAdapter();
-    const doublesAdapter = doublesPackageResolver.resolveCorrespondingAdapter();
-    const unitMocker = new UnitMocker(doublesAdapter);
-
-    return UnitBuilder.create<TClass>(doublesAdapter, unitMocker, diAdapter, console);
+    doublesAdapter = doublesPackageResolver.resolveCorrespondingAdapter();
   } catch (error: unknown) {
-    throw new AdapterNotFoundError(`Suites requires a DI adapter to seamlessly integrate with different dependency injection frameworks.
+    throw new AdapterNotFoundError(`Suites requires an adapter to integrate with different mocking libraries.
 It seems that you haven't installed an appropriate adapter package. To resolve this issue, please install
-one of the available adapters that matches your dependency injection framework.
+one of the available packages that matches your mocking library.
 Refer to the docs for further information: https://suites.dev/docs`);
   }
+
+  const unitMocker = new UnitMocker(doublesAdapter);
+
+  return UnitBuilder.create<TClass>(doublesAdapter, unitMocker, diAdapter, console);
 }
 
 export function TestBedBuilderFactory<TClass>(targetClass: Type<TClass>) {

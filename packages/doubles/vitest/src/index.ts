@@ -1,4 +1,4 @@
-/// <reference types="@vitest/spy" />
+/// <reference types="vitest" />
 /// <reference types="@suites/unit" />
 
 import { Mocked as VitestMocked } from '@vitest/spy';

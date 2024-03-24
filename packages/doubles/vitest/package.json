@@ -25,6 +25,9 @@
       "email": "omer.moradd@gmail.com"
     }
   ],
+  "engines": {
+    "node": "^18.12.0 || >=20.0.0"
+  },
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "postinstall": "node postinstall.js",
@@ -37,9 +40,6 @@
     "README.md",
     "postinstall.js"
   ],
-  "engines": {
-    "node": "^18.12.0 || >=20.0.0"
-  },
   "dependencies": {
     "@suites/core.unit": "^4.0.0",
     "@suites/types.doubles": "^4.0.0"

@@ -4,9 +4,11 @@
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
+    "mocking",
     "mock",
     "sinon",
-    "dependency-injection"
+    "dependency-injection",
+    "testing"
   ],
   "repository": {
     "type": "git",
@@ -45,10 +47,6 @@
   "devDependencies": {
     "@types/sinon": "^10.0.19",
     "sinon": "^16.1.0"
-  },
-  "peerDependencies": {
-    "@types/sinon": "9 - 10",
-    "sinon": "10 - 16"
   },
   "publishConfig": {
     "access": "public"

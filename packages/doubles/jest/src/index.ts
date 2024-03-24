@@ -1,3 +1,6 @@
+/// <reference types="@types/jest" />
+/// <reference types="@suites/unit" />
+
 import { UnitReference as CoreUnitReference } from '@suites/core.unit';
 import { Type } from '@suites/types.common';
 import { IdentifierMetadata } from '@suites/types.di';

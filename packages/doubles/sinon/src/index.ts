@@ -1,4 +1,5 @@
 /// <reference types="@types/sinon" />
+/// <reference types="@suites/unit" />
 
 import { Type } from '@suites/types.common';
 import { IdentifierMetadata } from '@suites/types.di';

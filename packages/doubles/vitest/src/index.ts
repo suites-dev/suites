@@ -1,3 +1,6 @@
+/// <reference types="@vitest/spy" />
+/// <reference types="@suites/unit" />
+
 import { Mocked as VitestMocked } from '@vitest/spy';
 import { UnitReference as CoreUnitReference } from '@suites/core.unit';
 import { Type } from '@suites/types.common';

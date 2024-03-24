@@ -1,4 +1,4 @@
-/// <reference types="@types/jest" />
+/// <reference types="jest" />
 /// <reference types="@suites/unit" />
 
 import { UnitReference as CoreUnitReference } from '@suites/core.unit';

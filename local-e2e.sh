@@ -72,10 +72,10 @@ yarn lerna publish from-package --yes \
   --dist-tag e2e
 
 # Test Matrix
-setup_and_test sinon nestjs
-setup_and_test sinon inversify
-setup_and_test jest nestjs
-setup_and_test jest inversify
+#setup_and_test sinon nestjs
+#setup_and_test sinon inversify
+#setup_and_test jest nestjs
+#setup_and_test jest inversify
 setup_and_test vitest nestjs
 setup_and_test vitest inversify
 

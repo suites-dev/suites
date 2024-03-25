@@ -18,7 +18,7 @@ const SuitesDoublesAdapters = {
   vitest: '@suites/doubles.vitest',
 } as const;
 
-export const SuitesDIAdapters = {
+const SuitesDIAdapters = {
   nestjs: '@suites/di.nestjs',
   inversify: '@suites/di.inversify',
 } as const;
@@ -63,6 +63,16 @@ Refer to the docs for further information: https://suites.dev/docs`);
   return UnitBuilder.create<TClass>(doublesAdapter, unitMocker, diAdapter, console);
 }
 
-export function TestBedBuilderFactory<TClass>(targetClass: Type<TClass>) {
+function TestBedBuilderFactory<TClass>(targetClass: Type<TClass>) {
   return createTestbedBuilder<TClass>(SuitesDIAdapters, SuitesDoublesAdapters)(targetClass);
+}
+
+export class TestBed {
+  public static solitary<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
+    return TestBedBuilderFactory<TClass>(targetClass);
+  }
+
+  public static create<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
+    return TestBed.solitary<TClass>(targetClass);
+  }
 }

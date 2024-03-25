@@ -5,7 +5,6 @@ import {
   TestBedBuilder as TestBedBuilderCore,
   UnitReference as UnitReferenceCore,
 } from '@suites/core.unit';
-import { TestBedBuilderFactory } from './main';
 
 /**
  * Provides a reference to mock objects that have been mocked for testing
@@ -161,16 +160,6 @@ export interface TestBed {
    * @param targetClass
    */
   create<TClass>(targetClass: Type<TClass>): TestBedBuilder<TClass>;
-}
-
-export class TestBed {
-  public static solitary<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
-    return TestBedBuilderFactory<TClass>(targetClass);
-  }
-
-  public static create<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
-    return TestBed.solitary<TClass>(targetClass);
-  }
 }
 
 /**

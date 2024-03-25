@@ -2,7 +2,7 @@
   "name": "@suites/doubles.vitest",
   "version": "3.0.0",
   "license": "MIT",
-  "main": "dist/index.js",
+  "module": "dist/index.js",
   "keywords": [
     "mocking",
     "mock",

@@ -123,7 +123,7 @@ declare module '@suites/unit' {
   }
 }
 
-export * from './mock.static';
+export { mock } from './mock.static';
 export type Mocked<TType> = jest.Mocked<TType>;
 
 export default mock;

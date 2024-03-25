@@ -1,9 +1,10 @@
 /// <reference types="@types/sinon" />
 /// <reference types="@suites/unit" />
 
+import { SinonStubbedInstance } from 'sinon';
+import { UnitReference as CoreUnitReference } from '@suites/core.unit';
 import { Type } from '@suites/types.common';
 import { IdentifierMetadata } from '@suites/types.di';
-import { SinonStubbedInstance } from 'sinon';
 import { mock } from './mock.static';
 
 /**
@@ -20,7 +21,7 @@ import { mock } from './mock.static';
  * @see https://suites.dev/api-reference/api/unitreference-api
  */
 declare module '@suites/unit' {
-  export interface UnitReference {
+  export interface UnitReference extends CoreUnitReference {
     /**
      * Retrieves a reference to the mocked object of a dependency corresponding to its type
      * identifier.
@@ -123,7 +124,7 @@ declare module '@suites/unit' {
   }
 }
 
-export * from './mock.static';
+export { mock } from './mock.static';
 export type Mocked<TType> = SinonStubbedInstance<TType>;
 
 export default mock;

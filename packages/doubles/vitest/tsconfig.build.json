@@ -3,6 +3,7 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
+    "removeComments": true,
     "rootDir": "src",
     "baseUrl": "./",
     "outDir": "dist",

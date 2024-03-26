@@ -1,11 +1,11 @@
 /// <reference types="vitest" />
 /// <reference types="@suites/unit" />
 
-import { Mocked as VitestMocked } from '@vitest/spy';
+import type { Mocked as VitestMocked } from '@vitest/spy';
 import { UnitReference as CoreUnitReference } from '@suites/core.unit';
-import { Type } from '@suites/types.common';
-import { IdentifierMetadata } from '@suites/types.di';
-import { mock } from './mock.static';
+import type { Type } from '@suites/types.common';
+import type { IdentifierMetadata } from '@suites/types.di';
+import { createRequire } from 'node:module';
 
 /**
  * Provides a reference to mock objects that have been mocked for testing
@@ -124,7 +124,11 @@ declare module '@suites/unit' {
   }
 }
 
-export { mock } from './mock.static';
-export type Mocked<TType> = VitestMocked<TType>;
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const require = createRequire(import.meta.url);
 
+export type Mocked<TType> = VitestMocked<TType>;
+const mock = require('./mock.static');
+export { mock };
 export default mock;

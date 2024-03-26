@@ -2,7 +2,12 @@
   "name": "@suites/doubles.vitest",
   "version": "3.0.0",
   "license": "MIT",
-  "module": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "type": "module",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
   "keywords": [
     "mocking",
     "mock",
@@ -31,7 +36,7 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "postinstall": "node postinstall.js",
-    "build": "yarn tsc -p tsconfig.build.json",
+    "build": "sh ./build.sh",
     "test": "VITE_CJS_IGNORE_WARNING=true yarn vitest run --coverage",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },

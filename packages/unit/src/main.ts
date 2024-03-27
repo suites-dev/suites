@@ -23,10 +23,10 @@ const SuitesDIAdapters = {
   inversify: '@suites/di.inversify',
 } as const;
 
-function createTestbedBuilder<TClass>(
+async function createTestbedBuilder<TClass>(
   diAdapters: typeof SuitesDIAdapters,
   doublesAdapters: typeof SuitesDoublesAdapters
-): (targetClass: Type<TClass>) => TestBedBuilder<TClass> | never {
+): Promise<(targetClass: Type<TClass>) => TestBedBuilder<TClass> | never> {
   let diAdapter: DependencyInjectionAdapter;
   let doublesAdapter: MockFunction<unknown>;
 
@@ -36,7 +36,7 @@ function createTestbedBuilder<TClass>(
       require,
     });
 
-    diAdapter = diPackageResolver.resolveCorrespondingAdapter();
+    diAdapter = await diPackageResolver.resolveCorrespondingAdapter();
   } catch (error: unknown) {
     throw new AdapterNotFoundError(`Suites requires an adapter to integrate with different dependency injection frameworks.
 It seems that you haven't installed an appropriate package. To resolve this issue, please install
@@ -50,7 +50,7 @@ Refer to the docs for further information: https://suites.dev/docs`);
       require,
     });
 
-    doublesAdapter = doublesPackageResolver.resolveCorrespondingAdapter();
+    doublesAdapter = await doublesPackageResolver.resolveCorrespondingAdapter();
   } catch (error: unknown) {
     throw new AdapterNotFoundError(`Suites requires an adapter to integrate with different mocking libraries.
 It seems that you haven't installed an appropriate adapter package. To resolve this issue, please install
@@ -63,16 +63,20 @@ Refer to the docs for further information: https://suites.dev/docs`);
   return UnitBuilder.create<TClass>(doublesAdapter, unitMocker, diAdapter, console);
 }
 
-function TestBedBuilderFactory<TClass>(targetClass: Type<TClass>) {
-  return createTestbedBuilder<TClass>(SuitesDIAdapters, SuitesDoublesAdapters)(targetClass);
+async function TestBedBuilderFactory<TClass>(targetClass: Type<TClass>) {
+  return (await createTestbedBuilder<TClass>(SuitesDIAdapters, SuitesDoublesAdapters))(targetClass);
 }
 
 export class TestBed {
-  public static solitary<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
+  public static async solitary<TClass = any>(
+    targetClass: Type<TClass>
+  ): Promise<TestBedBuilder<TClass>> {
     return TestBedBuilderFactory<TClass>(targetClass);
   }
 
-  public static create<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
+  public static async create<TClass = any>(
+    targetClass: Type<TClass>
+  ): Promise<TestBedBuilder<TClass>> {
     return TestBed.solitary<TClass>(targetClass);
   }
 }

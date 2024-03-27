@@ -12,7 +12,7 @@ export class PackageResolver<TAdapter extends DependencyInjectionAdapter | MockF
     private readonly require: NodeRequire<TAdapter>
   ) {}
 
-  public resolveCorrespondingAdapter(): TAdapter | never {
+  public async resolveCorrespondingAdapter(): Promise<TAdapter | never> {
     const resolvers = Object.keys(this.adapters);
 
     const adapterName = resolvers.find((resolverName: string) =>
@@ -29,7 +29,7 @@ export class PackageResolver<TAdapter extends DependencyInjectionAdapter | MockF
       throw new Error('Adapter has no default export');
     }
 
-    return this.require.require(this.adapters[adapterName]).default as TAdapter;
+    return import(this.adapters[adapterName]).then((module) => module.default as TAdapter);
   }
 
   private packageIsAvailable(path: string): boolean {

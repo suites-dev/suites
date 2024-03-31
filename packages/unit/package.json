@@ -3,8 +3,12 @@
   "private": false,
   "version": "3.0.0",
   "license": "MIT",
+  "main": "dist/cjs/index.js",
   "type": "module",
-  "main": "dist/index.js",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
   "types": "typings.d.ts",
   "repository": {
     "type": "git",
@@ -26,7 +30,7 @@
   },
   "scripts": {
     "prebuild": "yarn rimraf dist",
-    "build": "yarn tsc -p tsconfig.build.json",
+    "build": "sh ./build.sh",
     "test": "jest --coverage --verbose",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },

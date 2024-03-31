@@ -1,16 +1,8 @@
 import { DependencyInjectionAdapter } from '@suites/types.di';
 import { MockFunction } from '@suites/types.doubles';
 
-interface NodeRequire<TAdapter extends DependencyInjectionAdapter | MockFunction<unknown>> {
-  resolve(path: string): string;
-  require(path: string): { default: TAdapter };
-}
-
 export class PackageResolver<TAdapter extends DependencyInjectionAdapter | MockFunction<unknown>> {
-  public constructor(
-    private readonly adapters: Record<string, string>,
-    private readonly require: NodeRequire<TAdapter>
-  ) {}
+  public constructor(private readonly adapters: Record<string, string>) {}
 
   public async resolveCorrespondingAdapter(): Promise<TAdapter | never> {
     const resolvers = Object.keys(this.adapters);
@@ -23,18 +15,20 @@ export class PackageResolver<TAdapter extends DependencyInjectionAdapter | MockF
       throw new Error('Adapter not found');
     }
 
-    const adapter = this.require.require(this.adapters[adapterName]);
+    const adapter = await import(this.adapters[adapterName]);
 
-    if (!Object.prototype.hasOwnProperty.call(adapter, 'default')) {
-      throw new Error('Adapter has no default export');
+    if (!Object.prototype.hasOwnProperty.call(adapter, 'adapter')) {
+      throw new Error('Adapter has no export');
     }
 
-    return import(this.adapters[adapterName]).then((module) => module.default as TAdapter);
+    return import(this.adapters[adapterName]).then(
+      (module: Record<'adapter', TAdapter>) => module.adapter
+    );
   }
 
   private packageIsAvailable(path: string): boolean {
     try {
-      this.require.resolve(path);
+      require.resolve(path);
       return true;
     } catch (e) {
       return false;

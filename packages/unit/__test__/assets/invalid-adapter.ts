@@ -1,6 +1,6 @@
 import { DependencyInjectionAdapter, InjectableRegistry } from '@suites/types.di';
 
-export = {
+export const invalidExport = {
   inspect(): InjectableRegistry {
     return 'not-reachable' as unknown as InjectableRegistry;
   },

@@ -9,71 +9,104 @@ import { UnitReference } from './unit-reference';
 import { UnitMocker } from './unit-mocker';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
 import { normalizeIdentifier } from '../normalize-identifier.static';
-import { MockOverride, TestBedBuilder, UnitTestBed } from '../types';
 
-export interface UnitBuilder {
-  create<TClass>(
-    mockFn: MockFunction<unknown>,
-    unitMocker: UnitMocker,
-    adapter: DependencyInjectionAdapter,
-    logger: Console
-  ): (targetClass: Type<TClass>) => TestBedBuilder<TClass>;
+export interface UnitTestBed<TClass> {
+  unit: TClass;
+  unitRef: UnitReference;
 }
 
-export class UnitBuilder {
-  public static create<TClass>(
-    mockFn: MockFunction<unknown>,
-    unitMocker: UnitMocker,
-    adapter: DependencyInjectionAdapter,
-    logger: Console
-  ): (targetClass: Type<TClass>) => TestBedBuilder<TClass> {
-    return (targetClass: Type<TClass>): TestBedBuilder<TClass> => {
-      const identifiersToMocks: IdentifierToMock[] = [];
-      const dependencyContainer = adapter.inspect(targetClass);
+export interface MockOverride<TDependency, TClass> {
+  using(value: TDependency & ConstantValue): TestBedBuilder<TClass>;
+  using(mockImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
+}
 
-      return {
-        mock<TDependency>(
-          identifier: InjectableIdentifier,
-          metadata?: IdentifierMetadata
-        ): MockOverride<TDependency, TClass> {
-          const dependency = dependencyContainer.resolve<never>(identifier, metadata);
+export interface TestBedBuilder<TClass> {
+  mock<TDependency>(type: Type<TDependency>): MockOverride<TDependency, TClass>;
+  mock<TDependency>(
+    type: Type<TDependency>,
+    identifierMetadata: IdentifierMetadata
+  ): MockOverride<TDependency, TClass>;
+  mock<TDependency>(token: string): MockOverride<TDependency, TClass>;
+  mock<TDependency>(
+    token: string,
+    identifierMetadata: IdentifierMetadata
+  ): MockOverride<TDependency, TClass>;
+  mock<TDependency>(token: symbol): MockOverride<TDependency, TClass>;
+  mock<TDependency>(
+    token: symbol,
+    identifierMetadata: IdentifierMetadata
+  ): MockOverride<TDependency, TClass>;
+  mock<TDependency>(
+    identifier: Type<TDependency> | string | symbol,
+    identifierMetadata?: IdentifierMetadata
+  ): MockOverride<TDependency, TClass>;
+  compile(): Promise<UnitTestBed<TClass>>;
+}
 
-          if (!dependency) {
-            logger.warn(mockDependencyNotFoundMessage(identifier, metadata));
-          }
+export class TestBedBuilder<TClass> {
+  private readonly identifiersToBeMocked: IdentifierToMock[] = [];
 
-          return {
-            using: (mockImplementationOrValue: DeepPartial<TDependency> | ConstantValue) => {
-              if (isConstantValue(mockImplementationOrValue)) {
-                identifiersToMocks.push([
-                  normalizeIdentifier(identifier, metadata),
-                  mockImplementationOrValue as ConstantValue,
-                ]);
+  public constructor(
+    private readonly mockFn: Promise<MockFunction<unknown>>,
+    private readonly diAdapter: Promise<DependencyInjectionAdapter>,
+    private readonly unitMocker: UnitMocker,
+    private readonly targetClass: Type<TClass>,
+    private readonly logger: Console
+  ) {}
 
-                return this;
-              }
+  public mock<TDependency>(
+    identifier: InjectableIdentifier,
+    metadata?: IdentifierMetadata
+  ): MockOverride<TDependency, TClass> {
+    return {
+      using: (
+        mockImplementationOrValue: DeepPartial<TDependency> | ConstantValue
+      ): TestBedBuilder<TClass> => {
+        this.identifiersToBeMocked.push([
+          normalizeIdentifier(identifier, metadata),
+          mockImplementationOrValue as StubbedInstance<TDependency> | ConstantValue,
+        ]);
 
-              identifiersToMocks.push([
-                normalizeIdentifier(identifier, metadata),
-                mockFn(mockImplementationOrValue) as StubbedInstance<TDependency>,
-              ]);
+        return this;
+      },
+    };
+  }
 
-              return this;
-            },
-          };
-        },
-        compile(): UnitTestBed<TClass> {
-          const { container, instance } = unitMocker.applyMocksToUnit<TClass>(targetClass)(
-            new MocksContainer(identifiersToMocks),
-            dependencyContainer
+  public async compile(): Promise<UnitTestBed<TClass>> {
+    const diAdapter = await this.diAdapter;
+    const dependencyContainer = diAdapter.inspect(this.targetClass);
+    const mockFn = await this.mockFn;
+
+    const identifiersToMocks: IdentifierToMock[] = this.identifiersToBeMocked.map(
+      ([identifier, valueToMock]) => {
+        const dependency = dependencyContainer.resolve<never>(
+          identifier.identifier,
+          identifier.metadata as never
+        );
+
+        if (!dependency) {
+          this.logger.warn(
+            mockDependencyNotFoundMessage(identifier.identifier, identifier.metadata as never)
           );
+        }
 
-          return {
-            unit: instance,
-            unitRef: new UnitReference(container),
-          };
-        },
-      };
+        if (isConstantValue(valueToMock)) {
+          return [identifier, valueToMock as ConstantValue];
+        }
+
+        return [identifier, mockFn(valueToMock)];
+      }
+    );
+
+    const mocksContainer = new MocksContainer(identifiersToMocks);
+
+    const cb = await this.unitMocker.applyMocksToUnit(this.targetClass);
+
+    const { container, instance } = cb(mocksContainer, dependencyContainer);
+
+    return {
+      unit: instance as TClass,
+      unitRef: new UnitReference(container),
     };
   }
 }

@@ -6,29 +6,23 @@ describe('Automock Adapter Package Resolving Integration Test', () => {
 
   describe('Resolving an adapter with default export', () => {
     beforeAll(() => {
-      packageResolver = new PackageResolver(
-        { test: './assets/test-adapter' },
-        { resolve: require.resolve, require }
-      );
+      packageResolver = new PackageResolver({ test: __dirname + '/assets/test-adapter' });
     });
 
-    it('should successfully resolve the adapter package', () => {
-      const adapter = packageResolver.resolveCorrespondingAdapter();
-      expect(adapter.inspect({} as never)).toBe('success');
+    it('should successfully resolve the adapter package', async () => {
+      const diAdapter = await packageResolver.resolveCorrespondingAdapter();
+      expect(diAdapter.inspect({} as never)).toBe('success');
     });
   });
 
   describe('Resolving an adapter with no default export', () => {
     beforeAll(() => {
-      packageResolver = new PackageResolver(
-        { test: './assets/invalid-adapter' },
-        { resolve: require.resolve, require }
-      );
+      packageResolver = new PackageResolver({ test: __dirname + '/assets/invalid-adapter' });
     });
 
-    it('should failed resolving the adapter package and throw an error', () => {
-      expect(() => packageResolver.resolveCorrespondingAdapter()).toThrow(
-        new Error('Adapter has no default export')
+    it('should failed resolving the adapter package and throw an error', async () => {
+      await expect(() => packageResolver.resolveCorrespondingAdapter()).rejects.toThrow(
+        new Error('Adapter has no export')
       );
     });
   });

@@ -1,2 +1,2 @@
+import { TestBed } from './main';
 export * from './types';
-export { TestBed } from './main';

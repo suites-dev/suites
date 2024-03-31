@@ -1,14 +1,13 @@
 import { Type } from '@suites/types.common';
-import { UnitReference, UnitBuilder, UnitMocker } from '../src';
+import { UnitReference, UnitMocker, TestBedBuilder, UnitTestBed } from '../src';
 import {
   ArbitraryClassFive,
   ArbitraryClassFour,
   ArbitraryClassOne,
   ArbitraryClassTwo,
   ClassUnderTest,
-  FakeAdapter,
+  FakeDIAdapter,
 } from './assets/integration.assets';
-import { TestBedBuilder, UnitTestBed } from '../src/types';
 
 const MockedFromBuilder = Symbol.for('MockedFromBuilder');
 const MockedFromMocker = Symbol.for('MockFromMocker');
@@ -23,19 +22,20 @@ describe('Builder Integration Test', () => {
   const mockFunctionMockOfMocker = jest.fn(() => MockedFromMocker);
 
   beforeAll(() => {
-    underTest = UnitBuilder.create<ClassUnderTest>(
-      mockFunctionMockOfBuilder,
-      new UnitMocker(mockFunctionMockOfMocker),
-      FakeAdapter,
+    underTest = new TestBedBuilder<ClassUnderTest>(
+      Promise.resolve(mockFunctionMockOfBuilder),
+      Promise.resolve(FakeDIAdapter),
+      new UnitMocker(Promise.resolve(mockFunctionMockOfMocker)),
+      ClassUnderTest,
       loggerMock as Console
-    )(ClassUnderTest);
+    );
   });
 
   describe('creating a testbed builder with some mock overrides', () => {
     let unitTestBed: UnitTestBed<ClassUnderTest>;
 
-    beforeAll(() => {
-      unitTestBed = underTest
+    beforeAll(async () => {
+      unitTestBed = await underTest
         .mock(ArbitraryClassTwo)
         .using({
           print: () => 'overridden',
@@ -97,8 +97,8 @@ describe('Builder Integration Test', () => {
       expect(unitTestBed.unitRef).toBeInstanceOf(UnitReference);
     });
 
-    it('should log a warning indicating the dependency was not found when mocking missing dependency', () => {
-      underTest.mock('does-not-exists').using({}).compile();
+    it('should log a warning indicating the dependency was not found when mocking missing dependency', async () => {
+      await underTest.mock('does-not-exists').using({}).compile();
       expect(loggerMock.warn).toHaveBeenCalledTimes(1);
     });
   });

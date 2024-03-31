@@ -315,5 +315,5 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
    * @since 1.1.0
    * @returns UnitTestBed instance representing the compiled unit.
    */
-  compile(): UnitTestBed<TClass>;
+  compile(): Promise<UnitTestBed<TClass>>;
 }

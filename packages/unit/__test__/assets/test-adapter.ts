@@ -1,6 +1,6 @@
 import { DependencyInjectionAdapter, InjectableRegistry } from '@suites/types.di';
 
-export default {
+export const adapter = {
   inspect(): InjectableRegistry {
     return 'success' as unknown as InjectableRegistry;
   },

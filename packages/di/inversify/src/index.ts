@@ -16,5 +16,4 @@ const InversifyAutomockDependenciesAdapter: DependencyInjectionAdapter = ((
 );
 
 export { IdentifierMetadata } from './types';
-
-export default InversifyAutomockDependenciesAdapter;
+export const adapter = InversifyAutomockDependenciesAdapter;

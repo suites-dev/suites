@@ -165,7 +165,7 @@ const classInjectables: ClassInjectable[] = [
   },
 ];
 
-export const FakeAdapter: DependencyInjectionAdapter = {
+export const FakeDIAdapter: DependencyInjectionAdapter = {
   inspect: () => {
     return {
       list: () => classInjectables,

@@ -10,15 +10,15 @@ export interface MockedUnit<TClass> {
 }
 
 export class UnitMocker {
-  public constructor(private readonly mockFunction: MockFunction<unknown>) {}
+  public constructor(private readonly mockFunction: Promise<MockFunction<unknown>>) {}
 
-  public applyMocksToUnit<TClass>(
+  public async applyMocksToUnit<TClass>(
     targetClass: Type<TClass>
-  ): (
-    mockContainer: MocksContainer,
-    injectablesContainer: InjectableRegistry
-  ) => MockedUnit<TClass> {
+  ): Promise<
+    (mockContainer: MocksContainer, injectablesContainer: InjectableRegistry) => MockedUnit<TClass>
+  > {
     const identifiersToMocks: IdentifierToMock[] = [];
+    const mockFunction = await this.mockFunction;
 
     return (
       mocksContainer: MocksContainer,
@@ -29,7 +29,7 @@ export class UnitMocker {
       const propsInjectables = allInjectables.filter(({ type }) => type === 'PROPERTY');
 
       for (const { identifier, metadata } of ctorInjectables) {
-        const mock = mocksContainer.resolve(identifier, metadata) || this.mockFunction();
+        const mock = mocksContainer.resolve(identifier, metadata) || mockFunction();
         identifiersToMocks.push([normalizeIdentifier(identifier, metadata), mock]);
       }
 
@@ -37,7 +37,7 @@ export class UnitMocker {
       const classInstance = new targetClass(...classCtorParams) as Record<string, unknown>;
 
       for (const { identifier, metadata, property } of propsInjectables) {
-        const mock = mocksContainer.resolve(identifier, metadata) || this.mockFunction();
+        const mock = mocksContainer.resolve(identifier, metadata) || mockFunction();
 
         identifiersToMocks.push([normalizeIdentifier(identifier, metadata), mock]);
         classInstance[property!.key] = mock;

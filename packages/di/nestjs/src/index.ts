@@ -17,4 +17,4 @@ const NestJSDIAdapter: DependencyInjectionAdapter = ((
 );
 
 export { IdentifierMetadata } from './types';
-export default NestJSDIAdapter;
+export const adapter = NestJSDIAdapter;

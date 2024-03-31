@@ -127,4 +127,4 @@ declare module '@suites/unit' {
 export { mock } from './mock.static';
 export type Mocked<TType> = SinonStubbedInstance<TType>;
 
-export default mock;
+export const adapter = mock;

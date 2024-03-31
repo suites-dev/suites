@@ -1,7 +1,5 @@
 import { beforeAll, describe, test, expect } from 'vitest';
-import { UnitReference } from '@suites/core';
-import { TestBed } from '@suites/vitest';
-import { Mocked } from '@vitest/spy';
+import { TestBed, Mocked, UnitReference } from '@suites/unit';
 import {
   ClassThatIsNotInjected,
   Foo,
@@ -20,8 +18,8 @@ describe('Suites Vitest / NestJS E2E Test Ctor', () => {
   let unit: NestJSTestClass;
   let unitRef: UnitReference;
 
-  beforeAll(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.create<NestJSTestClass>(NestJSTestClass)
+  beforeAll(async () => {
+    const { unitRef: ref, unit: underTest } = await TestBed.create(NestJSTestClass)
       .mock(TestClassOne)
       .using({
         async foo(): Promise<string> {
@@ -65,7 +63,7 @@ describe('Suites Vitest / NestJS E2E Test Ctor', () => {
     });
 
     test('call the unit instance method', async () => {
-      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo = unitRef.get(TestClassTwo);
 
       testClassTwo.bar.mockResolvedValue('context');
 

@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@suites/adapters.nestjs": "e2e",
-    "@suites/sinon": "e2e",
-    "@nestjs/common": "10.0.0",
+    "@suites/di.nestjs": "e2e",
+    "@suites/doubles.sinon": "e2e",
+    "@suites/unit": "e2e",
     "@nestjs/core": "10.0.0",
     "reflect-metadata": "^0.1.13"
   },

@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 
-import { UnitReference } from '@suites/core';
-import { TestBed } from '@suites/sinon';
+import { UnitReference, TestBed, Mocked } from '@suites/unit';
 import {
   ClassThatIsNotInjected,
   Foo,
@@ -16,25 +15,24 @@ import {
   TestClassTwo,
   Bar,
 } from './e2e-assets';
-import { SinonStubbedInstance } from 'sinon';
 import { expect } from 'chai';
 import { before } from 'mocha';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import sinon = require('sinon');
+import { stub } from 'sinon';
 chai.use(chaiAsPromised);
 
 describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
   let unit: InversifyJSTestClass;
   let unitRef: UnitReference;
 
-  before(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.create<InversifyJSTestClass>(
+  before(async () => {
+    const { unitRef: ref, unit: underTest } = await TestBed.create<InversifyJSTestClass>(
       InversifyJSTestClass
     )
       .mock(TestClassOne)
       .using({
-        foo: sinon.stub().resolves('foo-from-test'),
+        foo: stub().resolves('foo-from-test'),
         bar(): string {
           return 'bar';
         },
@@ -75,7 +73,7 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     it('call the unit instance method', async () => {
-      const testClassTwo: SinonStubbedInstance<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       testClassTwo.bar.resolves('context');
 
@@ -90,7 +88,7 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     it('then mock the implementation of the dependencies', async () => {
-      const testClassOne: SinonStubbedInstance<TestClassOne> = unitRef.get(TestClassOne);
+      const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
       const logger = unitRef.get<Logger>('LOGGER');
 
       // The original 'foo' method in TestClassOne return value should be changed
@@ -109,8 +107,8 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     it('then mock the undefined reflected values and tokens', () => {
-      const testClassFour: SinonStubbedInstance<TestClassFour> = unitRef.get(TestClassFour);
-      const undefinedValue: SinonStubbedInstance<{ method: () => number }> = unitRef.get<{
+      const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
+      const undefinedValue: Mocked<{ method: () => number }> = unitRef.get<{
         method: () => number;
       }>('UNDEFINED');
 

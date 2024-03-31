@@ -1,9 +1,9 @@
 import {
   ClassInjectable,
-  InjectablesRegistry,
+  InjectableRegistry,
   UndefinedDependency,
   WithMetadata,
-} from '@suites/common';
+} from '@suites/types.di';
 import { MockedUnit, UnitMocker } from './unit-mocker';
 import { IdentifierToMock, MocksContainer } from './mocks-container';
 
@@ -35,11 +35,11 @@ describe('Unit Mocker Unit Spec', () => {
   const mockFunctionStub = () => MockedFromBuilder;
 
   beforeAll(() => {
-    underTest = new UnitMocker(mockFunctionStub);
+    underTest = new UnitMocker(Promise.resolve(mockFunctionStub));
   });
 
   describe('given that the adapter returns container with the following dependencies', () => {
-    const dependenciesContainer: InjectablesRegistry = {
+    const dependenciesContainer: InjectableRegistry = {
       list(): ClassInjectable[] {
         return [
           { identifier: ArbitraryClassOne, value: ArbitraryClassOne, type: 'PARAM' },
@@ -100,8 +100,10 @@ describe('Unit Mocker Unit Spec', () => {
       ]);
 
       describe('when applying all the mocks on the target unit, including the already mocked', () => {
-        beforeAll(() => {
-          result = underTest.applyMocksToUnit(DummyClass)(mocksContainer, dependenciesContainer);
+        beforeAll(async () => {
+          result = await underTest.applyMocksToUnit(DummyClass).then((cb) => {
+            return cb(mocksContainer, dependenciesContainer);
+          });
         });
 
         it('should return container that lists all the dependencies together, mocked from the builder or from advanced', () => {

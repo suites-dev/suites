@@ -29,7 +29,7 @@ jobs:
 
       - name: Remove Vitest If Needed
         if: ${{ matrix.node-version == '16.x'  }}
-        run: rm -rf packages/testbeds/vitest
+        run: rm -rf packages/doubles/vitest
 
       - name: Yarn
         run: yarn --frozen-lockfile
@@ -40,7 +40,7 @@ jobs:
 
       - name: Build
         if: ${{ matrix.node-version == '16.x' }}
-        run: yarn build --ignore @suites/vitest
+        run: yarn build --ignore @suites/doubles.vitest
 
   lint:
     name: Lint
@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ['jest', 'sinon', 'core', 'vitest', 'adapters.nestjs', 'adapters.inversify']
+        project: ['doubles.jest', 'doubles.sinon', 'core.unit', 'doubles.vitest', 'di.nestjs', 'di.inversify', 'unit']
     steps:
       - name: Checkout
         uses: actions/checkout@v3

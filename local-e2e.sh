@@ -71,6 +71,9 @@ yarn lerna publish from-package --yes \
   --force-publish \
   --dist-tag e2e
 
+echo "Cleaning source packages.."
+git rm -rf packages
+
 # Test Matrix
 setup_and_test sinon nestjs
 setup_and_test sinon inversify
@@ -80,3 +83,8 @@ setup_and_test vitest nestjs
 setup_and_test vitest inversify
 
 echo -e "🎉 Testing complete!"
+
+git stash
+
+docker kill verdaccio
+docker rm verdaccio

@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
 
 const filePath = path.join(__dirname, '..', 'unit', 'typings.d.ts');
 const newContent = "\nexport { mock, Mocked } from '@suites/doubles.vitest';\n";

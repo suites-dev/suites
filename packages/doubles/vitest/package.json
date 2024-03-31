@@ -36,7 +36,7 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "postinstall": "node postinstall.js",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "sh build.sh",
     "test": "VITE_CJS_IGNORE_WARNING=true yarn vitest run --coverage",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
@@ -56,5 +56,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
+  "gitHead": "dd33b5c30d15a170b23bd48daa38d68879b8497a"
 }

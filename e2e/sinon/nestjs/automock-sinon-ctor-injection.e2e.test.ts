@@ -25,8 +25,8 @@ describe('Suites Sinon / NestJS E2E Test Ctor', () => {
   let unit: NestJSTestClass;
   let unitRef: UnitReference;
 
-  before(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.create<NestJSTestClass>(NestJSTestClass)
+  before(async () => {
+    const { unitRef: ref, unit: underTest } = await TestBed.create<NestJSTestClass>(NestJSTestClass)
       .mock(TestClassOne)
       .using({
         foo: stub().resolves('foo-from-test'),

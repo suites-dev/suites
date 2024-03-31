@@ -17,8 +17,10 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
   let unit: NestJSTestClass;
   let unitRef: UnitReference;
 
-  beforeAll(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.solitary<NestJSTestClass>(NestJSTestClass)
+  beforeAll(async () => {
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<NestJSTestClass>(
+      NestJSTestClass
+    )
       .mock(TestClassOne)
       .using({
         async foo(): Promise<string> {

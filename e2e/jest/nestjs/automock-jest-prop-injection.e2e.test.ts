@@ -17,8 +17,8 @@ describe('Suites Jest / NestJS E2E Test Props', () => {
   let unit: NestJSTestClassProp;
   let unitRef: UnitReference;
 
-  beforeAll(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.solitary<NestJSTestClassProp>(
+  beforeAll(async () => {
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<NestJSTestClassProp>(
       NestJSTestClassProp
     )
       .mock(TestClassOne)

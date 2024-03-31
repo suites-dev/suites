@@ -18,8 +18,8 @@ describe('Suites Vitest / NestJS E2E Test Ctor', () => {
   let unit: NestJSTestClass;
   let unitRef: UnitReference;
 
-  beforeAll(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.create<NestJSTestClass>(NestJSTestClass)
+  beforeAll(async () => {
+    const { unitRef: ref, unit: underTest } = await TestBed.create(NestJSTestClass)
       .mock(TestClassOne)
       .using({
         async foo(): Promise<string> {

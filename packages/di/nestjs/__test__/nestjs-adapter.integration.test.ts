@@ -12,10 +12,10 @@ import {
 } from './assets/integration.assets';
 import { InjectableIdentifier, UndefinedDependency, WithoutMetadata } from '@suites/types.di';
 import { Type } from '@suites/types.common';
-import NestJSDIAdapter from '../src';
+import { adapter } from '../src';
 
 describe('NestJS Automock Adapter Integration Test', () => {
-  const dependencyInjectionAdapter = NestJSDIAdapter;
+  const dependencyInjectionAdapter = adapter;
 
   describe('reflecting a class with constructor based injection', () => {
     const injectablesContainer = dependencyInjectionAdapter.inspect(ConstructorBasedInjectionClass);

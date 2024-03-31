@@ -22,10 +22,10 @@ import {
   UndefinedDependency,
 } from '@suites/types.di';
 import { InversifyInjectableIdentifierMetadata } from '../src/types';
-import InversifyAutomockDependenciesAdapter from '../src';
+import { adapter } from '../src';
 
 describe('Inversify Automock Adapter Integration Test', () => {
-  const dependenciesAdapter = InversifyAutomockDependenciesAdapter;
+  const dependenciesAdapter = adapter;
 
   describe('class constructor injection', () => {
     let injectablesRegistry: InjectableRegistry;

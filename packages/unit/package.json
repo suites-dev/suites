@@ -3,6 +3,7 @@
   "private": false,
   "version": "3.0.0",
   "license": "MIT",
+  "type": "module",
   "main": "dist/index.js",
   "types": "typings.d.ts",
   "repository": {

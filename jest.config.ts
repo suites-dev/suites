@@ -7,6 +7,7 @@ const config: Config.InitialOptions = {
     '<rootDir>/packages/unit',
     '<rootDir>/packages/core',
     '<rootDir>/packages/di/nestjs',
+    '<rootDir>/packages/di/tsyringe',
     '<rootDir>/packages/di/inversify',
     '<rootDir>/packages/doubles/jest',
     '<rootDir>/packages/doubles/sinon',

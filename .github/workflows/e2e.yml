@@ -1,4 +1,6 @@
-name: Suites E2E
+name: Suites e2e
+env:
+  CI: true
 
 on:
   workflow_dispatch:
@@ -8,18 +10,40 @@ on:
         required: true
 
 jobs:
-  build:
+  e2e:
     name: Build and Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'jest/inversify', 'sinon/inversify']
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
         node-version: [16.x, 18.x, 20.x]
+        exclude:
+          - e2e-project: 'vitest/inversify'
+            node-version: '16.x'
+          - e2e-project: 'vitest/nestjs'
+            node-version: '16.x'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.target_branch }}
+
+      - name: Remove Vitest If Needed
+        if: ${{ matrix.node-version == '16.x' }}
+        run: |
+          rm -rf packages/doubles/vitest
+          git config --global user.email "ci@suites.dev"
+          git config --global user.name "Suites CI"
+          git add .
+          git commit -am "remove vitest temp"
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Yarn
+        run: yarn --frozen-lockfile
 
       - name: Run Verdaccio Docker
         run: |
@@ -28,19 +52,16 @@ jobs:
           -v ${{ github.workspace }}/e2e/config.yaml:/verdaccio/conf/config.yaml \
           verdaccio/verdaccio
 
-      - name: Setup Node ${{ matrix.node-version }}
+      - name: Build
+        run: yarn build
+
+      - name: Setup Registry
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: http://localhost:4873
           scope: '@suites'
           always-auth: false
-
-      - name: Yarn
-        run: yarn --frozen-lockfile
-
-      - name: Build
-        run: yarn build
 
       - name: Publish Packages
         run: |
@@ -54,16 +75,62 @@ jobs:
           --force-publish \
           --dist-tag e2e
 
-      - name: Remove Source Code
-        run: rm -rf packages
-
       - name: Setup and Test
         run: |
           IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
           echo "FRAMEWORK=$framework" >> $GITHUB_ENV
           echo "LIBRARY=$library" >> $GITHUB_ENV
 
+      - name: Clean Source
+        run: |
+          rm -rf packages
+          rm -rf node_modules
+
+      - name: Install Dependencies
+        run: |
+          cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
+          npm install --no-cache --no-package-lock
+          npm install --dev --no-package-lock @types/node@${{ matrix.node-version }}
+
       - name: Execute Test
         run: |
-          npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
-          npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"
+          cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
+          npm test
+
+  update-status:
+    name: Update PR Status
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+      checks: write
+      statuses: write
+    needs: [e2e]
+    if: always()
+    steps:
+      - name: Find Pull Request
+        uses: juliangruber/find-pull-request-action@v1
+        id: pull-request
+        with:
+          branch: ${{ github.event.inputs.branch }}
+
+      - name: Update PR e2e Status (Failed)
+        if: needs.e2e.result == 'failure'
+        run: |
+          curl \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
+          -d '{"state":"failure","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"❌ Failed","context":"Suites e2e Tests"}'
+
+      - name: Update PR e2e Status (Success)
+        if: needs.e2e.result == 'success'
+        run: |
+          curl \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
+          -d '{"state":"success","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"✅ Passed Successfully","context":"Suites e2e Tests"}'

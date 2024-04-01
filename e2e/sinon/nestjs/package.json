@@ -3,11 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@suites/adapters.nestjs": "e2e",
-    "@suites/core": "e2e",
-    "@suites/common": "e2e",
-    "@suites/types": "e2e",
-    "@suites/sinon": "e2e"
+    "@suites/di.nestjs": "e2e",
+    "@suites/doubles.sinon": "e2e",
+    "@suites/unit": "e2e",
+    "@nestjs/core": "10.0.0",
+    "reflect-metadata": "^0.1.13"
   },
   "scripts": {
     "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts"
@@ -16,11 +16,12 @@
     "@types/chai": "^4.3.11",
     "@types/chai-as-promised": "^7.1.8",
     "@types/sinon": "*",
+    "@types/mocha": "10.0.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
-    "mocha": "^10.2.0",
+    "mocha": "10.0.0",
     "sinon": "*",
     "ts-mocha": "10.0.0",
-    "typescript": "^4.x"
+    "typescript": "^5.x"
   }
 }

@@ -1,20 +1,24 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "noEmit": true,
+    "declaration": false,
+    "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2017",
-    "sourceMap": false,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "baseUrl": "./",
     "incremental": false,
     "moduleResolution": "node",
-    "types": [
-      "node",
-      "jest"
-    ],
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
     "lib": [
       "es6",
       "es2015.reflect"
     ]
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

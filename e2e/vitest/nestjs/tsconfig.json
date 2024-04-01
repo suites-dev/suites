@@ -1,6 +1,8 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
     "experimentalDecorators": true,
     "allowJs": true
   },

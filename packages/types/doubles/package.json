@@ -1,0 +1,35 @@
+{
+  "name": "@suites/types.doubles",
+  "private": false,
+  "version": "4.0.0",
+  "license": "MIT",
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/types/doubles"
+  },
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites/issues"
+  },
+  "homepage": "https://suites.dev",
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "scripts": {
+    "prebuild": "yarn rimraf dist",
+    "build": "yarn tsc -p tsconfig.build.json",
+    "test": "jest --passWithNoTests",
+    "lint": "yarn eslint 'index.ts'"
+  },
+  "files": [
+    "index.d.ts"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
+}

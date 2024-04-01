@@ -1,9 +1,5 @@
 {
   "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "experimentalDecorators": true,
-    "allowJs": true
-  },
   "include": [
     "*e2e.test.ts"
   ],

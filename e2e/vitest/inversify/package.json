@@ -1,23 +1,24 @@
 {
-  "name": "suites-jest-inverisfy",
+  "name": "suites-vitest-inverisfy",
+  "type": "module",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "dependencies": {
-    "@suites/adapters.inversify": "e2e",
-    "@suites/core": "e2e",
-    "@suites/common": "e2e",
-    "@suites/types": "e2e",
-    "@suites/jest": "e2e"
+    "@suites/di.inversify": "e2e",
+    "@suites/doubles.vitest": "e2e",
+    "@suites/unit": "e2e",
+    "inversify": "^6.0.2",
+    "reflect-metadata": "^0.1.13"
   },
   "scripts": {
-    "test": "jest && tsc --noEmit"
+    "test": "npx vitest && tsc --noEmit"
   },
   "devDependencies": {
-    "inversify": "^6.0.2",
-    "@types/jest": "^29.0.1",
-    "jest": "e2e",
-    "ts-jest": "e2e",
-    "ts-node": "e2e",
-    "typescript": "^5.x"
+    "@swc/core": "^1.3.105",
+    "@vitest/coverage-v8": "^1.2.1",
+    "ts-node": "*",
+    "typescript": "^5.x",
+    "unplugin-swc": "^1.4.4",
+    "vitest": "*"
   }
 }

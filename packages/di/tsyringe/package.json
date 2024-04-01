@@ -1,17 +1,17 @@
 {
-  "name": "@automock/adapters.tsyringe",
+  "name": "@suites/adapters.tsyringe",
   "private": false,
-  "version": "2.1.0",
+  "version": "3.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/automock/automock.git",
-    "directory": "packages/adapters/tsyringe"
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/di/tsyringe"
   },
-  "homepage": "https://automock.dev",
+  "homepage": "https://suites.dev",
   "bugs": {
-    "url": "https://github.com/automock/automock/issues"
+    "url": "https://github.com/suites-dev/suites/issues"
   },
   "contributors": [
     {
@@ -31,8 +31,8 @@
     "dist"
   ],
   "dependencies": {
-    "@automock/common": "^3.1.0",
-    "@automock/types": "^2.0.1",
+    "@suites/types.di": "^4.0.0",
+    "@suites/types.common": "^4.0.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {

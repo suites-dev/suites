@@ -1,6 +1,6 @@
-import { ClassInjectable, InjectableIdentifier, UndefinedDependency } from '@automock/common';
-import { Type } from '@automock/types';
-import TSyringeAutomockDependenciesAdapter from '../src';
+import { ClassInjectable, InjectableIdentifier, UndefinedDependency } from '@suites/types.di';
+import { Type } from '@suites/types.common';
+import { adapter } from '../src';
 import {
   ClassWithUndefinedDependency,
   ConstructorBasedInjectionClass,
@@ -12,7 +12,7 @@ import {
 } from './assets/integration.assets';
 
 describe('TSyringe Automock Adapter Integration Test', () => {
-  const dependenciesAdapter = TSyringeAutomockDependenciesAdapter;
+  const dependenciesAdapter = adapter;
 
   describe('reflecting a class with constructor based injection', () => {
     const injectablesContainer = dependenciesAdapter.inspect(ConstructorBasedInjectionClass);

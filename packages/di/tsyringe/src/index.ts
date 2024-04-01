@@ -1,9 +1,9 @@
 import 'reflect-metadata';
-import { AutomockDependenciesAdapter } from '@automock/common';
+import { DependencyInjectionAdapter } from '@suites/types.di';
 import { DependenciesAdapter } from './dependencies-adapter';
 import { ClassCtorReflector } from './class-ctor-reflector';
 
-const TSyringeAutomockDependenciesAdapter: AutomockDependenciesAdapter = ((
+const TSyringeAutomockDependenciesAdapter: DependencyInjectionAdapter = ((
   classCtorReflector: ClassCtorReflector
 ) => {
   return DependenciesAdapter( classCtorReflector);
@@ -12,4 +12,4 @@ const TSyringeAutomockDependenciesAdapter: AutomockDependenciesAdapter = ((
 );
 
 export { IdentifierMetadata } from './types';
-export default TSyringeAutomockDependenciesAdapter;
+export const adapter = TSyringeAutomockDependenciesAdapter;

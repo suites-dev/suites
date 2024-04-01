@@ -1,5 +1,5 @@
 import { InjectionToken } from 'tsyringe';
-import { Type } from '@automock/types';
+import { Type } from '@suites/types.common';
 
 export interface TokenDescriptor {
   token: InjectionToken;

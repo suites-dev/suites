@@ -1,15 +1,11 @@
-import { Type } from '@automock/types';
-import {
-  AutomockDependenciesAdapter,
-  ClassInjectable,
-  InjectablesRegistry,
-} from '@automock/common';
+import { Type } from '@suites/types.common';
+import { DependencyInjectionAdapter, ClassInjectable, InjectableRegistry } from '@suites/types.di';
 import { ClassCtorReflector } from './class-ctor-reflector';
 
 export function DependenciesAdapter(
   classCtorReflector: ClassCtorReflector
-): AutomockDependenciesAdapter {
-  function inspect(targetClass: Type): InjectablesRegistry {
+): DependencyInjectionAdapter {
+  function inspect(targetClass: Type): InjectableRegistry {
     const injectables = classCtorReflector.reflectInjectables(targetClass);
 
     return {

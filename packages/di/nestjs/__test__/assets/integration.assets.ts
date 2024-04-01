@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, Scope } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
 type DummyType = string;
 
@@ -40,7 +40,7 @@ export class DependencySix {
   }
 }
 
-@Injectable({ scope: Scope.TRANSIENT })
+@Injectable()
 export class ConstructorBasedInjectionClass {
   public constructor(
     private readonly dependencyOne: DependencyOne,

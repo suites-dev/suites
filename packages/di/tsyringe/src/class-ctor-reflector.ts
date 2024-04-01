@@ -1,10 +1,10 @@
-import { Type } from '@automock/types';
+import { Type } from '@suites/types.common';
 import {
   ClassInjectable,
   NonExistingDependency,
   UndefinedDependency,
   UndefinedDependencyError,
-} from '@automock/common';
+} from '@suites/types.di';
 import {
   IdentifierMetadata,
   MetadataReflector,

@@ -10,7 +10,7 @@ const NestJSDIAdapter: DependencyInjectionAdapter = ((
   classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
 ) => {
-  return DependenciesAdapter(Reflect, classPropsReflector, classCtorReflector);
+  return DependenciesAdapter(classPropsReflector, classCtorReflector);
 })(
   ClassPropsReflector(Reflect, PropertyReflectionStrategies),
   ClassCtorReflector(Reflect, ParamsTokensReflector)

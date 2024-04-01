@@ -26,7 +26,6 @@
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
-    "watch": "yarn tsc -p tsconfig.build.json --watch",
     "test": "jest --passWithNoTests",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },

@@ -8,6 +8,9 @@ export * from './errors';
 export const UndefinedDependency: unique symbol = Symbol('UndefinedDependency');
 export type UndefinedDependencySymbol = typeof UndefinedDependency;
 
+export const NonExistingDependency: unique symbol = Symbol('NonExistingDependency');
+export type NonExistingDependencySymbol = typeof NonExistingDependency;
+
 /**
  * @since 3.0.0
  */

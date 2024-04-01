@@ -1,10 +1,10 @@
-import { Type } from '@automock/types';
+import { Type } from '@suites/types.common';
 import {
   ClassInjectable,
   InjectableIdentifier,
   UndefinedDependency,
   UndefinedTokenError,
-} from '@automock/common';
+} from '@suites/types.di';
 import { TSyringeReflectedInjectableIdentifier } from './types';
 
 export interface NestCustomToken {

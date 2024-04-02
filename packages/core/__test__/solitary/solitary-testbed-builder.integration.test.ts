@@ -1,5 +1,11 @@
 import { Type } from '@suites/types.common';
-import { UnitReference, UnitMocker, TestBedBuilder, UnitTestBed } from '../src';
+import {
+  UnitReference,
+  UnitMocker,
+  SolitaryTestBedBuilder,
+  BaseTestBedBuilder,
+  UnitTestBed,
+} from '../../src';
 import {
   ArbitraryClassFive,
   ArbitraryClassFour,
@@ -13,8 +19,8 @@ const MockedFromBuilder = Symbol.for('MockedFromBuilder');
 const MockedFromMocker = Symbol.for('MockFromMocker');
 const symbolIdentifier = Symbol.for('TOKEN_METADATA');
 
-describe('Builder Integration Test', () => {
-  let underTest: TestBedBuilder<ClassUnderTest>;
+describe('Solitary TestBed Builder Integration Tests', () => {
+  let underTest: BaseTestBedBuilder<ClassUnderTest>;
   const loggerMock = { warn: jest.fn() } as Partial<Console>;
 
   // It's a mark for a function that mocks the mock function, don't be confused by the name
@@ -22,10 +28,10 @@ describe('Builder Integration Test', () => {
   const mockFunctionMockOfMocker = jest.fn(() => MockedFromMocker);
 
   beforeAll(() => {
-    underTest = new TestBedBuilder<ClassUnderTest>(
+    underTest = new SolitaryTestBedBuilder<ClassUnderTest>(
       Promise.resolve(mockFunctionMockOfBuilder),
       Promise.resolve(FakeDIAdapter),
-      new UnitMocker(Promise.resolve(mockFunctionMockOfMocker)),
+      new UnitMocker(Promise.resolve(mockFunctionMockOfMocker), Promise.resolve(FakeDIAdapter)),
       ClassUnderTest,
       loggerMock as Console
     );

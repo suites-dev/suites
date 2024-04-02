@@ -2,8 +2,8 @@ import { InjectableIdentifier } from '@suites/types.di';
 
 export function normalizeIdentifier(
   identifier: InjectableIdentifier,
-  metadata?: unknown
-): { identifier: InjectableIdentifier; metadata?: unknown } {
+  metadata: undefined | never = undefined
+): { identifier: InjectableIdentifier; metadata?: never } {
   if (metadata) {
     return Object.assign({ identifier }, { metadata });
   }

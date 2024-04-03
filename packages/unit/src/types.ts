@@ -1,7 +1,10 @@
 import { IdentifierMetadata } from '@suites/types.di';
 import { DeepPartial, Type, ConstantValue } from '@suites/types.common';
 import { StubbedInstance } from '@suites/types.doubles';
-import { BaseTestBedBuilder, UnitReference as UnitReferenceCore } from '@suites/core.unit';
+import {
+  TestBedBuilder as TestBedBuilderCore,
+  UnitReference as UnitReferenceCore,
+} from '@suites/core.unit';
 
 /**
  * Provides a reference to mock objects that have been mocked for testing
@@ -148,17 +151,17 @@ export interface TestBed {
    *
    * @template TClass - The class to be tested.
    * @param {Type<TClass>} targetClass - The class to be tested.
-   * @returns {BaseTestBedBuilder<TClass>} - The TestBedBuilder instance.
+   * @returns {TestBedBuilder<TClass>} - The TestBedBuilder instance.
    */
-  solitary<TClass>(targetClass: Type<TClass>): BaseTestBedBuilder<TClass>;
+  solitary<TClass>(targetClass: Type<TClass>): TestBedBuilder<TClass>;
 
-  sociable<TClass>(targetClass: Type<TClass>): BaseTestBedBuilder<TClass>;
+  sociable<TClass>(targetClass: Type<TClass>): TestBedBuilder<TClass>;
 
   /**
    * @deprecated Use TestBed.solitary() instead.
    * @param targetClass
    */
-  create<TClass>(targetClass: Type<TClass>): BaseTestBedBuilder<TClass>;
+  create<TClass>(targetClass: Type<TClass>): TestBedBuilder<TClass>;
 }
 
 /**
@@ -199,7 +202,7 @@ export interface MockOverride<TDependency, TClass> {
    * @param value - The constant value for the mocked dependency.
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
-  using(value: TDependency & ConstantValue): BaseTestBedBuilder<TClass>;
+  using(value: TDependency & ConstantValue): TestBedBuilder<TClass>;
 
   /**
    * Specifies the mock implementation to be used for the mocked dependency.
@@ -208,7 +211,7 @@ export interface MockOverride<TDependency, TClass> {
    * @param mockImplementation - The mock implementation for the mocked dependency.
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
-  using(mockImplementation: DeepPartial<TDependency>): BaseTestBedBuilder<TClass>;
+  using(mockImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
 }
 
 /**
@@ -217,7 +220,7 @@ export interface MockOverride<TDependency, TClass> {
  * @template TClass The class type being tested.
  * @see https://suites.dev/api-reference/api/testbedbuilder-api
  */
-export interface TestBedBuilder<TClass> extends BaseTestBedBuilder<TClass> {
+export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   /**
    * Declares a dependency to be mocked using its type.
    *

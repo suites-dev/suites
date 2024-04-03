@@ -8,11 +8,11 @@ export interface UnitTestBed<TClass> {
 }
 
 export interface MockOverride<TDependency, TClass> {
-  using(value: TDependency & ConstantValue): BaseTestBedBuilder<TClass>;
-  using(mockImplementation: DeepPartial<TDependency>): BaseTestBedBuilder<TClass>;
+  using(value: TDependency & ConstantValue): TestBedBuilder<TClass>;
+  using(mockImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
 }
 
-export interface BaseTestBedBuilder<TClass> {
+export interface TestBedBuilder<TClass> {
   mock<TDependency>(type: Type<TDependency>): MockOverride<TDependency, TClass>;
   mock<TDependency>(
     type: Type<TDependency>,

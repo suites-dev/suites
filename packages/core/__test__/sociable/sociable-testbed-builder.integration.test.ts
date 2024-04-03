@@ -12,8 +12,7 @@ import {
   DatabaseService,
   User,
 } from './assets/injectable-registry.fixture';
-import { UnitReference } from '@suites/unit';
-import { SociableTestBedBuilder, UnitMocker } from '../../src';
+import { SociableTestBedBuilder, UnitMocker, UnitReference } from '../../src';
 import * as console from 'console';
 
 describe('Social TestBed Builder Integration Tests', () => {

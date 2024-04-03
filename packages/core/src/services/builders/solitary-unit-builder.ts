@@ -5,14 +5,14 @@ import { UnitReference } from '../unit-reference';
 import { UnitMocker } from '../unit-mocker';
 import { IdentifierToDependency, DependencyContainer } from '../dependency-container';
 import { isConstantValue, mockDependencyNotFoundMessage } from '../functions.static';
-import { BaseTestBedBuilder, UnitTestBed } from '../../types';
+import { TestBedBuilder, UnitTestBed } from '../../types';
 import { TestBedBuilderAbstract } from './abstract-base-builder';
 
-export interface SolitaryTestBedBuilder<TClass> extends BaseTestBedBuilder<TClass> {}
+export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {}
 
 export class SolitaryTestBedBuilder<TClass>
   extends TestBedBuilderAbstract<TClass>
-  implements BaseTestBedBuilder<TClass>
+  implements TestBedBuilder<TClass>
 {
   public constructor(
     private readonly mockFn: Promise<MockFunction<unknown>>,

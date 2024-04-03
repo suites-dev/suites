@@ -5,16 +5,16 @@ import { UnitReference } from '../unit-reference';
 import { UnitMocker } from '../unit-mocker';
 import { IdentifierToDependency, DependencyContainer } from '../dependency-container';
 import { isConstantValue, mockDependencyNotFoundMessage } from '../functions.static';
-import { BaseTestBedBuilder, UnitTestBed } from '../../types';
+import { TestBedBuilder, UnitTestBed } from '../../types';
 import { TestBedBuilderAbstract } from './abstract-base-builder';
 
-export interface SociableTestBedBuilder<TClass> extends BaseTestBedBuilder<TClass> {
+export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
   expose(dependency: Type): SociableTestBedBuilder<TClass>;
 }
 
 export class SociableTestBedBuilder<TClass>
   extends TestBedBuilderAbstract<TClass>
-  implements BaseTestBedBuilder<TClass>
+  implements TestBedBuilder<TClass>
 {
   private readonly classesToExpose: Type[] = [];
 

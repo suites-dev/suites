@@ -1,11 +1,11 @@
 import { StubbedInstance } from '@suites/types.doubles';
 import { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
 import { ConstantValue, DeepPartial, Type } from '@suites/types.common';
-import { BaseTestBedBuilder, MockOverride, UnitTestBed } from '../../types';
+import { TestBedBuilder, MockOverride, UnitTestBed } from '../../types';
 import { normalizeIdentifier } from '../../normalize-identifier.static';
 import { IdentifierToDependency } from '../dependency-container';
 
-export abstract class TestBedBuilderAbstract<TClass> implements BaseTestBedBuilder<TClass> {
+export abstract class TestBedBuilderAbstract<TClass> implements TestBedBuilder<TClass> {
   protected readonly identifiersToBeMocked: IdentifierToDependency[] = [];
 
   public mock<TDependency>(type: Type<TDependency>): MockOverride<TDependency, TClass>;
@@ -34,7 +34,7 @@ export abstract class TestBedBuilderAbstract<TClass> implements BaseTestBedBuild
     return {
       using: (
         mockImplementationOrValue: DeepPartial<TDependency> | ConstantValue
-      ): BaseTestBedBuilder<TClass> => {
+      ): TestBedBuilder<TClass> => {
         this.identifiersToBeMocked.push([
           normalizeIdentifier(identifier, metadata as never),
           mockImplementationOrValue as StubbedInstance<TDependency> | ConstantValue,

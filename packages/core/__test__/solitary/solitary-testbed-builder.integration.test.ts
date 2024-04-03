@@ -3,7 +3,7 @@ import {
   UnitReference,
   UnitMocker,
   SolitaryTestBedBuilder,
-  BaseTestBedBuilder,
+  TestBedBuilder,
   UnitTestBed,
 } from '../../src';
 import {
@@ -20,7 +20,7 @@ const MockedFromMocker = Symbol.for('MockFromMocker');
 const symbolIdentifier = Symbol.for('TOKEN_METADATA');
 
 describe('Solitary TestBed Builder Integration Tests', () => {
-  let underTest: BaseTestBedBuilder<ClassUnderTest>;
+  let underTest: TestBedBuilder<ClassUnderTest>;
   const loggerMock = { warn: jest.fn() } as Partial<Console>;
 
   // It's a mark for a function that mocks the mock function, don't be confused by the name

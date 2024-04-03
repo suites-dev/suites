@@ -108,8 +108,4 @@ export class DependencyResolver {
   public getResolvedDependencies() {
     return this.dependencyMap.entries();
   }
-
-  public getDependencyMap() {
-    return this.dependencyMap;
-  }
 }

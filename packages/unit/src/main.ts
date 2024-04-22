@@ -71,7 +71,7 @@ export class TestBed {
 
   public static sociable<TClass = any>(targetClass: Type<TClass>): SociableTestBedBuilder<TClass> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
-      SolitaryTestBedBuilder
+      SociableTestBedBuilder
     );
   }
 

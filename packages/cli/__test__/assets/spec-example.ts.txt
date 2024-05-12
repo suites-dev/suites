@@ -1,0 +1,21 @@
+import { TestBed } from '@automock/jest';
+import { UnitReference } from '@automock/core';
+
+class ClassUnderTest {}
+
+describe('just a dummy file', () => {
+  let unit: ClassUnderTest;
+  let unitRef: UnitReference;
+
+  beforeAll(() => {
+    const { unitRef: ref, unit: underTest } = TestBed.create<ClassUnderTest>(ClassUnderTest)
+      .mock<string>('CONSTANT_VALUE')
+      .using('arbitrary-string')
+      .compile();
+
+    unitRef = ref;
+    unit = underTest;
+  });
+
+  describe('when compiling the builder and turning into testing unit', () => {});
+});

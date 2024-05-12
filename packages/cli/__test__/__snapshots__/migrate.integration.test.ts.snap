@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Code Migrator Integration Test migrate 1`] = `
+"import { TestBed,
+UnitReference } from "@suites/unit";
+
+class ClassUnderTest {}
+
+describe('just a dummy file', () => {
+  let unit: ClassUnderTest;
+  let unitRef: UnitReference;
+
+  beforeAll(async () => {
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<ClassUnderTest>(ClassUnderTest).
+    mock<string>('CONSTANT_VALUE').
+    using('arbitrary-string').
+    compile();
+
+    unitRef = ref;
+    unit = underTest;
+  });
+
+  describe('when compiling the builder and turning into testing unit', () => {});
+});"
+`;

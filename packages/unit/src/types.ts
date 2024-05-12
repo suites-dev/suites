@@ -143,6 +143,16 @@ export interface UnitReference extends UnitReferenceCore {
   get<TDependency, TValue extends ConstantValue>(
     identifier: Type<TDependency> | string | symbol
   ): StubbedInstance<TDependency> | TValue;
+
+  /**
+   * Retrieves an array of mocked objects corresponding to an array of dependencies.
+   *
+   * @since @TODO
+   * @template TDependency The type of the dependencies being retrieved.
+   * @param identifiers An array of identifiers representing the dependencies.
+   * @returns An array of mocked objects corresponding to the provided identifiers.
+   */
+  spread<TDependency>(identifiers: Type<TDependency>[]): jest.Mocked<TDependency>[];
 }
 
 export interface TestBed {

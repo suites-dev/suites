@@ -120,6 +120,16 @@ declare module '@suites/unit' {
       identifier: Type<TDependency> | string | symbol,
       identifierMetadata?: IdentifierMetadata
     ): jest.Mocked<TDependency>;
+
+    /**
+     * Retrieves an array of mocked objects corresponding to an array of dependencies.
+     *
+     * @since @TODO
+     * @template TDependency The type of the dependencies being retrieved.
+     * @param identifiers An array of identifiers representing the dependencies.
+     * @returns An array of mocked objects corresponding to the provided identifiers.
+     */
+    spread<TDependency>(identifiers: Type<TDependency>[]): jest.Mocked<TDependency>[];
   }
 }
 

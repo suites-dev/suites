@@ -60,4 +60,14 @@ describe('Unit Reference Unit Spec', () => {
   it('should throw an error indicating the dependency not found in case the identifier is missing', () => {
     expect(() => unitReference.get('does-not-exist')).toThrowError();
   });
+
+  it('should spread multiple dependencies', () => {
+    const [dependencyOne, constantValue] = unitReference.spread([
+      DependencyOne,
+      ConstantValueSymbol,
+    ]);
+
+    expect(dependencyOne).toEqual(DependencyOneStubbed);
+    expect(constantValue).toEqual([1, 2, 3]);
+  });
 });

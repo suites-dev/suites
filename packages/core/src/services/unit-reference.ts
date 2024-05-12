@@ -43,6 +43,12 @@ export class UnitReference {
 
     return dependency as StubbedInstance<TDependency> | TValue;
   }
+
+  public spread<TDependency>(
+    identifiers: InjectableIdentifier<TDependency>[]
+  ): StubbedInstance<TDependency>[] {
+    return identifiers.map((identifier) => this.get(identifier));
+  }
 }
 
 function referenceDependencyNotFoundError(

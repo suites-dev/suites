@@ -45,7 +45,7 @@
     "jest-junit": "^16.0.0",
     "lerna": "^7.3.1",
     "madge": "^7.0.0",
-    "micromatch": "4.0.6",
+    "micromatch": "4.0.7",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
     "sinon": "^16.1.0",

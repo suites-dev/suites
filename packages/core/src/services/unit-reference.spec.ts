@@ -80,8 +80,12 @@ describe('Unit Reference Unit Spec', () => {
       expect(dependencyOne).toEqual([DependencyOneStubbed]);
     });
 
+    it('should throw an error indicating the dependency not found in case the identifier is missing', () => {
+      expect(() => unitReference.spread('DEPENDENCY_TWO', { dependency: 'two' })).toThrowError();
+    });
+
     it('should spread a single dependency with metadata', () => {
-      const dependencyTwo = unitReference.spread('DEPENDENCY_TWO', { dependency: 'two' });
+      const dependencyTwo = unitReference.spread(DependencyTwoSymbol);
       expect(dependencyTwo).toEqual([DependencyTwoStubbed]);
     });
 
@@ -97,8 +101,7 @@ describe('Unit Reference Unit Spec', () => {
     it('should spread multiple dependencies with metadata', () => {
       const [dependencyOne, dependencyTwo] = unitReference.spread(
         DependencyOneSymbol,
-        'DEPENDENCY_TWO',
-        { dependency: 'two' }
+        'DEPENDENCY_TWO'
       );
       expect(dependencyOne).toEqual(DependencyOneStubbed);
       expect(dependencyTwo).toEqual(DependencyTwoStubbed);
@@ -107,8 +110,7 @@ describe('Unit Reference Unit Spec', () => {
     it('should spread multiple dependencies with metadata in any order', () => {
       const [dependencyTwo, dependencyOne] = unitReference.spread(
         'DEPENDENCY_TWO',
-        DependencyOneSymbol,
-        { dependency: 'two' }
+        DependencyOneSymbol
       );
       expect(dependencyOne).toEqual(DependencyOneStubbed);
       expect(dependencyTwo).toEqual(DependencyTwoStubbed);

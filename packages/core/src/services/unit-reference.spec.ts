@@ -1,10 +1,13 @@
+/* eslint-disable prefer-const */
 import { InjectableIdentifier } from '@suites/types.di';
 import { ConstantValue } from '@suites/types.common';
 import { StubbedInstance } from '@suites/types.doubles';
 import { UnitReference } from './unit-reference';
 import { MocksContainer } from './mocks-container';
 
-class DependencyOne {}
+class DependencyOne {
+  yaron(): void {}
+}
 class DependencyOneStubbed {}
 class DependencyTwoStubbed {}
 
@@ -61,13 +64,63 @@ describe('Unit Reference Unit Spec', () => {
     expect(() => unitReference.get('does-not-exist')).toThrowError();
   });
 
-  it('should spread multiple dependencies', () => {
-    const [dependencyOne, constantValue] = unitReference.spread([
-      DependencyOne,
-      ConstantValueSymbol,
-    ]);
+  describe('Spread Method', () => {
+    /*
+    To enable the spread method to accept multiple dependencies and return them in an array,
+    we need to use the spread operator.
 
-    expect(dependencyOne).toEqual(DependencyOneStubbed);
-    expect(constantValue).toEqual([1, 2, 3]);
+    An important thing to note is that the spread method is a variadic function that accepts
+    multiple identifiers and returns an array of dependencies.
+
+    We can not get it as an object because the order of the dependencies is not guaranteed.
+  */
+
+    it('should spread a single dependency', () => {
+      const dependencyOne = unitReference.spread(DependencyOne);
+      expect(dependencyOne).toEqual([DependencyOneStubbed]);
+    });
+
+    it('should spread a single dependency with metadata', () => {
+      const dependencyTwo = unitReference.spread('DEPENDENCY_TWO', { dependency: 'two' });
+      expect(dependencyTwo).toEqual([DependencyTwoStubbed]);
+    });
+
+    it('should spread multiple dependencies', () => {
+      const [dependencyOne, constantValue] = unitReference.spread(
+        DependencyOne,
+        ConstantValueSymbol
+      );
+      expect(dependencyOne).toEqual(DependencyOneStubbed);
+      expect(constantValue).toEqual([1, 2, 3]);
+    });
+
+    it('should spread multiple dependencies with metadata', () => {
+      const [dependencyOne, dependencyTwo] = unitReference.spread(
+        DependencyOneSymbol,
+        'DEPENDENCY_TWO',
+        { dependency: 'two' }
+      );
+      expect(dependencyOne).toEqual(DependencyOneStubbed);
+      expect(dependencyTwo).toEqual(DependencyTwoStubbed);
+    });
+
+    it('should spread multiple dependencies with metadata in any order', () => {
+      const [dependencyTwo, dependencyOne] = unitReference.spread(
+        'DEPENDENCY_TWO',
+        DependencyOneSymbol,
+        { dependency: 'two' }
+      );
+      expect(dependencyOne).toEqual(DependencyOneStubbed);
+      expect(dependencyTwo).toEqual(DependencyTwoStubbed);
+    });
+
+    it('should spread multiple dependencies with metadata and constants', () => {
+      let dependencyOne: StubbedInstance<DependencyOne>;
+      let constantValue: ConstantValue;
+      [dependencyOne, constantValue] = unitReference.spread(DependencyOne, ConstantValueSymbol);
+
+      expect(dependencyOne).toEqual(DependencyOneStubbed);
+      expect(constantValue).toEqual([1, 2, 3]);
+    });
   });
 });

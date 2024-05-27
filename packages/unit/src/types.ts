@@ -1,4 +1,4 @@
-import { IdentifierMetadata } from '@suites/types.di';
+import { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
 import { DeepPartial, Type, ConstantValue } from '@suites/types.common';
 import { StubbedInstance } from '@suites/types.doubles';
 import {
@@ -152,7 +152,9 @@ export interface UnitReference extends UnitReferenceCore {
    * @param identifiers An array of identifiers representing the dependencies.
    * @returns An array of mocked objects corresponding to the provided identifiers.
    */
-  spread<TDependency>(identifiers: Type<TDependency>[]): jest.Mocked<TDependency>[];
+  spread(
+    ...identifiers: InjectableIdentifier[]
+  ): (StubbedInstance<InjectableIdentifier> | ConstantValue)[];
 }
 
 export interface TestBed {

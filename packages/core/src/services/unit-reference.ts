@@ -44,9 +44,9 @@ export class UnitReference {
     return dependency as StubbedInstance<TDependency> | TValue;
   }
 
-  public spread<TDependency>(
-    identifiers: InjectableIdentifier<TDependency>[]
-  ): StubbedInstance<TDependency>[] {
+  spread(
+    ...identifiers: InjectableIdentifier[]
+  ): (StubbedInstance<InjectableIdentifier> | ConstantValue)[] {
     return identifiers.map((identifier) => this.get(identifier));
   }
 }

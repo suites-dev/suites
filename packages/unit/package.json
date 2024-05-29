@@ -24,6 +24,16 @@
       "email": "omer.moradd@gmail.com"
     }
   ],
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/automock"
+    },
+    {
+      "type": "opencollective",
+      "url": "https://opencollective.com/automock"
+    }
+  ],
   "engines": {
     "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },

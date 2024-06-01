@@ -129,7 +129,7 @@ declare module '@suites/unit' {
      * @param identifiers An array of identifiers representing the dependencies.
      * @returns An array of mocked objects corresponding to the provided identifiers.
      */
-    spread<TDependency>(identifiers: Type<TDependency>[]): jest.Mocked<TDependency>[];
+    spread<TDependency>(...identifiers: Type<TDependency>[]): TDependency[];
   }
 }
 

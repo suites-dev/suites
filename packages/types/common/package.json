@@ -33,8 +33,9 @@
     "README.md",
     "typings.d.ts"
   ],
-  "config": {
-    "publishConfig": "public"
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

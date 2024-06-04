@@ -14,7 +14,7 @@ import { InjectableIdentifier, UndefinedDependency, WithoutMetadata } from '@sui
 import { Type } from '@suites/types.common';
 import { adapter } from '../src';
 
-describe('NestJS Automock Adapter Integration Test', () => {
+describe('NestJS Suites DI Adapter Integration Test', () => {
   const dependencyInjectionAdapter = adapter;
 
   describe('reflecting a class with constructor based injection', () => {

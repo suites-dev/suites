@@ -86,7 +86,7 @@ export class TestBedBuilder<TClass> {
 
         if (!dependency) {
           this.logger.warn(
-            mockDependencyNotFoundMessage(identifier.identifier, identifier.metadata as never)
+            dependencyNotFoundMessage(identifier.identifier, identifier.metadata as never)
           );
         }
 
@@ -122,7 +122,7 @@ function isConstantValue(value: unknown): value is ConstantValue {
   );
 }
 
-function mockDependencyNotFoundMessage(
+function dependencyNotFoundMessage(
   identifier: Type | string | symbol,
   metadata: IdentifierMetadata | undefined
 ): string {
@@ -133,8 +133,8 @@ function mockDependencyNotFoundMessage(
   const metadataMsg = metadata ? `, with metadata [${JSON.stringify(metadata)}]` : '';
   const details = identifierName + metadataMsg;
 
-  return `Automock Warning (${SuitesErrorCode.IDENTIFIER_NOT_FOUND}): The provided dependency identifier '${details}' does not match any
-existing dependencies in the current testing context. Please review your identifier and
+  return `Suites warning (${SuitesErrorCode.IDENTIFIER_NOT_FOUND}): The provided dependency identifier '${details}' does not match any
+existing dependency in the current testing context. Please review your identifier and
 ensure it corresponds to the expected configuration.
-Refer to the docs for further information: https://suites.dev/docs`;
+For more details, refer to our docs website: https://suites.dev/docs`;
 }

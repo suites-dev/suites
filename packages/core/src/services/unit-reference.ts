@@ -56,7 +56,7 @@ function referenceDependencyNotFoundError(
   const metadataMsg = metadata ? `, with metadata ${JSON.stringify(metadata)}` : '';
   const details = `'${identifierName}'${metadataMsg}`;
 
-  return `The dependency associated with the specified token or identifier (${details}) could not be located within
+  return `The dependency associated with the specified token or identifier '${details}' could not be located within
 the current testing context. This issue pertains to the usage of the UnitReference API.
 Please ensure accurate spelling and correspondence between the provided token or identifier and the corresponding
 injection configuration. If you are utilizing a custom token, it is essential to confirm its proper registration

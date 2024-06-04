@@ -24,8 +24,8 @@ export function ClassCtorReflector(
     return paramTokens.map((inversifyInjectableMetadataItems, index) => {
       if (!inversifyInjectableMetadataItems) {
         if (paramTypes[index] === undefined) {
-          throw new UndefinedDependencyError(`Automock encountered an error while attempting to detect a token or type for the
-dependency at index [${index}] in the class '${targetClass.name}'.
+          throw new UndefinedDependencyError(`Suites encountered an error while attempting to detect a token or type for the
+dependency at index [${index}] under the class '${targetClass.name}'.
 This issue is commonly caused by either improper parameter decoration or a problem during the reflection of
 the parameter type. In some cases, this error may arise due to circular dependencies. If this is the case,
 please ensure that the circular dependency is resolved, or consider using 'LazyServiceIdentifier' to address it.`);

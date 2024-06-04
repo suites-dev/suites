@@ -60,8 +60,4 @@ export class TestBed {
   public static solitary<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
     return createTestbedBuilder(SuitesDIAdapters, SuitesDoublesAdapters, targetClass);
   }
-
-  public static create<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
-    return TestBed.solitary<TClass>(targetClass);
-  }
 }

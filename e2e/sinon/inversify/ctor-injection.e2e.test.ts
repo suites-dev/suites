@@ -27,7 +27,7 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
   let unitRef: UnitReference;
 
   before(async () => {
-    const { unitRef: ref, unit: underTest } = await TestBed.create<InversifyJSTestClass>(
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<InversifyJSTestClass>(
       InversifyJSTestClass
     )
       .mock(TestClassOne)

@@ -1,7 +1,7 @@
 import { PackageResolver } from '../src/package-resolver';
 import { DependencyInjectionAdapter } from '@suites/types.di';
 
-describe('Automock Adapter Package Resolving Integration Test', () => {
+describe('Suites Adapter Package Resolving Integration Test', () => {
   let packageResolver: PackageResolver<DependencyInjectionAdapter>;
 
   describe('Resolving an adapter with default export', () => {

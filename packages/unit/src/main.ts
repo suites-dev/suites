@@ -17,11 +17,15 @@ const SuitesDoublesAdapters = {
   jest: '@suites/doubles.jest',
   sinon: '@suites/doubles.sinon',
   vitest: '@suites/doubles.vitest',
+  bun: '@suites/doubles.bun',
+  deno: '@suites/doubles.deno',
+  node: '@suites/doubles.node',
 } as const;
 
 const SuitesDIAdapters = {
   nestjs: '@suites/di.nestjs',
   inversify: '@suites/di.inversify',
+  tsyringe: '@suites/di.tsyringe',
 } as const;
 
 function testBedBuilderFactory<TClass>(
@@ -37,10 +41,10 @@ function testBedBuilderFactory<TClass>(
         .resolveCorrespondingAdapter()
         .then((adapter) => adapter)
         .catch(() => {
-          throw new AdapterNotFoundError(`Suites requires an adapter to integrate with different dependency injection frameworks.
-It seems that you haven't installed an appropriate package. To resolve this issue, please install
-one of the available packages that matches your dependency injection framework.
-Refer to the docs for further information: https://suites.dev/docs`);
+          throw new AdapterNotFoundError(`It seems that there is an issue with the adapter package needed to integrate Suites
+with your dependency injection framework. To resolve this issue, please install the
+correct Suites adapter package that is compatible with your dependency injection framework.
+For more details, refer to our docs website: https://suites.dev/docs`);
         });
 
       const doublesPackageResolver = new PackageResolver<MockFunction<unknown>>(doublesAdapters);
@@ -49,10 +53,10 @@ Refer to the docs for further information: https://suites.dev/docs`);
         .resolveCorrespondingAdapter()
         .then((adapter) => adapter)
         .catch(() => {
-          throw new AdapterNotFoundError(`Suites requires an adapter to integrate with different mocking libraries.
-It seems that you haven't installed an appropriate adapter package. To resolve this issue, please install
-one of the available packages that matches your mocking library.
-Refer to the docs for further information: https://suites.dev/docs`);
+          throw new AdapterNotFoundError(`It seems that there is an issue with the adapter package needed to integrate Suites
+with your mocking library. To resolve this issue, please install the
+correct Suites adapter package that is compatible with mocking library.
+For more details, refer to our docs website: https://suites.dev/docs`);
         });
 
       const unitMocker = new UnitMocker(doublesAdapter, diAdapter);
@@ -73,9 +77,5 @@ export class TestBed {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
       SociableTestBedBuilder
     );
-  }
-
-  public static create<TClass = any>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass> {
-    return TestBed.solitary<TClass>(targetClass);
   }
 }

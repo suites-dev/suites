@@ -24,7 +24,7 @@ import {
 import { InversifyInjectableIdentifierMetadata } from '../src/types';
 import { adapter } from '../src';
 
-describe('Inversify Automock Adapter Integration Test', () => {
+describe('InversifyJS Suites DI Adapter Integration Test', () => {
   const dependenciesAdapter = adapter;
 
   describe('class constructor injection', () => {
@@ -39,7 +39,7 @@ describe('Inversify Automock Adapter Integration Test', () => {
         expect(injectablesRegistry.list()).toStrictEqual<InversifyInjectableIdentifierMetadata[]>([
           {
             identifier: 'Interface',
-            metadata: { name: 'dependencyOne' },
+            metadata: { name: 'dependencyOne' } as never,
             value: DependencyOne,
             type: 'PARAM',
           },
@@ -52,18 +52,18 @@ describe('Inversify Automock Adapter Integration Test', () => {
           {
             identifier: 'Interface',
             value: DependencyFive,
-            metadata: { name: 'dependencyFive' },
+            metadata: { name: 'dependencyFive' } as never,
             type: 'PARAM',
           },
           {
             identifier: 'CUSTOM_TOKEN',
-            metadata: { canThrow: true },
+            metadata: { canThrow: true } as never,
             value: DependencyFour,
             type: 'PARAM',
           },
           {
             identifier: DependencySix,
-            metadata: { tagged: 'withValue' },
+            metadata: { tagged: 'withValue' } as never,
             value: DependencySix,
             type: 'PARAM',
           },
@@ -101,7 +101,7 @@ describe('Inversify Automock Adapter Integration Test', () => {
             identifier: DependencyEight,
             metadata: {
               named: 'arbitrary-name',
-            },
+            } as never,
             type: 'PARAM',
             value: DependencyEight,
           },
@@ -109,13 +109,13 @@ describe('Inversify Automock Adapter Integration Test', () => {
             identifier: DependencyNine,
             metadata: {
               unmanaged: true,
-            },
+            } as never,
             type: 'PARAM',
             value: DependencyNine,
           },
           {
             identifier: DependencyTen,
-            metadata: { canThrow: true },
+            metadata: { canThrow: true } as never,
             type: 'PARAM',
             value: String,
           },
@@ -125,11 +125,11 @@ describe('Inversify Automock Adapter Integration Test', () => {
 
     describe('resolving dependencies from the container by identifiers and metadata keys and values', () => {
       it.each([
-        ['Interface', { name: 'dependencyOne' }],
+        ['Interface', { name: 'dependencyOne' } as never],
         [DependencyTwo, undefined],
-        ['Interface', { name: 'dependencyFive' }],
-        ['CUSTOM_TOKEN', { canThrow: true }],
-        [DependencySix, { tagged: 'withValue' }],
+        ['Interface', { name: 'dependencyFive' } as never],
+        ['CUSTOM_TOKEN', { canThrow: true } as never],
+        [DependencySix, { tagged: 'withValue' } as never],
         [DependencySeven, undefined],
         ['CUSTOM_TOKEN_SECOND', undefined],
         [SymbolToken, undefined],
@@ -165,7 +165,7 @@ describe('Inversify Automock Adapter Integration Test', () => {
           },
           {
             type: 'PROPERTY',
-            metadata: { canThrow: true },
+            metadata: { canThrow: true } as never,
             identifier: 'CUSTOM_TOKEN',
             value: DependencyFour,
             property: { key: 'dependencyFour' },
@@ -179,7 +179,7 @@ describe('Inversify Automock Adapter Integration Test', () => {
           },
           {
             type: 'PROPERTY',
-            metadata: { tagged: 'withValue' },
+            metadata: { tagged: 'withValue' } as never,
             identifier: DependencySix,
             value: DependencySix,
             property: { key: 'dependencySix' },
@@ -219,9 +219,9 @@ describe('Inversify Automock Adapter Integration Test', () => {
     describe('resolving dependencies from the container by identifiers and metadata keys and values', () => {
       it.each([
         ['Interface', undefined],
-        ['CUSTOM_TOKEN', { canThrow: true }],
+        ['CUSTOM_TOKEN', { canThrow: true } as never],
         [DependencyThree, undefined],
-        [DependencySix, { tagged: 'withValue' }],
+        [DependencySix, { tagged: 'withValue' } as never],
         ['CUSTOM_TOKEN_SECOND', undefined],
         [SymbolToken, undefined],
         [SymbolToken, undefined],

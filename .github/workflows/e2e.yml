@@ -10,9 +10,42 @@ on:
         required: true
 
 jobs:
+  status-pending:
+    name: Update PR Status
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+      checks: write
+      statuses: write
+    steps:
+      - name: Find Pull Request
+        uses: juliangruber/find-pull-request-action@v1
+        id: pull-request
+        with:
+          branch: ${{ github.event.inputs.branch }}
+
+      - name: Update PR e2e Status (Failed)
+        if: needs.e2e.result == 'failure'
+        run: |
+          curl \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
+          -d '{"state":"pending","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"Running..","context":"Suites e2e"}'
+
   e2e:
     name: Build and Test
+    needs: [status-pending]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+      checks: write
+      statuses: write
     strategy:
       matrix:
         e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
@@ -63,6 +96,22 @@ jobs:
           scope: '@suites'
           always-auth: false
 
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Remove provenance from publishConfig
+        run: |
+          find packages -name 'package.json' | while read filename; do
+            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
+          done
+
+      - name: Commit Change
+        run: |
+          git config --global user.email "e2e@suites.dev"
+          git config --global user.name "Suites e2e"
+          git add .
+          git commit -am "remove provenance"
+
       - name: Publish Packages
         run: |
           yarn lerna publish from-package --yes \
@@ -106,7 +155,7 @@ jobs:
       id-token: write
       checks: write
       statuses: write
-    needs: [e2e]
+    needs: [status-pending, e2e]
     if: always()
     steps:
       - name: Find Pull Request
@@ -121,7 +170,7 @@ jobs:
           curl \
           -X POST \
           -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
           -d '{"state":"failure","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"❌ Failed","context":"Suites e2e Tests"}'
 
@@ -131,6 +180,6 @@ jobs:
           curl \
           -X POST \
           -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
           -d '{"state":"success","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"✅ Passed Successfully","context":"Suites e2e Tests"}'

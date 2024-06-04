@@ -48,7 +48,7 @@ export const ParamsTokensReflector = (function (): ParamsTokensReflector {
       const token = lookupTokenInParams(tokens, index);
 
       if (!token) {
-        throw new UndefinedTokenError(`Automock encountered an error while attempting to detect a token for the
+        throw new UndefinedTokenError(`Suites encountered an error while attempting to detect a token for the
 dependency at index [${index}].
 This issue is commonly caused by either improper parameter decoration or a problem during the reflection of
 the parameter type. In some cases, this error may arise due to circular dependencies. If this is the case,

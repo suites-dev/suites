@@ -16,11 +16,15 @@ const SuitesDoublesAdapters = {
   jest: '@suites/doubles.jest',
   sinon: '@suites/doubles.sinon',
   vitest: '@suites/doubles.vitest',
+  bun: '@suites/doubles.bun',
+  deno: '@suites/doubles.deno',
+  node: '@suites/doubles.node',
 } as const;
 
 const SuitesDIAdapters = {
   nestjs: '@suites/di.nestjs',
   inversify: '@suites/di.inversify',
+  tsyringe: '@suites/di.tsyringe',
 } as const;
 
 function createTestbedBuilder<TClass>(

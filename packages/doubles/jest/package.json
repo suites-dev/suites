@@ -34,7 +34,6 @@
   },
   "files": [
     "dist",
-    "README.md",
     "postinstall.js"
   ],
   "engines": {

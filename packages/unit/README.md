@@ -11,7 +11,6 @@ of creating reliable tests, thereby ensuring the development of high-quality sof
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/suites-dev/suites/master.svg?style=flat-square)](https://codecov.io/gh/suites-dev/suites)
 [![e2e](https://github.com/suites-dev/suites/actions/workflows/e2e.yml/badge.svg?branch=master)](https://github.com/suites-dev/suites/actions)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
-[![npm downloads](https://img.shields.io/npm/dm/@suites/unit.svg?label=%40suites%2Funit)](https://npmjs.org/package/@suites/unit "View this project on npm")
 ![npm downloads](https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest)
 
 [↗️ Visit Documentation](https://suites.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://suites.dev/api-reference)
@@ -70,7 +69,7 @@ Let's create a unit test for this class:
 
 ```typescript
 import { TestBed, Mocked } from '@suites/unit';
-import { Database, UserService } from './user.service'; 
+import { Database, UserService } from './user.service';
 
 describe('User Service Unit Spec', () => {
   let userService: UserService; // 🧪 Declare the unit under test

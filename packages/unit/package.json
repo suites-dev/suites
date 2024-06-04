@@ -27,11 +27,11 @@
   "funding": [
     {
       "type": "github",
-      "url": "https://github.com/sponsors/automock"
+      "url": "https://github.com/sponsors/suites"
     },
     {
       "type": "opencollective",
-      "url": "https://opencollective.com/automock"
+      "url": "https://opencollective.com/suites"
     }
   ],
   "engines": {

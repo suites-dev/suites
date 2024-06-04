@@ -42,7 +42,6 @@
   },
   "files": [
     "dist",
-    "README.md",
     "postinstall.js"
   ],
   "dependencies": {

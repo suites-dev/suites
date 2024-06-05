@@ -1,7 +1,7 @@
-import { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
-import { ConstantValue, Type } from '@suites/types.common';
-import { StubbedInstance } from '@suites/types.doubles';
-import { IdentifierToDependency } from './dependency-container';
+import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
+import type { ConstantValue, Type } from '@suites/types.common';
+import type { StubbedInstance } from '@suites/types.doubles';
+import type { IdentifierToDependency } from './dependency-container';
 
 export class DependencyMap {
   private readonly resolvedDependencies: IdentifierToDependency[] = [];

@@ -5,7 +5,7 @@ import type { MockFunction } from '@suites/types.doubles';
 import { SolitaryTestBedBuilder, SociableTestBedBuilder, UnitMocker } from '@suites/core.unit';
 import { PackageResolver } from './package-resolver';
 import * as console from 'console';
-import { TestBedBuilder } from './types';
+import type { TestBedBuilder } from './types';
 
 export class AdapterNotFoundError extends SuitesError {
   public constructor(message: string) {

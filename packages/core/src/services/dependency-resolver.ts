@@ -1,13 +1,13 @@
-import { ConstantValue, Type } from '@suites/types.common';
-import { MockFunction, StubbedInstance } from '@suites/types.doubles';
-import {
+import type { ConstantValue, Type } from '@suites/types.common';
+import type { MockFunction, StubbedInstance } from '@suites/types.doubles';
+import type {
   ClassInjectable,
   DependencyInjectionAdapter,
   IdentifierMetadata,
   InjectableIdentifier,
   WithMetadata,
 } from '@suites/types.di';
-import { DependencyContainer } from './dependency-container';
+import type { DependencyContainer } from './dependency-container';
 import { DependencyMap } from './dependency-map';
 
 export class DependencyResolver {

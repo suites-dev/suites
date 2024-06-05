@@ -1,11 +1,8 @@
-import { StubbedInstance } from '@suites/types.doubles';
-import {
-  IdentifierMetadata,
-  InjectableIdentifier,
-  IdentifierNotFoundError,
-} from '@suites/types.di';
-import { ConstantValue, Type } from '@suites/types.common';
-import { DependencyContainer } from './dependency-container';
+import type { StubbedInstance } from '@suites/types.doubles';
+import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
+import { IdentifierNotFoundError } from '@suites/types.di';
+import type { ConstantValue, Type } from '@suites/types.common';
+import type { DependencyContainer } from './dependency-container';
 import { referenceDependencyNotFoundError } from './functions.static';
 
 export class UnitReference {

@@ -1,19 +1,17 @@
-import { MockFunction } from '@suites/types.doubles';
-import { DependencyInjectionAdapter } from '@suites/types.di';
-import { Type, ConstantValue } from '@suites/types.common';
+import type { MockFunction } from '@suites/types.doubles';
+import type { DependencyInjectionAdapter } from '@suites/types.di';
+import type { Type, ConstantValue } from '@suites/types.common';
 import { UnitReference } from '../unit-reference';
-import { UnitMocker } from '../unit-mocker';
-import { IdentifierToDependency, DependencyContainer } from '../dependency-container';
+import type { UnitMocker } from '../unit-mocker';
+import type { IdentifierToDependency } from '../dependency-container';
+import { DependencyContainer } from '../dependency-container';
 import { isConstantValue, mockDependencyNotFoundMessage } from '../functions.static';
-import { TestBedBuilder, UnitTestBed } from '../../types';
-import { TestBedBuilderAbstract } from './abstract-base-builder';
+import type { UnitTestBed } from '../../types';
+import { TestBedBuilder } from '../../types';
 
 export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {}
 
-export class SolitaryTestBedBuilder<TClass>
-  extends TestBedBuilderAbstract<TClass>
-  implements TestBedBuilder<TClass>
-{
+export class SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
   public constructor(
     private readonly mockFn: Promise<MockFunction<unknown>>,
     private readonly diAdapter: Promise<DependencyInjectionAdapter>,

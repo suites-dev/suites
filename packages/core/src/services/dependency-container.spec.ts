@@ -1,4 +1,5 @@
-import { IdentifierToDependency, DependencyContainer } from './dependency-container';
+import type { IdentifierToDependency } from './dependency-container';
+import { DependencyContainer } from './dependency-container';
 
 class ArbitraryClassAsIdentifier {}
 class DummyIdentifier {}

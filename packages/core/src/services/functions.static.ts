@@ -1,5 +1,6 @@
-import { ConstantValue, SuitesErrorCode, Type } from '@suites/types.common';
-import { IdentifierMetadata } from '@suites/types.di';
+import type { ConstantValue, Type } from '@suites/types.common';
+import { SuitesErrorCode } from '@suites/types.common';
+import type { IdentifierMetadata } from '@suites/types.di';
 
 export function isConstantValue(value: unknown): value is ConstantValue {
   return (

@@ -2,6 +2,8 @@ import type { IdentifierMetadata } from '@suites/types.di';
 import type { DeepPartial, Type, ConstantValue } from '@suites/types.common';
 import type { StubbedInstance } from '@suites/types.doubles';
 import type {
+  SociableTestBedBuilder,
+  SolitaryTestBedBuilder,
   TestBedBuilder as TestBedBuilderCore,
   UnitReference as UnitReferenceCore,
 } from '@suites/core.unit';
@@ -16,7 +18,7 @@ export interface UnitReference extends UnitReferenceCore {
   /**
    * Retrieves a reference to the mocked object of a dependency corresponding to its type identifier.
    *
-   * @since 2.0.0
+   * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param type The type representing the dependency.
    * @throws {IdentifierNotFoundError} - If the dependency is not found.
@@ -28,7 +30,7 @@ export interface UnitReference extends UnitReferenceCore {
    * Retrieves a reference to the mocked object of a dependency corresponding to its type identifier
    * and metadata object.
    *
-   * @since 2.1.0
+   * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param type The type representing the dependency.
    * @param identifierMetadata A metadata object that corresponds to the type identifier.
@@ -44,7 +46,7 @@ export interface UnitReference extends UnitReferenceCore {
   /**
    * Retrieves a reference to the mocked object of a dependency corresponding to a string-based token.
    *
-   * @since 2.0.0
+   * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param token The string-based token representing the dependency.
    * @throws {IdentifierNotFoundError} - If the dependency is not found.
@@ -56,7 +58,7 @@ export interface UnitReference extends UnitReferenceCore {
    * Retrieves a reference to the mocked object of a dependency corresponding to a string-based
    * token and an identifier metadata object.
    *
-   * @since 2.1.0
+   * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param token The symbol-based token representing the dependency.
    * @param identifierMetadata An accompanying metadata object for the token identifier.
@@ -72,7 +74,7 @@ export interface UnitReference extends UnitReferenceCore {
   /**
    * Retrieves a reference to the mocked object of a dependency corresponding to a symbol-based token.
    *
-   * @since 2.0.0
+   * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param token The symbol-based token representing the dependency.
    * @throws {IdentifierNotFoundError} - If the dependency is not found.
@@ -84,7 +86,7 @@ export interface UnitReference extends UnitReferenceCore {
    * Retrieves a reference to the mocked object of a dependency corresponding to a symbol-based
    * token and an identifier metadata object.
    *
-   * @since 2.1.0
+   * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param token The symbol-based token representing the dependency.
    * @param identifierMetadata An accompanying metadata object for the token identifier.
@@ -99,7 +101,7 @@ export interface UnitReference extends UnitReferenceCore {
   /**
    * Retrieves a constant value corresponding to a string-based token.
    *
-   * @since 2.0.0
+   * @since 3.0.0
    * @template TValue The type of the constant value being retrieved.
    * @param token The string-based token representing the constant value.
    * @throws {IdentifierNotFoundError} - If the dependency is not found.
@@ -110,7 +112,7 @@ export interface UnitReference extends UnitReferenceCore {
   /**
    * Retrieves a constant value corresponding to a symbol-based token.
    *
-   * @since 2.0.0
+   * @since 3.0.0
    * @template TValue The type of the constant value being retrieved.
    * @param token The symbol-based token representing the constant value.
    * @throws {IdentifierNotFoundError} - If the dependency is not found.
@@ -124,7 +126,7 @@ export interface UnitReference extends UnitReferenceCore {
    * This method provides flexibility in retrieving dependencies by allowing various identifier types.
    * Depending on the identifier and the setup, it can return either a mocked object or a constant value.
    *
-   * @since 2.1.0
+   * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @template TValue The type of the constant value that might be returned.
    * @param identifier The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
@@ -143,7 +145,7 @@ export interface UnitReference extends UnitReferenceCore {
    * This method provides flexibility in retrieving dependencies by allowing various identifier types.
    * Depending on the identifier and the setup, it can return either a mocked object or a constant value.
    *
-   * @since 2.0.0
+   * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @template TValue The type of the constant value that might be returned.
    * @param identifier The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
@@ -163,15 +165,9 @@ export interface TestBed {
    * @param {Type<TClass>} targetClass - The class to be tested.
    * @returns {TestBedBuilder<TClass>} - The TestBedBuilder instance.
    */
-  solitary<TClass>(targetClass: Type<TClass>): TestBedBuilder<TClass>;
+  solitary<TClass>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass>;
 
-  sociable<TClass>(targetClass: Type<TClass>): TestBedBuilder<TClass>;
-
-  /**
-   * @deprecated Use TestBed.solitary() instead.
-   * @param targetClass
-   */
-  create<TClass>(targetClass: Type<TClass>): TestBedBuilder<TClass>;
+  sociable<TClass>(targetClass: Type<TClass>): SociableTestBedBuilder<TClass>;
 }
 
 /**
@@ -208,7 +204,7 @@ export interface MockOverride<TDependency, TClass> {
   /**
    * Specifies a constant value to be used for the mocked dependency.
    *
-   * @since 2.0.0
+   * @since 3.0.0
    * @param value - The constant value for the mocked dependency.
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
@@ -217,7 +213,7 @@ export interface MockOverride<TDependency, TClass> {
   /**
    * Specifies the mock implementation to be used for the mocked dependency.
    *
-   * @since 2.0.0
+   * @since 3.0.0
    * @param mockImplementation - The mock implementation for the mocked dependency.
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
@@ -234,7 +230,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   /**
    * Declares a dependency to be mocked using its type.
    *
-   * @since 1.1.0
+   * @since 3.0.0
    * @param type The type of the dependency.
    * @template TDependency The type of the dependency being mocked.
    * @returns MockOverride instance for further configuration.
@@ -244,7 +240,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   /**
    * Declares a dependency to be mocked using its type along with a corresponding metadata object.
    *
-   * @since 2.1.0
+   * @since 3.0.0
    * @param type The type of the dependency.
    * @param identifierMetadata the identifier metadata.
    * @template TDependency The type of the dependency being mocked.
@@ -258,7 +254,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   /**
    * Declares a dependency to be mocked using a string-based token.
    *
-   * @since 1.1.0
+   * @since 3.0.0
    * @param token The token string representing the dependency to be mocked.
    * @template TDependency The type of the dependency being mocked.
    * @returns MockOverride instance for further configuration.
@@ -269,7 +265,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
    * Declares a dependency to be mocked using a string-based token along with a corresponding
    * metadata object.
    *
-   * @since 2.1.0
+   * @since 3.0.0
    * @param token The token string representing the dependency to be mocked.
    * @param identifierMetadata the identifier metadata.
    * @template TDependency The type of the dependency being mocked.
@@ -283,7 +279,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   /**
    * Declares a dependency to be mocked using a symbol-based token.
    *
-   * @since 2.0.0
+   * @since 3.0.0
    * @param token - The token symbol representing the dependency to be mocked.
    * @template TDependency The type of the dependency being mocked.
    * @returns MockOverride instance for further configuration.
@@ -294,7 +290,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
    * Declares a dependency to be mocked using a symbol-based token along with a corresponding
    * metadata object.
    *
-   * @since 2.1.0
+   * @since 3.0.0
    * @param token - The token symbol representing the dependency to be mocked.
    * @param identifierMetadata the identifier metadata if exists.
    * @template TDependency The type of the dependency being mocked.
@@ -309,7 +305,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
    * Declares a dependency to be mocked using a symbol-based token along with a corresponding
    * metadata object.
    *
-   * @since 2.1.0
+   * @since 3.0.0
    * @param identifier The identifier representing the dependency. It can be of type
    * `Type<TDependency>`, `string`, or `symbol`.
    * @param identifierMetadata the identifier metadata if exists.
@@ -324,7 +320,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   /**
    * Finalizes the mocking setup and creates a new UnitTestBed.
    *
-   * @since 1.1.0
+   * @since 3.0.0
    * @returns UnitTestBed instance representing the compiled unit.
    */
   compile(): Promise<UnitTestBed<TClass>>;

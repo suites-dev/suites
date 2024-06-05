@@ -1,7 +1,8 @@
-import { MockFunction } from '@suites/types.doubles';
-import { DependencyInjectionAdapter } from '@suites/types.di';
-import { IdentifierToDependency, DependencyContainer } from './dependency-container';
-import { Type } from '@suites/types.common';
+import type { MockFunction } from '@suites/types.doubles';
+import type { DependencyInjectionAdapter } from '@suites/types.di';
+import type { IdentifierToDependency } from './dependency-container';
+import { DependencyContainer } from './dependency-container';
+import type { Type } from '@suites/types.common';
 import { DependencyResolver } from './dependency-resolver';
 
 export interface MockedUnit<TClass> {

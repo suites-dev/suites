@@ -1,6 +1,6 @@
-import { InjectableIdentifier } from '@suites/types.di';
-import { ConstantValue } from '@suites/types.common';
-import { StubbedInstance } from '@suites/types.doubles';
+import type { InjectableIdentifier } from '@suites/types.di';
+import type { ConstantValue } from '@suites/types.common';
+import type { StubbedInstance } from '@suites/types.doubles';
 import { UnitReference } from './unit-reference';
 import { MocksContainer } from './mocks-container';
 
@@ -48,12 +48,12 @@ describe('Unit Reference Unit Spec', () => {
   it('should return the corresponding class or value using unique identifier with metadata combined', () => {
     expect(
       unitReference.get<DependencyTwoStubbed>('DEPENDENCY_TWO', {
-        dependency: 'two',
+        dependency: 'two' as never,
       })
     ).toEqual(DependencyTwoStubbed);
 
     expect(
-      unitReference.get<DependencyTwoStubbed>(DependencyTwoSymbol, { dependency: 'two' })
+      unitReference.get<DependencyTwoStubbed>(DependencyTwoSymbol, { dependency: 'two' } as never)
     ).toEqual(DependencyTwoStubbed);
   });
 

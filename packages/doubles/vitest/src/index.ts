@@ -2,7 +2,7 @@
 /// <reference types="@suites/unit" />
 
 import type { Mocked as VitestMocked } from '@vitest/spy';
-import { UnitReference as CoreUnitReference } from '@suites/core.unit';
+import type { UnitReference as CoreUnitReference } from '@suites/core.unit';
 import type { Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
 import { mock } from './mock.static.js';

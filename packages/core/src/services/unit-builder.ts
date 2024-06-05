@@ -1,13 +1,15 @@
-import { MockFunction, StubbedInstance } from '@suites/types.doubles';
-import {
+import type { MockFunction, StubbedInstance } from '@suites/types.doubles';
+import type {
   IdentifierMetadata,
   InjectableIdentifier,
   DependencyInjectionAdapter,
 } from '@suites/types.di';
-import { Type, ConstantValue, DeepPartial, SuitesErrorCode } from '@suites/types.common';
+import type { Type, ConstantValue, DeepPartial } from '@suites/types.common';
+import { SuitesErrorCode } from '@suites/types.common';
 import { UnitReference } from './unit-reference';
-import { UnitMocker } from './unit-mocker';
-import { IdentifierToMock, MocksContainer } from './mocks-container';
+import type { UnitMocker } from './unit-mocker';
+import type { IdentifierToMock } from './mocks-container';
+import { MocksContainer } from './mocks-container';
 import { normalizeIdentifier } from '../normalize-identifier.static';
 
 export interface UnitTestBed<TClass> {

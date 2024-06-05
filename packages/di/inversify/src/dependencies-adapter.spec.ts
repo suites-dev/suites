@@ -1,6 +1,6 @@
-import { DependencyInjectionAdapter, ClassInjectable } from '@suites/types.di';
+import type { DependencyInjectionAdapter, ClassInjectable } from '@suites/types.di';
 import { DependenciesAdapter } from './dependencies-adapter';
-import { IdentifierMetadata } from './types';
+import type { IdentifierMetadata } from './types';
 
 const classPropsReflector = { reflectInjectables: jest.fn() };
 const classCtorReflector = { reflectInjectables: jest.fn() };

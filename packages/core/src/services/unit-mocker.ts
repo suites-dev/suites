@@ -1,8 +1,9 @@
-import { MockFunction } from '@suites/types.doubles';
-import { InjectableRegistry, WithMetadata } from '@suites/types.di';
-import { IdentifierToMock, MocksContainer } from './mocks-container';
+import type { MockFunction } from '@suites/types.doubles';
+import type { InjectableRegistry, WithMetadata } from '@suites/types.di';
+import type { IdentifierToMock } from './mocks-container';
+import { MocksContainer } from './mocks-container';
 import { normalizeIdentifier } from '../normalize-identifier.static';
-import { Type } from '@suites/types.common';
+import type { Type } from '@suites/types.common';
 
 export interface MockedUnit<TClass> {
   container: MocksContainer;

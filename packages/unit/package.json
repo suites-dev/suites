@@ -50,7 +50,9 @@
   ],
   "dependencies": {
     "@suites/core.unit": "^4.0.0",
-    "@suites/types.common": "^4.0.0",
+    "@suites/types.common": "^4.0.0"
+  },
+  "devDependencies": {
     "@suites/types.di": "^4.0.0",
     "@suites/types.doubles": "^4.0.0"
   },

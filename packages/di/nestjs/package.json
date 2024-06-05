@@ -31,12 +31,13 @@
     "dist"
   ],
   "dependencies": {
-    "@suites/types.di": "^4.0.0",
-    "@suites/types.doubles": "^4.0.0",
-    "reflect-metadata": "^0.1.13"
+    "@suites/types.common": "^4.0.0"
   },
   "devDependencies": {
     "@nestjs/common": "10.2.7",
+    "@suites/types.di": "^4.0.0",
+    "@suites/types.doubles": "^4.0.0",
+    "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
   "engines": {

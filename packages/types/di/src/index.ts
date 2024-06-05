@@ -1,4 +1,4 @@
-import { Type, ConstantValue } from '@suites/types.common';
+import type { Type, ConstantValue } from '@suites/types.common';
 
 export * from './errors';
 

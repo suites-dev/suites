@@ -1,6 +1,7 @@
-import { SuitesError, SuitesErrorCode, Type } from '@suites/types.common';
-import { DependencyInjectionAdapter } from '@suites/types.di';
-import { MockFunction } from '@suites/types.doubles';
+import type { Type } from '@suites/types.common';
+import { SuitesError, SuitesErrorCode } from '@suites/types.common';
+import type { DependencyInjectionAdapter } from '@suites/types.di';
+import type { MockFunction } from '@suites/types.doubles';
 import { SolitaryTestBedBuilder, SociableTestBedBuilder, UnitMocker } from '@suites/core.unit';
 import { PackageResolver } from './package-resolver';
 import * as console from 'console';

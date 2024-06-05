@@ -1,11 +1,11 @@
-import { Type } from '@suites/types.common';
-import {
+import type { Type } from '@suites/types.common';
+import type {
   InjectableIdentifier,
   InjectableReflectedType,
   InjectableFinalValue,
-  UndefinedDependency,
 } from '@suites/types.di';
-import { ForwardRefToken, NestInjectableIdentifier } from './types';
+import { UndefinedDependency } from '@suites/types.di';
+import type { ForwardRefToken, NestInjectableIdentifier } from './types';
 
 export interface StrategyReturnType {
   identifier: InjectableIdentifier;

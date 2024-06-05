@@ -1,5 +1,5 @@
-import { ClassInjectable } from '@suites/types.di';
-import { Type } from '@suites/types.common';
+import type { ClassInjectable } from '@suites/types.di';
+import type { Type } from '@suites/types.common';
 import { interfaces } from 'inversify';
 
 import Metadata = interfaces.Metadata;

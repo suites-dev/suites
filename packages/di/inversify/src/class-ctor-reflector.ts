@@ -1,12 +1,13 @@
 import { METADATA_KEY } from 'inversify';
-import { Type } from '@suites/types.common';
-import { ClassInjectable, UndefinedDependency, UndefinedDependencyError } from '@suites/types.di';
-import {
+import type { Type } from '@suites/types.common';
+import type { ClassInjectable } from '@suites/types.di';
+import { UndefinedDependency, UndefinedDependencyError } from '@suites/types.di';
+import type {
   InversifyInjectableIdentifierMetadata,
   InversifyInjectableMetadata,
   MetadataReflector,
 } from './types';
-import { IdentifierBuilder } from './identifier-builder.static';
+import type { IdentifierBuilder } from './identifier-builder.static';
 
 const { PARAM_TYPES, TAGGED } = METADATA_KEY;
 

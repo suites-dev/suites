@@ -1,15 +1,15 @@
 import isEqual from 'lodash.isequal';
-import { Type } from '@suites/types.common';
-import {
+import type { Type } from '@suites/types.common';
+import type {
   DependencyInjectionAdapter,
   ClassInjectable,
   InjectableRegistry,
   InjectableIdentifier,
   WithMetadata,
 } from '@suites/types.di';
-import { ClassPropsReflector } from './class-props-reflector';
-import { ClassCtorReflector } from './class-ctor-reflector';
-import { IdentifierMetadata } from './types';
+import type { ClassPropsReflector } from './class-props-reflector';
+import type { ClassCtorReflector } from './class-ctor-reflector';
+import type { IdentifierMetadata } from './types';
 
 export type DependenciesAdapter = (
   classPropsReflector: ClassPropsReflector,

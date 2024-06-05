@@ -1,8 +1,9 @@
 import { SELF_DECLARED_DEPS_METADATA, PARAMTYPES_METADATA } from '@nestjs/common/constants';
-import { UndefinedDependencyError, ClassInjectable } from '@suites/types.di';
-import { Type } from '@suites/types.common';
-import { MetadataReflector, NestInjectableIdentifier } from './types';
-import { NestCustomToken, ParamsTokensReflector } from './params-token-resolver';
+import type { ClassInjectable } from '@suites/types.di';
+import { UndefinedDependencyError } from '@suites/types.di';
+import type { Type } from '@suites/types.common';
+import type { MetadataReflector, NestInjectableIdentifier } from './types';
+import type { NestCustomToken, ParamsTokensReflector } from './params-token-resolver';
 
 export type ClassCtorReflector = ReturnType<typeof ClassCtorReflector>;
 

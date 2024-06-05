@@ -1,4 +1,4 @@
-import { DeepPartial } from '@suites/types.common';
+import type { DeepPartial } from '@suites/types.common';
 
 import Mocked = jest.Mocked;
 

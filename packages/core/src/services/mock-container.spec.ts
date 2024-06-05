@@ -1,4 +1,5 @@
-import { IdentifierToMock, MocksContainer } from './mocks-container';
+import type { IdentifierToMock } from './mocks-container';
+import { MocksContainer } from './mocks-container';
 
 class ArbitraryClassAsIdentifier {}
 

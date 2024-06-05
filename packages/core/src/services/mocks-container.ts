@@ -1,7 +1,7 @@
 import isEqual from 'lodash.isequal';
-import { ClassInjectable, IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
-import { StubbedInstance } from '@suites/types.doubles';
-import { ConstantValue } from '@suites/types.common';
+import type { ClassInjectable, IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
+import type { StubbedInstance } from '@suites/types.doubles';
+import type { ConstantValue } from '@suites/types.common';
 
 export type IdentifierToMock = [
   Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },

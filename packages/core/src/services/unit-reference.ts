@@ -1,11 +1,8 @@
-import { StubbedInstance } from '@suites/types.doubles';
-import {
-  IdentifierMetadata,
-  InjectableIdentifier,
-  IdentifierNotFoundError,
-} from '@suites/types.di';
-import { MocksContainer } from './mocks-container';
-import { ConstantValue, Type } from '@suites/types.common';
+import type { StubbedInstance } from '@suites/types.doubles';
+import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
+import { IdentifierNotFoundError } from '@suites/types.di';
+import type { MocksContainer } from './mocks-container';
+import type { ConstantValue, Type } from '@suites/types.common';
 
 export class UnitReference {
   public constructor(private readonly mocksContainer: MocksContainer) {}

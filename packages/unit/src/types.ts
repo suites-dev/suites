@@ -1,7 +1,7 @@
-import { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
-import { DeepPartial, Type, ConstantValue } from '@suites/types.common';
-import { StubbedInstance } from '@suites/types.doubles';
-import {
+import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
+import type { DeepPartial, Type, ConstantValue } from '@suites/types.common';
+import type { StubbedInstance } from '@suites/types.doubles';
+import type {
   TestBedBuilder as TestBedBuilderCore,
   UnitReference as UnitReferenceCore,
 } from '@suites/core.unit';
@@ -19,6 +19,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @since 2.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param type The type representing the dependency.
+   * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns The mocked object corresponding to the provided type identifier.
    */
   get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;
@@ -31,6 +32,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @template TDependency The type of the dependency being retrieved.
    * @param type The type representing the dependency.
    * @param identifierMetadata A metadata object that corresponds to the type identifier.
+   * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns StubbedInstance<TDependency> The mocked object corresponding to the provided
    * symbol-based token.
    */
@@ -45,6 +47,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @since 2.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param token The string-based token representing the dependency.
+   * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns The mocked object corresponding to the provided string-based token.
    */
   get<TDependency>(token: string): StubbedInstance<TDependency>;
@@ -57,6 +60,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @template TDependency The type of the dependency being retrieved.
    * @param token The symbol-based token representing the dependency.
    * @param identifierMetadata An accompanying metadata object for the token identifier.
+   * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns StubbedInstance<TDependency> The mocked object corresponding to the provided
    * symbol-based token.
    */
@@ -71,6 +75,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @since 2.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param token The symbol-based token representing the dependency.
+   * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns The mocked object corresponding to the provided symbol-based token.
    */
   get<TDependency>(token: symbol): StubbedInstance<TDependency>;
@@ -83,6 +88,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @template TDependency The type of the dependency being retrieved.
    * @param token The symbol-based token representing the dependency.
    * @param identifierMetadata An accompanying metadata object for the token identifier.
+   * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns StubbedInstance<TDependency> The mocked object corresponding to the provided symbol-based token.
    */
   get<TDependency>(
@@ -96,6 +102,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @since 2.0.0
    * @template TValue The type of the constant value being retrieved.
    * @param token The string-based token representing the constant value.
+   * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns The constant value corresponding to the provided string-based token.
    */
   get<TValue extends ConstantValue>(token: string): TValue;
@@ -106,6 +113,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @since 2.0.0
    * @template TValue The type of the constant value being retrieved.
    * @param token The symbol-based token representing the constant value.
+   * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns The constant value corresponding to the provided symbol-based token.
    */
   get<TValue extends ConstantValue>(token: symbol): TValue;
@@ -121,6 +129,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @template TValue The type of the constant value that might be returned.
    * @param identifier The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
    * @param identifierMetadata A corresponding metadata object for the token identifier.
+   * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns StubbedInstance<TDependency> The mocked instance corresponding to the provided identifier and metadata if exists.
    */
   get<TDependency>(
@@ -138,6 +147,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @template TDependency The type of the dependency being retrieved.
    * @template TValue The type of the constant value that might be returned.
    * @param identifier The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
+   * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns The mocked instance or constant value corresponding to the provided identifier.
    */
   get<TDependency, TValue extends ConstantValue>(

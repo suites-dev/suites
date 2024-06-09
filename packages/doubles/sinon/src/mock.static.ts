@@ -1,4 +1,5 @@
-import { SinonStubbedInstance, stub } from 'sinon';
+import type { SinonStubbedInstance } from 'sinon';
+import { stub } from 'sinon';
 
 type PropertyType = string | number | symbol;
 

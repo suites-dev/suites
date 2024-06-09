@@ -1,11 +1,8 @@
-import { StubbedInstance } from '@suites/types.doubles';
-import {
-  IdentifierMetadata,
-  InjectableIdentifier,
-  IdentifierNotFoundError,
-} from '@suites/types.di';
-import { MocksContainer } from './mocks-container';
-import { ConstantValue, Type } from '@suites/types.common';
+import type { StubbedInstance } from '@suites/types.doubles';
+import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
+import { IdentifierNotFoundError } from '@suites/types.di';
+import type { MocksContainer } from './mocks-container';
+import type { ConstantValue, Type } from '@suites/types.common';
 
 export class UnitReference {
   public constructor(private readonly mocksContainer: MocksContainer) {}
@@ -62,7 +59,7 @@ function referenceDependencyNotFoundError(
   const metadataMsg = metadata ? `, with metadata ${JSON.stringify(metadata)}` : '';
   const details = `'${identifierName}'${metadataMsg}`;
 
-  return `The dependency associated with the specified token or identifier (${details}) could not be located within
+  return `The dependency associated with the specified token or identifier '${details}' could not be located within
 the current testing context. This issue pertains to the usage of the UnitReference API.
 Please ensure accurate spelling and correspondence between the provided token or identifier and the corresponding
 injection configuration. If you are utilizing a custom token, it is essential to confirm its proper registration

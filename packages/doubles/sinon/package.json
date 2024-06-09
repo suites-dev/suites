@@ -37,19 +37,26 @@
   },
   "files": [
     "dist",
-    "README.md",
     "postinstall.js"
   ],
   "dependencies": {
     "@suites/core.unit": "^4.0.0",
-    "@suites/types.doubles": "^4.0.0"
+    "@suites/types.common": "^4.0.0"
+  },
+  "peerDependencies": {
+    "@suites/types.di": "^4.0.0",
+    "@suites/types.doubles": "^4.0.0",
+    "sinon": "*"
   },
   "devDependencies": {
+    "@suites/types.di": "*",
+    "@suites/types.doubles": "*",
     "@types/sinon": "^10.0.19",
     "sinon": "^16.1.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

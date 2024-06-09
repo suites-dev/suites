@@ -42,19 +42,21 @@
   },
   "files": [
     "dist",
-    "README.md",
     "postinstall.js"
   ],
   "dependencies": {
-    "@suites/core.unit": "^4.0.0",
-    "@suites/types.doubles": "^4.0.0"
+    "@suites/core.unit": "^4.0.0"
   },
   "devDependencies": {
+    "@suites/types.common": "^4.0.0",
+    "@suites/types.doubles": "^4.0.0",
     "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/spy": "^1.x",
     "vitest": "^1.1.3"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "gitHead": "dd33b5c30d15a170b23bd48daa38d68879b8497a"
 }

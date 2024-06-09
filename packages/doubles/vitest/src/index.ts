@@ -2,10 +2,10 @@
 /// <reference types="@suites/unit" />
 
 import type { Mocked as VitestMocked } from '@vitest/spy';
-import { UnitReference as CoreUnitReference } from '@suites/core.unit';
+import type { UnitReference as CoreUnitReference } from '@suites/core.unit';
 import type { Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
-import { mock } from './mock.static';
+import { mock } from './mock.static.js';
 
 /**
  * Provides a reference to mock objects that have been mocked for testing
@@ -136,6 +136,6 @@ declare module '@suites/unit' {
   }
 }
 
-export { mock } from './mock.static';
+export { mock } from './mock.static.js';
 export type Mocked<TType> = VitestMocked<TType>;
 export const adapter = mock;

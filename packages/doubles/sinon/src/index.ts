@@ -1,10 +1,10 @@
 /// <reference types="@types/sinon" />
 /// <reference types="@suites/unit" />
 
-import { SinonStubbedInstance } from 'sinon';
-import { UnitReference as CoreUnitReference } from '@suites/core.unit';
-import { Type } from '@suites/types.common';
-import { IdentifierMetadata } from '@suites/types.di';
+import type { SinonStubbedInstance } from 'sinon';
+import type { UnitReference as CoreUnitReference } from '@suites/core.unit';
+import type { Type } from '@suites/types.common';
+import type { IdentifierMetadata } from '@suites/types.di';
 import { mock } from './mock.static';
 
 /**

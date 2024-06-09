@@ -24,6 +24,16 @@
       "email": "omer.moradd@gmail.com"
     }
   ],
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/suites"
+    },
+    {
+      "type": "opencollective",
+      "url": "https://opencollective.com/suites"
+    }
+  ],
   "engines": {
     "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },
@@ -40,7 +50,9 @@
   ],
   "dependencies": {
     "@suites/core.unit": "^4.0.0",
-    "@suites/types.common": "^4.0.0",
+    "@suites/types.common": "^4.0.0"
+  },
+  "devDependencies": {
     "@suites/types.di": "^4.0.0",
     "@suites/types.doubles": "^4.0.0"
   },

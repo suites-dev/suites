@@ -1,4 +1,4 @@
-import { DependencyInjectionAdapter, InjectableRegistry } from '@suites/types.di';
+import type { DependencyInjectionAdapter, InjectableRegistry } from '@suites/types.di';
 
 export const invalidExport = {
   inspect(): InjectableRegistry {

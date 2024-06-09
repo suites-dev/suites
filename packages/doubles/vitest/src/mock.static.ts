@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { DeepPartial } from '@suites/types.common';
+import type { DeepPartial } from '@suites/types.common';
 import type { Mocked } from '@vitest/spy';
 
 type PropertyType = string | number | symbol;

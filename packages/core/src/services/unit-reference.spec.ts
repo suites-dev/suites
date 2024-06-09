@@ -116,8 +116,11 @@ describe('Unit Reference Unit Spec', () => {
     });
 
     it('should spread multiple dependencies with metadata and constants', () => {
+      /* eslint-disable prefer-const */
       let dependencyOne: StubbedInstance<DependencyOne>;
       let constantValue: ConstantValue;
+      /* eslint-enable prefer-const */
+
       [dependencyOne, constantValue] = unitReference.spread(DependencyOne, ConstantValueSymbol);
 
       expect(dependencyOne).toEqual(DependencyOneStubbed);

@@ -62,7 +62,7 @@ For more details, refer to our docs website: https://suites.dev/docs`);
 
       const unitMocker = new UnitMocker(doublesAdapter, diAdapter);
 
-      return new testBedBuilderType(doublesAdapter, unitMocker, targetClass, console) as TBuilder;
+      return new type(doublesAdapter, unitMocker, targetClass, console) as TBuilder;
     },
   };
 }

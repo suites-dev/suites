@@ -62,9 +62,14 @@ For more details, refer to our docs website: https://suites.dev/docs`);
 
       const unitMocker = new UnitMocker(doublesAdapter, diAdapter);
 
-      return new type(doublesAdapter, diAdapter, unitMocker, targetClass, console) as TBuilder;
+      return new testBedBuilderType(doublesAdapter, unitMocker, targetClass, console) as TBuilder;
     },
   };
+}
+
+export interface TestBed {
+  solitary<TClass>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass>;
+  sociable<TClass>(targetClass: Type<TClass>): Pick<SociableTestBedBuilder<TClass>, 'expose'>;
 }
 
 export class TestBed {
@@ -74,7 +79,9 @@ export class TestBed {
     );
   }
 
-  public static sociable<TClass = any>(targetClass: Type<TClass>): SociableTestBedBuilder<TClass> {
+  public static sociable<TClass = any>(
+    targetClass: Type<TClass>
+  ): Pick<SociableTestBedBuilder<TClass>, 'expose'> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
       SociableTestBedBuilder
     );

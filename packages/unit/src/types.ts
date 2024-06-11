@@ -157,18 +157,62 @@ export interface UnitReference extends UnitReferenceCore {
   ): StubbedInstance<TDependency> | TValue;
 }
 
-export interface TestBed {
   /**
-   * @description Creates new TestBedBuilder instance for the given target class.
+   * A factory interface for creating UnitTestBed instances for testing classes.
    *
-   * @template TClass - The class to be tested.
-   * @param {Type<TClass>} targetClass - The class to be tested.
-   * @returns {TestBedBuilder<TClass>} - The TestBedBuilder instance.
+   * @interface TestBed
+   * @extends {TestBedCore}
+   * @see https://suites.dev/docs/api-reference
+   * @since 3.0.0
+   * @example
+   * import { TestBed } from '@suites/unit';
+   * import { MyService } from './my-service';
+   *
+   * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
    */
-  solitary<TClass>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass>;
+  export interface TestBed extends TestBedCore {
+    /**
+     * Creates a new TestBedBuilder instance for the given target class. This builder helps in configuring
+     * and compiling the test environment for a class that should be tested in isolation (solitary).
+     * It sets up the necessary dependencies and mocks, ensuring that the class under test is the primary
+     * focus without interference from other components.
+     *
+     * @see https://suites.dev/docs/developer-guide/unit-tests
+     * @since 3.0.0
+     * @template TClass - The class to be tested.
+     * @param {Type<TClass>} targetClass - The class to be tested.
+     * @returns {SolitaryTestBedBuilder<TClass>} - The TestBedBuilder instance configured for solitary testing.
+     * @example
+     * import { TestBed } from '@suites/unit';
+     * import { MyService } from './my-service';
+     *
+     * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
+     * // MyService is now tested in isolation with all its dependencies mocked.
+     */
+    solitary<TClass>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass>;
 
-  sociable<TClass>(targetClass: Type<TClass>): SociableTestBedBuilder<TClass>;
-}
+    /**
+     * Creates a TestBedBuilder instance for the given target class for sociable testing.
+     * Sociable testing allows for the inclusion of real implementations or partial mocks of certain dependencies.
+     * This method returns a subset of the SociableTestBedBuilder's methods, focusing on exposing
+     * specific dependencies that should be included in their real or partially mocked state.
+     *
+     * @see https://suites.dev/docs/developer-guide/unit-tests
+     * @template TClass - The type of the target class.
+     * @param {Type<TClass>} targetClass - The target class to be tested.
+     * @returns {Pick<SociableTestBedBuilder<TClass>, 'expose'>} - A subset of the SociableTestBedBuilder's methods
+     * containing only the 'expose' method.
+     * @since 3.0.0
+     * @example
+     * import { TestBed } from '@suites/unit';
+     * import { MyService } from './my-service';
+     * import { AnotherService } from './another-service';
+     *
+     * const { unit, unitRef } = await TestBed.sociable(MyService).expose(AnotherService).compile();
+     * // MyService is now tested with AnotherService exposed and not fully mocked.
+     */
+    sociable<TClass>(targetClass: Type<TClass>): Pick<SociableTestBedBuilder<TClass>, 'expose'>;
+  }
 
 /**
  * Represents the outcome when a `TestBedBuilder` is compiled.

@@ -1,4 +1,6 @@
-import { TestBed, UnitReference, Mocked } from '@suites/unit';
+import type { UnitReference, Mocked } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Repository, User } from './e2e-assets-sociable';
 import {
   Logger,
   DatabaseService,
@@ -6,8 +8,6 @@ import {
   UserDal,
   UserService,
   ApiService,
-  Repository,
-  User,
   UserVerificationService,
 } from './e2e-assets-sociable';
 
@@ -17,12 +17,11 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
 
   beforeAll(async () => {
     const { unitRef: ref, unit } = await TestBed.sociable(UserService)
-    .expose(UserApiService)
-    .expose(UserDal)
-    .expose(DatabaseService)
-    .mock(Logger)
-    .using({ log: jest.fn().mockReturnValue('overridden') })
-    .compile();
+      .expose(UserApiService)
+      .expose(UserDal)
+      .mock(Logger)
+      .using({ log: jest.fn().mockReturnValue('overridden') })
+      .compile();
 
     unitRef = ref;
     underTest = unit;
@@ -54,8 +53,8 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       const userFixture = { name: 'Test User', email: 'test@example.com' } as const;
 
       beforeAll(async () => {
-        userVerService = unitRef.get(UserVerificationService);
         repository = unitRef.get<Repository>('Repository');
+        userVerService = unitRef.get(UserVerificationService);
 
         userVerService.verify.mockReturnValue(true);
         createdUser = await underTest.create(userFixture);

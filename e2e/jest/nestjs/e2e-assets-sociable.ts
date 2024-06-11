@@ -1,5 +1,6 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
+@Injectable()
 export class HttpClient {
   public async get(url: string): Promise<string> {
     return `Response from ${url}`;
@@ -11,6 +12,7 @@ export interface User {
   email: string;
 }
 
+@Injectable()
 export class Logger {
   public log(message: string): string {
     // Logs the message to the console or a logging service.
@@ -23,6 +25,7 @@ export interface Repository {
   create(data: string): Promise<void>;
 }
 
+@Injectable()
 export class UserVerificationService {
   public verify(user: User): boolean {
     // Simulates user verification logic.
@@ -30,6 +33,7 @@ export class UserVerificationService {
   }
 }
 
+@Injectable()
 export class ApiService {
   public constructor(
     private readonly httpClient: HttpClient,
@@ -42,6 +46,7 @@ export class ApiService {
   }
 }
 
+@Injectable()
 export class DatabaseService {
   public constructor(@Inject('Repository') private readonly repository: Repository) {}
 
@@ -54,6 +59,7 @@ export class DatabaseService {
   }
 }
 
+@Injectable()
 export class UserDigestService {
   public constructor(@Inject('SOME_VALUE_TOKEN') private readonly someValue: string[]) {}
 
@@ -63,6 +69,7 @@ export class UserDigestService {
   }
 }
 
+@Injectable()
 export class UserApiService {
   public constructor(
     private readonly userVerificationService: UserVerificationService,
@@ -80,6 +87,7 @@ export class UserApiService {
   }
 }
 
+@Injectable()
 export class UserDal {
   public constructor(
     private readonly userVerificationService: UserVerificationService,
@@ -101,6 +109,7 @@ export class UserDal {
   }
 }
 
+@Injectable()
 export class UserService {
   public constructor(
     private readonly userApiService: UserApiService,

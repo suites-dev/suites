@@ -1,7 +1,21 @@
-import { ClassInjectable, InjectableRegistry } from '@suites/types.di';
+import type { ClassInjectable, InjectableRegistry } from '@suites/types.di';
+
+export const FakeInject =
+  (identifier: string | symbol): ParameterDecorator =>
+  () =>
+    identifier;
+
+export class Axios {
+  public get(url: string): Promise<string> {
+    return Promise.resolve(`Response from ${url}`);
+  }
+}
 
 export class HttpClient {
+  public constructor(private readonly axios: Axios) {}
+
   public async get(url: string): Promise<string> {
+    await this.axios.get(url);
     return `Response from ${url}`;
   }
 }
@@ -11,17 +25,12 @@ export interface User {
   email: string;
 }
 
-export class Logger {
+export class TestLogger {
   public log(message: string): string {
     // Logs the message to the console or a logging service.
     return message;
   }
 }
-
-export const FakeInject =
-  (identifier: string | symbol): ParameterDecorator =>
-  () =>
-    identifier;
 
 export interface Repository {
   find(query: string): Promise<string[]>;
@@ -38,7 +47,7 @@ export class UserVerificationService {
 export class ApiService {
   public constructor(
     private readonly httpClient: HttpClient,
-    private readonly logger: Logger
+    private readonly logger: TestLogger
   ) {}
 
   public async fetchData(endpoint: string): Promise<string> {
@@ -110,7 +119,7 @@ export class UserService {
   public constructor(
     private readonly userApiService: UserApiService,
     private readonly userDal: UserDal,
-    private readonly logger: Logger,
+    private readonly logger: TestLogger,
     @FakeInject('SOME_VALUE_TOKEN') private readonly someValue: string[]
   ) {
     this.logger.log('Just logging a message');
@@ -150,11 +159,18 @@ export const databaseServiceRegistry: InjectableRegistry = {
   resolve: () => undefined,
 };
 
+export const httpClientRegistry: InjectableRegistry = {
+  list(): ClassInjectable[] {
+    return [{ identifier: Axios, value: Axios, type: 'PARAM' }];
+  },
+  resolve: () => undefined,
+};
+
 export const apiServiceRegistry: InjectableRegistry = {
   list(): ClassInjectable[] {
     return [
       { identifier: HttpClient, value: HttpClient, type: 'PARAM' },
-      { identifier: Logger, value: Logger, type: 'PARAM' },
+      { identifier: TestLogger, value: TestLogger, type: 'PARAM' },
     ];
   },
   resolve: () => undefined,
@@ -186,7 +202,7 @@ export const userServiceRegistry: InjectableRegistry = {
     return [
       { identifier: UserApiService, value: UserApiService, type: 'PARAM' },
       { identifier: UserDal, value: UserDal, type: 'PARAM' },
-      { identifier: Logger, value: Logger, type: 'PARAM' },
+      { identifier: TestLogger, value: TestLogger, type: 'PARAM' },
       { identifier: 'SOME_VALUE_TOKEN', value: Array, type: 'PARAM' },
     ];
   },

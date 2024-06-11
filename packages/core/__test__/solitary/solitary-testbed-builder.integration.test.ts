@@ -1,11 +1,6 @@
-import { Type } from '@suites/types.common';
-import {
-  UnitReference,
-  UnitMocker,
-  SolitaryTestBedBuilder,
-  TestBedBuilder,
-  UnitTestBed,
-} from '../../src';
+import type { Type } from '@suites/types.common';
+import type { TestBedBuilder, UnitTestBed } from '../../src';
+import { UnitReference, UnitMocker, SolitaryTestBedBuilder } from '../../src';
 import {
   ArbitraryClassFive,
   ArbitraryClassFour,
@@ -30,7 +25,6 @@ describe('Solitary TestBed Builder Integration Tests', () => {
   beforeAll(() => {
     underTest = new SolitaryTestBedBuilder<ClassUnderTest>(
       Promise.resolve(mockFunctionMockOfBuilder),
-      Promise.resolve(FakeDIAdapter),
       new UnitMocker(Promise.resolve(mockFunctionMockOfMocker), Promise.resolve(FakeDIAdapter)),
       ClassUnderTest,
       loggerMock as Console

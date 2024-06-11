@@ -1,12 +1,12 @@
 import isEqual from 'lodash.isequal';
-import {
+import type {
   DependencyInjectionAdapter,
   ClassInjectable,
   IdentifierMetadata,
   InjectableRegistry,
   WithMetadata,
 } from '@suites/types.di';
-import { Type } from '@suites/types.common';
+import type { Type } from '@suites/types.common';
 import { normalizeIdentifier } from '../../../src/normalize-identifier.static';
 import {
   apiServiceRegistry,
@@ -17,7 +17,7 @@ import {
   userServiceRegistry,
   emptyRegistry,
   HttpClient,
-  Logger,
+  TestLogger,
   UserVerificationService,
   ApiService,
   DatabaseService,
@@ -25,15 +25,17 @@ import {
   UserApiService,
   UserDal,
   UserService,
+  httpClientRegistry,
 } from './injectable-registry.fixture';
 
 const registryToClass: Map<Type, InjectableRegistry> = new Map<Type, InjectableRegistry>([
   [HttpClient, emptyRegistry],
-  [Logger, emptyRegistry],
+  [TestLogger, emptyRegistry],
   [UserVerificationService, emptyRegistry],
 ]);
 
 registryToClass.set(ApiService, apiServiceRegistry);
+registryToClass.set(HttpClient, httpClientRegistry);
 registryToClass.set(DatabaseService, databaseServiceRegistry);
 registryToClass.set(UserDigestService, userDigestServiceRegistry);
 registryToClass.set(UserApiService, userApiServiceRegistry);

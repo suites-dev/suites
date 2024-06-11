@@ -8,6 +8,10 @@ import { DependencyResolver } from './dependency-resolver';
 export interface MockedUnit<TClass> {
   container: DependencyContainer;
   instance: TClass;
+  redundant: {
+    mocks: { metadata?: unknown; identifier: Type }[];
+    exposed: Type[];
+  };
 }
 
 export class UnitMocker {
@@ -37,6 +41,7 @@ export class UnitMocker {
     return {
       container: new DependencyContainer(identifierToDependency),
       instance: instance as TClass,
+      redundant: dependencyResolver.getRedundantInteractions(),
     };
   }
 }

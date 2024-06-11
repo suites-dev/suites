@@ -11,13 +11,14 @@ import type { DependencyContainer } from './dependency-container';
 import { DependencyMap } from './dependency-map';
 
 export class DependencyResolver {
-  private dependencyMap = new DependencyMap();
+  private readonly dependencyMap = new DependencyMap();
+  private readonly availableClassesToExpose = new Set<Type>();
 
   constructor(
-    private classesToExpose: Type[],
-    private mockedFromBeforeContainer: DependencyContainer,
-    private adapter: DependencyInjectionAdapter,
-    private mockFunction: MockFunction<unknown>
+    private readonly classesToExpose: Type[],
+    private readonly mockedFromBeforeContainer: DependencyContainer,
+    private readonly adapter: DependencyInjectionAdapter,
+    private readonly mockFunction: MockFunction<unknown>
   ) {}
 
   public isLeafOrPrimitive(identifier: InjectableIdentifier): boolean {
@@ -80,6 +81,13 @@ export class DependencyResolver {
     }
 
     const injectableRegistry = this.adapter.inspect(type);
+
+    injectableRegistry.list().forEach((injectable: ClassInjectable) => {
+      if (typeof injectable.identifier === 'function') {
+        this.availableClassesToExpose.add(injectable.identifier);
+      }
+    });
+
     const ctorInjectables = injectableRegistry.list().filter(({ type }) => type === 'PARAM');
 
     const ctorParams = ctorInjectables.map(({ identifier, metadata }: WithMetadata<never>) => {
@@ -107,5 +115,22 @@ export class DependencyResolver {
 
   public getResolvedDependencies() {
     return this.dependencyMap.entries();
+  }
+
+  public getRedundantInteractions(): {
+    mocks: { metadata?: unknown; identifier: Type }[];
+    exposed: Type[];
+  } {
+    const exposed = this.classesToExpose.filter((cls) => !this.availableClassesToExpose.has(cls));
+
+    const mocks = this.mockedFromBeforeContainer
+      .list()
+      .filter(([injectable]) => typeof injectable.identifier === 'function')
+      .filter(([injectable]) => !this.availableClassesToExpose.has(injectable.identifier as Type));
+
+    return {
+      mocks: mocks.map(([injectable]) => injectable) as { metadata?: unknown; identifier: Type }[],
+      exposed: exposed,
+    };
   }
 }

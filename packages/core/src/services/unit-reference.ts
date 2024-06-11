@@ -2,13 +2,17 @@ import type { StubbedInstance } from '@suites/types.doubles';
 import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
 import { IdentifierNotFoundError } from '@suites/types.di';
 import type { ConstantValue, Type } from '@suites/types.common';
+import { DependencyResolutionError } from '@suites/types.common';
 import type { DependencyContainer } from './dependency-container';
-import { referenceDependencyNotFoundError } from './functions.static';
+import {
+  exposedDependencyRetrievalError,
+  referenceDependencyNotFoundError,
+} from './functions.static';
 
 export class UnitReference {
   public constructor(
     private readonly mocksContainer: DependencyContainer,
-    private readonly exposedInstances: Type[]
+    private readonly exposedInstances: InjectableIdentifier[]
   ) {}
 
   public get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;
@@ -36,8 +40,8 @@ export class UnitReference {
     identifierMetadata?: IdentifierMetadata
   ): StubbedInstance<TDependency> | TValue {
     if (typeof identifier === 'function' && this.exposedInstances.includes(identifier)) {
-      const message = referenceDependencyNotFoundError(identifier, identifierMetadata);
-      throw new IdentifierNotFoundError(message);
+      const message = exposedDependencyRetrievalError(identifier, identifierMetadata);
+      throw new DependencyResolutionError(message);
     }
 
     const dependency = this.mocksContainer.resolve<TDependency>(identifier, identifierMetadata);

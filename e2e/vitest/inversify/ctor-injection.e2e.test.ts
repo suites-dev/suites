@@ -1,11 +1,12 @@
 import 'reflect-metadata';
 
 import { beforeAll, describe, test, expect, vi } from 'vitest';
-import { TestBed, UnitReference, Mocked } from '@suites/unit';
+import type { UnitReference, Mocked } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Logger, Bar } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
   Foo,
-  Logger,
   InversifyJSTestClass,
   SymbolToken,
   SymbolTokenSecond,
@@ -14,7 +15,6 @@ import {
   TestClassOne,
   TestClassThree,
   TestClassTwo,
-  Bar,
 } from './e2e-assets';
 
 describe('Suites Vitest / InversifyJS E2E Test Ctor', () => {

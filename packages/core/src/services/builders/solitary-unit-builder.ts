@@ -36,21 +36,20 @@ export class SolitaryTestBedBuilder<TClass>
       }
     );
 
-    const { container, instance, redundant } = await this.unitMocker.constructUnit<TClass>(
+    const { container, instance, resolution } = await this.unitMocker.constructUnit<TClass>(
       this.targetClass,
       [],
       new DependencyContainer(identifiersToMocks)
     );
 
-    if (redundant.mocks.length > 0) {
-      redundant.mocks.forEach((identifier) => {
-        this.logger.warn(`Suites Warning: Unreachable Mock Detected.
-Attempting to mock the dependency '${identifier.identifier.name}' will have no effect as it is not reachable within the current testing context.
-This can occur because '${identifier.identifier.name}' is neither a direct dependency of the class under test (${this.targetClass.name}) nor any of
-its explicitly exposed dependencies. If '${identifier.identifier.name}' is not intended to influence the unit under test, consider removing this
-mocking from your test setup. Alternatively, if this mock is necessary, please ensure all dependent classe
-are appropriately exposed. For more guidance, refer to the documentation: https://suites.dev/docs
-        `);
+    if (resolution.notFound.length > 0) {
+      resolution.notFound.forEach(([identifier]) => {
+        this.logger.warn(`Suites Warning: Redundant Mock Configuration Detected.
+You are attempting to mock '${identifier.identifier.toString()}', which is not a dependency of the unit under test ('${this.targetClass.name}').
+This mock will have no effect as it does not interact directly with the tested unit. Such configurations may lead to
+misunderstandings about the test's behavior and can safely be removed if '${identifier.identifier.toString()}' does not
+impact the test outcomes. If you believe this mock is required, please double-check your unit's dependencies and their
+interactions. For detailed guidelines on setting up solitary tests, refer to: https://suites.dev/docs.`);
       });
     }
 

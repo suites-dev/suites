@@ -99,7 +99,9 @@ describe('Solitary TestBed Builder Integration Tests', () => {
 
     it('should log a warning indicating the dependency was not found when mocking missing dependency', async () => {
       await underTest.mock('does-not-exists').using({}).compile();
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warn).toHaveBeenCalledWith(
+        expect.stringContaining('Suites Warning: Redundant Mock Configuration Detected.')
+      );
     });
   });
 });

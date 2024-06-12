@@ -7,7 +7,7 @@ import type {
   InjectableIdentifier,
   WithMetadata,
 } from '@suites/types.di';
-import type { DependencyContainer } from './dependency-container';
+import type { DependencyContainer, IdentifierToDependency } from './dependency-container';
 import { DependencyMap } from './dependency-map';
 
 export class DependencyResolver {
@@ -117,20 +117,26 @@ export class DependencyResolver {
     return this.dependencyMap.entries();
   }
 
-  public getRedundantInteractions(): {
+  public getResolutionSummary(): {
     mocks: { metadata?: unknown; identifier: Type }[];
-    exposed: Type[];
+    exposes: Type[];
+    notFound: IdentifierToDependency[];
   } {
-    const exposed = this.classesToExpose.filter((cls) => !this.availableClassesToExpose.has(cls));
+    const exposes = this.classesToExpose.filter((cls) => !this.availableClassesToExpose.has(cls));
 
     const mocks = this.mockedFromBeforeContainer
       .list()
       .filter(([injectable]) => typeof injectable.identifier === 'function')
       .filter(([injectable]) => !this.availableClassesToExpose.has(injectable.identifier as Type));
 
+    const notFound = this.mockedFromBeforeContainer.list().filter(([injectable]) => {
+      return !this.dependencyMap.has(injectable.identifier);
+    });
+
     return {
+      notFound,
       mocks: mocks.map(([injectable]) => injectable) as { metadata?: unknown; identifier: Type }[],
-      exposed: exposed,
+      exposes,
     };
   }
 }

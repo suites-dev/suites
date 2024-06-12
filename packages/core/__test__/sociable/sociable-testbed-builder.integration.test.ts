@@ -53,7 +53,7 @@ describe('Social TestBed Builder Integration Tests', () => {
   it('should have log a warning message about http client cannot be exposed because it is not a direct dependency', () => {
     expect(loggerMock.warn).toHaveBeenNthCalledWith(
       1,
-      expect.stringContaining('Suites Warning: Unreachable Mock Detected')
+      expect.stringContaining('Suites Warning: Unreachable Mock Configuration Detected')
     );
     expect(loggerMock.warn).toHaveBeenNthCalledWith(
       2,
@@ -135,5 +135,25 @@ describe('Social TestBed Builder Integration Tests', () => {
     it('should go through UserApiService because it is exposed and return the data', () => {
       expect(result).toEqual('User Data: Data from API');
     });
+
+    it('should not expose the HttpClient because it is not a direct dependency', () => {
+      expect(() => unitRef.get(HttpClient)).toThrowError();
+    });
+  });
+
+  it('should trigger the logger warning when the HttpClient is mocked', async () => {
+    await unitBuilder.mock('non-existing-dep').using({}).compile();
+
+    expect(loggerMock.warn).toHaveBeenCalledWith(
+      expect.stringContaining('Suites Warning: Unreachable Mock Configuration Detected')
+    );
+  });
+
+  it('should trigger the logger warning when the HttpClient is mocked', async () => {
+    await unitBuilder.mock(UserDal).using({}).compile();
+
+    expect(loggerMock.warn).toHaveBeenCalledWith(
+      expect.stringContaining('Suites Warning: Unreachable Mock Configuration Detected')
+    );
   });
 });

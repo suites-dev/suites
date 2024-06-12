@@ -42,31 +42,30 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
       }
     );
 
-    const { container, instance, redundant } = await this.unitMocker.constructUnit<TClass>(
+    const { container, instance, resolution } = await this.unitMocker.constructUnit<TClass>(
       this.targetClass,
       this.classesToExpose,
       new DependencyContainer(identifiersToMocks)
     );
 
-    if (redundant.mocks.length > 0) {
-      redundant.mocks.forEach((identifier) => {
-        this.logger.warn(`Suites Warning: Unreachable Mock Detected.
-Attempting to mock the dependency '${identifier.identifier.name}' will have no effect as it is not reachable within the current testing context.
-This can occur because '${identifier.identifier.name}' is neither a direct dependency of the class under test (${this.targetClass.name}) nor any of
-its explicitly exposed dependencies. If '${identifier.identifier.name}' is not intended to influence the unit under test, consider removing this
-mocking from your test setup. Alternatively, if this mock is necessary, please ensure all dependent classes
-are appropriately exposed. For more guidance, refer to the documentation: https://suites.dev/docs
-        `);
+    if (resolution.mocks.length > 0) {
+      resolution.mocks.forEach((identifier) => {
+        this.logger.warn(`Suites Warning: Unreachable Mock Configuration Detected.
+You attempted to mock '${identifier.identifier.name}', which is not directly involved in the current testing context of '${this.targetClass.name}'.
+This mock will not affect the outcome of your tests because '${identifier.identifier.name}' is neither a direct dependency of the tested unit nor is it
+among the dependencies explicitly exposed. If '${identifier.identifier.name}' does not influence the unit under test, consider removing this mock from your
+setup to streamline your test configuration. However, if this mock is crucial, verify that all required dependencies are correctly exposed.
+For detailed guidance on configuring sociable tests, please consult: https://suites.dev/docs.`);
       });
     }
 
-    if (redundant.exposed.length > 0) {
-      redundant.exposed.forEach((identifier) => {
+    if (resolution.exposes.length > 0) {
+      resolution.exposes.forEach((identifier) => {
         this.logger.warn(`Suites Warning: Unreachable Exposed Dependency Detected.
 The dependency '${identifier.name}' has been exposed but cannot be reached within the current testing context.
 This typically occurs because '${identifier.name}' is not a direct dependency of the unit under test (${this.targetClass.name}) nor any
 of its other exposed dependencies. Exposing '${identifier.name}' without it being accessible from the unit under test or
-its direct dependencies may lead to incorrect test configurations. To resolve this, please review and adjust your testing
+its dependencies may lead to incorrect test configurations. To resolve this, please review and adjust your testing
 setup to ensure all necessary dependencies are interconnected. Alternatively, if '${identifier.name}' does not influence
 the unit under test, consider removing its exposure from your test setup.
 For detailed instructions and best practices, refer to our documentation: https://suites.dev/docs.`);

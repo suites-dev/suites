@@ -1,7 +1,5 @@
 /// <reference types="jest" />
 /// <reference types="@suites/unit" />
-
-import type { UnitReference as UnitReferenceCore } from '@suites/core.unit';
 import type { Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
 import { mock } from './mock.static';
@@ -15,7 +13,7 @@ declare module '@suites/unit' {
    * @since 3.0.0
    * @see https://suites.dev/docs/api-reference
    */
-  export interface UnitReference extends UnitReferenceCore {
+  export interface UnitReference {
     /**
      * Retrieves a reference to the mocked object of a dependency corresponding
      * to its type identifier.

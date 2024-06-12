@@ -2,7 +2,7 @@ import type { IdentifierMetadata } from '@suites/types.di';
 import type { DeepPartial, Type, ConstantValue } from '@suites/types.common';
 import type { StubbedInstance } from '@suites/types.doubles';
 
-declare module '@suites/core.unit' {
+declare module '@suites/unit' {
   /**
    * The UnitReference interface represents a reference to a unit object.
    * It provides methods to retrieve mocked objects of dependencies based

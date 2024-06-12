@@ -4,6 +4,7 @@
   "version": "3.0.0",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "types.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git",

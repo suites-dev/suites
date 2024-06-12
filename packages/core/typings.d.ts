@@ -1,7 +1,6 @@
 import type { IdentifierMetadata } from '@suites/types.di';
 import type { DeepPartial, Type, ConstantValue } from '@suites/types.common';
 import type { UnitReference } from './dist';
-
 /**
  * A factory interface for creating UnitTestBed instances for testing classes.
  *

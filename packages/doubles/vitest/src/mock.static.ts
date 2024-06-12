@@ -44,8 +44,18 @@ const applyMockImplementation = (initialObject: DeepPartial<never>) => {
   return proxy;
 };
 
-export const mock = <T, MockedType extends Mocked<T> = Mocked<T>>(
-  mockImpl: Partial<T> = {} as Partial<T>
+/**
+ * Creates a mock object with the provided implementation.
+ *
+ * @since 3.0.0
+ * @template TType - The type of the object being mocked.
+ * @template MockedType - The type of the mock object.
+ * @param {Partial<TType>} mockImpl - The implementation of the mock object.
+ * @default {} - An empty object.
+ * @returns {Mocked<TType>} - The mocked object with the provided implementation.
+ */
+export const mock = <TType, MockedType extends Mocked<TType> = Mocked<TType>>(
+  mockImpl: Partial<TType> = {} as Partial<TType>
 ): MockedType => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore

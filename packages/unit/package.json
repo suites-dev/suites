@@ -49,10 +49,8 @@
     "README.md"
   ],
   "dependencies": {
-    "@suites/core.unit": "^4.0.0",
-    "@suites/types.common": "^4.0.0"
-  },
-  "devDependencies": {
+    "@suites/core.unit": "^3.0.0",
+    "@suites/types.common": "^4.0.0",
     "@suites/types.di": "^4.0.0",
     "@suites/types.doubles": "^4.0.0"
   },

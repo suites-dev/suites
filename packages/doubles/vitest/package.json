@@ -45,7 +45,11 @@
     "postinstall.js"
   ],
   "dependencies": {
-    "@suites/core.unit": "^4.0.0"
+    "@suites/core.unit": "^3.0.0"
+  },
+  "peerDependencies": {
+    "@vitest/spy": "^1.x",
+    "vitest": "^1.x"
   },
   "devDependencies": {
     "@suites/types.common": "^4.0.0",

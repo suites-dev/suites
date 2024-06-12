@@ -1,7 +1,7 @@
 {
   "name": "@suites/core.unit",
   "private": false,
-  "version": "4.0.0",
+  "version": "3.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "repository": {
@@ -40,8 +40,11 @@
     "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {
-    "@suites/types.doubles": "^4.0.0",
     "@types/lodash.isequal": "^4.5.6"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

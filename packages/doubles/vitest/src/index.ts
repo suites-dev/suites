@@ -143,7 +143,7 @@ declare module '@suites/unit' {
   }
 }
 
-export { mock } from './mock.static';
+export { mock } from './mock.static.js';
 
 /**
  * Represents a mocked instance of a given type.

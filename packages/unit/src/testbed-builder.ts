@@ -1,11 +1,10 @@
+import * as console from 'console';
 import type { Type } from '@suites/types.common';
 import { SuitesError, SuitesErrorCode } from '@suites/types.common';
 import type { DependencyInjectionAdapter } from '@suites/types.di';
 import type { MockFunction } from '@suites/types.doubles';
-import { SolitaryTestBedBuilder, SociableTestBedBuilder, UnitMocker } from '@suites/core.unit';
+import { TestBedBuilder, UnitMocker } from '@suites/core.unit';
 import { PackageResolver } from './package-resolver';
-import * as console from 'console';
-import type { TestBedBuilder } from './types';
 
 export class AdapterNotFoundError extends SuitesError {
   public constructor(message: string) {
@@ -14,7 +13,7 @@ export class AdapterNotFoundError extends SuitesError {
   }
 }
 
-const SuitesDoublesAdapters = {
+export const SuitesDoublesAdapters = {
   jest: '@suites/doubles.jest',
   sinon: '@suites/doubles.sinon',
   vitest: '@suites/doubles.vitest',
@@ -23,13 +22,13 @@ const SuitesDoublesAdapters = {
   node: '@suites/doubles.node',
 } as const;
 
-const SuitesDIAdapters = {
+export const SuitesDIAdapters = {
   nestjs: '@suites/di.nestjs',
   inversify: '@suites/di.inversify',
   tsyringe: '@suites/di.tsyringe',
 } as const;
 
-function testBedBuilderFactory<TClass>(
+export function testBedBuilderFactory<TClass>(
   diAdapters: typeof SuitesDIAdapters,
   doublesAdapters: typeof SuitesDoublesAdapters,
   targetClass: Type<TClass>
@@ -67,23 +66,3 @@ For more details, refer to our docs website: https://suites.dev/docs`);
   };
 }
 
-export interface TestBed {
-  solitary<TClass>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass>;
-  sociable<TClass>(targetClass: Type<TClass>): Pick<SociableTestBedBuilder<TClass>, 'expose'>;
-}
-
-export class TestBed {
-  public static solitary<TClass = any>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass> {
-    return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
-      SolitaryTestBedBuilder
-    );
-  }
-
-  public static sociable<TClass = any>(
-    targetClass: Type<TClass>
-  ): Pick<SociableTestBedBuilder<TClass>, 'expose'> {
-    return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
-      SociableTestBedBuilder
-    );
-  }
-}

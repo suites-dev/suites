@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-
-import { UnitReference, TestBed, Mocked } from '@suites/unit';
+import type { UnitReference, Mocked } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Logger, Bar } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
   Foo,
-  Logger,
   InversifyJSTestClass,
   SymbolToken,
   SymbolTokenSecond,
@@ -13,7 +13,6 @@ import {
   TestClassOne,
   TestClassThree,
   TestClassTwo,
-  Bar,
 } from './e2e-assets';
 
 describe('Suites Jest / InversifyJS E2E Test Ctor', () => {

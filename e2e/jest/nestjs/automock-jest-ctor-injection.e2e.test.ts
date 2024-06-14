@@ -1,8 +1,9 @@
-import { TestBed, UnitReference, Mocked } from '@suites/unit';
+import type { UnitReference, Mocked } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Logger } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
   Foo,
-  Logger,
   NestJSTestClass,
   SymbolToken,
   SymbolTokenSecond,

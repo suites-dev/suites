@@ -1,7 +1,6 @@
 import type { IdentifierMetadata } from '@suites/types.di';
 import type { DeepPartial, Type, ConstantValue } from '@suites/types.common';
-import type { UnitReference } from '@suites/core.unit';
-
+import type { UnitReference } from './dist';
 /**
  * Represents the outcome when a `TestBedBuilder` is compiled.
  *

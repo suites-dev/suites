@@ -1,9 +1,10 @@
 import { beforeAll, describe, test, expect } from 'vitest';
-import { TestBed, Mocked, UnitReference } from '@suites/unit';
+import type { Mocked, UnitReference } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Logger } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
   Foo,
-  Logger,
   NestJSTestClass,
   SymbolToken,
   SymbolTokenSecond,

@@ -78,7 +78,7 @@ describe('User Service Unit Spec', () => {
 
   beforeAll(async () => {
     // 🚀 Create an isolated test env for the unit (under test) + auto generated mock objects
-    const { unit, unitRef } = await TestBed.create(UserService).compile();
+    const { unit, unitRef } = await TestBed.solitary(UserService).compile();
 
     userService = unit;
 

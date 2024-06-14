@@ -91,8 +91,8 @@ setup_and_test vitest inversify
 
 echo -e "🎉 Testing complete!"
 
-git stash
-git reset --hard HEAD~1
+#git stash
+#git reset --hard HEAD~1
 
 docker kill verdaccio
 docker rm verdaccio

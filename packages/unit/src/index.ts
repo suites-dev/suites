@@ -1,1 +1,1 @@
-export { TestBed } from './main';
+export { TestBed } from './testbed';

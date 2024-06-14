@@ -1,10 +1,10 @@
+import * as console from 'console';
 import type { Type } from '@suites/types.common';
 import { SuitesError, SuitesErrorCode } from '@suites/types.common';
 import type { DependencyInjectionAdapter } from '@suites/types.di';
 import type { MockFunction } from '@suites/types.doubles';
 import { TestBedBuilder, UnitMocker } from '@suites/core.unit';
 import { PackageResolver } from './package-resolver';
-import * as console from 'console';
 
 export class AdapterNotFoundError extends SuitesError {
   public constructor(message: string) {
@@ -13,7 +13,7 @@ export class AdapterNotFoundError extends SuitesError {
   }
 }
 
-const SuitesDoublesAdapters = {
+export const SuitesDoublesAdapters = {
   jest: '@suites/doubles.jest',
   sinon: '@suites/doubles.sinon',
   vitest: '@suites/doubles.vitest',
@@ -22,13 +22,13 @@ const SuitesDoublesAdapters = {
   node: '@suites/doubles.node',
 } as const;
 
-const SuitesDIAdapters = {
+export const SuitesDIAdapters = {
   nestjs: '@suites/di.nestjs',
   inversify: '@suites/di.inversify',
   tsyringe: '@suites/di.tsyringe',
 } as const;
 
-function createTestbedBuilder<TClass>(
+export function createTestbedBuilder<TClass>(
   diAdapters: typeof SuitesDIAdapters,
   doublesAdapters: typeof SuitesDoublesAdapters,
   targetClass: Type<TClass>
@@ -59,10 +59,4 @@ For more details, refer to our docs website: https://suites.dev/docs`);
 
   const unitMocker = new UnitMocker(doublesAdapter);
   return new TestBedBuilder<TClass>(doublesAdapter, diAdapter, unitMocker, targetClass, console);
-}
-
-export class TestBed {
-  public static solitary<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
-    return createTestbedBuilder(SuitesDIAdapters, SuitesDoublesAdapters, targetClass);
-  }
 }

@@ -1,6 +1,7 @@
-import { createTestbedBuilder, SuitesDIAdapters, SuitesDoublesAdapters } from './testbed-builder';
+import { SuitesDIAdapters, SuitesDoublesAdapters, testBedBuilderFactory } from './testbed-builder';
 import type { Type } from '@nestjs/common';
 import type { TestBedBuilder } from './types';
+import { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/core.unit';
 
 /**
  * Creates a new TestBedBuilder instance for the given target class. This builder helps in configuring
@@ -33,6 +34,14 @@ export class TestBed {
    * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
    */
   public static solitary<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
-    return createTestbedBuilder(SuitesDIAdapters, SuitesDoublesAdapters, targetClass);
+    return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
+      SolitaryTestBedBuilder
+    );
+  }
+
+  public static sociable<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
+    return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
+      SociableTestBedBuilder
+    );
   }
 }

@@ -3,7 +3,8 @@ import type { Type } from '@suites/types.common';
 import { SuitesError, SuitesErrorCode } from '@suites/types.common';
 import type { DependencyInjectionAdapter } from '@suites/types.di';
 import type { MockFunction } from '@suites/types.doubles';
-import { TestBedBuilder, UnitMocker } from '@suites/core.unit';
+import type { TestBedBuilder } from '@suites/core.unit';
+import { UnitMocker } from '@suites/core.unit';
 import { PackageResolver } from './package-resolver';
 
 export class AdapterNotFoundError extends SuitesError {
@@ -32,9 +33,9 @@ export function testBedBuilderFactory<TClass>(
   diAdapters: typeof SuitesDIAdapters,
   doublesAdapters: typeof SuitesDoublesAdapters,
   targetClass: Type<TClass>
-): { create: <TBuilder>(type: Type<TestBedBuilder<TClass>>) => TBuilder } {
+): { create: <TBuilder>(testbedBuilderType: Type<TestBedBuilder<TClass>>) => TBuilder } {
   return {
-    create: <TBuilder>(type: Type<TestBedBuilder<TClass>>): TBuilder => {
+    create: <TBuilder>(testbedBuilderType: Type<TestBedBuilder<TClass>>): TBuilder => {
       const diPackageResolver = new PackageResolver<DependencyInjectionAdapter>(diAdapters);
 
       const diAdapter = diPackageResolver
@@ -61,8 +62,7 @@ For more details, refer to our docs website: https://suites.dev/docs`);
 
       const unitMocker = new UnitMocker(doublesAdapter, diAdapter);
 
-      return new type(doublesAdapter, unitMocker, targetClass, console) as TBuilder;
+      return new testbedBuilderType(doublesAdapter, unitMocker, targetClass, console) as TBuilder;
     },
   };
 }
-

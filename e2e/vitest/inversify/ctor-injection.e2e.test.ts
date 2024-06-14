@@ -22,7 +22,7 @@ describe('Suites Vitest / InversifyJS E2E Test Ctor', () => {
   let unitRef: UnitReference;
 
   beforeAll(async () => {
-    const { unitRef: ref, unit: underTest } = await TestBed.create<InversifyJSTestClass>(
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<InversifyJSTestClass>(
       InversifyJSTestClass
     )
       .mock(TestClassOne)

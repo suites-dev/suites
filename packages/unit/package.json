@@ -9,6 +9,22 @@
     "require": "./dist/cjs/index.js",
     "import": "./dist/esm/index.js"
   },
+  "keywords": [
+    "unit",
+    "testing",
+    "mocking",
+    "doubles",
+    "stubs",
+    "mocks",
+    "test",
+    "jest",
+    "sinon",
+    "vitest",
+    "depdency injection",
+    "nestjs",
+    "inversify",
+    "tsyringe"
+  ],
   "types": "typings.d.ts",
   "repository": {
     "type": "git",
@@ -51,9 +67,9 @@
   ],
   "dependencies": {
     "@suites/core.unit": "^3.0.0",
-    "@suites/types.common": "^4.0.0",
-    "@suites/types.di": "^4.0.0",
-    "@suites/types.doubles": "^4.0.0"
+    "@suites/types.common": "^3.0.0",
+    "@suites/types.di": "^3.0.0",
+    "@suites/types.doubles": "^3.0.0"
   },
   "publishConfig": {
     "access": "public",

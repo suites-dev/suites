@@ -24,9 +24,9 @@ jobs:
         uses: juliangruber/find-pull-request-action@v1
         id: pull-request
         with:
-          branch: ${{ github.event.inputs.branch }}
+          branch: ${{ inputs.branch }}
 
-      - name: Update PR e2e Status (Failed)
+      - name: Update PR e2e Status to Pending
         if: needs.e2e.result == 'failure'
         run: |
           curl \
@@ -59,7 +59,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.target_branch }}
+          ref: ${{ inputs.target_branch }}
 
       - name: Remove Vitest If Needed
         if: ${{ matrix.node-version == '16.x' }}
@@ -162,7 +162,7 @@ jobs:
         uses: juliangruber/find-pull-request-action@v1
         id: pull-request
         with:
-          branch: ${{ github.event.inputs.branch }}
+          branch: ${{ inputs.branch }}
 
       - name: Update PR e2e Status (Failed)
         if: needs.e2e.result == 'failure'

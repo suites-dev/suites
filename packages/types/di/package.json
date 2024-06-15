@@ -1,7 +1,7 @@
 {
   "name": "@suites/types.di",
   "private": false,
-  "version": "4.0.0",
+  "version": "3.0.0",
   "license": "MIT",
   "types": "typings.d.ts",
   "main": "dist/index.js",
@@ -35,10 +35,11 @@
     "typings.d.ts"
   ],
   "dependencies": {
-    "@suites/types.common": "^4.0.0"
+    "@suites/types.common": "^3.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

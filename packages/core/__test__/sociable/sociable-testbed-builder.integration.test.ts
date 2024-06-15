@@ -40,6 +40,8 @@ describe('Social TestBed Builder Integration Tests', () => {
       .using({ log: jest.fn().mockReturnValue('overridden') })
       .mock(Axios)
       .using({})
+      .mock<string[]>('SOME_VALUE_TOKEN')
+      .using(['some value'])
       .compile();
 
     userServiceAsIfItWasUnderTest = testBed.unit;
@@ -48,6 +50,10 @@ describe('Social TestBed Builder Integration Tests', () => {
 
   it('should instantiate UserService with all dependencies properly resolved', () => {
     expect(userServiceAsIfItWasUnderTest).toBeInstanceOf(UserService);
+  });
+
+  it('should return the constant value that has been mocked in the builder as is', () => {
+    expect(unitRef.get<string[]>('SOME_VALUE_TOKEN')).toEqual<string[]>(['some value']);
   });
 
   it('should have log a warning message about http client cannot be exposed because it is not a direct dependency', () => {
@@ -141,7 +147,7 @@ describe('Social TestBed Builder Integration Tests', () => {
     });
   });
 
-  it('should trigger the logger warning when the HttpClient is mocked', async () => {
+  it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
     await unitBuilder.mock('non-existing-dep').using({}).compile();
 
     expect(loggerMock.warn).toHaveBeenCalledWith(
@@ -149,7 +155,7 @@ describe('Social TestBed Builder Integration Tests', () => {
     );
   });
 
-  it('should trigger the logger warning when the HttpClient is mocked', async () => {
+  it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
     await unitBuilder.mock(UserDal).using({}).compile();
 
     expect(loggerMock.warn).toHaveBeenCalledWith(

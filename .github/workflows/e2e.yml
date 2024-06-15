@@ -9,6 +9,13 @@ on:
         description: 'E2E Target Branch'
         required: true
 
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+  checks: write
+  statuses: write
+
 jobs:
   status-pending:
     name: Update PR Status
@@ -24,15 +31,14 @@ jobs:
         uses: juliangruber/find-pull-request-action@v1
         id: pull-request
         with:
-          branch: ${{ inputs.branch }}
+          branch: ${{ inputs.target_branch }}
 
       - name: Update PR e2e Status to Pending
-        if: needs.e2e.result == 'failure'
         run: |
           curl \
           -X POST \
           -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
           -d '{"state":"pending","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"Running..","context":"Suites e2e"}'
 
@@ -40,12 +46,6 @@ jobs:
     name: Build and Test
     needs: [status-pending]
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      id-token: write
-      checks: write
-      statuses: write
     strategy:
       matrix:
         e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
@@ -162,7 +162,7 @@ jobs:
         uses: juliangruber/find-pull-request-action@v1
         id: pull-request
         with:
-          branch: ${{ inputs.branch }}
+          branch: ${{ inputs.target_branch }}
 
       - name: Update PR e2e Status (Failed)
         if: needs.e2e.result == 'failure'
@@ -170,9 +170,9 @@ jobs:
           curl \
           -X POST \
           -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
-          -d '{"state":"failure","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"❌ Failed","context":"Suites e2e Tests"}'
+          -d '{"state":"failure","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"❌ Failed","context":"Suites e2e"}'
 
       - name: Update PR e2e Status (Success)
         if: needs.e2e.result == 'success'
@@ -180,6 +180,6 @@ jobs:
           curl \
           -X POST \
           -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
-          -d '{"state":"success","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"✅ Passed Successfully","context":"Suites e2e Tests"}'
+          -d '{"state":"success","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"✅ Passed Successfully","context":"Suites e2e"}'

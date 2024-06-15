@@ -1,4 +1,4 @@
-import { testBedBuilderFactory } from './testbed-builder';
+import { testBedBuilderFactory } from '../src/testbed-builder';
 
 const initiationStub = jest.fn();
 
@@ -19,9 +19,9 @@ describe('Testbed Builder Unit Spec', () => {
   let result: FakeBuilderType;
 
   beforeAll(async () => {
-    result = await testBedBuilderFactory(
-      { jest: '@suites/doubles.jest' } as never,
-      { nestjs: '@suites/di.nestjs' } as never,
+    result = testBedBuilderFactory(
+      { test: __dirname + '/assets/test-adapter' } as never,
+      { test: __dirname + '/assets/test-adapter' } as never,
       TargetClass
     ).create(FakeBuilderType as never);
   });

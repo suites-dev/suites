@@ -8,7 +8,7 @@ import { isConstantValue } from '../functions.static';
 import { TestBedBuilder } from '../../types';
 import type { UnitTestBed } from '../../types';
 
-export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
+export interface SociableTestBedBuilder<TClass> {
   expose(dependency: Type): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass>;
 }
 

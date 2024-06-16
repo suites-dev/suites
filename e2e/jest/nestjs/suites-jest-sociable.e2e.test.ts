@@ -19,6 +19,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
     const { unitRef: ref, unit } = await TestBed.sociable(UserService)
       .expose(UserApiService)
       .expose(UserDal)
+      .expose(DatabaseService)
       .mock(Logger)
       .using({ log: jest.fn().mockReturnValue('overridden') })
       .compile();

@@ -1,6 +1,6 @@
-import * as fs from 'fs';
+import type * as fs from 'fs';
 import * as path from 'path';
-import { CodeTransformer } from './code-transformer';
+import type { CodeTransformer } from './code-transformer';
 
 export class MigrationHandler {
   private modifiedFiles: number = 0;

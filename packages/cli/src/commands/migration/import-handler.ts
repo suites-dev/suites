@@ -1,13 +1,6 @@
-import { NodePath } from '@babel/traverse';
-import {
-  Identifier,
-  ImportDeclaration,
-  importDeclaration,
-  ImportSpecifier,
-  isImportSpecifier,
-  Program,
-  stringLiteral,
-} from '@babel/types';
+import type { NodePath } from '@babel/traverse';
+import type { Identifier, ImportDeclaration, ImportSpecifier, Program } from '@babel/types';
+import { importDeclaration, isImportSpecifier, stringLiteral } from '@babel/types';
 
 export class ImportManager {
   public manageImports(path: NodePath<ImportDeclaration>, modified: boolean): boolean {

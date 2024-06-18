@@ -1,21 +1,24 @@
-import { parse } from '@babel/parser';
-import traverse, { Node, NodePath } from '@babel/traverse';
-import generate from '@babel/generator';
-import {
-  awaitExpression,
+import type { parse } from '@babel/parser';
+import type { Node, NodePath } from '@babel/traverse';
+import type traverse from '@babel/traverse';
+import type generate from '@babel/generator';
+import type {
   CallExpression,
   File,
   Identifier,
-  identifier,
   ImportDeclaration,
+  MemberExpression,
+} from '@babel/types';
+import {
+  awaitExpression,
+  identifier,
   isArrowFunctionExpression,
   isFunctionDeclaration,
   isFunctionExpression,
   isIdentifier,
   isMemberExpression,
-  MemberExpression,
 } from '@babel/types';
-import { ImportManager } from './import-handler';
+import type { ImportManager } from './import-handler';
 
 export class CodeTransformer {
   constructor(

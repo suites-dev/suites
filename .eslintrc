@@ -1,11 +1,9 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "prettier"
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
-  "parserOptions": {
-    "ecmaVersion": 8
-  },
   "settings": {
     "import/parsers": {
       "@typescript-eslint/parser": [
@@ -14,20 +12,34 @@
     },
     "import/resolver": {
       "node": {
+        "paths": [
+          "packages/"
+        ],
         "extensions": [
           ".ts"
         ]
       },
       "typescript": {
-        "alwaysTryTypes": true
+        "alwaysTryTypes": true,
+        "project": [
+          "packages/*/tsconfig.json",
+          "packages/di/*/tsconfig.json",
+          "packages/doubles/*/tsconfig.json",
+          "packages/types/*/tsconfig.json"
+        ]
       }
-    },
-    "import/extensions": 0
+    }
   },
-  "extends": [
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+  "plugins": [
+    "prettier",
+    "import"
   ],
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "project": [
+      "./tsconfig.json"
+    ]
+  },
   "rules": {
     "no-useless-constructor": "off",
     "react/forbid-prop-types": 0,
@@ -50,7 +62,23 @@
     "camelcase": "off",
     "consistent-return": 0,
     "import/prefer-default-export": 0,
-    "lines-between-class-members": "off"
+    "lines-between-class-members": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [],
+        "optionalDependencies": false,
+        "peerDependencies": false,
+        "packageDir": "./"
+      }
+    ],
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports",
+        "disallowTypeAnnotations": false
+      }
+    ]
   },
   "env": {
     "node": true,

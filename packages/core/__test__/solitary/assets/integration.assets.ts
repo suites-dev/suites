@@ -7,7 +7,7 @@ import {
   WithMetadata,
 } from '@suites/types.di';
 import { Type } from '@suites/types.common';
-import { normalizeIdentifier } from '../../src/normalize-identifier.static';
+import { normalizeIdentifier } from '../../../src/normalize-identifier.static';
 
 interface Printer {
   print(): string;
@@ -174,7 +174,7 @@ export const FakeDIAdapter: DependencyInjectionAdapter = {
         metadata?: IdentifierMetadata
       ): ClassInjectable | undefined {
         return classInjectables.find((injectable: WithMetadata<never>) => {
-          const subject = normalizeIdentifier(identifier, metadata);
+          const subject = normalizeIdentifier(identifier, metadata as never);
           const toFind = normalizeIdentifier(injectable.identifier, injectable.metadata);
 
           return isEqual(toFind, subject);

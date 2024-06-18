@@ -1,10 +1,11 @@
 import 'reflect-metadata';
 
-import { UnitReference, TestBed, Mocked } from '@suites/unit';
+import type { UnitReference, Mocked } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Logger } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
   Foo,
-  Logger,
   NestJSTestClass,
   SymbolToken,
   SymbolTokenSecond,
@@ -26,7 +27,9 @@ describe('Suites Sinon / NestJS E2E Test Ctor', () => {
   let unitRef: UnitReference;
 
   before(async () => {
-    const { unitRef: ref, unit: underTest } = await TestBed.create<NestJSTestClass>(NestJSTestClass)
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<NestJSTestClass>(
+      NestJSTestClass
+    )
       .mock(TestClassOne)
       .using({
         foo: stub().resolves('foo-from-test'),

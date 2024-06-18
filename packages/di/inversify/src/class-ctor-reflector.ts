@@ -1,12 +1,13 @@
 import { METADATA_KEY } from 'inversify';
-import { Type } from '@suites/types.common';
-import { ClassInjectable, UndefinedDependency, UndefinedDependencyError } from '@suites/types.di';
-import {
+import type { Type } from '@suites/types.common';
+import type { ClassInjectable } from '@suites/types.di';
+import { UndefinedDependency, UndefinedDependencyError } from '@suites/types.di';
+import type {
   InversifyInjectableIdentifierMetadata,
   InversifyInjectableMetadata,
   MetadataReflector,
 } from './types';
-import { IdentifierBuilder } from './identifier-builder.static';
+import type { IdentifierBuilder } from './identifier-builder.static';
 
 const { PARAM_TYPES, TAGGED } = METADATA_KEY;
 
@@ -24,8 +25,8 @@ export function ClassCtorReflector(
     return paramTokens.map((inversifyInjectableMetadataItems, index) => {
       if (!inversifyInjectableMetadataItems) {
         if (paramTypes[index] === undefined) {
-          throw new UndefinedDependencyError(`Automock encountered an error while attempting to detect a token or type for the
-dependency at index [${index}] in the class '${targetClass.name}'.
+          throw new UndefinedDependencyError(`Suites encountered an error while attempting to detect a token or type for the
+dependency at index [${index}] under the class '${targetClass.name}'.
 This issue is commonly caused by either improper parameter decoration or a problem during the reflection of
 the parameter type. In some cases, this error may arise due to circular dependencies. If this is the case,
 please ensure that the circular dependency is resolved, or consider using 'LazyServiceIdentifier' to address it.`);

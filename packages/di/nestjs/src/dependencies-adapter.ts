@@ -1,7 +1,11 @@
-import { Type } from '@suites/types.common';
-import { DependencyInjectionAdapter, ClassInjectable, InjectableRegistry } from '@suites/types.di';
-import { ClassPropsReflector } from './class-props-reflector';
-import { ClassCtorReflector } from './class-ctor-reflector';
+import type { Type } from '@suites/types.common';
+import type {
+  DependencyInjectionAdapter,
+  ClassInjectable,
+  InjectableRegistry,
+} from '@suites/types.di';
+import type { ClassPropsReflector } from './class-props-reflector';
+import type { ClassCtorReflector } from './class-ctor-reflector';
 
 export function DependenciesAdapter(
   classPropsReflector: ClassPropsReflector,

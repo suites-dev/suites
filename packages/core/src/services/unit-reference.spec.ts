@@ -1,12 +1,14 @@
-import { InjectableIdentifier } from '@suites/types.di';
-import { ConstantValue } from '@suites/types.common';
-import { StubbedInstance } from '@suites/types.doubles';
+import type { InjectableIdentifier } from '@suites/types.di';
+import type { ConstantValue } from '@suites/types.common';
+import type { StubbedInstance } from '@suites/types.doubles';
 import { UnitReference } from './unit-reference';
-import { MocksContainer } from './mocks-container';
+import { DependencyContainer } from './dependency-container';
 
 class DependencyOne {}
 class DependencyOneStubbed {}
 class DependencyTwoStubbed {}
+class RealDependencyOne {}
+class RealDependencyTwo {}
 
 const DependencyOneSymbol = Symbol('DependencyOneSymbol');
 const DependencyTwoSymbol = Symbol('DependencyTwoSymbol');
@@ -16,7 +18,7 @@ describe('Unit Reference Unit Spec', () => {
   let unitReference: UnitReference;
 
   beforeAll(() => {
-    const mocksContainer = new MocksContainer([
+    const mocksContainer = new DependencyContainer([
       // Types
       [{ identifier: DependencyOne }, DependencyOneStubbed],
       [{ identifier: 'DEPENDENCY_ONE' }, DependencyOneStubbed],
@@ -29,7 +31,11 @@ describe('Unit Reference Unit Spec', () => {
       [{ identifier: DependencyTwoSymbol, metadata: { dependency: 'two' } }, DependencyTwoStubbed],
     ]);
 
-    unitReference = new UnitReference(mocksContainer);
+    unitReference = new UnitReference(mocksContainer, [RealDependencyOne, RealDependencyTwo]);
+  });
+
+  it('should throw an error indicating the dependency cannot be retrieved because it is exposed', () => {
+    expect(() => unitReference.get(RealDependencyOne)).toThrowError();
   });
 
   it.each([
@@ -48,12 +54,12 @@ describe('Unit Reference Unit Spec', () => {
   it('should return the corresponding class or value using unique identifier with metadata combined', () => {
     expect(
       unitReference.get<DependencyTwoStubbed>('DEPENDENCY_TWO', {
-        dependency: 'two',
+        dependency: 'two' as never,
       })
     ).toEqual(DependencyTwoStubbed);
 
     expect(
-      unitReference.get<DependencyTwoStubbed>(DependencyTwoSymbol, { dependency: 'two' })
+      unitReference.get<DependencyTwoStubbed>(DependencyTwoSymbol, { dependency: 'two' } as never)
     ).toEqual(DependencyTwoStubbed);
   });
 

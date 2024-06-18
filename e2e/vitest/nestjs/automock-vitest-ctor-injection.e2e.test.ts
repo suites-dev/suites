@@ -1,9 +1,10 @@
 import { beforeAll, describe, test, expect } from 'vitest';
-import { TestBed, Mocked, UnitReference } from '@suites/unit';
+import type { Mocked, UnitReference } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Logger } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
   Foo,
-  Logger,
   NestJSTestClass,
   SymbolToken,
   SymbolTokenSecond,
@@ -19,7 +20,7 @@ describe('Suites Vitest / NestJS E2E Test Ctor', () => {
   let unitRef: UnitReference;
 
   beforeAll(async () => {
-    const { unitRef: ref, unit: underTest } = await TestBed.create(NestJSTestClass)
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary(NestJSTestClass)
       .mock(TestClassOne)
       .using({
         async foo(): Promise<string> {

@@ -13,6 +13,9 @@
   "bugs": {
     "url": "https://github.com/suites-dev/suites/issues"
   },
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
   "contributors": [
     {
       "name": "Omer Morad",
@@ -31,19 +34,21 @@
     "dist"
   ],
   "dependencies": {
-    "@suites/types.di": "^4.0.0",
-    "@suites/types.doubles": "^4.0.0",
+    "@suites/types.common": "^3.0.0",
+    "@suites/types.di": "^3.0.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": ">= 8.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@nestjs/common": "10.2.7",
+    "@nestjs/common": "^10.3.9",
+    "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
-  "engines": {
-    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
-  },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

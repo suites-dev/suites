@@ -1,5 +1,5 @@
-import { DependencyInjectionAdapter } from '@suites/types.di';
-import { MockFunction } from '@suites/types.doubles';
+import type { DependencyInjectionAdapter } from '@suites/types.di';
+import type { MockFunction } from '@suites/types.doubles';
 
 export class PackageResolver<TAdapter extends DependencyInjectionAdapter | MockFunction<unknown>> {
   public constructor(private readonly adapters: Record<string, string>) {}

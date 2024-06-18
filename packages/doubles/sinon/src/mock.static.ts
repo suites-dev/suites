@@ -1,4 +1,5 @@
-import { SinonStubbedInstance, stub } from 'sinon';
+import type { SinonStubbedInstance } from 'sinon';
+import { stub } from 'sinon';
 
 type PropertyType = string | number | symbol;
 
@@ -38,6 +39,18 @@ const applyMockImplementation = (initialObject: Record<string, any>) => {
   return proxy;
 };
 
-export const mock = <T>(mockImpl: Partial<T> = {} as Partial<T>): SinonStubbedInstance<T> => {
+/**
+ * Creates a mock object with the provided implementation.
+ *
+ * @since 3.0.0
+ * @template TType - The type of the object being mocked.
+ * @template MockedType - The type of the mock object.
+ * @param {Partial<TType>} mockImpl - The implementation of the mock object.
+ * @default {} - An empty object.
+ * @returns {sinon.SinonStubbedInstance<TType>} - The mocked object with the provided implementation.
+ */
+export const mock = <TType>(
+  mockImpl: Partial<TType> = {} as Partial<TType>
+): SinonStubbedInstance<TType> => {
   return applyMockImplementation(mockImpl);
 };

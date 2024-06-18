@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import { DependencyInjectionAdapter } from '@suites/types.di';
+import type { DependencyInjectionAdapter } from '@suites/types.di';
 import { ClassPropsReflector } from './class-props-reflector';
 import { ClassCtorReflector } from './class-ctor-reflector';
 import { IdentifierBuilder } from './identifier-builder.static';
 import { DependenciesAdapter } from './dependencies-adapter';
 
-const InversifyAutomockDependenciesAdapter: DependencyInjectionAdapter = ((
+const InversifyJSDIAdapter: DependencyInjectionAdapter = ((
   classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
 ) => {
@@ -16,4 +16,4 @@ const InversifyAutomockDependenciesAdapter: DependencyInjectionAdapter = ((
 );
 
 export { IdentifierMetadata } from './types';
-export const adapter = InversifyAutomockDependenciesAdapter;
+export const adapter = InversifyJSDIAdapter;

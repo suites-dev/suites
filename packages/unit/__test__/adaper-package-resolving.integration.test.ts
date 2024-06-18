@@ -1,5 +1,5 @@
-import { PackageResolver } from '../src/package-resolver';
 import type { DependencyInjectionAdapter } from '@suites/types.di';
+import { PackageResolver } from '../src/package-resolver';
 
 describe('Suites Adapter Package Resolving Integration Test', () => {
   let packageResolver: PackageResolver<DependencyInjectionAdapter>;

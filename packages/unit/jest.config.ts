@@ -8,10 +8,9 @@ const config: Config = {
   collectCoverageFrom: ['src/**/*.ts', '__test__/**/*.ts'],
   coveragePathIgnorePatterns: [
     'index.ts',
-    'integration.assets.ts',
     'invalid-adapter.ts',
     'test-adapter.ts',
-    'main.ts',
+    'testbed.ts',
     'types.ts',
   ],
 };

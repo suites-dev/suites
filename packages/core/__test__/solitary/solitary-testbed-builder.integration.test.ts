@@ -1,5 +1,6 @@
-import { Type } from '@suites/types.common';
-import { UnitReference, UnitMocker, TestBedBuilder, UnitTestBed } from '../src';
+import type { Type } from '@suites/types.common';
+import type { TestBedBuilder, UnitTestBed } from '../../src';
+import { UnitReference, UnitMocker, SolitaryTestBedBuilder } from '../../src';
 import {
   ArbitraryClassFive,
   ArbitraryClassFour,
@@ -13,7 +14,7 @@ const MockedFromBuilder = Symbol.for('MockedFromBuilder');
 const MockedFromMocker = Symbol.for('MockFromMocker');
 const symbolIdentifier = Symbol.for('TOKEN_METADATA');
 
-describe('Builder Integration Test', () => {
+describe('Solitary TestBed Builder Integration Tests', () => {
   let underTest: TestBedBuilder<ClassUnderTest>;
   const loggerMock = { warn: jest.fn() } as Partial<Console>;
 
@@ -22,10 +23,9 @@ describe('Builder Integration Test', () => {
   const mockFunctionMockOfMocker = jest.fn(() => MockedFromMocker);
 
   beforeAll(() => {
-    underTest = new TestBedBuilder<ClassUnderTest>(
+    underTest = new SolitaryTestBedBuilder<ClassUnderTest>(
       Promise.resolve(mockFunctionMockOfBuilder),
-      Promise.resolve(FakeDIAdapter),
-      new UnitMocker(Promise.resolve(mockFunctionMockOfMocker)),
+      new UnitMocker(Promise.resolve(mockFunctionMockOfMocker), Promise.resolve(FakeDIAdapter)),
       ClassUnderTest,
       loggerMock as Console
     );
@@ -99,7 +99,9 @@ describe('Builder Integration Test', () => {
 
     it('should log a warning indicating the dependency was not found when mocking missing dependency', async () => {
       await underTest.mock('does-not-exists').using({}).compile();
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warn).toHaveBeenCalledWith(
+        expect.stringContaining('Suites Warning: Redundant Mock Configuration Detected.')
+      );
     });
   });
 });

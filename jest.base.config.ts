@@ -14,12 +14,7 @@ const config: (coverageDir?: string) => Config.InitialOptions = (coverageDir?: s
       },
     ],
   },
-  coveragePathIgnorePatterns: [
-    '/node_modules/',
-    'spec-assets.ts',
-    '/__test__/assets/',
-    'testbed-factory.ts',
-  ],
+  coveragePathIgnorePatterns: ['/node_modules/', 'spec-assets.ts', '/__test__/'],
   testPathIgnorePatterns: ['/node_modules/', '/e2e/'],
   testEnvironment: 'node',
   coverageDirectory: coverageDir || '<rootDir>',

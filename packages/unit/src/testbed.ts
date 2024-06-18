@@ -1,38 +1,73 @@
-import { createTestbedBuilder, SuitesDIAdapters, SuitesDoublesAdapters } from './testbed-builder';
+import { SuitesDIAdapters, SuitesDoublesAdapters, testBedBuilderFactory } from './testbed-builder';
 import type { Type } from '@nestjs/common';
-import type { TestBedBuilder } from './types';
+import { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/core.unit';
 
 /**
- * Creates a new TestBedBuilder instance for the given target class. This builder helps in configuring
- * and compiling the test environment for a class that should be tested in isolation (solitary).
- * It sets up the necessary dependencies and mocks, ensuring that the class under test is the primary
- * focus without an interference from other components.
+ * @description
+ * Provides a testing framework for unit testing classes in both isolated (solitary) and integrated (sociable)
+ * environments. This class facilitates building configurable test environments tailored to specific unit tests.
  *
- * @see https://suites.dev/docs/developer-guide/unit-tests
+ * @class TestBed
+ * @see https://suites.dev/docs/api-reference
  * @since 3.0.0
- * @template TClass - The class to be tested.
- * @param {Type<TClass>} targetClass - The class to be tested.
- * @returns {TestBedBuilder<TClass>} - The TestBedBuilder instance configured for solitary testing.
- * @example
- * import { TestBed } from '@suites/unit';
- * import { MyService } from './my-service';
- *
- * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
- * // MyService is now tested in isolation with all its dependencies mocked.
  */
 export class TestBed {
   /**
-   * A factory interface for creating UnitTestBed instances for testing classes.
+   * @description
+   * Initializes a solitary test environment builder for a specified class. In a solitary environment,
+   * all dependencies are mocked by default, ensuring that tests are isolated to the class under test only.
+   * This method is ideal for testing the internal logic of the class without external interactions.
    *
-   * @see https://suites.dev/docs/api-reference
    * @since 3.0.0
+   * @template TClass The type of the class to be tested.
+   * @param {Type<TClass>} targetClass The class for which the test environment is constructed.
+   * @returns {SolitaryTestBedBuilder<TClass>} A builder to configure the solitary test environment.
+   * @see https://suites.dev/docs/developer-guide/unit-tests
+   *
    * @example
    * import { TestBed } from '@suites/unit';
    * import { MyService } from './my-service';
    *
    * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
    */
-  public static solitary<TClass = any>(targetClass: Type<TClass>): TestBedBuilder<TClass> {
-    return createTestbedBuilder(SuitesDIAdapters, SuitesDoublesAdapters, targetClass);
+  public static solitary<TClass = any>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass> {
+    return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
+      SolitaryTestBedBuilder
+    );
+  }
+
+  /**
+   * @description
+   * Initializes a sociable test environment builder for a specified class. In a sociable environment,
+   * dependencies can be either real or mocked based on the test requirements, allowing for integrated testing.
+   * It's essential to use the `.expose()` method at least once to define which dependencies should be real,
+   * as this method sets the stage for more complex interaction testing between the class under test and its dependencies.
+   *
+   * @since 3.0.0
+   * @template TClass The type of the class to be tested.
+   * @param {Type<TClass>} targetClass The class for which the test environment is constructed.
+   * @returns A builder to configure the sociable test environment with 'expose' as the first step,
+   * with the ability to selectively expose dependencies.
+   *
+   * @example
+   * import { TestBed } from '@suites/unit';
+   * import { MyService, DependencyOne, DependencyTwo, Logger } from './my-service';
+   *
+   * const { unit, unitRef } = await TestBed.sociable(MyService)
+   *   .expose(DependencyOne)
+   *   .expose(DependencyTwo)
+   *   .mock(Logger)
+   *   .using({ log: jest.fn().mockReturnValue('overridden') })
+   *   .compile();
+   *
+   * @see https://suites.dev/docs/developer-guide/unit-tests
+   * @since 3.0.0
+   */
+  public static sociable<TClass = any>(
+    targetClass: Type<TClass>
+  ): Pick<SociableTestBedBuilder<TClass>, 'expose'> {
+    return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
+      SociableTestBedBuilder
+    );
   }
 }

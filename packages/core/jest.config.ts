@@ -7,6 +7,8 @@ const config: Config = {
   displayName: 'core',
   collectCoverageFrom: ['src/**/*.ts', '__test__/**/*.ts'],
   coveragePathIgnorePatterns: [
+    'injectable-registry.fixture.ts',
+    '__test__/sociable/assets',
     'index.ts',
     'integration.assets.ts',
     'invalid-adapter.ts',

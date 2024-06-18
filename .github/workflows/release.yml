@@ -7,6 +7,7 @@ on:
     inputs:
       dist_tag:
         description: 'Distribution Tag'
+        type: choice
         options:
           - 'next'
           - 'latest'

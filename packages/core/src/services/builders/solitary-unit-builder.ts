@@ -1,12 +1,11 @@
-import type { MockFunction } from '@suites/types.doubles';
-import type { Type, ConstantValue } from '@suites/types.common';
+import type { DoublesAdapter } from '@suites/types.doubles';
+import type { Type } from '@suites/types.common';
 import { UnitReference } from '../unit-reference';
 import type { UnitMocker } from '../unit-mocker';
-import type { IdentifierToDependency } from '../dependency-container';
+import type { IdentifierToMockOrFinal, IdentifierToMockImplWithCb } from '../dependency-container';
 import { DependencyContainer } from '../dependency-container';
-import { isConstantValue } from '../functions.static';
 import type { UnitTestBed } from '../../types';
-import { TestBedBuilder } from '../../types';
+import { TestBedBuilder } from './testbed-builder';
 
 export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {}
 
@@ -15,7 +14,7 @@ export class SolitaryTestBedBuilder<TClass>
   implements TestBedBuilder<TClass>
 {
   public constructor(
-    private readonly mockFn: Promise<MockFunction<unknown>>,
+    private readonly doublesAdapter: Promise<DoublesAdapter>,
     private readonly unitMocker: UnitMocker,
     private readonly targetClass: Type<TClass>,
     private readonly logger: Console
@@ -24,22 +23,19 @@ export class SolitaryTestBedBuilder<TClass>
   }
 
   public async compile(): Promise<UnitTestBed<TClass>> {
-    const mockFn = await this.mockFn;
+    const mockFn = await this.doublesAdapter.then((adapter) => adapter.mock);
+    const stubFn = await this.doublesAdapter.then((adapter) => adapter.stub);
 
-    const identifiersToMocks: IdentifierToDependency[] = this.identifiersToBeMocked.map(
-      ([identifier, valueToMock]) => {
-        if (isConstantValue(valueToMock)) {
-          return [identifier, valueToMock as ConstantValue];
-        }
-
-        return [identifier, mockFn(valueToMock)];
+    const identifiersToMocksImpls: IdentifierToMockOrFinal[] = this.identifiersToBeMocked.map(
+      ([identifier, mockImplCallback]: IdentifierToMockImplWithCb) => {
+        return [identifier, mockFn(mockImplCallback(stubFn))];
       }
     );
 
     const { container, instance, resolution } = await this.unitMocker.constructUnit<TClass>(
       this.targetClass,
       [],
-      new DependencyContainer(identifiersToMocks)
+      new DependencyContainer(identifiersToMocksImpls)
     );
 
     if (resolution.notFound.length > 0) {
@@ -55,7 +51,7 @@ interactions. For detailed guidelines on setting up solitary tests, refer to: ht
 
     return {
       unit: instance as TClass,
-      unitRef: new UnitReference(container, []),
+      unitRef: new UnitReference(container, [], this.identifiersToBeFinalized),
     };
   }
 }

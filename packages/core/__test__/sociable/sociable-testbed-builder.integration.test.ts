@@ -15,6 +15,7 @@ import {
 } from './assets/injectable-registry.fixture';
 import type { UnitReference } from '../../src';
 import { SociableTestBedBuilder, UnitMocker } from '../../src';
+import Mock = jest.Mock;
 
 describe('Social TestBed Builder Integration Tests', () => {
   let unitBuilder: SociableTestBedBuilder<UserService>;
@@ -25,7 +26,10 @@ describe('Social TestBed Builder Integration Tests', () => {
 
   beforeAll(async () => {
     unitBuilder = new SociableTestBedBuilder(
-      Promise.resolve(mock),
+      Promise.resolve({
+        mock: mock,
+        stub: jest.fn,
+      }),
       new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
       UserService,
       loggerMock
@@ -37,11 +41,11 @@ describe('Social TestBed Builder Integration Tests', () => {
       .expose(HttpClient)
       .expose(DatabaseService)
       .mock(TestLogger)
-      .using({ log: jest.fn().mockReturnValue('overridden') })
+      .using((stubbed: Mock) => ({ log: stubbed.mockReturnValue('overridden') }))
       .mock(Axios)
-      .using({})
+      .using(() => ({}))
       .mock<string[]>('SOME_VALUE_TOKEN')
-      .using(['some value'])
+      .final(['some value'])
       .compile();
 
     userServiceAsIfItWasUnderTest = testBed.unit;
@@ -50,10 +54,6 @@ describe('Social TestBed Builder Integration Tests', () => {
 
   it('should instantiate UserService with all dependencies properly resolved', () => {
     expect(userServiceAsIfItWasUnderTest).toBeInstanceOf(UserService);
-  });
-
-  it('should return the constant value that has been mocked in the builder as is', () => {
-    expect(unitRef.get<string[]>('SOME_VALUE_TOKEN')).toEqual<string[]>(['some value']);
   });
 
   it('should have log a warning message about http client cannot be exposed because it is not a direct dependency', () => {
@@ -114,15 +114,13 @@ describe('Social TestBed Builder Integration Tests', () => {
   describe('getting a user info with UserService', () => {
     const userId = '12345';
 
-    let logger: jest.Mocked<TestLogger>;
-    let apiService: jest.Mocked<ApiService>;
+    let logger: StubbedInstance<TestLogger>;
+    let apiService: StubbedInstance<ApiService>;
     let result: string;
 
     beforeAll(async () => {
-      logger = unitRef.get(TestLogger) as StubbedInstance<TestLogger> as jest.Mocked<TestLogger>;
-      apiService = unitRef.get(
-        ApiService
-      ) as StubbedInstance<ApiService> as jest.Mocked<ApiService>;
+      logger = unitRef.get(TestLogger) as StubbedInstance<TestLogger>;
+      apiService = unitRef.get(ApiService) as StubbedInstance<ApiService>;
 
       apiService.fetchData.mockResolvedValue('Data from API');
 
@@ -148,7 +146,10 @@ describe('Social TestBed Builder Integration Tests', () => {
   });
 
   it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
-    await unitBuilder.mock('non-existing-dep').using({}).compile();
+    await unitBuilder
+      .mock('non-existing-dep')
+      .using(() => ({}))
+      .compile();
 
     expect(loggerMock.warn).toHaveBeenCalledWith(
       expect.stringContaining('Suites Warning: Unreachable Mock Configuration Detected')
@@ -156,7 +157,10 @@ describe('Social TestBed Builder Integration Tests', () => {
   });
 
   it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
-    await unitBuilder.mock(UserDal).using({}).compile();
+    await unitBuilder
+      .mock(UserDal)
+      .using(() => ({}))
+      .compile();
 
     expect(loggerMock.warn).toHaveBeenCalledWith(
       expect.stringContaining('Suites Warning: Unreachable Mock Configuration Detected')

@@ -1,5 +1,5 @@
 import type { IdentifierMetadata } from '@suites/types.di';
-import type { DeepPartial, Type, ConstantValue } from '@suites/types.common';
+import type { DeepPartial, Type } from '@suites/types.common';
 import type { StubbedInstance } from '@suites/types.doubles';
 import type {
   SociableTestBedBuilder,
@@ -99,28 +99,6 @@ export interface UnitReference extends UnitReferenceCore {
   ): StubbedInstance<TDependency>;
 
   /**
-   * Retrieves a constant value corresponding to a string-based token.
-   *
-   * @since 3.0.0
-   * @template TValue The type of the constant value being retrieved.
-   * @param token The string-based token representing the constant value.
-   * @throws {IdentifierNotFoundError} - If the dependency is not found.
-   * @returns The constant value corresponding to the provided string-based token.
-   */
-  get<TValue extends ConstantValue>(token: string): TValue;
-
-  /**
-   * Retrieves a constant value corresponding to a symbol-based token.
-   *
-   * @since 3.0.0
-   * @template TValue The type of the constant value being retrieved.
-   * @param token The symbol-based token representing the constant value.
-   * @throws {IdentifierNotFoundError} - If the dependency is not found.
-   * @returns The constant value corresponding to the provided symbol-based token.
-   */
-  get<TValue extends ConstantValue>(token: symbol): TValue;
-
-  /**
    * Retrieves a mocked object or a constant value of a dependency using its type, string, or symbol token.
    *
    * This method provides flexibility in retrieving dependencies by allowing various identifier types.
@@ -152,9 +130,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns The mocked instance or constant value corresponding to the provided identifier.
    */
-  get<TDependency, TValue extends ConstantValue>(
-    identifier: Type<TDependency> | string | symbol
-  ): StubbedInstance<TDependency> | TValue;
+  get<TDependency>(identifier: Type<TDependency> | string | symbol): StubbedInstance<TDependency>;
 }
 
 /**
@@ -184,8 +160,8 @@ export interface TestBed {
    * import { TestBed } from '@suites/unit';
    * import { MyService } from './my-service';
    *
-   * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
    * // MyService is now tested in isolation with all its dependencies mocked.
+   * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
    */
   solitary<TClass>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass>;
 
@@ -244,15 +220,6 @@ export interface UnitTestBed<TClass> {
  */
 export interface MockOverride<TDependency, TClass> {
   /**
-   * Specifies a constant value to be used for the mocked dependency.
-   *
-   * @since 3.0.0
-   * @param value - The constant value for the mocked dependency.
-   * @returns `TestBedBuilder` instance for chaining further configuration.
-   */
-  using(value: TDependency & ConstantValue): TestBedBuilder<TClass>;
-
-  /**
    * Specifies the mock implementation to be used for the mocked dependency.
    *
    * @since 3.0.0
@@ -260,6 +227,15 @@ export interface MockOverride<TDependency, TClass> {
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
   using(mockImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
+
+  /**
+   * Specifies the final implementation to be used for the mocked dependency.
+   *
+   * @since 3.0.0
+   * @param finalImplementation - The final implementation for the mocked dependency.
+   * @returns `TestBedBuilder` instance for chaining further configuration.
+   */
+  final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
 }
 
 /**
@@ -358,7 +334,6 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
     identifier: Type<TDependency> | string | symbol,
     identifierMetadata?: IdentifierMetadata
   ): MockOverride<TDependency, TClass>;
-
   /**
    * Finalizes the mocking setup and creates a new UnitTestBed.
    *

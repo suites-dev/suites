@@ -32,7 +32,7 @@ export class TestBed {
    */
   public static solitary<TClass = any>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
-      SolitaryTestBedBuilder
+      SolitaryTestBedBuilder<TClass>
     );
   }
 
@@ -67,7 +67,7 @@ export class TestBed {
     targetClass: Type<TClass>
   ): Pick<SociableTestBedBuilder<TClass>, 'expose'> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
-      SociableTestBedBuilder
+      SociableTestBedBuilder<TClass>
     );
   }
 }

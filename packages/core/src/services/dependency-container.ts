@@ -1,11 +1,21 @@
 import isEqual from 'lodash.isequal';
 import type { ClassInjectable, IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
-import type { StubbedInstance } from '@suites/types.doubles';
-import type { ConstantValue } from '@suites/types.common';
+import type { StubbedInstance, StubCallback } from '@suites/types.doubles';
+import type { ConstantValue, FinalValue } from '@suites/types.common';
 
-export type IdentifierToDependency = [
+export type IdentifierToMockOrFinal = [
   Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },
-  StubbedInstance<unknown> | ConstantValue,
+  StubbedInstance<unknown> | FinalValue,
+];
+
+export type IdentifierToFinal = [
+  Pick<ClassInjectable, 'identifier'> & { metadata?: never },
+  FinalValue,
+];
+
+export type IdentifierToMockImplWithCb = [
+  Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },
+  StubCallback<unknown>,
 ];
 
 export interface DependencyContainer {
@@ -16,7 +26,7 @@ export interface DependencyContainer {
 }
 
 export class DependencyContainer {
-  public constructor(private readonly identifierToDependency: IdentifierToDependency[]) {}
+  public constructor(private readonly identifierToDependency: IdentifierToMockOrFinal[]) {}
 
   public resolve<TDependency = unknown>(
     identifier: InjectableIdentifier<TDependency>,
@@ -56,7 +66,7 @@ export class DependencyContainer {
       : undefined;
   }
 
-  public list(): IdentifierToDependency[] {
+  public list(): IdentifierToMockOrFinal[] {
     return this.identifierToDependency;
   }
 }

@@ -2,10 +2,10 @@ import * as console from 'console';
 import type { Type } from '@suites/types.common';
 import { SuitesError, SuitesErrorCode } from '@suites/types.common';
 import type { DependencyInjectionAdapter } from '@suites/types.di';
-import type { MockFunction } from '@suites/types.doubles';
 import type { TestBedBuilder } from '@suites/core.unit';
 import { UnitMocker } from '@suites/core.unit';
 import { PackageResolver } from './package-resolver';
+import type { DoublesAdapter } from '@suites/types.doubles';
 
 export class AdapterNotFoundError extends SuitesError {
   public constructor(message: string) {
@@ -48,7 +48,7 @@ correct Suites adapter package that is compatible with your dependency injection
 For more details, refer to our docs website: https://suites.dev/docs`);
         });
 
-      const doublesPackageResolver = new PackageResolver<MockFunction<unknown>>(doublesAdapters);
+      const doublesPackageResolver = new PackageResolver<DoublesAdapter>(doublesAdapters);
 
       const doublesAdapter = doublesPackageResolver
         .resolveCorrespondingAdapter()
@@ -60,7 +60,10 @@ correct Suites adapter package that is compatible with mocking library.
 For more details, refer to our docs website: https://suites.dev/docs`);
         });
 
-      const unitMocker = new UnitMocker(doublesAdapter, diAdapter);
+      const unitMocker = new UnitMocker(
+        doublesAdapter.then((adapter) => adapter.mock),
+        diAdapter
+      );
 
       return new testbedBuilderType(doublesAdapter, unitMocker, targetClass, console) as TBuilder;
     },

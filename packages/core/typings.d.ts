@@ -1,6 +1,8 @@
 import type { IdentifierMetadata } from '@suites/types.di';
-import type { DeepPartial, Type, ConstantValue } from '@suites/types.common';
+import type { DeepPartial, Type, ConstantValue, FinalValue } from '@suites/types.common';
+import type { StubFunction } from '@suites/types.doubles';
 import type { UnitReference } from './dist';
+
 /**
  * Represents the outcome when a `TestBedBuilder` is compiled.
  *
@@ -33,16 +35,6 @@ export interface UnitTestBed<TClass> {
  */
 export interface MockOverride<TDependency, TClass> {
   /**
-   * Specifies a constant value to be used for the mocked dependency.
-   *
-   * @since 3.0.0
-   * @param value - The constant value for the mocked dependency.
-   * @template TDependency The type of the dependency being mocked.
-   * @returns `TestBedBuilder` instance for chaining further configuration.
-   */
-  using(value: TDependency & ConstantValue): TestBedBuilder<TClass>;
-
-  /**
    * Specifies the mock implementation to be used for the mocked dependency.
    *
    * @since 3.0.0
@@ -50,7 +42,19 @@ export interface MockOverride<TDependency, TClass> {
    * @template TDependency The type of the dependency being mocked.
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
-  using(mockImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
+  using(
+    mockImplementation: (stub: StubFunction) => DeepPartial<TDependency>
+  ): TestBedBuilder<TClass>;
+
+  /**
+   * Specifies the final implementation to be used for the mocked dependency.
+   *
+   * @since 3.0.0
+   * @param finalImplementation - The final implementation for the mocked dependency.
+   * @template TDependency The type of the dependency being mocked.
+   * @returns `TestBedBuilder` instance for chaining further configuration.
+   */
+  final(finalImplementation: FinalValue<TDependency> | ConstantValue): TestBedBuilder<TClass>;
 }
 
 /**

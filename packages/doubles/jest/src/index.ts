@@ -1,8 +1,7 @@
 /// <reference types="jest" />
 /// <reference types="@suites/unit" />
-import type { DeepPartial, Type } from '@suites/types.common';
+import type { Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
-import type { TestBedBuilder } from '@suites/core.unit';
 import type { Mocked as JestMocked } from './types';
 import { mock } from './mock.static';
 
@@ -142,38 +141,6 @@ declare module '@suites/unit' {
     ): JestMocked<TDependency>;
   }
 }
-
-declare module '@suites/core.unit' {
-  /**
-   * Interface to define overrides for mocking dependencies in a test environment.
-   *
-   * @template TDependency The type of the dependency to be mocked.
-   * @template TClass The type of the class under test.
-   * @see https://suites.dev/api-reference/api/mockoverride-api
-   */
-  interface MockOverride<TDependency, TClass> {
-    /**
-     * Specifies the mock implementation to be used for the mocked dependency.
-     *
-     * @since 3.0.0
-     * @param mockImplementation - The mock implementation for the mocked dependency.
-     * @returns `TestBedBuilder` instance for chaining further configuration.
-     */
-    using(
-      mockImplementation: (stubFn: ReturnType<jest.Mock<TDependency>>) => DeepPartial<TDependency>
-    ): TestBedBuilder<TClass>;
-
-    /**
-     * Specifies the final implementation to be used for the mocked dependency.
-     *
-     * @since 3.0.0
-     * @param finalImplementation - The final implementation for the mocked dependency.
-     * @returns `TestBedBuilder` instance for chaining further configuration.
-     */
-    final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
-  }
-}
-
 /**
  * Represents a stub function
  *
@@ -208,3 +175,14 @@ export type Mocked<T> = JestMocked<T>;
 export const adapter = { mock, stub: (): Stub => jest.fn() };
 
 export { mock } from './mock.static';
+
+/**
+ * Represents a stub function
+ *
+ * @since 3.0.0
+ * functions replaced by stubs.
+ * @alias jest.fn
+ * @see https://jestjs.io/docs/mock-function-api#jestfnimplementation
+ * @see https://suites.dev/docs/api-reference
+ */
+export const stub = jest.fn();

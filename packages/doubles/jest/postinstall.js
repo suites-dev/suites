@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const filePath = path.join(__dirname, '..', 'unit', 'typings.d.ts');
-const newContent = "\nexport { mock, Mocked, Stub } from '@suites/doubles.jest';\n";
+const newContent = "\nexport { mock, Mocked, Stub, stub } from '@suites/doubles.jest';\n";
 
 fs.readFile(filePath, 'utf8', function (err, data) {
   console.log('Suites: attempting to override @suites/unit typings file');

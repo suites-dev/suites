@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const filePath = path.join(__dirname, '..', 'unit', 'typings.d.ts');
-const newContent = "\nexport { mock, Mocked } from '@suites/doubles.vitest';\n";
+const newContent = "\nexport { mock, Mocked, Stub, stub } from '@suites/doubles.vitest';\n";
 
 fs.readFile(filePath, 'utf8', function (err, data) {
   console.log('Suites: attempting to override @suites/unit typings file');

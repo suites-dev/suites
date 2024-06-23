@@ -19,7 +19,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       NestJSTestClass
     )
       .mock(TestClassOne)
-      .using((stub: Stub) => ({
+      .using((stub) => ({
         foo: stub().mockResolvedValue('foo-from-test'),
         bar(): string {
           return 'bar';
@@ -30,7 +30,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       .mock('UNDEFINED')
       .final({ method: () => 456 })
       .mock<Logger>('LOGGER')
-      .using((stub) => ({ log: stub().mockReturnValue('baz-from-test') }))
+      .using((stubFn: Stub) => ({ log: stubFn().mockReturnValue('baz-from-test') }))
       .mock<TestClassFive>(SymbolToken)
       .final({ doSomething: () => 'mocked' })
       .compile();

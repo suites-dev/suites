@@ -21,7 +21,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       .expose(UserDal)
       .expose(DatabaseService)
       .mock(Logger)
-      .using({ log: jest.fn().mockReturnValue('overridden') })
+      .using((stubFn) => ({ log: stubFn().mockReturnValue('overridden') }))
       .compile();
 
     unitRef = ref;

@@ -1,6 +1,6 @@
 import type { IdentifierMetadata } from '@suites/types.di';
 import type { DeepPartial, Type } from '@suites/types.common';
-import type { StubbedInstance } from '@suites/types.doubles';
+import type { StubFactory, StubbedInstance } from '@suites/types.doubles';
 import type {
   SociableTestBedBuilder,
   SolitaryTestBedBuilder,
@@ -226,7 +226,9 @@ export interface MockOverride<TDependency, TClass> {
    * @param mockImplementation - The mock implementation for the mocked dependency.
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
-  using(mockImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
+  using(
+    mockImplementation: (stubFn: StubFactory) => DeepPartial<TDependency>
+  ): TestBedBuilder<TClass>;
 
   /**
    * Specifies the final implementation to be used for the mocked dependency.

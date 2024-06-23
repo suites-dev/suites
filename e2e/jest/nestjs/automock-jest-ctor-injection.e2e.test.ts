@@ -19,7 +19,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       NestJSTestClass
     )
       .mock(TestClassOne)
-      .using((stub) => ({
+      .using((stub: Stub) => ({
         foo: stub().mockResolvedValue('foo-from-test'),
         bar(): string {
           return 'bar';

@@ -23,19 +23,19 @@ describe('Suites Jest / NestJS E2E Test Props', () => {
       NestJSTestClassProp
     )
       .mock(TestClassOne)
-      .using({
+      .final({
         async foo(): Promise<string> {
           return 'foo-from-test';
         },
       })
       .mock<string>('CONSTANT_VALUE')
-      .using('arbitrary-string')
+      .final('arbitrary-string')
       .mock('UNDEFINED')
-      .using({ method: () => 456 })
+      .final({ method: () => 456 })
       .mock<Logger>('LOGGER')
-      .using({ log: () => 'baz-from-test' })
+      .final({ log: () => 'baz-from-test' })
       .mock<TestClassFive>(SymbolToken)
-      .using({ doSomething: () => 'mocked' })
+      .final({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;
@@ -47,24 +47,9 @@ describe('Suites Jest / NestJS E2E Test Props', () => {
       expect(unit).toBeInstanceOf(NestJSTestClassProp);
     });
 
-    test('then successfully resolve the dependencies of the tested classes', () => {
-      expect(() => unitRef.get<{ log: () => void }>('LOGGER')).toBeDefined();
-      expect(() => unitRef.get('UNDEFINED')).toBeDefined();
-      expect(() => unitRef.get('UNDEFINED_SECOND')).toBeDefined();
-      expect(() => unitRef.get(TestClassFour)).toBeDefined();
-      expect(() => unitRef.get(TestClassThree)).toBeDefined();
-      expect(() => unitRef.get(Foo)).toBeDefined();
-      expect(() => unitRef.get(TestClassTwo)).toBeDefined();
-      expect(() => unitRef.get('CONSTANT_VALUE')).toBeDefined();
-      expect(() => unitRef.get(TestClassOne)).toBeDefined();
-      expect(() => unitRef.get(SymbolToken)).toBeDefined();
-      expect(() => unitRef.get(SymbolTokenSecond)).toBeDefined();
-    });
-
     test('then do not return the actual reflected dependencies of the injectable class', () => {
-      expect(() => unitRef.get(TestClassOne)).not.toBeInstanceOf(TestClassOne);
-      expect(() => unitRef.get(TestClassTwo)).not.toBeInstanceOf(TestClassTwo);
-      expect(() => unitRef.get(SymbolToken)).not.toBeInstanceOf(TestClassFive);
+      expect(() => unitRef.get(TestClassOne)).toBeDefined();§
+      expect(() => unitRef.get(TestClassTwo)).toBeDefined();
     });
 
     test('then mock the implementation of the dependencies', async () => {

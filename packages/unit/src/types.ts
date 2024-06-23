@@ -2,11 +2,35 @@ import type { IdentifierMetadata } from '@suites/types.di';
 import type { DeepPartial, Type } from '@suites/types.common';
 import type { StubFactory, StubbedInstance } from '@suites/types.doubles';
 import type {
-  SociableTestBedBuilder,
-  SolitaryTestBedBuilder,
+  SociableTestBedBuilder as SociableTestBedBuilderCore,
   TestBedBuilder as TestBedBuilderCore,
   UnitReference as UnitReferenceCore,
 } from '@suites/core.unit';
+
+export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCore<TClass> {
+  /**
+   * Exposes a dependency to be included in the test environment in its real or partially mocked state.
+   * This method is used to selectively expose dependencies that should not be fully mocked.
+   * It allows for sociable testing, where the class under test interacts with real implementations
+   * or partial mocks of certain dependencies.
+   *
+   * @since 3.0.0
+   * @template TClass The type of the class under test.
+   * @param dependency The dependency to be exposed in its real or partially mocked state.
+   * @returns A TestBedBuilder instance for further configuration.
+   * @example
+   * import { TestBed } from '@suites/unit';
+   * import { MyService, AnotherService } from './my-service';
+   *
+   * const { unit, unitRef } = await TestBed.sociable(MyService).expose(AnotherService).compile();
+   * // MyService is now tested with AnotherService exposed and not fully mocked.
+   * @see https://suites.dev/docs/developer-guide/unit-tests
+   * @param dependency
+   */
+  expose(dependency: Type): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass>;
+}
+
+export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {}
 
 /**
  * Provides a reference to mock objects that have been mocked for testing

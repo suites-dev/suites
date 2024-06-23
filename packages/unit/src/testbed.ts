@@ -1,6 +1,10 @@
 import { SuitesDIAdapters, SuitesDoublesAdapters, testBedBuilderFactory } from './testbed-builder';
 import type { Type } from '@nestjs/common';
-import { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/core.unit';
+import {
+  SociableTestBedBuilder as SociableTestBedBuilderCore,
+  SolitaryTestBedBuilder as SolitaryTestBedBuilderCore,
+} from '@suites/core.unit';
+import type { SociableTestBedBuilder, SolitaryTestBedBuilder } from './types';
 
 /**
  * @description
@@ -32,7 +36,7 @@ export class TestBed {
    */
   public static solitary<TClass = any>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
-      SolitaryTestBedBuilder<TClass>
+      SolitaryTestBedBuilderCore<TClass>
     );
   }
 
@@ -67,7 +71,7 @@ export class TestBed {
     targetClass: Type<TClass>
   ): Pick<SociableTestBedBuilder<TClass>, 'expose'> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
-      SociableTestBedBuilder<TClass>
+      SociableTestBedBuilderCore<TClass>
     );
   }
 }

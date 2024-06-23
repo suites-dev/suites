@@ -4,6 +4,7 @@ import type { DeepPartial, Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
 import type { TestBedBuilder } from '@suites/core.unit';
 import type { Mocked as JestMocked } from './types';
+import { mock } from './mock.static';
 
 declare module '@suites/unit' {
   /**
@@ -140,7 +141,9 @@ declare module '@suites/unit' {
       identifierMetadata?: IdentifierMetadata
     ): JestMocked<TDependency>;
   }
+}
 
+declare module '@suites/core.unit' {
   /**
    * Interface to define overrides for mocking dependencies in a test environment.
    *
@@ -172,16 +175,6 @@ declare module '@suites/unit' {
 }
 
 /**
- * Represents a mocked instance of a given type.
- *
- * @since 3.0.0
- * @template TType - The object type being mocked.
- * @see https://jestjs.io/docs/jest-object#jestmockedsource
- * @see https://suites.dev/docs/api-reference
- */
-
-export type Mocked<T> = JestMocked<T>;
-/**
  * Represents a stub function
  *
  * @since 3.0.0
@@ -190,8 +183,18 @@ export type Mocked<T> = JestMocked<T>;
  * @see https://jestjs.io/docs/mock-function-api#jestfnimplementation
  * @see https://suites.dev/docs/api-reference
  */
-
 export type Stub = jest.Mock;
+
+/**
+ * Represents a mocked instance of a given type.
+ *
+ * @since 3.0.0
+ * @template TType - The object type being mocked.
+ * @see https://jestjs.io/docs/jest-object#jestmockedsource
+ * @see https://suites.dev/docs/api-reference
+ */
+export type Mocked<T> = JestMocked<T>;
+
 /**
  * Adapter for a Jest mocking library to be used with Suites framework.
  *
@@ -202,9 +205,6 @@ export type Stub = jest.Mock;
  *
  * const mockedService = adapter.mock<MyService>(MyService);
  */
-export declare const adapter: {
-  mock: <T>(mockImplementation?: DeepPartial<T>) => JestMocked<T>;
-  stub: typeof jest.fn;
-};
+export const adapter = { mock, stub: (): Stub => jest.fn() };
 
 export { mock } from './mock.static';

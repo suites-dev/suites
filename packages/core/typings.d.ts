@@ -1,7 +1,7 @@
 import type { IdentifierMetadata } from '@suites/types.di';
 import type { DeepPartial, Type, ConstantValue, FinalValue } from '@suites/types.common';
-import type { StubFunction } from '@suites/types.doubles';
 import type { UnitReference } from './dist';
+import type { Stub } from '@suites/types.doubles';
 
 /**
  * Represents the outcome when a `TestBedBuilder` is compiled.
@@ -43,7 +43,7 @@ export interface MockOverride<TDependency, TClass> {
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
   using(
-    mockImplementation: (stub: StubFunction) => DeepPartial<TDependency>
+    mockImplementation: (stub: ReturnType<Stub<TDependency, never>>) => DeepPartial<TDependency>
   ): TestBedBuilder<TClass>;
 
   /**

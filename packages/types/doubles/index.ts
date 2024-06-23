@@ -1,5 +1,3 @@
-// @suites/types.doubles
-
 import type { DeepPartial } from '@suites/types.common';
 
 export type ArgsType<T> = T extends (...args: infer A) => any ? A : never;
@@ -22,7 +20,7 @@ export type MockFunction<TType = unknown> = (
   implementation?: DeepPartial<TType>
 ) => StubbedInstance<TType>;
 
-export type StubFunction = () => Stub<unknown, []>;
+export type StubFactory<T = unknown> = () => Stub<T, []>;
 
 export type StubCallback<TDependency> = (stubFn: Stub<TDependency, []>) => DeepPartial<TDependency>;
 

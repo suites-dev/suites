@@ -32,10 +32,16 @@ export class SolitaryTestBedBuilder<TClass>
       }
     );
 
+    const identifiersToFinal: IdentifierToMockOrFinal[] = this.identifiersToBeFinalized.map(
+      ([identifier, finalImpl]: IdentifierToMockOrFinal) => {
+        return [identifier, finalImpl];
+      }
+    );
+
     const { container, instance, resolution } = await this.unitMocker.constructUnit<TClass>(
       this.targetClass,
       [],
-      new DependencyContainer(identifiersToMocksImpls)
+      new DependencyContainer([...identifiersToMocksImpls, ...identifiersToFinal])
     );
 
     if (resolution.notFound.length > 0) {

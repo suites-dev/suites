@@ -5,7 +5,7 @@ import type { DeepPartial, Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
 import type { Mocked as JestMocked } from './types';
 import { mock } from './mock.static';
-import type { TestBedBuilder, MockOverride as MockOverrideCore } from '@suites/core.unit';
+import type { TestBedBuilder } from '@suites/core.unit';
 
 declare module '@suites/unit' {
   /**
@@ -150,7 +150,7 @@ declare module '@suites/unit' {
    * @template TClass The type of the class under test.
    * @see https://suites.dev/api-reference/api/mockoverride-api
    */
-  export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDependency, TClass> {
+  interface MockOverride<TDependency, TClass> {
     /**
      * Specifies the mock implementation to be used for the mocked dependency.
      *
@@ -161,6 +161,15 @@ declare module '@suites/unit' {
     using(
       mockImplementation: (stubFn: jest.Mock<TDependency>) => DeepPartial<TDependency>
     ): TestBedBuilder<TClass>;
+
+    /**
+     * Specifies the final implementation to be used for the mocked dependency.
+     *
+     * @since 3.0.0
+     * @param finalImplementation - The final implementation for the mocked dependency.
+     * @returns `TestBedBuilder` instance for chaining further configuration.
+     */
+    final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
   }
 }
 

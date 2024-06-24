@@ -5,3 +5,5 @@ type MockedProperty<T> = T extends (...args: any[]) => any ? MockFunction<T> : M
 export type Mocked<T> = {
   [Key in keyof T]: MockedProperty<T[Key]>;
 };
+
+export type Stub = jest.Mock;

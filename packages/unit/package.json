@@ -61,7 +61,6 @@
   },
   "files": [
     "dist",
-    "typings.d.ts",
     "README.md"
   ],
   "dependencies": {

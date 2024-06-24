@@ -6,7 +6,7 @@ const filePaths = [
   path.join(__dirname, '..', 'unit', 'dist', 'cjs', 'index.d.ts'),
 ];
 
-const newContent = '/// <reference types="@suites/doubles.jest/sinon" />\n';
+const newContent = '/// <reference types="@suites/doubles.sinon/unit" />\n';
 
 filePaths.forEach((filePath) => {
   fs.readFile(filePath, 'utf8', function (err, data) {

@@ -1,5 +1,6 @@
 /// <reference types="@types/sinon" />
 import { mock } from './mock.static';
+import type { SinonStub } from 'sinon';
 import { stub as sinonStub } from 'sinon';
 export { Mocked, Stub } from './types';
 
@@ -13,7 +14,7 @@ export { Mocked, Stub } from './types';
  *
  * const mockedService = mock<MyService>(MyService);
  */
-export const adapter = { mock, stub: (): jest.Mock => jest.fn() };
+export const adapter = { mock, stub: (): SinonStub => sinonStub() };
 
 export { mock } from './mock.static';
 

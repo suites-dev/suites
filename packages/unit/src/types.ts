@@ -3,6 +3,7 @@ import type { DeepPartial, Type } from '@suites/types.common';
 import type { ArgsType, Stub, StubbedInstance } from '@suites/types.doubles';
 import type {
   SociableTestBedBuilder as SociableTestBedBuilderCore,
+  SolitaryTestBedBuilder as SolitaryTestBedBuilderCore,
   TestBedBuilder as TestBedBuilderCore,
   UnitReference as UnitReferenceCore,
   MockOverride as MockOverrideCore,
@@ -31,7 +32,7 @@ export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCo
   expose(dependency: Type): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass>;
 }
 
-export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {}
+export interface SolitaryTestBedBuilder<TClass> extends SolitaryTestBedBuilderCore<TClass> {}
 
 /**
  * Provides a reference to mock objects that have been mocked for testing
@@ -252,9 +253,7 @@ export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDep
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
   impl(
-    mockImplementation: (
-      stubFn: () => Stub<TDependency, ArgsType<TDependency>>
-    ) => DeepPartial<TDependency>
+    mockImplementation: (stubFn: Stub<any, ArgsType<TDependency>>) => DeepPartial<TDependency>
   ): TestBedBuilder<TClass>;
 
   /**

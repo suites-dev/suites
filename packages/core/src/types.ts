@@ -10,9 +10,7 @@ export interface UnitTestBed<TClass> {
 
 export interface MockOverride<TDependency, TClass> {
   impl(
-    mockImplementation: (
-      stubFn: () => Stub<TDependency, ArgsType<TDependency>>
-    ) => DeepPartial<TDependency>
+    mockImplementation: (stubFn: Stub<any, ArgsType<TDependency>>) => DeepPartial<TDependency>
   ): TestBedBuilder<TClass>;
   final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
 }

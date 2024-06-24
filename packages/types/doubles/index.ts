@@ -1,6 +1,6 @@
 import type { DeepPartial } from '@suites/types.common';
 
-export type ArgsType<T> = T extends (...args: infer A) => any ? A : never;
+export type ArgsType<T> = T extends (...args: infer A) => any ? A : any;
 
 export interface Stub<ReturnType, Args extends any[]> {
   (...args: Args): ReturnType;

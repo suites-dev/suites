@@ -1,4 +1,4 @@
-import type { UnitReference, Mocked, Stub } from '@suites/unit';
+import type { UnitReference, Mocked } from '@suites/unit';
 import { TestBed } from '@suites/unit';
 import type { Logger, TestClassFive } from './e2e-assets';
 import {
@@ -19,8 +19,8 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       NestJSTestClass
     )
       .mock(TestClassOne)
-      .impl((stub: Stub) => ({
-        foo: stub().mockResolvedValue('foo-from-test'),
+      .impl((stubFn) => ({
+        foo: stubFn().mockResolvedValue('foo-from-test'),
         bar(): string {
           return 'bar';
         },
@@ -30,7 +30,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       .mock('UNDEFINED')
       .final({ method: () => 456 })
       .mock<Logger>('LOGGER')
-      .impl((stubFn: Stub) => ({ log: stubFn().mockReturnValue('baz-from-test') }))
+      .impl((stubFn) => ({ log: stubFn().mockReturnValue('baz-from-test') }))
       .mock<TestClassFive>(SymbolToken)
       .final({ doSomething: () => 'mocked' })
       .compile();

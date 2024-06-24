@@ -2,11 +2,16 @@ name: Publish Packages
 env:
   CI: true
 
+permissions:
+  id-token: write
+  contents: write
+
 on:
   workflow_dispatch:
     inputs:
       dist_tag:
         description: 'Distribution Tag'
+        type: choice
         options:
           - 'next'
           - 'latest'
@@ -20,7 +25,6 @@ on:
 jobs:
   e2e:
     name: Build and Test
-    needs: [status-pending]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -128,6 +132,23 @@ jobs:
         run: npx lerna run build
 
       - name: Publish Packages
-        run: npx lerna publish from-tag --yes --dist-tag ${{ github.event.inputs.dist_tag }}
+        run: npx lerna publish from-package --yes --dist-tag ${{ github.event.inputs.dist_tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Find Pull Request
+        uses: juliangruber/find-pull-request-action@v1
+        id: pull-request
+        with:
+          branch: ${{ github.event.inputs.target_branch }}
+
+      - name: Github - Create PR Comment
+        if: steps.pull-request.outputs.pr_found == 'true'
+        uses: actions-ecosystem/action-create-comment@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.pull-request.outputs.number }}
+          body: |
+            **Published packages successfully :tada:** 🚀\
+            **Dist Tag:** ${{ github.event.inputs.dist_tag }}
+            

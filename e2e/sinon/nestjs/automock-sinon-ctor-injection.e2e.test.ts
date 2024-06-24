@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import type { UnitReference, Mocked } from '@suites/unit';
 import { TestBed } from '@suites/unit';
 import type { Logger } from './e2e-assets';

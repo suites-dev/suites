@@ -25,7 +25,6 @@
     "inversify",
     "tsyringe"
   ],
-  "types": "typings.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git",

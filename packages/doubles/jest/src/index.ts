@@ -6,6 +6,7 @@ import type { IdentifierMetadata } from '@suites/types.di';
 import type { Mocked as JestMocked } from './types';
 import { mock } from './mock.static';
 import type { TestBedBuilder } from '@suites/core.unit';
+import '@suites/unit';
 
 declare module '@suites/unit' {
   /**

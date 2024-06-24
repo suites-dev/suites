@@ -210,7 +210,7 @@ export interface TestBed {
    * const { unit, unitRef } = await TestBed.sociable(MyService).expose(AnotherService).compile();
    * // MyService is now tested with AnotherService exposed and not fully mocked.
    */
-  sociable<TClass>(targetClass: Type<TClass>): Pick<SociableTestBedBuilder<TClass>, 'expose'>;
+  sociable<TClass>(targetClass: Type<TClass>): SociableTestBedBuilder<TClass>;
 }
 
 /**

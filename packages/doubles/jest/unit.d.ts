@@ -15,7 +15,7 @@ declare module '@suites/unit' {
    * @see https://jestjs.io/docs/mock-function-api#jestfnimplementation
    * @see https://suites.dev/docs/api-reference
    */
-  export type Stub<T = any, TArgs = any[]> = JestStub<T, TArgs>;
+  export type Stub<T = any, TArgs extends any[] = any[]> = JestStub<T, TArgs>;
 
   /**
    * Represents a mocked instance of a given type.

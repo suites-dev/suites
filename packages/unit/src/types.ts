@@ -32,7 +32,8 @@ export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCo
   expose(dependency: Type): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass>;
 }
 
-export interface SolitaryTestBedBuilder<TClass> extends SolitaryTestBedBuilderCore<TClass> {}
+export type SolitaryTestBedBuilder<TClass> = SolitaryTestBedBuilderCore<TClass> &
+  TestBedBuilder<TClass>;
 
 /**
  * Provides a reference to mock objects that have been mocked for testing

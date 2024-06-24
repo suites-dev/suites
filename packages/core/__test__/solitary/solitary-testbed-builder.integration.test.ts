@@ -40,19 +40,19 @@ describe('Solitary TestBed Builder Integration Test', () => {
     beforeAll(async () => {
       unitTestBed = await underTest
         .mock(ArbitraryClassTwo)
-        .using(() => ({
+        .impl(() => ({
           print: () => 'overridden',
         }))
         .mock(ArbitraryClassFour)
-        .using(() => ({
+        .impl(() => ({
           print: () => 'overridden',
         }))
         .mock('ANOTHER_TOKEN')
-        .using(() => ({
+        .impl(() => ({
           print: () => 'overridden',
         }))
         .mock(symbolIdentifier, { key: 'value' })
-        .using(() => ({
+        .impl(() => ({
           print: () => 'overridden',
         }))
         .mock<string>('STRING_TOKEN')
@@ -101,7 +101,7 @@ describe('Solitary TestBed Builder Integration Test', () => {
     it('should log a warning indicating the dependency was not found when mocking missing dependency', async () => {
       await underTest
         .mock('does-not-exists')
-        .using(() => ({}))
+        .impl(() => ({}))
         .compile();
 
       expect(loggerMock.warn).toHaveBeenCalledWith(

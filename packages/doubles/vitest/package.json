@@ -41,6 +41,7 @@
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
+    "unit.d.ts",
     "dist",
     "postinstall.js"
   ],

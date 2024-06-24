@@ -19,7 +19,7 @@ describe('Suites Jest / NestJS E2E Test Props', () => {
       NestJSTestClassProp
     )
       .mock(TestClassOne)
-      .using((stubFn: Stub) => ({
+      .impl((stubFn: Stub) => ({
         foo: stubFn().mockResolvedValue('foo-from-test'),
       }))
       .mock<string>('CONSTANT_VALUE')

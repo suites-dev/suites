@@ -41,9 +41,9 @@ describe('Social TestBed Builder Integration Tests', () => {
       .expose(HttpClient)
       .expose(DatabaseService)
       .mock(TestLogger)
-      .using((stubFn: Mock) => ({ log: stubFn().mockReturnValue('overridden') }))
+      .impl((stubFn: Mock) => ({ log: stubFn().mockReturnValue('overridden') }))
       .mock(Axios)
-      .using(() => ({}))
+      .impl(() => ({}))
       .mock<string[]>('SOME_VALUE_TOKEN')
       .final(['some value'])
       .compile();
@@ -67,7 +67,7 @@ describe('Social TestBed Builder Integration Tests', () => {
     );
   });
 
-  it('should log messages using the overridden Logger.log method when UserService is initialized', () => {
+  it('should log messages impl the overridden Logger.log method when UserService is initialized', () => {
     const mockedLogger: StubbedInstance<TestLogger> = unitRef.get<TestLogger>(TestLogger);
 
     expect(mockedLogger.log).toHaveBeenNthCalledWith(1, 'Just logging a message');
@@ -148,7 +148,7 @@ describe('Social TestBed Builder Integration Tests', () => {
   it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
     await unitBuilder
       .mock('non-existing-dep')
-      .using(() => ({}))
+      .impl(() => ({}))
       .compile();
 
     expect(loggerMock.warn).toHaveBeenCalledWith(
@@ -159,7 +159,7 @@ describe('Social TestBed Builder Integration Tests', () => {
   it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
     await unitBuilder
       .mock(UserDal)
-      .using(() => ({}))
+      .impl(() => ({}))
       .compile();
 
     expect(loggerMock.warn).toHaveBeenCalledWith(

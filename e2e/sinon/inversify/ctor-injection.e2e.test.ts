@@ -31,22 +31,22 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
       InversifyJSTestClass
     )
       .mock(TestClassOne)
-      .using({
+      .impl({
         foo: stub().resolves('foo-from-test'),
         bar(): string {
           return 'bar';
         },
       })
       .mock<Logger>('LOGGER')
-      .using({ log: () => 'baz-from-test' })
+      .impl({ log: () => 'baz-from-test' })
       .mock('UNDEFINED')
-      .using({ method: () => 456 })
+      .impl({ method: () => 456 })
       .mock<Bar>('BarToken', { name: 'someTarget' })
-      .using({})
+      .impl({})
       .mock<string>('CONSTANT_VALUE')
-      .using('arbitrary-string')
+      .impl('arbitrary-string')
       .mock<TestClassFive>(SymbolToken)
-      .using({ doSomething: () => 'mocked' })
+      .impl({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;

@@ -22,7 +22,7 @@ describe('Suites Vitest / NestJS E2E Test Ctor', () => {
   beforeAll(async () => {
     const { unitRef: ref, unit: underTest } = await TestBed.solitary(NestJSTestClass)
       .mock(TestClassOne)
-      .using({
+      .impl({
         async foo(): Promise<string> {
           return 'foo-from-test';
         },
@@ -31,13 +31,13 @@ describe('Suites Vitest / NestJS E2E Test Ctor', () => {
         },
       })
       .mock<string>('CONSTANT_VALUE')
-      .using('arbitrary-string')
+      .impl('arbitrary-string')
       .mock('UNDEFINED')
-      .using({ method: () => 456 })
+      .impl({ method: () => 456 })
       .mock<Logger>('LOGGER')
-      .using({ log: () => 'baz-from-test' })
+      .impl({ log: () => 'baz-from-test' })
       .mock<TestClassFive>(SymbolToken)
-      .using({ doSomething: () => 'mocked' })
+      .impl({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;

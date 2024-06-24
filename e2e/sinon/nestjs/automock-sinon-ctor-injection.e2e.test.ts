@@ -31,20 +31,20 @@ describe('Suites Sinon / NestJS E2E Test Ctor', () => {
       NestJSTestClass
     )
       .mock(TestClassOne)
-      .using({
+      .impl({
         foo: stub().resolves('foo-from-test'),
         bar(): string {
           return 'bar';
         },
       })
       .mock<string>('CONSTANT_VALUE')
-      .using('arbitrary-string')
+      .impl('arbitrary-string')
       .mock('UNDEFINED')
-      .using({ method: () => 456 })
+      .impl({ method: () => 456 })
       .mock<Logger>('LOGGER')
-      .using({ log: () => 'baz-from-test' })
+      .impl({ log: () => 'baz-from-test' })
       .mock<TestClassFive>(SymbolToken)
-      .using({ doSomething: () => 'mocked' })
+      .impl({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;

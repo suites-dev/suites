@@ -61,7 +61,7 @@ export class TestBed {
    *   .expose(DependencyOne)
    *   .expose(DependencyTwo)
    *   .mock(Logger)
-   *   .using({ log: jest.fn().mockReturnValue('overridden') })
+   *   .impl({ log: jest.fn().mockReturnValue('overridden') })
    *   .compile();
    *
    * @see https://suites.dev/docs/developer-guide/unit-tests

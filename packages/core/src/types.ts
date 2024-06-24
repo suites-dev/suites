@@ -9,6 +9,6 @@ export interface UnitTestBed<TClass> {
 }
 
 export interface MockOverride<TDependency, TClass> {
-  using(mockImplementation: StubCallback<TDependency>): TestBedBuilder<TClass>;
+  impl(mockImplementation: StubCallback<TDependency>): TestBedBuilder<TClass>;
   final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
 }

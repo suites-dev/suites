@@ -67,13 +67,13 @@ describe('Unit Reference Unit Spec', () => {
     ['CONSTANT_VALUE', ['1', '2', '3']],
     [ConstantValueSymbol, [1, 2, 3]],
   ])(
-    'should return the corresponding class or value using unique identifier with no metadata',
+    'should return the corresponding class or value impl unique identifier with no metadata',
     (identifier: InjectableIdentifier, value: StubbedInstance<unknown> | ConstantValue) => {
       expect(unitReference.get(identifier)).toEqual(value);
     }
   );
 
-  it('should return the corresponding class or value using unique identifier with metadata combined', () => {
+  it('should return the corresponding class or value impl unique identifier with metadata combined', () => {
     expect(
       unitReference.get<DependencyTwoStubbed>('DEPENDENCY_TWO', {
         dependency: 'two' as never,

@@ -178,7 +178,7 @@ declare module '@suites/unit' {
      * @param mockImplementation - The mock implementation for the mocked dependency.
      * @returns `TestBedBuilder` instance for chaining further configuration.
      */
-    using(mockImplementation: (stubFn: Stub) => DeepPartial<TDependency>): TestBedBuilder<TClass>;
+    impl(mockImplementation: (stubFn: Stub) => DeepPartial<TDependency>): TestBedBuilder<TClass>;
 
     /**
      * Specifies the final implementation to be used for the mocked dependency.

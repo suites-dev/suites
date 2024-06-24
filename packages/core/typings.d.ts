@@ -42,7 +42,7 @@ export interface MockOverride<TDependency, TClass> {
    * @template TDependency The type of the dependency being mocked.
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
-  using(
+  impl(
     mockImplementation: (stub: ReturnType<Stub<TDependency, never>>) => DeepPartial<TDependency>
   ): TestBedBuilder<TClass>;
 
@@ -66,7 +66,7 @@ export interface MockOverride<TDependency, TClass> {
  */
 export interface TestBedBuilder<TClass> {
   /**
-   * Declares a dependency to be mocked using its type.
+   * Declares a dependency to be mocked impl its type.
    *
    * @since 3.0.0
    * @see https://suites.dev/docs/api-reference
@@ -77,7 +77,7 @@ export interface TestBedBuilder<TClass> {
   mock<TDependency>(type: Type<TDependency>): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using its type along with a corresponding metadata object.
+   * Declares a dependency to be mocked impl its type along with a corresponding metadata object.
    *
    * @since 3.0.0
    * @see https://suites.dev/docs/api-reference
@@ -92,7 +92,7 @@ export interface TestBedBuilder<TClass> {
   ): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using a string-based token.
+   * Declares a dependency to be mocked impl a string-based token.
    *
    * @since 3.0.0
    * @see https://suites.dev/docs/api-reference
@@ -103,7 +103,7 @@ export interface TestBedBuilder<TClass> {
   mock<TDependency>(token: string): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using a string-based token along with a
+   * Declares a dependency to be mocked impl a string-based token along with a
    * corresponding metadata object.
    *
    * @since 3.0.0
@@ -119,7 +119,7 @@ export interface TestBedBuilder<TClass> {
   ): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using a symbol-based token.
+   * Declares a dependency to be mocked impl a symbol-based token.
    *
    * @since 3.0.0
    * @see https://suites.dev/docs/api-reference
@@ -130,7 +130,7 @@ export interface TestBedBuilder<TClass> {
   mock<TDependency>(token: symbol): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using a symbol-based token along with a
+   * Declares a dependency to be mocked impl a symbol-based token along with a
    * corresponding metadata object.
    *
    * @since 3.0.0
@@ -146,7 +146,7 @@ export interface TestBedBuilder<TClass> {
   ): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using a symbol-based token along with a
+   * Declares a dependency to be mocked impl a symbol-based token along with a
    * corresponding metadata object.
    *
    * @since 3.0.0

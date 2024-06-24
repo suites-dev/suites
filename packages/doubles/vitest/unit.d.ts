@@ -174,7 +174,7 @@ declare module '@suites/unit' {
      * @returns `TestBedBuilder` instance for chaining further configuration.
      */
     impl(
-      mockImplementation: (stubFn: Stub<TDependency>) => DeepPartial<TDependency>
+      mockImplementation: (stubFn: () => Stub<TDependency>) => DeepPartial<TDependency>
     ): TestBedBuilder<TClass>;
 
     /**

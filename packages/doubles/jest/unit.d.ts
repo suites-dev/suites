@@ -179,7 +179,7 @@ declare module '@suites/unit' {
      */
     impl(
       mockImplementation: (
-        stubFn: () => Stub<TDependency, ArgsType<TDependency>>
+        stubFn: () => Stub<any, ArgsType<TDependency>>
       ) => DeepPartial<TDependency>
     ): TestBedBuilder<TClass>;
 

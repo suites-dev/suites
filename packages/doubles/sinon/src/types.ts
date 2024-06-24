@@ -8,4 +8,4 @@ export type Mocked<T> = {
   [Key in keyof T]: MockedProperty<T[Key]>;
 };
 
-export type Stub<TReturn = any> = SinonStub<any[], TReturn>;
+export type Stub<TArgs extends any[] = any[]> = SinonStub<TArgs>;

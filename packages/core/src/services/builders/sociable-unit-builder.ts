@@ -8,7 +8,7 @@ import type { UnitTestBed } from '../../types';
 import { TestBedBuilder } from './testbed-builder';
 
 export interface SociableTestBedBuilder<TClass> {
-  expose(dependency: Type): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass>;
+  expose(dependency: Type): SociableTestBedBuilder<TClass>;
 }
 
 export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {

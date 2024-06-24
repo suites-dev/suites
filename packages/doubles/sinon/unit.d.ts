@@ -3,6 +3,7 @@ import type { DeepPartial, Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
 import type { Mocked as SinonMocked, Stub as SinonStub } from '@suites/doubles.sinon';
 import type { TestBedBuilder } from '@suites/core.unit';
+import type { ArgsType } from '@suites/types.doubles';
 
 declare module '@suites/unit' {
   /**
@@ -177,8 +178,9 @@ declare module '@suites/unit' {
      * @param mockImplementation - The mock implementation for the mocked dependency.
      * @returns `TestBedBuilder` instance for chaining further configuration.
      */
-    impl(mockImplementation: (stubFn: Stub) => DeepPartial<TDependency>): TestBedBuilder<TClass>;
-
+    impl(
+      mockImplementation: (stubFn: () => Stub<ArgsType<TDependency>>) => DeepPartial<TDependency>
+    ): TestBedBuilder<TClass>;
     /**
      * Specifies the final implementation to be used for the mocked dependency.
      *

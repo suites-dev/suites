@@ -10,7 +10,7 @@ const filePaths = [
   path.join(__dirname, '..', 'unit', 'dist', 'cjs', 'index.d.ts'),
 ];
 
-const newContent = '/// <reference types="@suites/doubles.jest/vitest" />\n';
+const newContent = '/// <reference types="@suites/doubles.vitest/unit" />\n';
 
 filePaths.forEach((filePath) => {
   if (!fs.existsSync(filePath)) {

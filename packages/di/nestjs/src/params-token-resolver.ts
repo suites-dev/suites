@@ -48,7 +48,7 @@ export const ParamsTokensReflector = (function (): ParamsTokensReflector {
 dependency at index [${index}].
 This issue is commonly caused by either improper parameter decoration or a problem during the reflection of
 the parameter type. In some cases, this error may arise due to circular dependencies. If this is the case,
-please ensure that the circular dependency is resolved, or consider impl 'forwardRef()' to address it.`);
+please ensure that the circular dependency is resolved, or consider using 'forwardRef()' to address it.`);
       }
 
       const ref = resolveReferenceCallbackFromToken(token);

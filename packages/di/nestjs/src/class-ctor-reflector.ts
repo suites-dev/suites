@@ -24,7 +24,7 @@ export function ClassCtorReflector(
 dependency at index [${paramIndex}] in the class '${targetClass.name}'.
 This issue is commonly caused by either improper parameter decoration or a problem during the reflection of
 the parameter type. In some cases, this error may arise due to circular dependencies. If this is the case,
-please ensure that the circular dependency is resolved, or consider impl 'forwardRef()' to address it.`);
+please ensure that the circular dependency is resolved, or consider using 'forwardRef()' to address it.`);
 
       if (isToken) {
         try {

@@ -4,7 +4,7 @@ import { IdentifierBuilder } from './identifier-builder.static';
 class ArbitraryFakeClass {}
 
 describe('Identifier Builder Unit Spec', () => {
-  it('should return an identifier object with identifier and metadata when impl inject decorator', () => {
+  it('should return an identifier object with identifier and metadata when using inject decorator', () => {
     const inversifyInjectableMetadataItems = [
       { key: 'inject', value: ArbitraryFakeClass },
       { key: 'metadataKey', value: 'metadataValue' },
@@ -23,7 +23,7 @@ describe('Identifier Builder Unit Spec', () => {
     });
   });
 
-  it('should return an identifier object with identifier and metadata when impl multi inject decorator', () => {
+  it('should return an identifier object with identifier and metadata when using multi inject decorator', () => {
     const inversifyInjectableMetadataItems = [
       { key: 'multi_inject', value: ArbitraryFakeClass },
       { key: 'metadataKey', value: 'metadataValue' },

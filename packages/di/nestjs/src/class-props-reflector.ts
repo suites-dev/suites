@@ -26,7 +26,7 @@ export function ClassPropsReflector(
         throw new UndefinedDependencyError(`Suites encountered an error while attempting to detect a token or type for the dependency for property '${key}' in the class '${targetClass.name}'.
 This issue is commonly caused by either improper decoration of the property or a problem during the reflection of the parameter type.
 In some cases, this error may arise due to circular dependencies. If this is the case, please ensure that the circular dependency
-is resolved, or consider impl 'forwardRef()' to address it.`);
+is resolved, or consider using 'forwardRef()' to address it.`);
       }
 
       for (const strategy of reflectionStrategies) {

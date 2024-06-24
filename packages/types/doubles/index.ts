@@ -20,11 +20,11 @@ export type MockFunction<TType = unknown> = (
   implementation?: DeepPartial<TType>
 ) => StubbedInstance<TType>;
 
-export type StubCallback<TDependency> = (
-  stubFn: Stub<TDependency, any>
-) => DeepPartial<TDependency>;
+export type StubCallback<TType extends (...args: any) => any> = (
+  stubFn: Stub<ReturnType<TType>, any>
+) => DeepPartial<TType>;
 
 export type DoublesAdapter = {
   mock: MockFunction;
-  stub: StubCallback<unknown>;
+  stub: StubCallback<never>;
 };

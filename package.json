@@ -21,7 +21,6 @@
     }
   ],
   "scripts": {
-    "e2e:local": "sh ./local-e2e.sh",
     "build": "yarn lerna run build",
     "test": "yarn lerna exec yarn test",
     "lint": "yarn lerna run lint --parallel",

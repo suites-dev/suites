@@ -6,4 +6,4 @@ export type Mocked<T> = {
   [Key in keyof T]: MockedProperty<T[Key]>;
 };
 
-export type Stub = jest.Mock;
+export type Stub<T = any> = jest.Mock<T>;

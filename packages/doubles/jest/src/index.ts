@@ -25,4 +25,3 @@ export { mock } from './mock.static';
  * @see https://suites.dev/docs/api-reference
  */
 export const stub = jest.fn();
-

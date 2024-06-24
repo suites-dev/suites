@@ -14,7 +14,7 @@ declare module '@suites/unit' {
    * @alias SinonStub - A stub function that replaces the original function.
    * @see https://suites.dev/docs/api-reference
    */
-  export type Stub = SinonStub;
+  export type Stub<TReturn> = SinonStub<TReturn>;
 
   /**
    * Represents a mocked instance of a given type.

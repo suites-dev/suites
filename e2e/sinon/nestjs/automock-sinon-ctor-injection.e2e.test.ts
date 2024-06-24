@@ -19,7 +19,6 @@ import { expect } from 'chai';
 import { before } from 'mocha';
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { stub } from 'sinon';
 chai.use(chaiAsPromised);
 
 describe('Suites Sinon / NestJS E2E Test Ctor', () => {
@@ -31,20 +30,20 @@ describe('Suites Sinon / NestJS E2E Test Ctor', () => {
       NestJSTestClass
     )
       .mock(TestClassOne)
-      .impl({
-        foo: stub().resolves('foo-from-test'),
+      .impl((stubFn) => ({
+        foo: stubFn().resolves('foo-from-test'),
         bar(): string {
           return 'bar';
         },
-      })
+      }))
       .mock<string>('CONSTANT_VALUE')
-      .impl('arbitrary-string')
+      .final('arbitrary-string')
       .mock('UNDEFINED')
-      .impl({ method: () => 456 })
+      .final({ method: () => 456 })
       .mock<Logger>('LOGGER')
-      .impl({ log: () => 'baz-from-test' })
+      .final({ log: () => 'baz-from-test' })
       .mock<TestClassFive>(SymbolToken)
-      .impl({ doSomething: () => 'mocked' })
+      .final({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;

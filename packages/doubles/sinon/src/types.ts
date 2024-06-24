@@ -1,6 +1,6 @@
 import type { SinonStub } from 'sinon';
 
-type MockFunction<T extends (...args: any[]) => any> = SinonStub<ReturnType<T>, Parameters<T>> & T;
+type MockFunction<T extends (...args: any[]) => any> = SinonStub<Parameters<T>, ReturnType<T>>;
 
 type MockedProperty<T> = T extends (...args: any[]) => any ? MockFunction<T> : Mocked<T>;
 

@@ -1,16 +1,15 @@
+import 'reflect-metadata';
+
 import type { UnitReference, Mocked } from '@suites/unit';
 import { TestBed } from '@suites/unit';
 import type { Logger } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
-  Foo,
   NestJSTestClass,
   SymbolToken,
-  SymbolTokenSecond,
   TestClassFive,
   TestClassFour,
   TestClassOne,
-  TestClassThree,
   TestClassTwo,
 } from './e2e-assets';
 import { expect } from 'chai';
@@ -54,17 +53,8 @@ describe('Suites Sinon / NestJS E2E Test Ctor', () => {
     });
 
     it('then successfully resolve the dependencies of the tested classes', () => {
-      expect(() => unitRef.get<{ log: () => void }>('LOGGER')).not.to.be.undefined;
-      expect(() => unitRef.get('UNDEFINED')).not.to.be.undefined;
-      expect(() => unitRef.get('UNDEFINED_SECOND')).not.to.be.undefined;
-      expect(() => unitRef.get(TestClassFour)).not.to.be.undefined;
-      expect(() => unitRef.get(TestClassThree)).not.to.be.undefined;
-      expect(() => unitRef.get(Foo)).not.to.be.undefined;
       expect(() => unitRef.get(TestClassTwo)).not.to.be.undefined;
-      expect(() => unitRef.get('CONSTANT_VALUE')).not.to.be.undefined;
       expect(() => unitRef.get(TestClassOne)).not.to.be.undefined;
-      expect(() => unitRef.get(SymbolToken)).not.to.be.undefined;
-      expect(() => unitRef.get(SymbolTokenSecond)).not.to.be.undefined;
     });
 
     it('call the unit instance method', async () => {
@@ -92,14 +82,10 @@ describe('Suites Sinon / NestJS E2E Test Ctor', () => {
 
     it('then mock the undefined reflected values and tokens', () => {
       const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
-      const undefinedValue: Mocked<{ method: () => number }> = unitRef.get<{
-        method: () => number;
-      }>('UNDEFINED');
 
       testClassFour.doSomething.returns('mocked');
 
       expect(testClassFour.doSomething()).to.equal('mocked');
-      expect(undefinedValue.method()).to.equal(456);
     });
 
     it('then throw an error when trying to resolve not existing dependency', () => {

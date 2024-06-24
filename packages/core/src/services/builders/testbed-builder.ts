@@ -1,9 +1,9 @@
 import type { IdentifierToFinal, IdentifierToMockImplWithCb } from '../dependency-container';
-import type { FinalValue, Type } from '@suites/types.common';
+import type { DeepPartial, FinalValue, Type } from '@suites/types.common';
 import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
 import { normalizeIdentifier } from '../../normalize-identifier.static';
 import type { MockOverride, UnitTestBed } from '../../types';
-import type { StubCallback } from '@suites/types.doubles';
+import type { ArgsType, Stub } from '@suites/types.doubles';
 
 export abstract class TestBedBuilder<TClass> implements TestBedBuilder<TClass> {
   protected readonly identifiersToBeMocked: IdentifierToMockImplWithCb[] = [];
@@ -33,7 +33,11 @@ export abstract class TestBedBuilder<TClass> implements TestBedBuilder<TClass> {
     metadata?: IdentifierMetadata
   ): MockOverride<TDependency, TClass> {
     return {
-      impl: (mockImplementation: StubCallback<never>): TestBedBuilder<TClass> => {
+      impl: (
+        mockImplementation: (
+          stubFn: () => Stub<TDependency, ArgsType<TDependency>>
+        ) => DeepPartial<TDependency>
+      ): TestBedBuilder<TClass> => {
         this.identifiersToBeMocked.push([
           normalizeIdentifier(identifier, metadata as never),
           mockImplementation,

@@ -1,2 +1,2 @@
 export { TestBed } from './testbed';
-export { UnitTestBed, TestBedBuilder } from './types';
+export { UnitTestBed, TestBedBuilder, MockOverride } from './types';

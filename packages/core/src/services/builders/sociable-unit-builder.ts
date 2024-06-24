@@ -30,11 +30,11 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
 
   public async compile(): Promise<UnitTestBed<TClass>> {
     const mockFn = await this.doublesAdapter.then((adapter) => adapter.mock);
-    const stubFn = await this.doublesAdapter.then((adapter) => adapter.stub);
+    const stubCb = await this.doublesAdapter.then((adapter) => adapter.stub);
 
     const identifiersToMocks: IdentifierToMockOrFinal[] = this.identifiersToBeMocked.map(
       ([identifier, mockImplCallback]) => {
-        return [identifier, mockFn(mockImplCallback(stubFn))];
+        return [identifier, mockFn(mockImplCallback(stubCb))];
       }
     );
 

@@ -3,6 +3,7 @@ import type { DeepPartial, Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
 import type { TestBedBuilder } from '@suites/core.unit';
 import type { Mocked as JestMocked, Stub as JestStub } from '@suites/doubles.jest';
+import type { ArgsType } from '@suites/types.doubles';
 
 declare module '@suites/unit' {
   /**
@@ -14,7 +15,7 @@ declare module '@suites/unit' {
    * @see https://jestjs.io/docs/mock-function-api#jestfnimplementation
    * @see https://suites.dev/docs/api-reference
    */
-  export type Stub<T = any> = JestStub<T>;
+  export type Stub<T = any, TArgs = any[]> = JestStub<T, TArgs>;
 
   /**
    * Represents a mocked instance of a given type.
@@ -177,7 +178,9 @@ declare module '@suites/unit' {
      * @returns `TestBedBuilder` instance for chaining further configuration.
      */
     impl(
-      mockImplementation: (stubFn: Stub<TDependency>) => DeepPartial<TDependency>
+      mockImplementation: (
+        stubFn: () => Stub<TDependency, ArgsType<TDependency>>
+      ) => DeepPartial<TDependency>
     ): TestBedBuilder<TClass>;
 
     /**

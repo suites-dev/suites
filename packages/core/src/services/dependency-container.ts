@@ -1,7 +1,7 @@
 import isEqual from 'lodash.isequal';
 import type { ClassInjectable, IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
-import type { StubbedInstance, StubCallback } from '@suites/types.doubles';
-import type { ConstantValue, FinalValue } from '@suites/types.common';
+import type { Stub, StubbedInstance } from '@suites/types.doubles';
+import type { ConstantValue, DeepPartial, FinalValue } from '@suites/types.common';
 
 export type IdentifierToMockOrFinal = [
   Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },
@@ -15,7 +15,7 @@ export type IdentifierToFinal = [
 
 export type IdentifierToMockImplWithCb = [
   Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },
-  StubCallback<never>,
+  (stubFn: () => Stub<unknown, any[]>) => DeepPartial<unknown>,
 ];
 
 export interface DependencyContainer {

@@ -169,7 +169,7 @@ declare module '@suites/unit' {
    * @template TClass The type of the class under test.
    * @see https://suites.dev/api-reference/api/mockoverride-api
    */
-  interface MockOverride<TDependency, TClass> {
+  export interface MockOverride<TDependency, TClass> {
     /**
      * Specifies the mock implementation to be used for the mocked dependency.
      *

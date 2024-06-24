@@ -15,7 +15,7 @@ export type IdentifierToFinal = [
 
 export type IdentifierToMockImplWithCb = [
   Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },
-  StubCallback<unknown>,
+  StubCallback<never>,
 ];
 
 export interface DependencyContainer {

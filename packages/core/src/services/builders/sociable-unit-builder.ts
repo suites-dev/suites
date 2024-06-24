@@ -1,22 +1,21 @@
-import type { MockFunction } from '@suites/types.doubles';
-import type { Type, ConstantValue } from '@suites/types.common';
+import type { DoublesAdapter } from '@suites/types.doubles';
+import type { Type } from '@suites/types.common';
 import { UnitReference } from '../unit-reference';
 import type { UnitMocker } from '../unit-mocker';
-import type { IdentifierToDependency } from '../dependency-container';
+import type { IdentifierToMockOrFinal } from '../dependency-container';
 import { DependencyContainer } from '../dependency-container';
-import { isConstantValue } from '../functions.static';
-import { TestBedBuilder } from '../../types';
 import type { UnitTestBed } from '../../types';
+import { TestBedBuilder } from './testbed-builder';
 
 export interface SociableTestBedBuilder<TClass> {
-  expose(dependency: Type): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass>;
+  expose(dependency: Type): SociableTestBedBuilder<TClass>;
 }
 
 export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
   private readonly classesToExpose: Type[] = [];
 
   public constructor(
-    private readonly mockFn: Promise<MockFunction<unknown>>,
+    private readonly doublesAdapter: Promise<DoublesAdapter>,
     private readonly unitMocker: UnitMocker,
     private readonly targetClass: Type<TClass>,
     private readonly logger: Console
@@ -30,15 +29,12 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
   }
 
   public async compile(): Promise<UnitTestBed<TClass>> {
-    const mockFn = await this.mockFn;
+    const mockFn = await this.doublesAdapter.then((adapter) => adapter.mock);
+    const stubCb = await this.doublesAdapter.then((adapter) => adapter.stub);
 
-    const identifiersToMocks: IdentifierToDependency[] = this.identifiersToBeMocked.map(
-      ([identifier, valueToMock]) => {
-        if (isConstantValue(valueToMock)) {
-          return [identifier, valueToMock as ConstantValue];
-        }
-
-        return [identifier, mockFn(valueToMock)];
+    const identifiersToMocks: IdentifierToMockOrFinal[] = this.identifiersToBeMocked.map(
+      ([identifier, mockImplCallback]) => {
+        return [identifier, mockFn(mockImplCallback(stubCb))];
       }
     );
 
@@ -74,7 +70,7 @@ For detailed instructions and best practices, refer to our documentation: https:
 
     return {
       unit: instance as TClass,
-      unitRef: new UnitReference(container, this.classesToExpose),
+      unitRef: new UnitReference(container, this.classesToExpose, this.identifiersToBeFinalized),
     };
   }
 }

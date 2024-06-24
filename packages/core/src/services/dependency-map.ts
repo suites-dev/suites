@@ -1,10 +1,10 @@
 import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
-import type { ConstantValue, Type } from '@suites/types.common';
+import type { FinalValue, Type } from '@suites/types.common';
 import type { StubbedInstance } from '@suites/types.doubles';
-import type { IdentifierToDependency } from './dependency-container';
+import type { IdentifierToMockOrFinal } from './dependency-container';
 
 export class DependencyMap {
-  private readonly resolvedDependencies: IdentifierToDependency[] = [];
+  private readonly resolvedDependencies: IdentifierToMockOrFinal[] = [];
 
   public has(identifier: InjectableIdentifier): boolean {
     return this.resolvedDependencies.some(([{ identifier: resolvedId }]) => {
@@ -14,7 +14,7 @@ export class DependencyMap {
 
   public set(
     identifier: InjectableIdentifier,
-    value: Type | StubbedInstance<unknown> | ConstantValue,
+    value: Type | StubbedInstance<unknown> | FinalValue,
     metadata?: IdentifierMetadata
   ): void {
     this.resolvedDependencies.push([{ identifier, metadata: metadata as never }, value]);
@@ -22,13 +22,13 @@ export class DependencyMap {
 
   public get(
     identifier: InjectableIdentifier
-  ): Type | StubbedInstance<unknown> | ConstantValue | undefined {
+  ): Type | StubbedInstance<unknown> | FinalValue | undefined {
     return this.resolvedDependencies.find(([{ identifier: resolvedId }]) => {
       return identifier === resolvedId;
     })?.[1];
   }
 
-  public entries(): IdentifierToDependency[] {
+  public entries(): IdentifierToMockOrFinal[] {
     return this.resolvedDependencies;
   }
 }

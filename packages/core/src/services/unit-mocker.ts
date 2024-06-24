@@ -1,6 +1,6 @@
 import type { MockFunction } from '@suites/types.doubles';
 import type { DependencyInjectionAdapter } from '@suites/types.di';
-import type { IdentifierToDependency } from './dependency-container';
+import type { IdentifierToMockOrFinal } from './dependency-container';
 import { DependencyContainer } from './dependency-container';
 import type { Type } from '@suites/types.common';
 import { DependencyResolver } from './dependency-resolver';
@@ -9,7 +9,7 @@ export interface MockedUnit<TClass> {
   container: DependencyContainer;
   instance: TClass;
   resolution: {
-    notFound: IdentifierToDependency[];
+    notFound: IdentifierToMockOrFinal[];
     mocks: { metadata?: unknown; identifier: Type }[];
     exposes: Type[];
   };
@@ -17,7 +17,7 @@ export interface MockedUnit<TClass> {
 
 export class UnitMocker {
   public constructor(
-    private readonly mockFunction: Promise<MockFunction<unknown>>,
+    private readonly mockFunction: Promise<MockFunction>,
     private readonly diAdapter: Promise<DependencyInjectionAdapter>
   ) {}
 
@@ -36,7 +36,7 @@ export class UnitMocker {
     const instance = dependencyResolver.instantiateClass(targetClass);
 
     const identifierToDependency = Array.from(dependencyResolver.getResolvedDependencies())
-      .map(([identifier, value]) => [identifier, value] as IdentifierToDependency)
+      .map(([identifier, value]) => [identifier, value] as IdentifierToMockOrFinal)
       .filter(([{ identifier }]) => identifier !== targetClass);
 
     return {

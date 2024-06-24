@@ -1,167 +1,27 @@
 /// <reference types="jest" />
-/// <reference types="@suites/unit" />
-import type { Type } from '@suites/types.common';
-import type { IdentifierMetadata } from '@suites/types.di';
 import { mock } from './mock.static';
-
-declare module '@suites/unit' {
-  /**
-   * The UnitReference interface represents a reference to a unit object.
-   * It provides methods to retrieve mocked objects of dependencies based
-   * on their type or identifier. This extension integrates Jest mocking capabilities.
-   *
-   * @since 3.0.0
-   * @see https://suites.dev/docs/api-reference
-   */
-  export interface UnitReference {
-    /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to a
-     * string-based token.
-     *
-     * @since 3.0.0
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The string-based token representing the dependency.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {jest.Mocked<TDependency>} The mocked object corresponding to the provided string-based token.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>('MY_SERVICE_TOKEN');
-     */
-    get<TDependency>(token: string): jest.Mocked<TDependency>;
-
-    /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to its
-     * string-based identifier and the identifier metadata.
-     *
-     * @since 3.0.0
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The string-based token representing the dependency.
-     * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {jest.Mocked<TDependency>} The mocked object corresponding to the provided string-based token and identifier metadata.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>('MY_SERVICE_TOKEN', metadata);
-     */
-    get<TDependency>(
-      token: string,
-      identifierMetadata: IdentifierMetadata
-    ): jest.Mocked<TDependency>;
-
-    /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to a
-     * symbol-based token.
-     *
-     * @since 3.0.0
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The symbol-based token representing the dependency.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {jest.Mocked<TDependency>} The mocked object corresponding to the provided symbol-based token.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>(MY_SERVICE_SYMBOL);
-     */
-    get<TDependency>(token: symbol): jest.Mocked<TDependency>;
-
-    /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to its
-     * symbol-based identifier and the identifier metadata.
-     *
-     * @since 3.0.0
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The symbol-based token representing the dependency.
-     * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {jest.Mocked<TDependency>} The mocked object corresponding to the provided symbol-based token and identifier metadata.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>(MY_SERVICE_SYMBOL, metadata);
-     */
-    get<TDependency>(
-      token: symbol,
-      identifierMetadata: IdentifierMetadata
-    ): jest.Mocked<TDependency>;
-    /**
-     * Retrieves a reference to the mocked object of a dependency corresponding
-     * to its type identifier.
-     *
-     * @since 3.0.0
-     * @template TDependency The type of the dependency being retrieved.
-     * @param type The type representing the dependency.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {jest.Mocked<TDependency>} The mocked object corresponding to the provided type identifier.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>(MyService);
-     */
-    get<TDependency>(type: Type<TDependency>): jest.Mocked<TDependency>;
-
-    /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to its
-     * type identifier and the identifier metadata.
-     *
-     * @since 3.0.0
-     * @template TDependency The type of the dependency being retrieved.
-     * @param type The type representing the dependency.
-     * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {jest.Mocked<TDependency>} The mocked object corresponding to the provided type identifier and identifier metadata.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>(MyService, metadata);
-     */
-    get<TDependency>(
-      type: Type<TDependency>,
-      identifierMetadata: IdentifierMetadata
-    ): jest.Mocked<TDependency>;
-
-    /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to its
-     * type, string-based or symbol-based identifier and the identifier metadata if present.
-     *
-     * @since 3.0.0
-     * @template TDependency The type of the dependency being retrieved.
-     * @param identifier The type or token that the dependency corresponds to.
-     * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {jest.Mocked<TDependency>} The mocked object corresponding to the provided identifier, along with any available identifier metadata.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>(MyService, metadata);
-     * // or
-     * const mockedService = unitRef.get<MyService>('MY_SERVICE_TOKEN');
-     * // or
-     * const mockedService = unitRef.get<MyService>(MY_SERVICE_SYMBOL, metadata);
-     */
-    get<TDependency>(
-      identifier: Type<TDependency> | string | symbol,
-      identifierMetadata?: IdentifierMetadata
-    ): jest.Mocked<TDependency>;
-  }
-}
-
-export { mock } from './mock.static';
-
-/**
- * Represents a mocked instance of a given type.
- *
- * @since 3.0.0
- * @alias jest.Mocked - An instance of a stubbed object type with
- * functions replaced by stubs.
- * @template TType - The object type being mocked.
- * @see https://jestjs.io/docs/jest-object#jestmockedsource
- * @see https://suites.dev/docs/api-reference
- */
-export type Mocked<TType> = jest.Mocked<TType>;
-
+export { Mocked, Stub } from './types';
 /**
  * Adapter for a Jest mocking library to be used with Suites framework.
  *
  * @see https://suites.dev/docs/api-reference
  * @since 3.0.0
  * @example
- * import { adapter as mock } from '@suites/doubles.jest';
+ * import { adapter } from '@suites/doubles.jest';
  *
- * const mockedService = mock<MyService>(MyService);
+ * const mockedService = adapter.mock<MyService>(MyService);
  */
-export const adapter = mock;
+export const adapter = { mock, stub: (): jest.Mock => jest.fn() };
+
+export { mock } from './mock.static';
+
+/**
+ * Represents a stub function
+ *
+ * @since 3.0.0
+ * functions replaced by stubs.
+ * @alias jest.fn
+ * @see https://jestjs.io/docs/mock-function-api#jestfnimplementation
+ * @see https://suites.dev/docs/api-reference
+ */
+export const stub = jest.fn();

@@ -1,4 +1,4 @@
-import type { ConstantValue, Type } from '@suites/types.common';
+import type { FinalValue, Type } from '@suites/types.common';
 import type { MockFunction, StubbedInstance } from '@suites/types.doubles';
 import type {
   ClassInjectable,
@@ -7,7 +7,7 @@ import type {
   InjectableIdentifier,
   WithMetadata,
 } from '@suites/types.di';
-import type { DependencyContainer, IdentifierToDependency } from './dependency-container';
+import type { DependencyContainer, IdentifierToMockOrFinal } from './dependency-container';
 import { DependencyMap } from './dependency-map';
 
 export class DependencyResolver {
@@ -18,7 +18,7 @@ export class DependencyResolver {
     private readonly classesToExpose: Type[],
     private readonly mockedFromBeforeContainer: DependencyContainer,
     private readonly adapter: DependencyInjectionAdapter,
-    private readonly mockFunction: MockFunction<unknown>
+    private readonly mockFunction: MockFunction
   ) {}
 
   public isLeafOrPrimitive(identifier: InjectableIdentifier): boolean {
@@ -31,9 +31,9 @@ export class DependencyResolver {
   public resolveOrMock(
     identifier: InjectableIdentifier,
     metadata?: IdentifierMetadata
-  ): Type | ConstantValue | StubbedInstance<unknown> {
+  ): Type | FinalValue | StubbedInstance<unknown> {
     if (this.dependencyMap.has(identifier)) {
-      return this.dependencyMap.get(identifier) as Type | ConstantValue | ClassInjectable;
+      return this.dependencyMap.get(identifier) as Type | FinalValue | ClassInjectable;
     }
 
     const existingMock = this.mockedFromBeforeContainer.resolve(identifier, metadata);
@@ -45,10 +45,7 @@ export class DependencyResolver {
 
     if (this.isLeafOrPrimitive(identifier)) {
       if (this.dependencyMap.has(identifier)) {
-        return this.dependencyMap.get(identifier) as
-          | Type
-          | ConstantValue
-          | StubbedInstance<unknown>;
+        return this.dependencyMap.get(identifier) as Type | FinalValue | StubbedInstance<unknown>;
       }
 
       if (typeof identifier === 'function' && this.classesToExpose.includes(identifier)) {
@@ -75,9 +72,9 @@ export class DependencyResolver {
   public instantiateClass(
     type: Type,
     metadata: IdentifierMetadata | undefined = undefined
-  ): Type | ConstantValue | StubbedInstance<unknown> {
+  ): Type | FinalValue | StubbedInstance<unknown> {
     if (this.dependencyMap.has(type)) {
-      return this.dependencyMap.get(type) as Type | ConstantValue | StubbedInstance<unknown>;
+      return this.dependencyMap.get(type) as Type | FinalValue | StubbedInstance<unknown>;
     }
 
     const injectableRegistry = this.adapter.inspect(type);
@@ -120,7 +117,7 @@ export class DependencyResolver {
   public getResolutionSummary(): {
     mocks: { metadata?: unknown; identifier: Type }[];
     exposes: Type[];
-    notFound: IdentifierToDependency[];
+    notFound: IdentifierToMockOrFinal[];
   } {
     const exposes = this.classesToExpose.filter((cls) => !this.availableClassesToExpose.has(cls));
 

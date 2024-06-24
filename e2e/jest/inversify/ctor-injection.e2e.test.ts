@@ -24,22 +24,22 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
       InversifyJSTestClass
     )
       .mock(TestClassOne)
-      .using({
-        foo: jest.fn().mockResolvedValue('foo-from-test'),
+      .impl((stubFn) => ({
+        foo: stubFn().mockResolvedValue('foo-from-test'),
         bar(): string {
           return 'bar';
         },
-      })
+      }))
       .mock<Logger>('LOGGER')
-      .using({ log: () => 'baz-from-test' })
+      .final({ log: () => 'baz-from-test' })
       .mock('UNDEFINED')
-      .using({ method: () => 456 })
+      .final({ method: () => 456 })
       .mock<Bar>('BarToken', { name: 'someTarget' })
-      .using({})
+      .final({})
       .mock<string>('CONSTANT_VALUE')
-      .using('arbitrary-string')
+      .impl((stubFn) => stubFn().mockResolvedValue('arbitrary-string'))
       .mock<TestClassFive>(SymbolToken)
-      .using({ doSomething: () => 'mocked' })
+      .final({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;
@@ -82,15 +82,12 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
 
     test('then mock the implementation of the dependencies', async () => {
       const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
-      const logger = unitRef.get<Logger>('LOGGER');
 
       // The original 'foo' method in TestClassOne return value should be changed
       // according to the passed flag; here, always return the same value
       // because we mock the implementation of foo permanently
       await expect(testClassOne.foo(true)).resolves.toBe('foo-from-test');
       await expect(testClassOne.foo(false)).resolves.toBe('foo-from-test');
-
-      expect(logger.log).toBeDefined();
     });
 
     test('then treat duplicate identifiers as the same reference', async () => {
@@ -106,14 +103,10 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
 
     test('then mock the undefined reflected values and tokens', () => {
       const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
-      const undefinedValue: Mocked<{ method: () => number }> = unitRef.get<{
-        method: () => number;
-      }>('UNDEFINED');
 
       testClassFour.doSomething.mockReturnValue('mocked');
 
       expect(testClassFour.doSomething()).toBe('mocked');
-      expect(undefinedValue.method()).toBe(456);
     });
 
     test('then throw an error when trying to resolve not existing dependency', () => {

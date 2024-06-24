@@ -1,14 +1,23 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const filePaths = [
   path.join(__dirname, '..', 'unit', 'dist', 'esm', 'index.d.ts'),
   path.join(__dirname, '..', 'unit', 'dist', 'cjs', 'index.d.ts'),
 ];
 
-const newContent = '/// <reference types="@suites/doubles.jest/unit" />\n';
+const newContent = '/// <reference types="@suites/doubles.vitest/unit" />\n';
 
 filePaths.forEach((filePath) => {
+  if (!fs.existsSync(filePath)) {
+    console.log('Suites: @suites/unit typings file does not exist');
+    return;
+  }
+
   fs.readFile(filePath, 'utf8', function (err, data) {
     console.log('Suites: attempting to override @suites/unit reference types');
 
@@ -26,7 +35,7 @@ filePaths.forEach((filePath) => {
       }
 
       console.log(
-        'Suites: @suites/unit typings file updated successfully with the proper doubles adapter (@suites/doubles.jest)'
+        'Suites: @suites/unit typings file updated successfully with the proper doubles adapter (@suites/doubles.vitest)'
       );
     });
   });

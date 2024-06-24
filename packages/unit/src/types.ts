@@ -1,12 +1,37 @@
 import type { IdentifierMetadata } from '@suites/types.di';
-import type { DeepPartial, Type, ConstantValue } from '@suites/types.common';
-import type { StubbedInstance } from '@suites/types.doubles';
+import type { DeepPartial, Type } from '@suites/types.common';
+import type { ArgsType, Stub, StubbedInstance } from '@suites/types.doubles';
 import type {
-  SociableTestBedBuilder,
-  SolitaryTestBedBuilder,
+  SociableTestBedBuilder as SociableTestBedBuilderCore,
   TestBedBuilder as TestBedBuilderCore,
   UnitReference as UnitReferenceCore,
+  MockOverride as MockOverrideCore,
 } from '@suites/core.unit';
+
+export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCore<TClass> {
+  /**
+   * Exposes a dependency to be included in the test environment in its real or partially mocked state.
+   * This method is used to selectively expose dependencies that should not be fully mocked.
+   * It allows for sociable testing, where the class under test interacts with real implementations
+   * or partial mocks of certain dependencies.
+   *
+   * @since 3.0.0
+   * @template TClass The type of the class under test.
+   * @param dependency The dependency to be exposed in its real or partially mocked state.
+   * @returns A TestBedBuilder instance for further configuration.
+   * @example
+   * import { TestBed } from '@suites/unit';
+   * import { MyService, AnotherService } from './my-service';
+   *
+   * const { unit, unitRef } = await TestBed.sociable(MyService).expose(AnotherService).compile();
+   * // MyService is now tested with AnotherService exposed and not fully mocked.
+   * @see https://suites.dev/docs/developer-guide/unit-tests
+   * @param dependency
+   */
+  expose(dependency: Type): SociableTestBedBuilder<TClass>;
+}
+
+export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {}
 
 /**
  * Provides a reference to mock objects that have been mocked for testing
@@ -99,29 +124,7 @@ export interface UnitReference extends UnitReferenceCore {
   ): StubbedInstance<TDependency>;
 
   /**
-   * Retrieves a constant value corresponding to a string-based token.
-   *
-   * @since 3.0.0
-   * @template TValue The type of the constant value being retrieved.
-   * @param token The string-based token representing the constant value.
-   * @throws {IdentifierNotFoundError} - If the dependency is not found.
-   * @returns The constant value corresponding to the provided string-based token.
-   */
-  get<TValue extends ConstantValue>(token: string): TValue;
-
-  /**
-   * Retrieves a constant value corresponding to a symbol-based token.
-   *
-   * @since 3.0.0
-   * @template TValue The type of the constant value being retrieved.
-   * @param token The symbol-based token representing the constant value.
-   * @throws {IdentifierNotFoundError} - If the dependency is not found.
-   * @returns The constant value corresponding to the provided symbol-based token.
-   */
-  get<TValue extends ConstantValue>(token: symbol): TValue;
-
-  /**
-   * Retrieves a mocked object or a constant value of a dependency using its type, string, or symbol token.
+   * Retrieves a mocked object or a constant value of a dependency impl its type, string, or symbol token.
    *
    * This method provides flexibility in retrieving dependencies by allowing various identifier types.
    * Depending on the identifier and the setup, it can return either a mocked object or a constant value.
@@ -140,7 +143,7 @@ export interface UnitReference extends UnitReferenceCore {
   ): StubbedInstance<TDependency>;
 
   /**
-   * Retrieves a mocked object or a constant value of a dependency using its type, string, or symbol token.
+   * Retrieves a mocked object or a constant value of a dependency impl its type, string, or symbol token.
    *
    * This method provides flexibility in retrieving dependencies by allowing various identifier types.
    * Depending on the identifier and the setup, it can return either a mocked object or a constant value.
@@ -152,9 +155,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @throws {IdentifierNotFoundError} - If the dependency is not found.
    * @returns The mocked instance or constant value corresponding to the provided identifier.
    */
-  get<TDependency, TValue extends ConstantValue>(
-    identifier: Type<TDependency> | string | symbol
-  ): StubbedInstance<TDependency> | TValue;
+  get<TDependency>(identifier: Type<TDependency> | string | symbol): StubbedInstance<TDependency>;
 }
 
 /**
@@ -184,15 +185,15 @@ export interface TestBed {
    * import { TestBed } from '@suites/unit';
    * import { MyService } from './my-service';
    *
-   * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
    * // MyService is now tested in isolation with all its dependencies mocked.
+   * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
    */
   solitary<TClass>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass>;
 
   /**
    * Creates a TestBedBuilder instance for the given target class for sociable testing.
    * Sociable testing allows for the inclusion of real implementations or partial mocks of certain dependencies.
-   * This method returns a subset of the SociableTestBedBuilder's methods, focusing on exposing
+   * This method returns a subset of the SociableTestBedBuilder's methods, focimpl on exposing
    * specific dependencies that should be included in their real or partially mocked state.
    *
    * @see https://suites.dev/docs/developer-guide/unit-tests
@@ -209,7 +210,7 @@ export interface TestBed {
    * const { unit, unitRef } = await TestBed.sociable(MyService).expose(AnotherService).compile();
    * // MyService is now tested with AnotherService exposed and not fully mocked.
    */
-  sociable<TClass>(targetClass: Type<TClass>): Pick<SociableTestBedBuilder<TClass>, 'expose'>;
+  sociable<TClass>(targetClass: Type<TClass>): SociableTestBedBuilder<TClass>;
 }
 
 /**
@@ -242,16 +243,7 @@ export interface UnitTestBed<TClass> {
  * @template TClass The type of the class under test.
  * @see https://suites.dev/api-reference/api/mockoverride-api
  */
-export interface MockOverride<TDependency, TClass> {
-  /**
-   * Specifies a constant value to be used for the mocked dependency.
-   *
-   * @since 3.0.0
-   * @param value - The constant value for the mocked dependency.
-   * @returns `TestBedBuilder` instance for chaining further configuration.
-   */
-  using(value: TDependency & ConstantValue): TestBedBuilder<TClass>;
-
+export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDependency, TClass> {
   /**
    * Specifies the mock implementation to be used for the mocked dependency.
    *
@@ -259,7 +251,18 @@ export interface MockOverride<TDependency, TClass> {
    * @param mockImplementation - The mock implementation for the mocked dependency.
    * @returns `TestBedBuilder` instance for chaining further configuration.
    */
-  using(mockImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
+  impl(
+    mockImplementation: (stubFn: Stub<any, ArgsType<TDependency>>) => DeepPartial<TDependency>
+  ): TestBedBuilder<TClass>;
+
+  /**
+   * Specifies the final implementation to be used for the mocked dependency.
+   *
+   * @since 3.0.0
+   * @param finalImplementation - The final implementation for the mocked dependency.
+   * @returns `TestBedBuilder` instance for chaining further configuration.
+   */
+  final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
 }
 
 /**
@@ -270,7 +273,7 @@ export interface MockOverride<TDependency, TClass> {
  */
 export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   /**
-   * Declares a dependency to be mocked using its type.
+   * Declares a dependency to be mocked impl its type.
    *
    * @since 3.0.0
    * @param type The type of the dependency.
@@ -280,7 +283,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   mock<TDependency>(type: Type<TDependency>): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using its type along with a corresponding metadata object.
+   * Declares a dependency to be mocked impl its type along with a corresponding metadata object.
    *
    * @since 3.0.0
    * @param type The type of the dependency.
@@ -294,7 +297,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   ): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using a string-based token.
+   * Declares a dependency to be mocked impl a string-based token.
    *
    * @since 3.0.0
    * @param token The token string representing the dependency to be mocked.
@@ -304,7 +307,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   mock<TDependency>(token: string): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using a string-based token along with a corresponding
+   * Declares a dependency to be mocked impl a string-based token along with a corresponding
    * metadata object.
    *
    * @since 3.0.0
@@ -319,7 +322,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   ): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using a symbol-based token.
+   * Declares a dependency to be mocked impl a symbol-based token.
    *
    * @since 3.0.0
    * @param token - The token symbol representing the dependency to be mocked.
@@ -329,7 +332,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   mock<TDependency>(token: symbol): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using a symbol-based token along with a corresponding
+   * Declares a dependency to be mocked impl a symbol-based token along with a corresponding
    * metadata object.
    *
    * @since 3.0.0
@@ -344,7 +347,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   ): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked using a symbol-based token along with a corresponding
+   * Declares a dependency to be mocked impl a symbol-based token along with a corresponding
    * metadata object.
    *
    * @since 3.0.0
@@ -358,7 +361,6 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
     identifier: Type<TDependency> | string | symbol,
     identifierMetadata?: IdentifierMetadata
   ): MockOverride<TDependency, TClass>;
-
   /**
    * Finalizes the mocking setup and creates a new UnitTestBed.
    *

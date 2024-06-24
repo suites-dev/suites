@@ -1,4 +1,4 @@
-import type { IdentifierToDependency } from './dependency-container';
+import type { IdentifierToMockOrFinal } from './dependency-container';
 import { DependencyContainer } from './dependency-container';
 
 class ArbitraryClassAsIdentifier {}
@@ -6,7 +6,7 @@ class DummyIdentifier {}
 
 describe('Dependency Container Unit Spec', () => {
   it('should return the corresponding value when the identifier matches a single identifier and metadata is not provided', () => {
-    const identifierToMocksTuples: IdentifierToDependency[] = [
+    const identifierToMocksTuples: IdentifierToMockOrFinal[] = [
       [{ identifier: ArbitraryClassAsIdentifier }, 'mock1'],
       [{ identifier: 'dependency2' }, 'mock2'],
     ];
@@ -18,7 +18,7 @@ describe('Dependency Container Unit Spec', () => {
   });
 
   it('should return the value of the first matching identifier when the identifier matches multiple identifiers and metadata is not provided', () => {
-    const identifierToMocksTuples: IdentifierToDependency[] = [
+    const identifierToMocksTuples: IdentifierToMockOrFinal[] = [
       [{ identifier: 'dependency1' }, 'mock1'],
       [{ identifier: 'dependency1' }, 'mock2'],
     ];
@@ -30,7 +30,7 @@ describe('Dependency Container Unit Spec', () => {
   });
 
   it('should return undefined when the identifier does not match any identifier', () => {
-    const identifierToMocksTuples: IdentifierToDependency[] = [
+    const identifierToMocksTuples: IdentifierToMockOrFinal[] = [
       [{ identifier: 'dependency1' }, 'mock1'],
       [{ identifier: 'dependency2' }, 'mock2'],
     ];
@@ -42,7 +42,7 @@ describe('Dependency Container Unit Spec', () => {
   });
 
   it('should return undefined when the identifier matches a single identifier but metadata does not match', () => {
-    const identifierToMocksTuples: IdentifierToDependency[] = [
+    const identifierToMocksTuples: IdentifierToMockOrFinal[] = [
       [{ identifier: 'dependency1', metadata: { metadataKey: 'arbitrary' } }, 'mock1'],
     ];
 
@@ -53,7 +53,7 @@ describe('Dependency Container Unit Spec', () => {
   });
 
   it('should return undefined when the identifier matches multiple identifiers but metadata does not match any of them', () => {
-    const identifierToMocksTuples: IdentifierToDependency[] = [
+    const identifierToMocksTuples: IdentifierToMockOrFinal[] = [
       [{ identifier: 'dependency1', metadata: 'metadata1' }, 'mock1'],
       [{ identifier: 'dependency1', metadata: 'metadata2' }, 'mock2'],
     ];
@@ -65,7 +65,7 @@ describe('Dependency Container Unit Spec', () => {
   });
 
   it('should return the value of the identifier when there are two identifiers with the same token but different metadata', () => {
-    const identifierToMocksTuples: IdentifierToDependency[] = [
+    const identifierToMocksTuples: IdentifierToMockOrFinal[] = [
       [{ identifier: DummyIdentifier, metadata: { key: 'metadata1' } }, 'mock1'],
       [{ identifier: DummyIdentifier, metadata: { key: 'metadata2' } }, 'mock2'],
     ];
@@ -77,7 +77,7 @@ describe('Dependency Container Unit Spec', () => {
   });
 
   it('should return undefined when there are two identifiers with the same token and resolved with no metadata', () => {
-    const identifierToMocksTuples: IdentifierToDependency[] = [
+    const identifierToMocksTuples: IdentifierToMockOrFinal[] = [
       [{ identifier: DummyIdentifier, metadata: { key: 'metadata1' } }, 'mock1'],
       [{ identifier: DummyIdentifier, metadata: { key: 'metadata2' } }, 'mock2'],
     ];

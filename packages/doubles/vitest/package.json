@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "license": "MIT",
   "main": "dist/cjs/index.js",
-  "type": "module",
+  "module": "dist/esm/index.js",
   "exports": {
     "require": "./dist/cjs/index.js",
     "import": "./dist/esm/index.js"
@@ -35,14 +35,15 @@
   },
   "scripts": {
     "prebuild": "yarn rimraf dist",
-    "postinstall": "node postinstall.js",
+    "postinstall": "node postinstall.mjs",
     "build": "sh build.sh",
     "test": "VITE_CJS_IGNORE_WARNING=true yarn vitest run --coverage",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
+    "unit.d.ts",
     "dist",
-    "postinstall.js"
+    "postinstall.mjs"
   ],
   "peerDependencies": {
     "@vitest/spy": ">= 1.0",

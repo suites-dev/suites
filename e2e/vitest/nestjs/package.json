@@ -20,6 +20,6 @@
     "vitest": "*"
   },
   "scripts": {
-    "test": "npx vitest && tsc --noEmit"
+    "test": "npx vitest --run && tsc --noEmit"
   }
 }

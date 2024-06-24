@@ -41,7 +41,7 @@ describe('Social TestBed Builder Integration Tests', () => {
       .expose(HttpClient)
       .expose(DatabaseService)
       .mock(TestLogger)
-      .using((stubbed: Mock) => ({ log: stubbed.mockReturnValue('overridden') }))
+      .using((stubFn: Mock) => ({ log: stubFn().mockReturnValue('overridden') }))
       .mock(Axios)
       .using(() => ({}))
       .mock<string[]>('SOME_VALUE_TOKEN')

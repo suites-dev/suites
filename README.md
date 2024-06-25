@@ -6,19 +6,23 @@
 
 # Welcome to Suites at NodeJS Conf! 🎉🎉
 
-## Hey NodeJS Conf Attendees! 👋
+## 👋 Hey NodeJS Conf Attendees! 
 
 We're thrilled to have you here. You are among the first to hear about Suites, the next evolution in testing frameworks, [originating from Automock](https://github.com/automock/automock). Suites is designed to elevate your testing experience, streamline your workflows, and help you deliver high-quality software with ease.
 
-**What is Suites❓**
+## ❓ What is Suites?
 
 Suites is an opinionated, flexible testing meta-framework aimed at simplifying the software testing process. It integrates a wide array of testing tools into a cohesive framework, making it easier than ever to create reliable tests and ensure your software is rock-solid.
 
-**What did you take me to an empty repository❓**
+### Key Features:
 
-This is just a landing page for now for NodeJS conference. We will transfer the repo from [Automock](https://github.com/automock/automock) very soon. Stay tuned!
+- 🚀 **Zero-Setup Mocking**: Dive straight into testing without the hassle. Automatically generate mock objects, eliminate manual setup, and reduce a lot of boilerplate code in your unit tests
 
-## Transinitioning from Automock to Suites 🚀
+- 🌟 **Seamless Integration**: Suites seamlessly integrates with popular DI and testing frameworks like NestJS and InversifyJS, and Jest, Sinon and Vitest, with more adapters on the way.
+
+- ⚡ **Optimized Performance**: Suites ensures your unit tests run significantly faster, letting you focus on development without unnecessary waits.
+
+## 🚀 Transinitioning from Automock to Suites
 
 **Automock is the precursor to Suites, providing a streamlined approach to creating unit tests in dependency injection frameworks.**
 
@@ -28,7 +32,7 @@ This is just a landing page for now for NodeJS conference. We will transfer the 
 
 [Take me to Automock repo for now](https://github.com/automock/automock)
 
-## Emphasizing Community and Official Support
+## 🌐 Emphasizing Community and Official Support
 
 **Suites is officially documented and supported within the NestJS and InversifyJS communities, with more DI adapters to come.**
 
@@ -43,9 +47,11 @@ This official support ensures that you have access to the latest features, best 
   <a href="https://github.com/inversify/InversifyJS/blob/master/wiki/testing.md"><img width="150" src="https://raw.githubusercontent.com/inversify/inversify.github.io/master/img/cover.jpg" alt="InversifyJS Logo" /></a>
 </p>
 
-## 🚀 Suites is Coming Soon!
+## ✔️ Suites is Coming Soon!
 
 We’re putting the final touches on Suites and it will be available in just a few days. In the meantime, check out Automock to get a taste of what's to come. Automock has paved the way for Suites, and we’re excited to bring you an even more powerful and flexible testing framework.
+
+---
 
 ## Curious About Automock?
 
@@ -55,9 +61,7 @@ This is just a landing page for now. We will transfer the repo from Automock ver
 
 Thank you for your interest in Suites! We're excited to bring this powerful tool to your development workflow. Stay tuned, and happy testing! 🎉
 
----
-
-## Can't wait? Here is a quick example:
+## Here is a quick example from Suites framework:
 
 Take a look at the following example (using Jest, but the same applies for Sinon):
 

@@ -4,7 +4,7 @@
   <img width="120" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
 </p>
 
-# Welcome to Suites (formerly Automock) at NodeJS Conf! 🎉
+# Welcome to Suites at NodeJS Conf! 🎉🎉
 
 ## Hey NodeJS Conf Attendees! 👋
 

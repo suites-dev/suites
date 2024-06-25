@@ -1,9 +1,8 @@
 <p align="center">
   <img width="300" src="https://github.com/suites-dev/suites/assets/6696717/93c71c9c-2cf6-4c8e-8c2e-c3e55cba1ae6" alt="Suites Logo" />
-  <br /><br />
-  <img width="120" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
+  <br /><br /><br />
+  <img width="140" src="https://github.com/suites-dev/suites/blob/main/logo.png?raw=true" alt="Logo" />
 </p>
-
 # Welcome to Suites at NodeJS Conf! 🎉🎉
 
 ## 👋 Hey NodeJS Conf Attendees! 

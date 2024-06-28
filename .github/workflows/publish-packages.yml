@@ -21,6 +21,14 @@ on:
           - 'beta'
         required: true
         default: 'dev'
+      strategy:
+        description: 'Release Strategy'
+        type: choice
+        options:
+          - 'from-git'
+          - 'from-package'
+        required: true
+        default: 'from-package'
 
 jobs:
   e2e:
@@ -76,6 +84,22 @@ jobs:
           scope: '@suites'
           always-auth: false
 
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Remove provenance from publishConfig
+        run: |
+          find packages -name 'package.json' | while read filename; do
+            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
+          done
+
+      - name: Commit Change
+        run: |
+          git config --global user.email "e2e@suites.dev"
+          git config --global user.name "Suites e2e"
+          git add .
+          git commit -am "remove provenance"
+
       - name: Publish Packages
         run: |
           yarn lerna publish from-package --yes \
@@ -110,8 +134,8 @@ jobs:
           cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
           npm test
 
-  release:
-    name: Release
+  publish:
+    name: publish
     needs: [e2e]
     runs-on: ubuntu-latest
     steps:
@@ -132,7 +156,7 @@ jobs:
         run: npx lerna run build
 
       - name: Publish Packages
-        run: npx lerna publish from-package --yes --dist-tag ${{ github.event.inputs.dist_tag }}
+        run: npx lerna publish ${{ github.event.inputs.strategy }} --yes --dist-tag ${{ github.event.inputs.dist_tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

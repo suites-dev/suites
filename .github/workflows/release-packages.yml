@@ -58,7 +58,7 @@ jobs:
       - name: Prerelease Version (Exact Version)
         if: ${{ github.event.inputs.release_type == 'prerelease' && github.event.inputs.exact_version }}
         run: |
-          npx lerna version ${{ github.event.inputs.exact_version }} --yes --no-changelog --sign-git-commit
+          npx lerna version ${{ github.event.inputs.exact_version }} --yes --no-changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -67,20 +67,15 @@ jobs:
         run: |
           npx lerna version prerelease --yes \
           --preid ${{ github.event.inputs.preid }} \
-          --no-changelog --sign-git-commit
+          --no-changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Graduate Version
         if: ${{ github.event.inputs.release_type == 'graduate' }}
-        run: npx lerna version graduate --yes --sign-git-tag --sign-git-commit
+        run: npx lerna version graduate --yes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Commit Changes
-        run: |
-          git add .
-          git commit -S -m "chore(*): version packages [skip ci]"
 
       - name: Push Changes to Branch
         run: |
@@ -88,20 +83,3 @@ jobs:
           git push origin --tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Find Pull Request
-        uses: juliangruber/find-pull-request-action@v1
-        id: pull-request
-        with:
-          branch: ${{ github.event.inputs.target_branch }}
-
-      - name: Github - Create PR Comment
-        if: steps.pull-request.outputs.pr_found == 'true'
-        uses: actions-ecosystem/action-create-comment@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          number: ${{ steps.pull-request.outputs.number }}
-          body: |
-            **Version Bump Successfully :tada:** \
-            - **Release Type:** ${{ github.event.inputs.release_type }} \
-            - **Preid:** ${{ github.event.inputs.preid }}

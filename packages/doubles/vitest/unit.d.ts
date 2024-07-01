@@ -14,7 +14,7 @@ declare module '@suites/unit' {
    * @alias Mock
    * @see https://suites.dev/docs/api-reference
    */
-  export type Stub<T = any> = VitestStub<T>;
+  export type Stub<TArgs extends any[]> = VitestStub<TArgs>;
 
   /**
    * Represents a mocked instance of a given type.
@@ -41,9 +41,7 @@ declare module '@suites/unit' {
      * @returns `TestBedBuilder` instance for chaining further configuration.
      */
     impl(
-      mockImplementation: (
-        stubFn: () => VitestStub<ArgsType<TDependency>, any>
-      ) => DeepPartial<TDependency>
+      mockImplementation: (stubFn: () => Stub<ArgsType<TDependency>>) => DeepPartial<TDependency>
     ): TestBedBuilder<TClass>;
 
     /**

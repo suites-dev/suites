@@ -3,6 +3,7 @@ import type { DeepPartial, Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
 import type { Mocked as VitestMocked, Stub as VitestStub } from '@suites/doubles.vitest';
 import type { TestBedBuilder } from '@suites/core.unit';
+import type { ArgsType } from '@suites/types.doubles';
 
 declare module '@suites/unit' {
   /**
@@ -23,6 +24,40 @@ declare module '@suites/unit' {
    * @see https://suites.dev/docs/api-reference
    */
   export type Mocked<T> = VitestMocked<T>;
+
+  /**
+   * Interface to define overrides for mocking dependencies in a test environment.
+   *
+   * @template TDependency The type of the dependency to be mocked.
+   * @template TClass The type of the class under test.
+   * @see https://suites.dev/api-reference/api/mockoverride-api
+   */
+  export interface MockOverride<TDependency, TClass> {
+    /**
+     * Specifies the mock implementation to be used for the mocked dependency.
+     *
+     * @since 3.0.0
+     * @param mockImplementation - The mock implementation for the mocked dependency.
+     * @returns `TestBedBuilder` instance for chaining further configuration.
+     */
+    impl(
+      mockImplementation: (
+        stubFn: () => VitestStub<ArgsType<TDependency>, any>
+      ) => DeepPartial<TDependency>
+    ): TestBedBuilder<TClass>;
+
+    /**
+     * Specifies the final implementation to be used for the mocked dependency.
+     *
+     * @since 3.0.0
+     * @param finalImplementation - The final implementation for the mocked dependency.
+     * @returns `TestBedBuilder` instance for chaining further configuration.
+     */
+    final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
+  }
+}
+
+declare module '@suites/unit.core' {
   /**
    * The UnitReference interface represents a reference to a unit object.
    * It provides methods to retrieve mocked objects of dependencies based
@@ -113,7 +148,7 @@ declare module '@suites/unit' {
      * @example
      * const mockedService = unitRef.get<MyService>(MyService);
      */
-    get<TDependency>(type: Type<TDependency>): Mocked<TDependency>;
+    get<TDependency>(type: Type<TDependency>): VitestMocked<TDependency>;
 
     /**
      * Retrieves a reference to the mocked object of a dependency corresponding to its
@@ -156,34 +191,5 @@ declare module '@suites/unit' {
       identifier: Type<TDependency> | string | symbol,
       identifierMetadata?: IdentifierMetadata
     ): VitestMocked<TDependency>;
-  }
-
-  /**
-   * Interface to define overrides for mocking dependencies in a test environment.
-   *
-   * @template TDependency The type of the dependency to be mocked.
-   * @template TClass The type of the class under test.
-   * @see https://suites.dev/api-reference/api/mockoverride-api
-   */
-  export interface MockOverride<TDependency, TClass> {
-    /**
-     * Specifies the mock implementation to be used for the mocked dependency.
-     *
-     * @since 3.0.0
-     * @param mockImplementation - The mock implementation for the mocked dependency.
-     * @returns `TestBedBuilder` instance for chaining further configuration.
-     */
-    impl(
-      mockImplementation: (stubFn: () => Stub<TDependency>) => DeepPartial<TDependency>
-    ): TestBedBuilder<TClass>;
-
-    /**
-     * Specifies the final implementation to be used for the mocked dependency.
-     *
-     * @since 3.0.0
-     * @param finalImplementation - The final implementation for the mocked dependency.
-     * @returns `TestBedBuilder` instance for chaining further configuration.
-     */
-    final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
   }
 }

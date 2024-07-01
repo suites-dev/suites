@@ -8,4 +8,4 @@ export type Mocked<T> = MaybeMockedDeep<T> & {
   [K in keyof T]: MockedProperty<T[K]>;
 };
 
-export type Stub<TArgs extends any[] = any[]> = Mock<TArgs, any>;
+export type Stub<TArgs extends any[] = any[], TReturn = any> = Mock<TArgs, TReturn>;

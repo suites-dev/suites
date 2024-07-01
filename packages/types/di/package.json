@@ -2,7 +2,7 @@
   "name": "@suites/types.di",
   "private": false,
   "version": "3.0.0-next.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "types": "typings.d.ts",
   "main": "dist/index.js",
   "repository": {

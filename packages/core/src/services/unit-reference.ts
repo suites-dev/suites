@@ -7,6 +7,32 @@ import type { DependencyContainer, IdentifierToFinal } from './dependency-contai
 import { referenceDependencyNotFoundError, stringifyIdentifier } from './functions.static';
 import { normalizeIdentifier } from '../normalize-identifier.static';
 
+export interface UnitReference {
+  get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;
+  get<TDependency>(
+    type: Type<TDependency>,
+    identifierMetadata: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+  get<TDependency>(token: string): StubbedInstance<TDependency>;
+  get<TDependency>(
+    token: string,
+    identifierMetadata: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+  get<TDependency>(token: symbol): StubbedInstance<TDependency>;
+  get<TDependency>(
+    token: symbol,
+    identifierMetadata: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+  get<TDependency>(
+    identifier: Type<TDependency> | string | symbol,
+    identifierMetadata?: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+  get<TDependency>(
+    identifier: InjectableIdentifier<TDependency>,
+    identifierMetadata?: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+}
+
 export class UnitReference {
   public constructor(
     private readonly mocksContainer: DependencyContainer,

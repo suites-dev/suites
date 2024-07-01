@@ -1,5 +1,5 @@
 import { SuitesDIAdapters, SuitesDoublesAdapters, testBedBuilderFactory } from './testbed-builder';
-import type { Type } from '@nestjs/common';
+import type { Type } from '@suites/types.common';
 import {
   SociableTestBedBuilder as SociableTestBedBuilderCore,
   SolitaryTestBedBuilder as SolitaryTestBedBuilderCore,

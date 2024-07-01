@@ -43,11 +43,11 @@
   "funding": [
     {
       "type": "github",
-      "url": "https://github.com/sponsors/suites"
+      "url": "https://github.com/sponsors/suites-dev"
     },
     {
       "type": "opencollective",
-      "url": "https://opencollective.com/suites"
+      "url": "https://opencollective.com/suites-dev"
     }
   ],
   "engines": {

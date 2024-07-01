@@ -1,6 +1,6 @@
 import type { Type } from '@suites/types.common';
 import type { TestBedBuilder, UnitTestBed } from '../../src';
-import { UnitReference, UnitMocker, SolitaryTestBedBuilder } from '../../src';
+import { UnitMocker, SolitaryTestBedBuilder } from '../../src';
 import {
   ArbitraryClassFive,
   ArbitraryClassFour,
@@ -93,9 +93,8 @@ describe('Solitary TestBed Builder Integration Test', () => {
       );
     });
 
-    it('should return an instance of the unit and a unit reference', () => {
+    it('should return an instance of the unit', () => {
       expect(unitTestBed.unit).toBeInstanceOf(ClassUnderTest);
-      expect(unitTestBed.unitRef).toBeInstanceOf(UnitReference);
     });
 
     it('should log a warning indicating the dependency was not found when mocking missing dependency', async () => {

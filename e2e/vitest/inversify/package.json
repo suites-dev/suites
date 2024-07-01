@@ -18,7 +18,7 @@
     "@vitest/coverage-v8": "^1.2.1",
     "ts-node": "*",
     "typescript": "^5.x",
-    "unplugin-swc": "^1.4.4",
+    "unplugin-swc": "1.4.4",
     "vitest": "*"
   }
 }

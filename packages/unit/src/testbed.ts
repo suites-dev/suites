@@ -4,7 +4,7 @@ import {
   SociableTestBedBuilder as SociableTestBedBuilderCore,
   SolitaryTestBedBuilder as SolitaryTestBedBuilderCore,
 } from '@suites/core.unit';
-import type { SociableTestBedBuilder, SolitaryTestBedBuilder } from './types';
+import type { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/core.unit';
 
 /**
  * @description

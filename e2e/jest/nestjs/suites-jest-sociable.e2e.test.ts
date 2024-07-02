@@ -24,6 +24,10 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       .impl((stubFn) => ({ log: stubFn().mockReturnValue('overridden') }))
       .compile();
 
+    // For type checking only, no runtime effect
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const mockedLogger: Mocked<Logger> = ref.get(Logger);
+
     unitRef = ref;
     underTest = unit;
   });

@@ -37,7 +37,7 @@ describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
       .mock<Bar>('BarToken', { name: 'someTarget' })
       .final({})
       .mock<string>('CONSTANT_VALUE')
-      .impl((stubFn) => stubFn().mockResolvedValue('arbitrary-string'))
+      .final('arbitrary-string')
       .mock<TestClassFive>(SymbolToken)
       .final({ doSomething: () => 'mocked' })
       .compile();

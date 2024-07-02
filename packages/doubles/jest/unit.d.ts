@@ -1,102 +1,67 @@
 /// <reference types="jest" />
 import type { DeepPartial, Type } from '@suites/types.common';
-import type { IdentifierMetadata } from '@suites/types.di';
+import type { InjectableIdentifier, IdentifierMetadata } from '@suites/types.di';
 import type { TestBedBuilder } from '@suites/core.unit';
 import type { Mocked as JestMocked, Stub as JestStub } from '@suites/doubles.jest';
 import type { ArgsType } from '@suites/types.doubles';
 
 declare module '@suites/unit' {
   /**
-   * Represents a stub function
+   * Represents a stub function typically used in testing to replace other functions or methods.
+   * This type extends jest.Mock to leverage Jest's built-in mocking capabilities.
    *
    * @since 3.0.0
-   * functions replaced by stubs.
+   * @template TArgs The arguments type of the stub function.
    * @alias jest.Mock
    * @see https://jestjs.io/docs/mock-function-api#jestfnimplementation
    * @see https://suites.dev/docs/api-reference
    */
-  export type Stub<T = any, TArgs extends any[] = any[]> = JestStub<T, TArgs>;
+  export type Stub<TArgs extends any[] = any[]> = JestStub<TArgs>;
 
   /**
-   * Represents a mocked instance of a given type.
+   * Represents a mocked instance of a given type, using Jest's mocking framework.
+   * This is particularly useful for creating mocked instances of classes or objects in a testing environment.
    *
    * @since 3.0.0
-   * @template TType - The object type being mocked.
-   * @see https://jestjs.io/docs/jest-object#jestmockedsource
+   * @template T The type of the object being mocked.
+   * @see https://jestjs.io/docs/jest-object#jestmockedtitem-t-deep
    * @see https://suites.dev/docs/api-reference
    */
   export type Mocked<T> = JestMocked<T>;
-
-  /**
-   * Interface to define overrides for mocking dependencies in a test environment.
-   *
-   * @template TDependency The type of the dependency to be mocked.
-   * @template TClass The type of the class under test.
-   * @see https://suites.dev/api-reference/api/mockoverride-api
-   */
-  export interface MockOverride<TDependency, TClass> {
-    /**
-     * Specifies the mock implementation to be used for the mocked dependency.
-     *
-     * @since 3.0.0
-     * @param mockImplementation - The mock implementation for the mocked dependency.
-     * @returns `TestBedBuilder` instance for chaining further configuration.
-     */
-    impl(
-      mockImplementation: (
-        stubFn: () => Stub<any, ArgsType<TDependency>>
-      ) => DeepPartial<TDependency>
-    ): TestBedBuilder<TClass>;
-
-    /**
-     * Specifies the final implementation to be used for the mocked dependency.
-     *
-     * @since 3.0.0
-     * @param finalImplementation - The final implementation for the mocked dependency.
-     * @returns `TestBedBuilder` instance for chaining further configuration.
-     */
-    final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
-  }
 }
 
 declare module '@suites/core.unit' {
   /**
    * The UnitReference interface represents a reference to a unit object.
    * It provides methods to retrieve mocked objects of dependencies based
-   * on their type or identifier. This extension integrates Jest mocking capabilities.
+   * on their type or identifier. This extension integrates Jest mocking capabilities,
+   * offering a flexible approach to access and manipulate mocked dependencies within unit tests.
    *
    * @since 3.0.0
    * @see https://suites.dev/docs/api-reference
    */
   export interface UnitReference {
     /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to a
-     * string-based token.
+     * Retrieves a mocked instance of a dependency based on a string token.
+     * This method allows fetching mocks based on unique identifiers, facilitating tests where dependencies are
+     * identified by strings.
      *
-     * @since 3.0.0
      * @template TDependency The type of the dependency being retrieved.
      * @param token The string-based token representing the dependency.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {Mocked<TDependency>} The mocked object corresponding to the provided string-based token.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>('MY_SERVICE_TOKEN');
+     * @returns The mocked object corresponding to the provided string-based token.
+     * @since 3.0.0
      */
     get<TDependency>(token: string): JestMocked<TDependency>;
 
     /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to its
-     * string-based identifier and the identifier metadata.
+     * Retrieves a mocked instance of a dependency based on a string token with additional identifier metadata.
+     * The metadata can be used to specify more detailed characteristics or requirements for the mock.
      *
-     * @since 3.0.0
      * @template TDependency The type of the dependency being retrieved.
      * @param token The string-based token representing the dependency.
      * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {Mocked<TDependency>} The mocked object corresponding to the provided string-based token and identifier metadata.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>('MY_SERVICE_TOKEN', metadata);
+     * @returns The mocked object corresponding to the provided string-based token and identifier metadata.
+     * @since 3.0.0
      */
     get<TDependency>(
       token: string,
@@ -104,33 +69,25 @@ declare module '@suites/core.unit' {
     ): JestMocked<TDependency>;
 
     /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to a
-     * symbol-based token.
+     * Retrieves a mocked instance of a dependency based on a symbol-based token.
+     * Symbols are used as unique and immutable identifiers, suitable for cases where collisions in names are a concern.
      *
-     * @since 3.0.0
      * @template TDependency The type of the dependency being retrieved.
      * @param token The symbol-based token representing the dependency.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {Mocked<TDependency>} The mocked object corresponding to the provided symbol-based token.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>(MY_SERVICE_SYMBOL);
+     * @returns The mocked object corresponding to the provided symbol-based token.
+     * @since 3.0.0
      */
     get<TDependency>(token: symbol): JestMocked<TDependency>;
 
     /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to its
-     * symbol-based identifier and the identifier metadata.
+     * Retrieves a mocked instance of a dependency based on a symbol token with additional identifier metadata.
+     * Metadata provides further customization or configuration of the mocked instance.
      *
-     * @since 3.0.0
      * @template TDependency The type of the dependency being retrieved.
      * @param token The symbol-based token representing the dependency.
      * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {Mocked<TDependency>} The mocked object corresponding to the provided symbol-based token and identifier metadata.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>(MY_SERVICE_SYMBOL, metadata);
+     * @returns The mocked object corresponding to the provided symbol-based token and identifier metadata.
+     * @since 3.0.0
      */
     get<TDependency>(
       token: symbol,
@@ -138,33 +95,25 @@ declare module '@suites/core.unit' {
     ): JestMocked<TDependency>;
 
     /**
-     * Retrieves a reference to the mocked object of a dependency corresponding
-     * to its type identifier.
+     * Retrieves a mocked instance of a dependency based on its type.
+     * This approach is type-safe and ensures that the retrieved mock matches the expected dependency type.
      *
-     * @since 3.0.0
      * @template TDependency The type of the dependency being retrieved.
      * @param type The type representing the dependency.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {Mocked<TDependency>} The mocked object corresponding to the provided type identifier.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>(MyService);
+     * @returns The mocked object corresponding to the provided type identifier.
+     * @since 3.0.0
      */
     get<TDependency>(type: Type<TDependency>): JestMocked<TDependency>;
 
     /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to its
-     * type identifier and the identifier metadata.
+     * Retrieves a mocked instance of a dependency based on its type with additional identifier metadata.
+     * This allows for more precise and context-specific mocking based on both type and metadata.
      *
-     * @since 3.0.0
      * @template TDependency The type of the dependency being retrieved.
      * @param type The type representing the dependency.
-     * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {Mocked<TDependency>} The mocked object corresponding to the provided type identifier and identifier metadata.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>(MyService, metadata);
+     * @param identifierMetadata An accompanying metadata object for the type identifier.
+     * @returns The mocked object corresponding to the provided type identifier and identifier metadata.
+     * @since 3.0.0
      */
     get<TDependency>(
       type: Type<TDependency>,
@@ -172,26 +121,57 @@ declare module '@suites/core.unit' {
     ): JestMocked<TDependency>;
 
     /**
-     * Retrieves a reference to the mocked object of a dependency corresponding to its
-     * type, string-based or symbol-based identifier and the identifier metadata if present.
+     * Retrieves a mocked instance of a dependency using a flexible identifier, which can be a type, string, or symbol.
+     * This method provides the ultimate flexibility in retrieving mocked dependencies, accommodating various
+     * identification strategies.
      *
-     * @since 3.0.0
      * @template TDependency The type of the dependency being retrieved.
-     * @param identifier The type or token that the dependency corresponds to.
-     * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @throws {IdentifierNotFoundError} If the dependency is not found.
-     * @returns {Mocked<TDependency>} The mocked object corresponding to the provided identifier, along with any available identifier metadata.
-     * @see https://suites.dev/docs/api-reference
-     * @example
-     * const mockedService = unitRef.get<MyService>(MyService, metadata);
-     * // or
-     * const mockedService = unitRef.get<MyService>('MY_SERVICE_TOKEN');
-     * // or
-     * const mockedService = unitRef.get<MyService>(MY_SERVICE_SYMBOL, metadata);
+     * @param identifier The identifier (type, string, or symbol) of the dependency.
+     * @param identifierMetadata Optional accompanying metadata object for the identifier.
+     * @returns The mocked instance corresponding to the provided identifier, along with any available identifier
+     * metadata.
+     * @since 3.0.0
      */
     get<TDependency>(
       identifier: Type<TDependency> | string | symbol,
       identifierMetadata?: IdentifierMetadata
     ): JestMocked<TDependency>;
+  }
+
+  /**
+   * Interface defining methods for configuring mock overrides in unit testing environments.
+   * This allows detailed setup of mock behavior for dependencies of the class under test.
+   *
+   * @since 3.0.0
+   * @template TDependency The type of the dependency to be mocked.
+   * @template TClass The type of the class under test.
+   * @see https://suites.dev/api-reference/api/mockoverride-api
+   */
+  export interface MockOverride<TDependency, TClass> {
+    /**
+     * Specifies the mock implementation for a dependency. This is used to override the default behavior
+     * or setup-specific scenarios in tests.
+     *
+     * @param mockImplementation The function that defines the mock behavior. It takes a function returning a
+     * Jest Stub and should return a partial implementation of the dependency.
+     * @returns {TestBedBuilder} A TestBedBuilder instance for chaining further configuration, allowing for fluent API style.
+     * @since 3.0.0
+     */
+    impl(
+      mockImplementation: (
+        stubFn: () => JestStub<ArgsType<TDependency>>
+      ) => DeepPartial<TDependency>
+    ): TestBedBuilder<TClass>;
+
+    /**
+     * Specifies the final, concrete implementation to use for a mocked dependency, effectively replacing any previous
+     * mock setups.
+     *
+     * @param {DeepPartial} finalImplementation The concrete implementation for the dependency, typically used when transitioning
+     * from mock to real objects.
+     * @returns {TestBedBuilder} A TestBedBuilder instance for chaining further configuration.
+     * @since 3.0.0
+     */
+    final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
   }
 }

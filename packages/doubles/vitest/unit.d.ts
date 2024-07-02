@@ -27,41 +27,6 @@ declare module '@suites/unit' {
    * @see https://suites.dev/docs/api-reference
    */
   export type Mocked<T> = VitestMocked<T>;
-
-  /**
-   * Interface defining methods for configuring mock overrides in unit testing environments.
-   * This allows detailed setup of mock behavior for dependencies of the class under test.
-   *
-   * @since 3.0.0
-   * @template TDependency The type of the dependency to be mocked.
-   * @template TClass The type of the class under test.
-   * @see https://suites.dev/api-reference/api/mockoverride-api
-   */
-  export interface MockOverride<TDependency, TClass> {
-    /**
-     * Specifies the mock implementation for a dependency. This is used to override the default behavior
-     * or setup-specific scenarios in tests.
-     *
-     * @param mockImplementation The function that defines the mock behavior. It takes a function returning a
-     * Vitest Stub and should return a partial implementation of the dependency.
-     * @returns {TestBedBuilder} A TestBedBuilder instance for chaining further configuration, allowing for fluent API style.
-     * @since 3.0.0
-     */
-    impl(
-      mockImplementation: (stubFn: () => Stub<ArgsType<TDependency>>) => DeepPartial<TDependency>
-    ): TestBedBuilder<TClass>;
-
-    /**
-     * Specifies the final, concrete implementation to use for a mocked dependency, effectively replacing any previous
-     * mock setups.
-     *
-     * @param {DeepPartial} finalImplementation The concrete implementation for the dependency, typically used when transitioning
-     * from mock to real objects.
-     * @returns {TestBedBuilder} A TestBedBuilder instance for chaining further configuration.
-     * @since 3.0.0
-     */
-    final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
-  }
 }
 
 declare module '@suites/core.unit' {
@@ -170,5 +135,42 @@ declare module '@suites/core.unit' {
       identifier: Type<TDependency> | string | symbol,
       identifierMetadata?: IdentifierMetadata
     ): VitestMocked<TDependency>;
+  }
+
+  /**
+   * Interface defining methods for configuring mock overrides in unit testing environments.
+   * This allows detailed setup of mock behavior for dependencies of the class under test.
+   *
+   * @since 3.0.0
+   * @template TDependency The type of the dependency to be mocked.
+   * @template TClass The type of the class under test.
+   * @see https://suites.dev/api-reference/api/mockoverride-api
+   */
+  export interface MockOverride<TDependency, TClass> {
+    /**
+     * Specifies the mock implementation for a dependency. This is used to override the default behavior
+     * or setup-specific scenarios in tests.
+     *
+     * @param mockImplementation The function that defines the mock behavior. It takes a function returning a
+     * Vitest Stub and should return a partial implementation of the dependency.
+     * @returns {TestBedBuilder} A TestBedBuilder instance for chaining further configuration, allowing for fluent API style.
+     * @since 3.0.0
+     */
+    impl(
+      mockImplementation: (
+        stubFn: () => VitestStub<ArgsType<TDependency>>
+      ) => DeepPartial<TDependency>
+    ): TestBedBuilder<TClass>;
+
+    /**
+     * Specifies the final, concrete implementation to use for a mocked dependency, effectively replacing any previous
+     * mock setups.
+     *
+     * @param {DeepPartial} finalImplementation The concrete implementation for the dependency, typically used when transitioning
+     * from mock to real objects.
+     * @returns {TestBedBuilder} A TestBedBuilder instance for chaining further configuration.
+     * @since 3.0.0
+     */
+    final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
   }
 }

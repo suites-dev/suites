@@ -1,7 +1,7 @@
 {
   "name": "@suites/types.doubles",
   "private": false,
-  "version": "3.0.0-next.0",
+  "version": "3.0.0-alpha.1",
   "license": "Apache-2.0",
   "types": "index.d.ts",
   "repository": {

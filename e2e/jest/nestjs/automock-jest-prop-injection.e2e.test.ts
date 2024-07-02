@@ -32,6 +32,10 @@ describe('Suites Jest / NestJS E2E Test Props', () => {
       .final({ doSomething: () => 'mocked' })
       .compile();
 
+    // For type checking only, no runtime effect
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const mockedTestClassOne: Mocked<TestClassOne> = ref.get(TestClassOne);
+
     unitRef = ref;
     unit = underTest;
   });

@@ -1,7 +1,7 @@
 {
   "name": "@suites/di.inversify",
   "private": false,
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-alpha.2",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "repository": {
@@ -34,8 +34,8 @@
     "dist"
   ],
   "dependencies": {
-    "@suites/types.common": "3.0.0-alpha.1",
-    "@suites/types.di": "3.0.0-alpha.1",
+    "@suites/types.common": "3.0.0-alpha.2",
+    "@suites/types.di": "3.0.0-alpha.2",
     "lodash.isequal": "^4.5.0"
   },
   "peerDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "@suites/doubles.sinon",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-alpha.2",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "keywords": [
@@ -45,9 +45,9 @@
     "sinon": "*"
   },
   "dependencies": {
-    "@suites/core.unit": "3.0.0-alpha.1",
-    "@suites/types.common": "3.0.0-alpha.1",
-    "@suites/types.doubles": "3.0.0-alpha.1"
+    "@suites/core.unit": "3.0.0-alpha.2",
+    "@suites/types.common": "3.0.0-alpha.2",
+    "@suites/types.doubles": "3.0.0-alpha.2"
   },
   "devDependencies": {
     "@types/sinon": "^10.0.19",

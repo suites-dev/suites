@@ -1,6 +1,6 @@
 {
   "name": "@suites/doubles.vitest",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0-alpha.2",
   "license": "Apache-2.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -50,9 +50,9 @@
     "vitest": ">= 1.0"
   },
   "dependencies": {
-    "@suites/core.unit": "3.0.0-alpha.1",
-    "@suites/types.common": "3.0.0-alpha.1",
-    "@suites/types.doubles": "3.0.0-alpha.1"
+    "@suites/core.unit": "^3.0.0-alpha.2",
+    "@suites/types.common": "^3.0.0-alpha.2",
+    "@suites/types.doubles": "^3.0.0-alpha.2"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^1.0.4",

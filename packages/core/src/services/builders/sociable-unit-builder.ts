@@ -38,10 +38,16 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
       }
     );
 
+    const identifiersToFinal: IdentifierToMockOrFinal[] = this.identifiersToBeFinalized.map(
+      ([identifier, finalImpl]: IdentifierToMockOrFinal) => {
+        return [identifier, finalImpl];
+      }
+    );
+
     const { container, instance, resolution } = await this.unitMocker.constructUnit<TClass>(
       this.targetClass,
       this.classesToExpose,
-      new DependencyContainer(identifiersToMocks)
+      new DependencyContainer([...identifiersToMocks, ...identifiersToFinal])
     );
 
     if (resolution.mocks.length > 0) {

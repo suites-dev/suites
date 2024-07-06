@@ -87,18 +87,18 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq
 
-      - name: Remove provenance from publishConfig
-        run: |
-          find packages -name 'package.json' | while read filename; do
-            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
-          done
-
-      - name: Commit Change
-        run: |
-          git config --global user.email "e2e@suites.dev"
-          git config --global user.name "Suites e2e"
-          git add .
-          git commit -am "remove provenance"
+#      - name: Remove provenance from publishConfig
+#        run: |
+#          find packages -name 'package.json' | while read filename; do
+#            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
+#          done
+#
+#      - name: Commit Change
+#        run: |
+#          git config --global user.email "e2e@suites.dev"
+#          git config --global user.name "Suites e2e"
+#          git add .
+#          git commit -am "remove provenance"
 
       - name: Publish Packages
         run: |
@@ -135,7 +135,7 @@ jobs:
           npm test
 
   publish:
-    name: publish
+    name: Publish Packages
     needs: [e2e]
     runs-on: ubuntu-latest
     steps:
@@ -159,20 +159,3 @@ jobs:
         run: npx lerna publish ${{ github.event.inputs.strategy }} --yes --dist-tag ${{ github.event.inputs.dist_tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Find Pull Request
-        uses: juliangruber/find-pull-request-action@v1
-        id: pull-request
-        with:
-          branch: ${{ github.event.inputs.target_branch }}
-
-      - name: Github - Create PR Comment
-        if: steps.pull-request.outputs.pr_found == 'true'
-        uses: actions-ecosystem/action-create-comment@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          number: ${{ steps.pull-request.outputs.number }}
-          body: |
-            **Published packages successfully :tada:** 🚀\
-            **Dist Tag:** ${{ github.event.inputs.dist_tag }}
-            

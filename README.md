@@ -143,4 +143,4 @@ Suites will automatically detect the installed adapters and configure itself acc
 
 ## :scroll: License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the Apache (Apache-2.0) License. See `LICENSE` for more information.

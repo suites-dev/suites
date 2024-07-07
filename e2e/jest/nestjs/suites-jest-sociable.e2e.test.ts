@@ -21,8 +21,14 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       .expose(UserDal)
       .expose(DatabaseService)
       .mock(Logger)
-      .using({ log: jest.fn().mockReturnValue('overridden') })
+      .impl((stubFn) => ({ log: stubFn().mockReturnValue('overridden') }))
+      .mock<string[]>('SOME_VALUE_TOKEN')
+      .final(['1', '2', '3'])
       .compile();
+
+    // For type checking only, no runtime effect
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const mockedLogger: Mocked<Logger> = ref.get(Logger);
 
     unitRef = ref;
     underTest = unit;
@@ -36,8 +42,14 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
     it('should log messages using the overridden Logger.log method when UserService is initialized', () => {
       const mockedLogger: Mocked<Logger> = unitRef.get(Logger);
 
-      expect(mockedLogger.log).toHaveBeenNthCalledWith(1, 'Just logging a message');
+      expect(mockedLogger.log).toHaveBeenNthCalledWith(1, 'just logging a message');
       expect(mockedLogger.log).toHaveBeenNthCalledWith(2, 'UserService initialized');
+    });
+
+    it('should log info message while using the constant dependency from the constructor, after finalizing it in the testbed', () => {
+      const mockedLogger: Mocked<Logger> = unitRef.get(Logger);
+
+      expect(mockedLogger.info).toHaveBeenCalledWith('printing from token: 1|2|3');
     });
 
     it('should throw an error indicating the dependencies cannot be retrieved as they were exposed in the testbed', () => {
@@ -100,7 +112,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       });
 
       it('should go through UserApiService because it is exposed and return the data', () => {
-        expect(result).toEqual('User Data: Data from API');
+        expect(result).toEqual('user data: Data from API');
       });
     });
   });

@@ -1,8 +1,8 @@
 {
   "name": "@suites/di.nestjs",
   "private": false,
-  "version": "3.0.0",
-  "license": "MIT",
+  "version": "3.0.0-alpha.2",
+  "license": "Apache-2.0",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
@@ -34,8 +34,8 @@
     "dist"
   ],
   "dependencies": {
-    "@suites/types.common": "^3.0.0",
-    "@suites/types.di": "^3.0.0"
+    "@suites/types.common": "3.0.0-alpha.2",
+    "@suites/types.di": "3.0.0-alpha.2"
   },
   "peerDependencies": {
     "@nestjs/common": ">= 8.0",
@@ -47,8 +47,7 @@
     "rxjs": "^7.8.1"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

@@ -15,7 +15,10 @@ export interface User {
 @Injectable()
 export class Logger {
   public log(message: string): string {
-    // Logs the message to the console or a logging service.
+    return message;
+  }
+
+  public info(message: string): string {
     return message;
   }
 }
@@ -79,7 +82,7 @@ export class UserApiService {
 
   public async getUserData(userId: string): Promise<string> {
     const data = await this.apiService.fetchData(`https://api.example.com/users/${userId}`);
-    return `User Data: ${data}`;
+    return `user data: ${data}`;
   }
 
   public verifyUser(user: User): boolean {
@@ -101,7 +104,7 @@ export class UserDal {
       return user;
     }
 
-    throw new Error('Invalid user data');
+    throw new Error('invalid user data');
   }
 
   public getUserDigest(user: User): string {
@@ -117,17 +120,18 @@ export class UserService {
     private readonly logger: Logger,
     @Inject('SOME_VALUE_TOKEN') private readonly someValue: string[]
   ) {
-    this.logger.log('Just logging a message');
+    this.logger.log('just logging a message');
 
     if (typeof this.logger.log !== 'function') {
-      throw new Error('Logger mock is not correctly set up. `log` method is missing.');
+      throw new Error('logger mock is not correctly set up. `log` method is missing.');
     }
 
+    this.logger.info(`printing from token: ${this.someValue.join('|')}`);
     this.logger.log('UserService initialized');
   }
 
   public async create(user: User): Promise<User> {
-    this.logger.log(`Creating user: ${user.name}`);
+    this.logger.log(`creating user: ${user.name}`);
     return this.userDal.createUser(user);
   }
 

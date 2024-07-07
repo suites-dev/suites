@@ -1,8 +1,8 @@
 {
   "name": "@suites/unit",
   "private": false,
-  "version": "3.0.0",
-  "license": "MIT",
+  "version": "3.0.0-alpha.2",
+  "license": "Apache-2.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "exports": {
@@ -25,7 +25,6 @@
     "inversify",
     "tsyringe"
   ],
-  "types": "typings.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git",
@@ -44,11 +43,11 @@
   "funding": [
     {
       "type": "github",
-      "url": "https://github.com/sponsors/suites"
+      "url": "https://github.com/sponsors/suites-dev"
     },
     {
       "type": "opencollective",
-      "url": "https://opencollective.com/suites"
+      "url": "https://opencollective.com/suites-dev"
     }
   ],
   "engines": {
@@ -62,18 +61,16 @@
   },
   "files": [
     "dist",
-    "typings.d.ts",
     "README.md"
   ],
   "dependencies": {
-    "@suites/core.unit": "^3.0.0",
-    "@suites/types.common": "^3.0.0",
-    "@suites/types.di": "^3.0.0",
-    "@suites/types.doubles": "^3.0.0"
+    "@suites/core.unit": "3.0.0-alpha.2",
+    "@suites/types.common": "3.0.0-alpha.2",
+    "@suites/types.di": "3.0.0-alpha.2",
+    "@suites/types.doubles": "3.0.0-alpha.2"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

@@ -1,6 +1,10 @@
 import { SuitesDIAdapters, SuitesDoublesAdapters, testBedBuilderFactory } from './testbed-builder';
-import type { Type } from '@nestjs/common';
-import { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/core.unit';
+import type { Type } from '@suites/types.common';
+import {
+  SociableTestBedBuilder as SociableTestBedBuilderCore,
+  SolitaryTestBedBuilder as SolitaryTestBedBuilderCore,
+} from '@suites/core.unit';
+import type { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/core.unit';
 
 /**
  * @description
@@ -32,7 +36,7 @@ export class TestBed {
    */
   public static solitary<TClass = any>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
-      SolitaryTestBedBuilder
+      SolitaryTestBedBuilderCore<TClass>
     );
   }
 
@@ -57,7 +61,7 @@ export class TestBed {
    *   .expose(DependencyOne)
    *   .expose(DependencyTwo)
    *   .mock(Logger)
-   *   .using({ log: jest.fn().mockReturnValue('overridden') })
+   *   .impl({ log: jest.fn().mockReturnValue('overridden') })
    *   .compile();
    *
    * @see https://suites.dev/docs/developer-guide/unit-tests
@@ -67,7 +71,7 @@ export class TestBed {
     targetClass: Type<TClass>
   ): Pick<SociableTestBedBuilder<TClass>, 'expose'> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
-      SociableTestBedBuilder
+      SociableTestBedBuilderCore<TClass>
     );
   }
 }

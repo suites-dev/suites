@@ -2,7 +2,7 @@ import type { ClassInjectable, InjectableRegistry, WithMetadata } from '@suites/
 import { UndefinedDependency } from '@suites/types.di';
 import type { MockedUnit } from './unit-mocker';
 import { UnitMocker } from './unit-mocker';
-import type { IdentifierToDependency } from './dependency-container';
+import type { IdentifierToMockOrFinal } from './dependency-container';
 import { DependencyContainer } from './dependency-container';
 
 class ArbitraryClassOne {}
@@ -109,7 +109,7 @@ describe('Unit Mocker Unit Spec', () => {
         });
 
         it('should return container that lists all the dependencies together, mocked from the builder or from advanced', () => {
-          expect(result.container.list()).toEqual<IdentifierToDependency[]>([
+          expect(result.container.list()).toEqual<IdentifierToMockOrFinal[]>([
             [{ identifier: ArbitraryClassOne }, MockedFromBuilder],
             [{ identifier: ArbitraryClassTwo }, StubbedClass],
             [{ identifier: ArbitraryClassFive }, MockedFromBuilder],

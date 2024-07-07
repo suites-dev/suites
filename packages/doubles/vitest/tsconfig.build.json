@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.build.json",
   "compilerOptions": {
-    "module": "esnext",
+    "module": "es2022",
     "target": "esnext",
     "removeComments": true,
     "rootDir": "src",

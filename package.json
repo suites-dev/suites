@@ -47,7 +47,7 @@
     "madge": "^7.0.0",
     "micromatch": "4.0.6",
     "prettier": "^3.2.5",
-    "rimraf": "^5.0.5",
+    "rimraf": "^6.0.1",
     "sinon": "^16.1.0",
     "tar": "6.2.1",
     "ts-jest": "^29.1.3",

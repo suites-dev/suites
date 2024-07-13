@@ -60,12 +60,12 @@ yarn build
 
 npm config set registry http://localhost:4873
 
-#find packages -name 'package.json' | while read filename; do
-#  jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
-#done
-#
-#git add .
-#git commit -m "remove provenance"
+find packages -name 'package.json' | while read filename; do
+  jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
+done
+
+git add .
+git commit -m "remove provenance"
 
 yarn lerna publish from-package --yes \
   --no-git-tag-version \
@@ -92,7 +92,7 @@ setup_and_test vitest inversify
 echo -e "🎉 Testing complete!"
 
 git stash
-#git reset --hard HEAD~1
+git reset --hard HEAD~1
 
 docker kill verdaccio
 docker rm verdaccio

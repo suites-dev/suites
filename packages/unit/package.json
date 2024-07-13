@@ -10,17 +10,17 @@
     "import": "./dist/esm/index.js"
   },
   "keywords": [
-    "unit",
+    "unit testing",
     "testing",
     "mocking",
-    "doubles",
+    "test doubles",
     "stubs",
     "mocks",
     "test",
     "jest",
     "sinon",
     "vitest",
-    "depdency injection",
+    "dependency injection",
     "nestjs",
     "inversify",
     "tsyringe"

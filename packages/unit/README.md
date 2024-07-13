@@ -15,7 +15,7 @@ of creating reliable tests, thereby ensuring the development of high-quality sof
 
 [↗️ Visit Documentation](https://suites.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://suites.dev/api-reference)
 
-## Automock is now Suites! 🎉
+## Automock has been rebranded to Suites 🎉
 
 **We are excited to announce that Automock has been rebranded to Suites**!
 
@@ -23,10 +23,6 @@ This change reflects our commitment to providing a comprehensive testing solutio
 testing scenarios. The core features and functionality of the framework remain the same, but with a new name and a fresh
 look.
 
-[↗️ More Information](https://suites.dev/overview/the-shift-from-automock)
-&nbsp;&nbsp;
-[↗️ Migration Guide](https://suites.dev/docs/getting-started/migrating-from-automock)
-&nbsp;&nbsp;
 [↗️ Change Log](https://suites.dev/docs/getting-started/change-log)
 
 ## Core Features
@@ -69,7 +65,7 @@ Let's create a unit test for this class:
 
 ```typescript
 import { TestBed, Mocked } from '@suites/unit';
-import { Database, UserService } from './user.service';
+import { Database, UserService } from './user.service'; 
 
 describe('User Service Unit Spec', () => {
   let userService: UserService; // 🧪 Declare the unit under test
@@ -142,4 +138,4 @@ Suites will automatically detect the installed adapters and configure itself acc
 
 ## :scroll: License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the Apache (Apache-2.0) License. See `LICENSE` for more information.

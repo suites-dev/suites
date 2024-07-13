@@ -76,7 +76,7 @@ yarn lerna publish from-package --yes \
   --no-git-reset \
   --exact \
   --force-publish \
-  --dist-tag e2e
+  --dist-tag ci
 
 echo "Cleaning source packages.."
 git rm -rf packages

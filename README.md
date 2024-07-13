@@ -24,7 +24,7 @@ This change reflects our commitment to providing a comprehensive testing solutio
 testing scenarios. The core features and functionality of the framework remain the same, but with a new name and a fresh
 look.
 
-[↗️ Change Log](https://suites.dev/docs/getting-started/change-log)
+[↗️ Change Log](https://suites.dev/docs/overview/migrating-from-automock)
 
 ## Core Features
 

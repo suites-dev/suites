@@ -122,7 +122,7 @@ jobs:
           --no-git-reset \
           --exact \
           --force-publish \
-          --dist-tag e2e
+          --dist-tag ci
 
       - name: Setup and Test
         run: |

@@ -1,5 +1,8 @@
 import { TestBed } from '@automock/jest';
 import { UnitReference } from '@automock/core';
+import { SinonStubbedInstance } from 'sinon';
+
+import Mocked = jest.Mocked;
 
 class ClassUnderTest {}
 
@@ -7,14 +10,22 @@ describe('just a dummy file', () => {
   let unit: ClassUnderTest;
   let unitRef: UnitReference;
 
+  let someMock: jest.Mocked<SomeClass>;
+
   beforeAll(() => {
     const { unitRef: ref, unit: underTest } = TestBed.create<ClassUnderTest>(ClassUnderTest)
       .mock<string>('CONSTANT_VALUE')
       .using('arbitrary-string')
+      .mock(SomeClass)
+      .using({ something: jest.fn() })
+      .mock(SomeOtherClass)
+      .using({ another: jest.fn().mockResolvedValue('some-value') })
       .compile();
 
     unitRef = ref;
     unit = underTest;
+
+    somemock = unitRef.get(SomeClass);
   });
 
   describe('when compiling the builder and turning into testing unit', () => {});

@@ -1,33 +1,133 @@
 import type { NodePath } from '@babel/traverse';
-import type { Identifier, ImportDeclaration, ImportSpecifier, Program } from '@babel/types';
-import { importDeclaration, isImportSpecifier, stringLiteral } from '@babel/types';
+import type {
+  Identifier,
+  ImportDeclaration,
+  ImportSpecifier,
+  Program,
+  TSImportEqualsDeclaration,
+} from '@babel/types';
+import {
+  importDeclaration,
+  isImportSpecifier,
+  stringLiteral,
+  importSpecifier,
+  tsImportEqualsDeclaration,
+  identifier as babelIdentifier,
+  tsQualifiedName,
+} from '@babel/types';
 
 export class ImportManager {
-  public manageImports(path: NodePath<ImportDeclaration>, modified: boolean): boolean {
-    if (
-      path.node.source.value === '@automock/jest' ||
-      path.node.source.value === '@automock/sinon'
-    ) {
-      path.node.source.value = '@suites/unit';
-      modified = true;
-    }
+  public manageImports(
+    path: NodePath<ImportDeclaration | TSImportEqualsDeclaration>,
+    modified: boolean
+  ): boolean {
+    if (path.isImportDeclaration()) {
+      if (
+        path.node.source.value === '@automock/jest' ||
+        path.node.source.value === '@automock/sinon'
+      ) {
+        path.node.source.value = '@suites/unit';
+        modified = true;
+      }
 
-    if (path.node.source.value === '@automock/core') {
-      path.node.specifiers.forEach((specifier) => {
-        if (
-          isImportSpecifier(specifier) &&
-          (specifier.imported as Identifier).name === 'UnitReference'
-        ) {
-          (specifier.imported as Identifier).name = 'UnitReference';
-          path.node.source.value = '@suites/unit';
+      if (path.node.source.value === 'sinon') {
+        let sinonStubbedInstanceIndex = -1;
+        path.node.specifiers.forEach((specifier, index) => {
+          if (
+            isImportSpecifier(specifier) &&
+            (specifier.imported as Identifier).name === 'SinonStubbedInstance'
+          ) {
+            sinonStubbedInstanceIndex = index;
+          }
+        });
+
+        if (sinonStubbedInstanceIndex !== -1) {
+          path.node.specifiers.splice(sinonStubbedInstanceIndex, 1);
           modified = true;
+
+          // Add Mocked from @suites/unit if not already imported
+          const alreadyImported = this.alreadyImportedMocked(path);
+          if (!alreadyImported) {
+            const newImport = importDeclaration(
+              [importSpecifier(babelIdentifier('Mocked'), babelIdentifier('Mocked'))],
+              stringLiteral('@suites/unit')
+            );
+            path.insertAfter(newImport);
+          }
         }
-      });
+      }
+
+      if (path.node.source.value === '@automock/core') {
+        path.node.specifiers.forEach((specifier) => {
+          if (
+            isImportSpecifier(specifier) &&
+            (specifier.imported as Identifier).name === 'UnitReference'
+          ) {
+            (specifier.imported as Identifier).name = 'UnitReference';
+            path.node.source.value = '@suites/unit';
+            modified = true;
+          }
+        });
+      }
+
+      if (path.node.source.value === 'jest') {
+        path.node.specifiers.forEach((specifier, index) => {
+          if (
+            isImportSpecifier(specifier) &&
+            (specifier.imported as Identifier).name === 'Mocked'
+          ) {
+            const newSpecifier = importSpecifier(
+              babelIdentifier('Mocked'),
+              babelIdentifier('Mocked')
+            );
+            const newImport = importDeclaration([newSpecifier], stringLiteral('@suites/unit'));
+            path.parentPath.node.body.push(newImport); // Add new import to the program body
+            path.node.specifiers.splice(index, 1); // Remove the Mocked specifier from the current import
+            if (path.node.specifiers.length === 0) {
+              path.remove(); // If no other specifiers left, remove the whole import declaration
+            }
+            modified = true;
+          }
+        });
+      }
+    } else if (path.isTSImportEqualsDeclaration()) {
+      // Specific handling for TypeScript style imports
+      const tsImport = path.node;
+      if (
+        tsImport.moduleReference.type === 'TSQualifiedName' &&
+        tsImport.moduleReference.left.name === 'jest' &&
+        tsImport.moduleReference.right.name === 'Mocked'
+      ) {
+        // Create a new TypeScript import equals declaration replacing jest.Mocked with Suites Mocked
+        const newTSImport = tsImportEqualsDeclaration(
+          babelIdentifier(tsImport.name.name),
+          tsQualifiedName(babelIdentifier('@suites/unit'), babelIdentifier('Mocked'))
+        );
+        path.replaceWith(newTSImport);
+        modified = true;
+      }
     }
 
     // Combine imports if necessary
-    this.combineImports(path.parentPath as NodePath<Program>, '@suites/unit');
+    if (path.parentPath.isProgram()) {
+      this.combineImports(path.parentPath, '@suites/unit');
+    }
+
     return modified;
+  }
+
+  private alreadyImportedMocked(path: NodePath<Program>): boolean {
+    // Look through the entire program to see if there's already an import for Mocked from @suites/unit
+    return path.parent.body.some(
+      (node: any) =>
+        node.type === 'ImportDeclaration' &&
+        node.source.value === '@suites/unit' &&
+        node.specifiers.some(
+          (specifier: any) =>
+            specifier.type === 'ImportSpecifier' &&
+            (specifier.imported.name === 'Mocked' || specifier.local.name === 'Mocked')
+        )
+    );
   }
 
   private combineImports(programPath: NodePath<Program>, source: string): void {

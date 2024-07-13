@@ -2,7 +2,7 @@
   "name": "@suites/cli",
   "private": false,
   "version": "0.0.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "main": "dist/index.js",
   "repository": {
     "type": "git",

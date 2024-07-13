@@ -2,7 +2,8 @@
 
 exports[`Code Migrator Integration Test migrate 1`] = `
 "import { TestBed,
-UnitReference } from "@suites/unit";
+UnitReference, Mocked } from "@suites/unit";
+import { SinonStubbedInstance } from 'sinon';
 
 class ClassUnderTest {}
 
@@ -10,14 +11,22 @@ describe('just a dummy file', () => {
   let unit: ClassUnderTest;
   let unitRef: UnitReference;
 
-  beforeAll(async () => {
-    const { unitRef: ref, unit: underTest } = await TestBed.solitary<ClassUnderTest>(ClassUnderTest).
+  let someMock: jest.Mocked<SomeClass>;
+
+  beforeAll(() => {
+    const { unitRef: ref, unit: underTest } = TestBed.solitary<ClassUnderTest>(ClassUnderTest).
     mock<string>('CONSTANT_VALUE').
-    using('arbitrary-string').
+    final('arbitrary-string').
+    mock(SomeClass).
+    impl((stubFn) => ({ something: stubFn() })).
+    mock(SomeOtherClass).
+    impl((stubFn) => ({ another: stubFn().mockResolvedValue('some-value') })).
     compile();
 
     unitRef = ref;
     unit = underTest;
+
+    somemock = unitRef.get(SomeClass);
   });
 
   describe('when compiling the builder and turning into testing unit', () => {});

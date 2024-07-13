@@ -93,6 +93,13 @@ jobs:
             jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
           done
 
+      - name: Commit Change
+        run: |
+          git config --global user.email "e2e@suites.dev"
+          git config --global user.name "Suites e2e"
+          git add .
+          git commit -am "remove provenance"
+
       - name: Publish Packages
         run: |
           yarn lerna publish from-package --yes \

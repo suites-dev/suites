@@ -1,20 +1,21 @@
 {
-  "name": "automock-jest-nestjs",
+  "name": "suites-jest-nestjs",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "dependencies": {
-    "@automock/adapters.nestjs": "file:tarballs/adapters.nestjs.tgz",
-    "@automock/core": "file:tarballs/core.tgz",
-    "@automock/common": "file:tarballs/common.tgz",
-    "@automock/types": "file:tarballs/types.tgz",
-    "@automock/jest": "file:tarballs/jest.tgz"
+    "@suites/di.nestjs": "e2e",
+    "@suites/doubles.jest": "e2e",
+    "@suites/unit": "e2e",
+    "@nestjs/common": "10.0.0",
+    "@nestjs/core": "10.0.0",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@types/jest": "^27.5.2",
     "jest": "*",
     "ts-jest": "*",
     "ts-node": "*",
-    "typescript": "^4.x"
+    "typescript": "^5.x"
   },
   "scripts": {
     "test": "jest && tsc --noEmit"

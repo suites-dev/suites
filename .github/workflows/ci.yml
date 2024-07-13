@@ -27,11 +27,20 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
+      - name: Remove Vitest If Needed
+        if: ${{ matrix.node-version == '16.x'  }}
+        run: rm -rf packages/doubles/vitest
+
       - name: Yarn
         run: yarn --frozen-lockfile
 
       - name: Build
+        if: ${{ matrix.node-version != '16.x' }}
         run: yarn build
+
+      - name: Build
+        if: ${{ matrix.node-version == '16.x' }}
+        run: yarn build --ignore @suites/doubles.vitest
 
   lint:
     name: Lint
@@ -42,6 +51,8 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
 
       - uses: actions/cache@v2
         with:
@@ -62,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ['jest', 'sinon', 'core', 'adapters.nestjs', 'adapters.inversify']
+        project: ['doubles.jest', 'doubles.sinon', 'core.unit', 'doubles.vitest', 'di.nestjs', 'di.inversify', 'unit']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -70,7 +81,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.17.0'
+          node-version: '18.x'
 
       - uses: actions/cache@v2
         with:
@@ -84,10 +95,12 @@ jobs:
         run: mkdir -p ${{ github.workspace }}/coverage
 
       - name: Test
-        run: yarn lerna exec yarn test --scope @automock/${{ matrix.project }}
+        run: yarn lerna exec yarn test --scope @suites/${{ matrix.project }}
         env:
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
           JEST_JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
+          JUNIT_OUTPUT_NAME: ${{ matrix.project }}
+          JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
           COVERAGE_DIR: ${{ github.workspace }}/coverage
           COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 

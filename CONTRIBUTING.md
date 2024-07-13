@@ -37,7 +37,7 @@ involvement is key to driving this vision forward and improving Automock.
 
 1. **Clone the Automock Repository**:
     ```bash
-    git clone https://github.com/automock/automock.git
+    git clone https://github.com/suites-dev/suites.git
     ```
 2. **Install Dependencies**:
     ```bash
@@ -56,7 +56,7 @@ yarn test
 
 ### Reporting Issues and Bugs
 
-Discover a bug? First, check our [Issue Tracker](https://github.com/automock/automock/issues). If it's a new issue,
+Discover a bug? First, check our [Issue Tracker](https://github.com/suites-dev/suites/issues). If it's a new issue,
 create a detailed report including steps to reproduce, expected outcomes, and actual results.
 
 ### Feature Requests

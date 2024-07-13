@@ -1,0 +1,41 @@
+{
+  "name": "@suites/types.common",
+  "private": false,
+  "version": "3.0.0",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/types/di"
+  },
+  "homepage": "https://suites.dev",
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites/issues"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
+  "scripts": {
+    "prebuild": "yarn rimraf dist",
+    "build": "yarn tsc -p tsconfig.build.json",
+    "test": "jest --passWithNoTests",
+    "lint": "yarn eslint '{src,test}/**/*.ts'"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "typings.d.ts"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
+}

@@ -1,0 +1,13 @@
+{
+  "extends": "../../../tsconfig.build.json",
+  "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "rootDir": ".",
+    "outDir": ".",
+    "baseUrl": ".",
+    "target": "es6"
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

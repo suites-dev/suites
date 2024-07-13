@@ -1,4 +1,6 @@
-name: Automock E2E
+name: Suites e2e
+env:
+  CI: true
 
 on:
   workflow_dispatch:
@@ -7,72 +9,177 @@ on:
         description: 'E2E Target Branch'
         required: true
 
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+  checks: write
+  statuses: write
+
 jobs:
-  build:
-    name: Build, Prepare and Test
+  status-pending:
+    name: Update PR Status
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+      checks: write
+      statuses: write
+    steps:
+      - name: Find Pull Request
+        uses: juliangruber/find-pull-request-action@v1
+        id: pull-request
+        with:
+          branch: ${{ inputs.target_branch }}
+
+      - name: Update PR e2e Status to Pending
+        run: |
+          curl \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
+          -d '{"state":"pending","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"Running..","context":"Suites e2e"}'
+
+  e2e:
+    name: Build and Test
+    needs: [status-pending]
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'jest/inversify', 'sinon/inversify']
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
         node-version: [16.x, 18.x, 20.x]
+        exclude:
+          - e2e-project: 'vitest/inversify'
+            node-version: '16.x'
+          - e2e-project: 'vitest/nestjs'
+            node-version: '16.x'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.target_branch }}
+          ref: ${{ inputs.target_branch }}
 
-      - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Remove Vitest If Needed
+        if: ${{ matrix.node-version == '16.x' }}
+        run: |
+          rm -rf packages/doubles/vitest
+          git config --global user.email "ci@suites.dev"
+          git config --global user.name "Suites CI"
+          git add .
+          git commit -am "remove vitest temp"
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
         run: yarn --frozen-lockfile
 
+      - name: Run Verdaccio Docker
+        run: |
+          docker run -d --name verdaccio \
+          -p 4873:4873 \
+          -v ${{ github.workspace }}/e2e/config.yaml:/verdaccio/conf/config.yaml \
+          verdaccio/verdaccio
+
       - name: Build
         run: yarn build
 
-      - name: Pack
-        run: lerna exec -- npm pack
+      - name: Setup Registry
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: http://localhost:4873
+          scope: '@suites'
+          always-auth: false
 
-      - name: Prepare Tarballs
-        run: |
-          mkdir -p $PWD/e2e/tarballs
-          lerna exec -- mv "*.tgz" $PWD/e2e/tarballs
+      - name: Install jq
+        run: sudo apt-get install jq
 
-      - name: Rename Tarballs
+      - name: Remove provenance from publishConfig
         run: |
-          for file in $PWD/e2e/tarballs/automock-*.tgz; do
-            [[ $file =~ automock-(.+)-[0-9]+\.[0-9]+\.[0-9]+(-dev\.[0-9]+)?\.tgz ]]
-            new_name="${BASH_REMATCH[1]}.tgz"
-            mv "$file" "$PWD/e2e/tarballs/$new_name"
+          find packages -name 'package.json' | while read filename; do
+            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
           done
 
-      - name: Remove Source Code
-        run: rm -rf packages
+      - name: Commit Change
+        run: |
+          git config --global user.email "e2e@suites.dev"
+          git config --global user.name "Suites e2e"
+          git add .
+          git commit -am "remove provenance"
+
+      - name: Publish Packages
+        run: |
+          yarn lerna publish from-package --yes \
+          --no-git-tag-version \
+          --no-push \
+          --no-changelog \
+          --no-commit-hooks \
+          --no-git-reset \
+          --exact \
+          --force-publish \
+          --dist-tag e2e
 
       - name: Setup and Test
         run: |
           IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
           echo "FRAMEWORK=$framework" >> $GITHUB_ENV
           echo "LIBRARY=$library" >> $GITHUB_ENV
+
+      - name: Clean Source
+        run: |
+          rm -rf packages
+          rm -rf node_modules
+
+      - name: Install Dependencies
+        run: |
+          cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
+          npm install --no-cache --no-package-lock
+          npm install --dev --no-package-lock @types/node@${{ matrix.node-version }}
+
       - name: Execute Test
         run: |
-          cp -r "$PWD/e2e/tarballs" "$PWD/e2e/$LIBRARY/$FRAMEWORK"
-          
-          # Remove the unnecessary tarballs based on the library
-          if [ "$LIBRARY" = "jest" ]; then
-            rm -rf "$PWD/e2e/$LIBRARY/$FRAMEWORK/tarballs/sinon.tgz"
-          elif [ "$LIBRARY" = "sinon" ]; then
-            rm -rf "$PWD/e2e/$LIBRARY/$FRAMEWORK/tarballs/jest.tgz"
-          fi
+          cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
+          npm test
 
-          rm -rf "$PWD/e2e/$LIBRARY/$FRAMEWORK/node_modules"
-          npm install --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK" --no-cache --no-package-lock
-          npm test --prefix "$PWD/e2e/$LIBRARY/$FRAMEWORK"
-        working-directory: ${{ github.workspace }}
+  update-status:
+    name: Update PR Status
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+      checks: write
+      statuses: write
+    needs: [status-pending, e2e]
+    if: always()
+    steps:
+      - name: Find Pull Request
+        uses: juliangruber/find-pull-request-action@v1
+        id: pull-request
+        with:
+          branch: ${{ inputs.target_branch }}
+
+      - name: Update PR e2e Status (Failed)
+        if: needs.e2e.result == 'failure'
+        run: |
+          curl \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
+          -d '{"state":"failure","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"❌ Failed","context":"Suites e2e"}'
+
+      - name: Update PR e2e Status (Success)
+        if: needs.e2e.result == 'success'
+        run: |
+          curl \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
+          -d '{"state":"success","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"✅ Passed Successfully","context":"Suites e2e"}'

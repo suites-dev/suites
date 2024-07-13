@@ -1,42 +1,38 @@
-import { UnitReference } from '@automock/core';
-import { TestBed } from '@automock/jest';
+import type { UnitReference, Mocked } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Logger, TestClassFive } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
-  Foo,
-  Logger,
   NestJSTestClass,
   SymbolToken,
-  SymbolTokenSecond,
-  TestClassFive,
   TestClassFour,
   TestClassOne,
-  TestClassThree,
   TestClassTwo,
 } from './e2e-assets';
 
-describe('Automock Jest / NestJS E2E Test Ctor', () => {
+describe('Suites Jest / NestJS E2E Test Ctor', () => {
   let unit: NestJSTestClass;
   let unitRef: UnitReference;
 
-  beforeAll(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.create<NestJSTestClass>(NestJSTestClass)
+  beforeAll(async () => {
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<NestJSTestClass>(
+      NestJSTestClass
+    )
       .mock(TestClassOne)
-      .using({
-        async foo(): Promise<string> {
-          return 'foo-from-test';
-        },
+      .impl((stubFn) => ({
+        foo: stubFn().mockResolvedValue('foo-from-test'),
         bar(): string {
           return 'bar';
         },
-      })
+      }))
       .mock<string>('CONSTANT_VALUE')
-      .using('arbitrary-string')
+      .final('arbitrary-string')
       .mock('UNDEFINED')
-      .using({ method: () => 456 })
+      .final({ method: () => 456 })
       .mock<Logger>('LOGGER')
-      .using({ log: () => 'baz-from-test' })
+      .impl((stubFn) => ({ log: stubFn().mockReturnValue('baz-from-test') }))
       .mock<TestClassFive>(SymbolToken)
-      .using({ doSomething: () => 'mocked' })
+      .final({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;
@@ -50,20 +46,11 @@ describe('Automock Jest / NestJS E2E Test Ctor', () => {
 
     test('then successfully resolve the dependencies of the tested classes', () => {
       expect(() => unitRef.get<{ log: () => void }>('LOGGER')).toBeDefined();
-      expect(() => unitRef.get('UNDEFINED')).toBeDefined();
-      expect(() => unitRef.get('UNDEFINED_SECOND')).toBeDefined();
-      expect(() => unitRef.get(TestClassFour)).toBeDefined();
-      expect(() => unitRef.get(TestClassThree)).toBeDefined();
-      expect(() => unitRef.get(Foo)).toBeDefined();
-      expect(() => unitRef.get(TestClassTwo)).toBeDefined();
-      expect(() => unitRef.get('CONSTANT_VALUE')).toBeDefined();
       expect(() => unitRef.get(TestClassOne)).toBeDefined();
-      expect(() => unitRef.get(SymbolToken)).toBeDefined();
-      expect(() => unitRef.get(SymbolTokenSecond)).toBeDefined();
     });
 
     test('call the unit instance method', async () => {
-      const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       testClassTwo.bar.mockResolvedValue('context');
 
@@ -71,14 +58,8 @@ describe('Automock Jest / NestJS E2E Test Ctor', () => {
       expect(result).toBe('context-baz-from-test-bar');
     });
 
-    test('then do not return the actual reflected dependencies of the injectable class', () => {
-      expect(() => unitRef.get(TestClassOne)).not.toBeInstanceOf(TestClassOne);
-      expect(() => unitRef.get(TestClassTwo)).not.toBeInstanceOf(TestClassTwo);
-      expect(() => unitRef.get(SymbolToken)).not.toBeInstanceOf(TestClassFive);
-    });
-
     test('then mock the implementation of the dependencies', async () => {
-      const testClassOne: jest.Mocked<TestClassOne> = unitRef.get(TestClassOne);
+      const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
       const logger = unitRef.get<Logger>('LOGGER');
 
       // The original 'foo' method in TestClassOne return value should be changed
@@ -95,26 +76,26 @@ describe('Automock Jest / NestJS E2E Test Ctor', () => {
     });
 
     test('then all the unoverride classes/dependencies should be stubs as well', () => {
-      const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       expect(testClassTwo.bar.getMockName).toBeDefined();
       expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');
     });
 
     test('then mock the undefined reflected values and tokens', () => {
-      const testClassFour: jest.Mocked<TestClassFour> = unitRef.get(TestClassFour);
-      const undefinedValue: jest.Mocked<{ method: () => number }> = unitRef.get<{
-        method: () => number;
-      }>('UNDEFINED');
+      const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
 
       testClassFour.doSomething.mockReturnValue('mocked');
 
       expect(testClassFour.doSomething()).toBe('mocked');
-      expect(undefinedValue.method()).toBe(456);
     });
 
     test('then throw an error when trying to resolve not existing dependency', () => {
       expect(() => unitRef.get(ClassThatIsNotInjected)).toThrow();
+    });
+
+    test('then throw an error when trying to resolve faked dependency', () => {
+      expect(() => unitRef.get('UNDEFINED')).toThrow(/as it is marked as a faked dependency/);
     });
   });
 });

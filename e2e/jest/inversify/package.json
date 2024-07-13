@@ -1,19 +1,18 @@
 {
-  "name": "automock-jest-inverisfy",
+  "name": "suites-jest-inverisfy",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "dependencies": {
-    "@automock/adapters.inversify": "file:tarballs/adapters.inversify.tgz",
-    "@automock/core": "file:tarballs/core.tgz",
-    "@automock/common": "file:tarballs/common.tgz",
-    "@automock/types": "file:tarballs/types.tgz",
-    "@automock/jest": "file:tarballs/jest.tgz"
+    "@suites/di.inversify": "e2e",
+    "@suites/doubles.jest": "e2e",
+    "@suites/unit": "e2e",
+    "inversify": "^6.0.2",
+    "reflect-metadata": "^0.1.13"
   },
   "scripts": {
     "test": "jest && tsc --noEmit"
   },
   "devDependencies": {
-    "inversify": "^6.0.2",
     "@types/jest": "^29.0.1",
     "jest": "*",
     "ts-jest": "*",

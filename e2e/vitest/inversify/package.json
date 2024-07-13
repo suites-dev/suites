@@ -1,0 +1,24 @@
+{
+  "name": "suites-vitest-inverisfy",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "@suites/di.inversify": "e2e",
+    "@suites/doubles.vitest": "e2e",
+    "@suites/unit": "e2e",
+    "inversify": "^6.0.2",
+    "reflect-metadata": "^0.1.13"
+  },
+  "scripts": {
+    "test": "npx vitest --run && tsc --noEmit"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.3.105",
+    "@vitest/coverage-v8": "^1.2.1",
+    "ts-node": "*",
+    "typescript": "^5.x",
+    "unplugin-swc": "1.4.4",
+    "vitest": "*"
+  }
+}

@@ -4,6 +4,7 @@ on:
     inputs:
       release_type:
         description: 'Release Type'
+        type: choice
         options:
           - 'graduate'
           - 'prerelease'
@@ -11,6 +12,7 @@ on:
         default: 'prerelease'
       target_branch:
         description: 'Target Branch'
+        type: choice
         options:
           - 'master'
           - 'next'
@@ -18,6 +20,7 @@ on:
         default: 'next'
       preid:
         description: 'Prefix Id'
+        type: choice
         options:
           - 'latest'
           - 'next'
@@ -27,6 +30,14 @@ on:
           - 'beta'
         required: true
         default: 'next'
+      exact_version:
+        description: 'Exact Version'
+        type: string
+        required: false
+
+permissions:
+  contents: write
+  id-token: write
 
 jobs:
   tag-version:
@@ -44,24 +55,31 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
+      - name: Prerelease Version (Exact Version)
+        if: ${{ github.event.inputs.release_type == 'prerelease' && github.event.inputs.exact_version }}
+        run: |
+          npx lerna version ${{ github.event.inputs.exact_version }} --yes --no-changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Prerelease Version
-        if: ${{ github.event.inputs.release_type == 'prerelease' }}
+        if: ${{ github.event.inputs.release_type == 'prerelease' && !github.event.inputs.exact_version }}
         run: |
           npx lerna version prerelease --yes \
           --preid ${{ github.event.inputs.preid }} \
-          --no-git-tag-version --no-changelog
+          --no-changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Graduate Version
         if: ${{ github.event.inputs.release_type == 'graduate' }}
-        run: npx lerna version graduate --yes --sign-git-tag --sign-git-commit
+        run: npx lerna version graduate --yes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Changes to Branch
         run: |
-          git push origin ${{ github.event.inputs.target_branch }}
+          git push origin ${{ github.event.inputs.target_branch }} --no-verify
           git push origin --tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

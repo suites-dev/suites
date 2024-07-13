@@ -37,7 +37,7 @@ jobs:
         run: mkdir -p ${{ github.workspace }}/coverage
 
       - name: Test
-        run: yarn lerna exec yarn test --scope @automock/${{ matrix.project }}
+        run: yarn lerna exec yarn test --scope @suites/${{ matrix.project }}
         env:
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
           JEST_JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports

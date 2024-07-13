@@ -2,5 +2,5 @@ blank_issues_enabled: false
 
 contact_links:
   - name: "\u2049 Docs"
-    url: "https://automock.dev/docs"
+    url: "https://suites.dev/docs"
     about: "Make sure you searched in our documentation website"

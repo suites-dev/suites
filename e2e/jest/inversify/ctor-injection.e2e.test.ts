@@ -1,11 +1,10 @@
 import 'reflect-metadata';
-
-import { UnitReference } from '@automock/core';
-import { TestBed } from '@automock/jest';
+import type { UnitReference, Mocked } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Logger, Bar } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
   Foo,
-  Logger,
   InversifyJSTestClass,
   SymbolToken,
   SymbolTokenSecond,
@@ -14,34 +13,33 @@ import {
   TestClassOne,
   TestClassThree,
   TestClassTwo,
-  Bar,
 } from './e2e-assets';
 
-describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
+describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
   let unit: InversifyJSTestClass;
   let unitRef: UnitReference;
 
-  beforeAll(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.create<InversifyJSTestClass>(
+  beforeAll(async () => {
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<InversifyJSTestClass>(
       InversifyJSTestClass
     )
       .mock(TestClassOne)
-      .using({
-        foo: jest.fn().mockResolvedValue('foo-from-test'),
+      .impl((stubFn) => ({
+        foo: stubFn().mockResolvedValue('foo-from-test'),
         bar(): string {
           return 'bar';
         },
-      })
+      }))
       .mock<Logger>('LOGGER')
-      .using({ log: () => 'baz-from-test' })
+      .final({ log: () => 'baz-from-test' })
       .mock('UNDEFINED')
-      .using({ method: () => 456 })
+      .final({ method: () => 456 })
       .mock<Bar>('BarToken', { name: 'someTarget' })
-      .using({})
+      .final({})
       .mock<string>('CONSTANT_VALUE')
-      .using('arbitrary-string')
+      .final('arbitrary-string')
       .mock<TestClassFive>(SymbolToken)
-      .using({ doSomething: () => 'mocked' })
+      .final({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;
@@ -68,7 +66,7 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     test('call the unit instance method', async () => {
-      const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       testClassTwo.bar.mockResolvedValue('context');
 
@@ -83,16 +81,13 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     test('then mock the implementation of the dependencies', async () => {
-      const testClassOne: jest.Mocked<TestClassOne> = unitRef.get(TestClassOne);
-      const logger = unitRef.get<Logger>('LOGGER');
+      const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
 
       // The original 'foo' method in TestClassOne return value should be changed
       // according to the passed flag; here, always return the same value
       // because we mock the implementation of foo permanently
       await expect(testClassOne.foo(true)).resolves.toBe('foo-from-test');
       await expect(testClassOne.foo(false)).resolves.toBe('foo-from-test');
-
-      expect(logger.log).toBeDefined();
     });
 
     test('then treat duplicate identifiers as the same reference', async () => {
@@ -100,22 +95,18 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     test('then all the unoverride classes/dependencies should be stubs as well', () => {
-      const testClassTwo: jest.Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       expect(testClassTwo.bar.getMockName).toBeDefined();
       expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');
     });
 
     test('then mock the undefined reflected values and tokens', () => {
-      const testClassFour: jest.Mocked<TestClassFour> = unitRef.get(TestClassFour);
-      const undefinedValue: jest.Mocked<{ method: () => number }> = unitRef.get<{
-        method: () => number;
-      }>('UNDEFINED');
+      const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
 
       testClassFour.doSomething.mockReturnValue('mocked');
 
       expect(testClassFour.doSomething()).toBe('mocked');
-      expect(undefinedValue.method()).toBe(456);
     });
 
     test('then throw an error when trying to resolve not existing dependency', () => {

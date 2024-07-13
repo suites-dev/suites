@@ -1,0 +1,77 @@
+{
+  "name": "@suites/unit",
+  "private": false,
+  "version": "3.0.0",
+  "license": "Apache-2.0",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
+  "keywords": [
+    "unit testing",
+    "testing",
+    "mocking",
+    "test doubles",
+    "stubs",
+    "mocks",
+    "test",
+    "jest",
+    "sinon",
+    "vitest",
+    "dependency injection",
+    "nestjs",
+    "inversify",
+    "tsyringe"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/unit"
+  },
+  "homepage": "https://suites.dev",
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites/issues"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/suites-dev"
+    },
+    {
+      "type": "opencollective",
+      "url": "https://opencollective.com/suites-dev"
+    }
+  ],
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
+  "scripts": {
+    "prebuild": "yarn rimraf dist",
+    "build": "sh ./build.sh",
+    "test": "jest --coverage --verbose",
+    "lint": "yarn eslint '{src,test}/**/*.ts'"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "@suites/core.unit": "^3.0.0",
+    "@suites/types.common": "^3.0.0",
+    "@suites/types.di": "^3.0.0",
+    "@suites/types.doubles": "^3.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
+}

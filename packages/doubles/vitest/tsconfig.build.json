@@ -1,0 +1,17 @@
+{
+  "extends": "../../../tsconfig.build.json",
+  "compilerOptions": {
+    "module": "es2022",
+    "target": "esnext",
+    "removeComments": true,
+    "rootDir": "src",
+    "baseUrl": "./",
+    "outDir": "dist",
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "vitest.config.ts"
+  ]
+}

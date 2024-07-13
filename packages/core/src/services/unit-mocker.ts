@@ -1,51 +1,48 @@
-import { Type, MockFunction } from '@automock/types';
-import { InjectablesRegistry, WithMetadata } from '@automock/common';
-import { IdentifierToMock, MocksContainer } from './mocks-container';
-import { normalizeIdentifier } from '../normalize-identifier.static';
+import type { MockFunction } from '@suites/types.doubles';
+import type { DependencyInjectionAdapter } from '@suites/types.di';
+import type { IdentifierToMockOrFinal } from './dependency-container';
+import { DependencyContainer } from './dependency-container';
+import type { Type } from '@suites/types.common';
+import { DependencyResolver } from './dependency-resolver';
 
 export interface MockedUnit<TClass> {
-  container: MocksContainer;
+  container: DependencyContainer;
   instance: TClass;
+  resolution: {
+    notFound: IdentifierToMockOrFinal[];
+    mocks: { metadata?: unknown; identifier: Type }[];
+    exposes: Type[];
+  };
 }
 
 export class UnitMocker {
-  public constructor(private readonly mockFunction: MockFunction<unknown>) {}
+  public constructor(
+    private readonly mockFunction: Promise<MockFunction>,
+    private readonly diAdapter: Promise<DependencyInjectionAdapter>
+  ) {}
 
-  public applyMocksToUnit<TClass>(
-    targetClass: Type<TClass>
-  ): (
-    mockContainer: MocksContainer,
-    injectablesContainer: InjectablesRegistry
-  ) => MockedUnit<TClass> {
-    const identifiersToMocks: IdentifierToMock[] = [];
+  public async constructUnit<TClass>(
+    targetClass: Type<TClass>,
+    classesToExpose: Type[],
+    mockContainer: DependencyContainer
+  ): Promise<MockedUnit<TClass>> {
+    const dependencyResolver = new DependencyResolver(
+      classesToExpose,
+      mockContainer,
+      await this.diAdapter,
+      await this.mockFunction
+    );
 
-    return (
-      mocksContainer: MocksContainer,
-      injectablesContainer: InjectablesRegistry
-    ): MockedUnit<TClass> => {
-      const allInjectables = injectablesContainer.list() as WithMetadata<never>[];
-      const ctorInjectables = allInjectables.filter(({ type }) => type === 'PARAM');
-      const propsInjectables = allInjectables.filter(({ type }) => type === 'PROPERTY');
+    const instance = dependencyResolver.instantiateClass(targetClass);
 
-      for (const { identifier, metadata } of ctorInjectables) {
-        const mock = mocksContainer.resolve(identifier, metadata) || this.mockFunction();
-        identifiersToMocks.push([normalizeIdentifier(identifier, metadata), mock]);
-      }
+    const identifierToDependency = Array.from(dependencyResolver.getResolvedDependencies())
+      .map(([identifier, value]) => [identifier, value] as IdentifierToMockOrFinal)
+      .filter(([{ identifier }]) => identifier !== targetClass);
 
-      const classCtorParams = identifiersToMocks.map(([, value]) => value);
-      const classInstance = new targetClass(...classCtorParams) as Record<string, unknown>;
-
-      for (const { identifier, metadata, property } of propsInjectables) {
-        const mock = mocksContainer.resolve(identifier, metadata) || this.mockFunction();
-
-        identifiersToMocks.push([normalizeIdentifier(identifier, metadata), mock]);
-        classInstance[property!.key] = mock;
-      }
-
-      return {
-        container: new MocksContainer(identifiersToMocks),
-        instance: classInstance as TClass,
-      };
+    return {
+      container: new DependencyContainer(identifierToDependency),
+      instance: instance as TClass,
+      resolution: dependencyResolver.getResolutionSummary(),
     };
   }
 }

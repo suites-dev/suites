@@ -1,13 +1,13 @@
 {
-  "name": "automock-sinon-nestjs",
+  "name": "suites-sinon-nestjs",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "dependencies": {
-    "@automock/adapters.nestjs": "file:tarballs/adapters.nestjs.tgz",
-    "@automock/core": "file:tarballs/core.tgz",
-    "@automock/common": "file:tarballs/common.tgz",
-    "@automock/types": "file:tarballs/types.tgz",
-    "@automock/sinon": "file:tarballs/sinon.tgz"
+    "@suites/di.nestjs": "e2e",
+    "@suites/doubles.sinon": "e2e",
+    "@suites/unit": "e2e",
+    "@nestjs/core": "10.0.0",
+    "reflect-metadata": "^0.1.13"
   },
   "scripts": {
     "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts"
@@ -16,11 +16,12 @@
     "@types/chai": "^4.3.11",
     "@types/chai-as-promised": "^7.1.8",
     "@types/sinon": "*",
+    "@types/mocha": "10.0.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
-    "mocha": "^10.2.0",
+    "mocha": "10.0.0",
     "sinon": "*",
     "ts-mocha": "10.0.0",
-    "typescript": "^4.x"
+    "typescript": "^5.x"
   }
 }

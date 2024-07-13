@@ -84,6 +84,15 @@ jobs:
           scope: '@suites'
           always-auth: false
 
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Remove provenance from publishConfig
+        run: |
+          find packages -name 'package.json' | while read filename; do
+            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
+          done
+
       - name: Publish Packages
         run: |
           yarn lerna publish from-package --yes \

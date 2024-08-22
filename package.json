@@ -27,7 +27,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@babel/traverse": "7.23.2",
+    "@babel/traverse": "7.25.4",
     "@manypkg/cli": "^0.21.4",
     "@nestjs/common": "^10.3.9",
     "@types/jest": "29.5.12",

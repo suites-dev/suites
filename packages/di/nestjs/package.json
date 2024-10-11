@@ -35,15 +35,14 @@
   ],
   "dependencies": {
     "@suites/types.common": "^3.0.0",
-    "@suites/types.di": "^3.0.0"
+    "@suites/types.di": "^3.0.0",
+    "reflect-metadata": "^0.1.13"
   },
   "peerDependencies": {
-    "@nestjs/common": ">= 8.0",
-    "reflect-metadata": "^0.1.13"
+    "@nestjs/common": ">= 8.0"
   },
   "devDependencies": {
     "@nestjs/common": "^10.3.9",
-    "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
   "publishConfig": {

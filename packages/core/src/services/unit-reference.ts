@@ -36,7 +36,7 @@ export interface UnitReference {
 export class UnitReference {
   public constructor(
     private readonly mocksContainer: DependencyContainer,
-    private readonly exposedInstances: InjectableIdentifier[],
+    private readonly exposedInstances: Map<InjectableIdentifier, Type>,
     private readonly fakedDependencies: IdentifierToFinal[]
   ) {}
 
@@ -78,7 +78,7 @@ Faked dependencies are not intended for direct retrieval and should be accessed 
 testing context or container. Refer to the docs for further information: https://suites.dev/docs`);
     }
 
-    if (typeof identifier === 'function' && this.exposedInstances.includes(identifier)) {
+    if (typeof identifier === 'function' && this.exposedInstances.has(identifier)) {
       throw new DependencyResolutionError(`The dependency associated with the specified identifier '${identifier.name}' could not be retrieved from the
 current testing context, as it is marked as an exposed dependency.
 Exposed dependencies are not intended for direct retrieval and should be accessed through the appropriate

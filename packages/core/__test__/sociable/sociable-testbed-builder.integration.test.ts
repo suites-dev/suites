@@ -2,9 +2,10 @@ import type { StubbedInstance } from '@suites/types.doubles';
 import { FakeAdapter } from './assets/integration.assets';
 import { mock } from './assets/mock.static';
 import type { Repository, User } from './assets/injectable-registry.fixture';
-import { Axios } from './assets/injectable-registry.fixture';
-import { HttpClient } from './assets/injectable-registry.fixture';
 import {
+  Axios,
+  DataMapper,
+  HttpClient,
   TestLogger,
   UserApiService,
   UserDal,
@@ -40,6 +41,7 @@ describe('Social TestBed Builder Integration Tests', () => {
       .expose(UserDal)
       .expose(HttpClient)
       .expose(DatabaseService)
+      .expose(Symbol.for('DATA_MAPPER'), DataMapper)
       .mock(TestLogger)
       .impl((stubFn: Mock) => ({ log: stubFn().mockReturnValue('overridden') }))
       .mock(Axios)
@@ -78,6 +80,7 @@ describe('Social TestBed Builder Integration Tests', () => {
     expect(() => unitRef.get(DatabaseService)).toThrowError();
     expect(() => unitRef.get(UserDal)).toThrowError();
     expect(() => unitRef.get(UserApiService)).toThrowError();
+    expect(() => unitRef.get(DataMapper)).toThrowError();
   });
 
   describe('creating a user with UserService', () => {

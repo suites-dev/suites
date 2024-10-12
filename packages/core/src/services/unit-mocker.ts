@@ -1,5 +1,5 @@
 import type { MockFunction } from '@suites/types.doubles';
-import type { DependencyInjectionAdapter } from '@suites/types.di';
+import type { DependencyInjectionAdapter, InjectableIdentifier } from '@suites/types.di';
 import type { IdentifierToMockOrFinal } from './dependency-container';
 import { DependencyContainer } from './dependency-container';
 import type { Type } from '@suites/types.common';
@@ -11,7 +11,7 @@ export interface MockedUnit<TClass> {
   resolution: {
     notFound: IdentifierToMockOrFinal[];
     mocks: { metadata?: unknown; identifier: Type }[];
-    exposes: Type[];
+    exposes: InjectableIdentifier[];
   };
 }
 
@@ -23,7 +23,7 @@ export class UnitMocker {
 
   public async constructUnit<TClass>(
     targetClass: Type<TClass>,
-    classesToExpose: Type[],
+    classesToExpose: Map<InjectableIdentifier, Type>,
     mockContainer: DependencyContainer
   ): Promise<MockedUnit<TClass>> {
     const dependencyResolver = new DependencyResolver(

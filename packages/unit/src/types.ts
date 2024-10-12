@@ -18,6 +18,7 @@ export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCo
    * @since 3.0.0
    * @template TClass The type of the class under test.
    * @param dependency The dependency to be exposed in its real or partially mocked state.
+   * @param concreteImplementation A concrete implementation to use if the dependency is a string or token identifier.
    * @returns A TestBedBuilder instance for further configuration.
    * @example
    * import { TestBed } from '@suites/unit';
@@ -29,6 +30,7 @@ export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCo
    * @param dependency
    */
   expose(dependency: Type): SociableTestBedBuilder<TClass>;
+  expose(dependency: symbol | string, concreteImplementation: Type): SociableTestBedBuilder<TClass>;
 }
 
 export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {}

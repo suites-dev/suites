@@ -12,10 +12,10 @@ import { DependencyMap } from './dependency-map';
 
 export class DependencyResolver {
   private readonly dependencyMap = new DependencyMap();
-  private readonly availableClassesToExpose = new Set<Type>();
+  private readonly availableClassesToExpose = new Set<InjectableIdentifier>();
 
   constructor(
-    private readonly classesToExpose: Type[],
+    private readonly classesToExpose: Map<InjectableIdentifier, Type>,
     private readonly mockedFromBeforeContainer: DependencyContainer,
     private readonly adapter: DependencyInjectionAdapter,
     private readonly mockFunction: MockFunction
@@ -48,8 +48,8 @@ export class DependencyResolver {
         return this.dependencyMap.get(identifier) as Type | FinalValue | StubbedInstance<unknown>;
       }
 
-      if (typeof identifier === 'function' && this.classesToExpose.includes(identifier)) {
-        this.instantiateClass(identifier, metadata);
+      if (this.classesToExpose.has(identifier)) {
+        return this.instantiateClass(this.classesToExpose.get(identifier) as Type, metadata);
       }
 
       const mock = this.mockFunction();
@@ -58,7 +58,7 @@ export class DependencyResolver {
     }
 
     // Non-leaf classes that are not exposed should also be mocked
-    if (typeof identifier === 'function' && !this.classesToExpose.includes(identifier)) {
+    if (typeof identifier === 'function' && !this.classesToExpose.has(identifier)) {
       const mock = this.mockFunction();
       this.dependencyMap.set(identifier, mock, metadata as never);
 
@@ -80,9 +80,7 @@ export class DependencyResolver {
     const injectableRegistry = this.adapter.inspect(type);
 
     injectableRegistry.list().forEach((injectable: ClassInjectable) => {
-      if (typeof injectable.identifier === 'function') {
-        this.availableClassesToExpose.add(injectable.identifier);
-      }
+      this.availableClassesToExpose.add(injectable.identifier);
     });
 
     const ctorInjectables = injectableRegistry.list().filter(({ type }) => type === 'PARAM');
@@ -116,10 +114,12 @@ export class DependencyResolver {
 
   public getResolutionSummary(): {
     mocks: { metadata?: unknown; identifier: Type }[];
-    exposes: Type[];
+    exposes: InjectableIdentifier[];
     notFound: IdentifierToMockOrFinal[];
   } {
-    const exposes = this.classesToExpose.filter((cls) => !this.availableClassesToExpose.has(cls));
+    const exposes = [...this.classesToExpose.keys()].filter(
+      (identifier) => !this.availableClassesToExpose.has(identifier)
+    );
 
     const mocks = this.mockedFromBeforeContainer
       .list()

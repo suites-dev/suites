@@ -77,11 +77,17 @@ export class UserDigestService {
   }
 }
 
+export class DataMapper {
+  // Symbol.for() is typed as `unique symbol`, set a static ref to a "normal" symbol here for later use
+  static token = Symbol('DATA_MAPPER')
+}
+
 export class UserApiService {
   public constructor(
     private readonly userVerificationService: UserVerificationService,
     private readonly apiService: ApiService,
-    private readonly userDigestService: UserDigestService
+    private readonly userDigestService: UserDigestService,
+    @FakeInject(DataMapper.token) readonly dataMapper: DataMapper
   ) {}
 
   public async getUserData(userId: string): Promise<string> {

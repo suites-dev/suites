@@ -40,7 +40,10 @@ describe('Unit Reference Unit Spec', () => {
 
     unitReference = new UnitReference(
       mocksContainer,
-      [RealDependencyOne, RealDependencyTwo],
+      new Map([
+        [RealDependencyOne, RealDependencyOne],
+        [RealDependencyTwo, RealDependencyTwo],
+      ]),
       fakedDependencies
     );
   });

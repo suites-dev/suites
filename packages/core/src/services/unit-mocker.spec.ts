@@ -105,7 +105,7 @@ describe('Unit Mocker Unit Spec', () => {
 
       describe('when applying all the mocks on the target unit, including the already mocked', () => {
         beforeAll(async () => {
-          result = await underTest.constructUnit(DummyClass, [], mocksContainer);
+          result = await underTest.constructUnit(DummyClass, new Map(), mocksContainer);
         });
 
         it('should return container that lists all the dependencies together, mocked from the builder or from advanced', () => {

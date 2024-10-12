@@ -1,5 +1,6 @@
 import type { DoublesAdapter } from '@suites/types.doubles';
 import type { Type } from '@suites/types.common';
+import type { InjectableIdentifier } from '@suites/types.di';
 import { UnitReference } from '../unit-reference';
 import type { UnitMocker } from '../unit-mocker';
 import type { IdentifierToMockOrFinal } from '../dependency-container';
@@ -9,10 +10,11 @@ import { TestBedBuilder } from './testbed-builder';
 
 export interface SociableTestBedBuilder<TClass> {
   expose(dependency: Type): SociableTestBedBuilder<TClass>;
+  expose(dependency: symbol | string, concreteImplementation: Type): SociableTestBedBuilder<TClass>;
 }
 
 export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
-  private readonly classesToExpose: Type[] = [];
+  private readonly classesToExpose: Map<InjectableIdentifier, Type> = new Map();
 
   public constructor(
     private readonly doublesAdapter: Promise<DoublesAdapter>,
@@ -23,8 +25,18 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
     super();
   }
 
-  public expose(dependency: Type): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass> {
-    this.classesToExpose.push(dependency);
+  public expose(
+    dependency: InjectableIdentifier,
+    concreteImplementation?: Type
+  ): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass> {
+    if (typeof dependency === 'function') {
+      this.classesToExpose.set(dependency, dependency);
+      return this;
+    }
+
+    // Type assertion with "!" because interface overloads guarantee concreteImplementation must be passed
+    this.classesToExpose.set(dependency, concreteImplementation!);
+
     return this;
   }
 
@@ -63,12 +75,14 @@ For detailed guidance on configuring sociable tests, please consult: https://sui
 
     if (resolution.exposes.length > 0) {
       resolution.exposes.forEach((identifier) => {
+        const dependency =
+          typeof identifier === 'function' ? identifier.name : identifier.toString();
         this.logger.warn(`Suites Warning: Unreachable Exposed Dependency Detected.
-The dependency '${identifier.name}' has been exposed but cannot be reached within the current testing context.
-This typically occurs because '${identifier.name}' is not a direct dependency of the unit under test (${this.targetClass.name}) nor any
-of its other exposed dependencies. Exposing '${identifier.name}' without it being accessible from the unit under test or
+The dependency '${dependency}' has been exposed but cannot be reached within the current testing context.
+This typically occurs because '${dependency}' is not a direct dependency of the unit under test (${this.targetClass.name}) nor any
+of its other exposed dependencies. Exposing '${dependency}' without it being accessible from the unit under test or
 its dependencies may lead to incorrect test configurations. To resolve this, please review and adjust your testing
-setup to ensure all necessary dependencies are interconnected. Alternatively, if '${identifier.name}' does not influence
+setup to ensure all necessary dependencies are interconnected. Alternatively, if '${dependency}' does not influence
 the unit under test, consider removing its exposure from your test setup.
 For detailed instructions and best practices, refer to our documentation: https://suites.dev/docs.`);
       });

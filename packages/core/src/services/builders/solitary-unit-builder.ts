@@ -40,7 +40,7 @@ export class SolitaryTestBedBuilder<TClass>
 
     const { container, instance, resolution } = await this.unitMocker.constructUnit<TClass>(
       this.targetClass,
-      [],
+      new Map(),
       new DependencyContainer([...identifiersToMocksImpls, ...identifiersToFinal])
     );
 
@@ -57,7 +57,7 @@ interactions. For detailed guidelines on setting up solitary tests, refer to: ht
 
     return {
       unit: instance as TClass,
-      unitRef: new UnitReference(container, [], this.identifiersToBeFinalized),
+      unitRef: new UnitReference(container, new Map(), this.identifiersToBeFinalized),
     };
   }
 }

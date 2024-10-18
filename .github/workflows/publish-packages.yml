@@ -87,7 +87,7 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq
 
-      - name: Remove provenance from publishConfig
+      - name: Remove provenance from package.json files
         run: |
           find packages -name 'package.json' | while read filename; do
             jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"

@@ -1,30 +1,46 @@
 {
   "name": "suites-monorepo",
-  "private": true,
   "version": "0.0.0",
-  "license": "MIT",
+  "private": true,
+  "homepage": "https://suites.dev",
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites.git"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git"
   },
-  "engines": {
-    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
-  },
-  "bugs": {
-    "url": "https://github.com/suites-dev/suites.git"
-  },
-  "homepage": "https://suites.dev",
+  "license": "MIT",
   "contributors": [
     {
       "name": "Omer Morad",
       "email": "omer.moradd@gmail.com"
     }
   ],
+  "workspaces": [
+    "packages/*",
+    "packages/di/*",
+    "packages/doubles/*",
+    "packages/types/*"
+  ],
   "scripts": {
     "build": "yarn lerna run build",
-    "test": "yarn lerna exec yarn test",
     "lint": "yarn lerna run lint --parallel",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "yarn lerna exec yarn test"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --ext .ts --fix"
+    ]
+  },
+  "jest-junit": {
+    "ancestorSeparator": " › ",
+    "classNameTemplate": "{classname}",
+    "outputDirectory": "test-reports",
+    "suiteNameTemplate": "{filepath}",
+    "titleTemplate": "{title}",
+    "uniqueOutputName": "true"
   },
   "dependencies": {
     "@babel/traverse": "7.23.2",
@@ -62,16 +78,11 @@
     "ts-node": "^10.9.1",
     "typescript": "~5.2.2"
   },
-  "workspaces": [
-    "packages/*",
-    "packages/di/*",
-    "packages/doubles/*",
-    "packages/types/*"
-  ],
-  "lint-staged": {
-    "*.ts": [
-      "eslint --ext .ts --fix"
-    ]
+  "resolutions": {
+    "reflect-metadata": "^0.1.13"
+  },
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },
   "jest-junit": {
     "outputDirectory": "test-reports",

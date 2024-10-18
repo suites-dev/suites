@@ -6,8 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const filePaths = [
-  path.join(__dirname, '..', 'unit', 'dist', 'esm', 'index.d.ts'),
-  path.join(__dirname, '..', 'unit', 'dist', 'cjs', 'index.d.ts'),
+  path.join(__dirname, 'global.d.ts'),
 ];
 
 const newContent = '/// <reference types="@suites/doubles.vitest/unit" />\n';

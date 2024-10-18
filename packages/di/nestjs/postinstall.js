@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const filePath = path.join(__dirname, '..', 'types.di', 'typings.d.ts');
+const filePath = path.join(__dirname, 'global.d.ts');
+
 const newContent =
   "\nexport type IdentifierMetadata = import('@suites/di.nestjs').IdentifierMetadata;\n";
 

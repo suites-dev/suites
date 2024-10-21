@@ -7,11 +7,8 @@
     "target": "es6"
   },
   "exclude": [
-    "./typings.d.ts",
+    "typings.d.ts",
     "index.ts",
-    "node_modules",
-    "__test__",
-    "**/*.spec.ts",
-    "jest.config.ts"
+    "node_modules"
   ]
 }

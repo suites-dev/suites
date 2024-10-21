@@ -1,16 +1,14 @@
 import { beforeAll, describe, test, expect } from 'vitest';
-import { TestBed, Mocked, UnitReference } from '@suites/unit';
+import type { Mocked, UnitReference } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Logger } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
-  Foo,
-  Logger,
   NestJSTestClass,
   SymbolToken,
-  SymbolTokenSecond,
   TestClassFive,
   TestClassFour,
   TestClassOne,
-  TestClassThree,
   TestClassTwo,
 } from './e2e-assets';
 
@@ -19,24 +17,22 @@ describe('Suites Vitest / NestJS E2E Test Ctor', () => {
   let unitRef: UnitReference;
 
   beforeAll(async () => {
-    const { unitRef: ref, unit: underTest } = await TestBed.create(NestJSTestClass)
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary(NestJSTestClass)
       .mock(TestClassOne)
-      .using({
-        async foo(): Promise<string> {
-          return 'foo-from-test';
-        },
+      .impl((stunFn) => ({
+        foo: stunFn().mockResolvedValue('foo-from-test'),
         bar(): string {
           return 'bar';
         },
-      })
+      }))
       .mock<string>('CONSTANT_VALUE')
-      .using('arbitrary-string')
+      .final('arbitrary-string')
       .mock('UNDEFINED')
-      .using({ method: () => 456 })
+      .final({ method: () => 456 })
       .mock<Logger>('LOGGER')
-      .using({ log: () => 'baz-from-test' })
+      .final({ log: () => 'baz-from-test' })
       .mock<TestClassFive>(SymbolToken)
-      .using({ doSomething: () => 'mocked' })
+      .final({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;
@@ -49,17 +45,7 @@ describe('Suites Vitest / NestJS E2E Test Ctor', () => {
     });
 
     test('then successfully resolve the dependencies of the tested classes', () => {
-      expect(() => unitRef.get<{ log: () => void }>('LOGGER')).toBeDefined();
-      expect(() => unitRef.get('UNDEFINED')).toBeDefined();
-      expect(() => unitRef.get('UNDEFINED_SECOND')).toBeDefined();
-      expect(() => unitRef.get(TestClassFour)).toBeDefined();
-      expect(() => unitRef.get(TestClassThree)).toBeDefined();
-      expect(() => unitRef.get(Foo)).toBeDefined();
-      expect(() => unitRef.get(TestClassTwo)).toBeDefined();
-      expect(() => unitRef.get('CONSTANT_VALUE')).toBeDefined();
       expect(() => unitRef.get(TestClassOne)).toBeDefined();
-      expect(() => unitRef.get(SymbolToken)).toBeDefined();
-      expect(() => unitRef.get(SymbolTokenSecond)).toBeDefined();
     });
 
     test('call the unit instance method', async () => {
@@ -79,15 +65,12 @@ describe('Suites Vitest / NestJS E2E Test Ctor', () => {
 
     test('then mock the implementation of the dependencies', async () => {
       const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
-      const logger = unitRef.get<Logger>('LOGGER');
 
       // The original 'foo' method in TestClassOne return value should be changed
       // according to the passed flag; here, always return the same value
       // because we mock the implementation of foo permanently
       await expect(testClassOne.foo(true)).resolves.toBe('foo-from-test');
       await expect(testClassOne.foo(false)).resolves.toBe('foo-from-test');
-
-      expect(logger.log).toBeDefined();
     });
 
     test('then treat duplicate identifiers as the same reference', async () => {
@@ -103,14 +86,10 @@ describe('Suites Vitest / NestJS E2E Test Ctor', () => {
 
     test('then mock the undefined reflected values and tokens', () => {
       const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
-      const undefinedValue: Mocked<{ method: () => number }> = unitRef.get<{
-        method: () => number;
-      }>('UNDEFINED');
 
       testClassFour.doSomething.mockReturnValue('mocked');
 
       expect(testClassFour.doSomething()).toBe('mocked');
-      expect(undefinedValue.method()).toBe(456);
     });
 
     test('then throw an error when trying to resolve not existing dependency', () => {

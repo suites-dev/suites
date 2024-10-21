@@ -1,19 +1,26 @@
-export type ArgsType<T> = T extends (...args: infer A) => any ? A : never;
+import type { DeepPartial } from '@suites/types.common';
 
-export type Callable = (...args: any[]) => any;
+export type ArgsType<T> = T extends (...args: infer A) => any ? A : any;
 
-export type Stubbable<TType> = Callable | TType;
-
-type Stub<ReturnType, Args extends any[]> = {
+export interface Stub<ReturnType, Args extends any[]> {
   (...args: Args): ReturnType;
-};
+}
 
-type StubbedMember<T> = T extends (...args: infer Args) => infer ReturnValue
-  ? Stub<ReturnValue, ArgsType<T>>
-  : T;
+export interface StubbedMember<T> {
+  [key: string]: T extends (...args: any[]) => infer ReturnValue
+    ? Stub<ReturnValue, ArgsType<T>>
+    : StubbedMember<T>;
+}
 
 export type StubbedInstance<TClass> = {
   [Prop in keyof TClass]: StubbedMember<TClass[Prop]>;
 };
 
-export type MockFunction<TType> = (implementation?: Stubbable<TType>) => StubbedInstance<TType>;
+export type MockFunction<TType = unknown> = (
+  implementation?: DeepPartial<TType>
+) => StubbedInstance<TType>;
+
+export type DoublesAdapter<T = unknown> = {
+  mock: MockFunction;
+  stub: () => Stub<T, any[]>;
+};

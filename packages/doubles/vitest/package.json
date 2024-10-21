@@ -1,9 +1,9 @@
 {
   "name": "@suites/doubles.vitest",
   "version": "3.0.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "main": "dist/cjs/index.js",
-  "type": "module",
+  "module": "dist/esm/index.js",
   "exports": {
     "require": "./dist/cjs/index.js",
     "import": "./dist/esm/index.js"
@@ -35,26 +35,33 @@
   },
   "scripts": {
     "prebuild": "yarn rimraf dist",
-    "postinstall": "node postinstall.js",
+    "postinstall": "node postinstall.mjs",
     "build": "sh build.sh",
     "test": "VITE_CJS_IGNORE_WARNING=true yarn vitest run --coverage",
     "lint": "yarn eslint '{src,test}/**/*.ts'"
   },
   "files": [
+    "unit.d.ts",
     "dist",
-    "README.md",
-    "postinstall.js"
+    "postinstall.mjs"
   ],
+  "peerDependencies": {
+    "@vitest/spy": ">= 1.0",
+    "vitest": ">= 1.0"
+  },
   "dependencies": {
-    "@suites/core.unit": "^4.0.0",
-    "@suites/types.doubles": "^4.0.0"
+    "@suites/core.unit": "^3.0.0",
+    "@suites/types.common": "^3.0.0",
+    "@suites/types.doubles": "^3.0.0"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/spy": "^1.x",
     "vitest": "^1.1.3"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
-  "gitHead": "dd33b5c30d15a170b23bd48daa38d68879b8497a"
+  "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

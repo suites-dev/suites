@@ -1,0 +1,161 @@
+name: Publish Packages
+env:
+  CI: true
+
+permissions:
+  id-token: write
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      dist_tag:
+        description: 'Distribution Tag'
+        type: choice
+        options:
+          - 'next'
+          - 'latest'
+          - 'rc'
+          - 'dev'
+          - 'alpha'
+          - 'beta'
+        required: true
+        default: 'dev'
+      strategy:
+        description: 'Release Strategy'
+        type: choice
+        options:
+          - 'from-git'
+          - 'from-package'
+        required: true
+        default: 'from-package'
+
+jobs:
+  e2e:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
+        node-version: [16.x, 18.x, 20.x]
+        exclude:
+          - e2e-project: 'vitest/inversify'
+            node-version: '16.x'
+          - e2e-project: 'vitest/nestjs'
+            node-version: '16.x'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+
+      - name: Remove Vitest If Needed
+        if: ${{ matrix.node-version == '16.x' }}
+        run: |
+          rm -rf packages/doubles/vitest
+          git config --global user.email "ci@suites.dev"
+          git config --global user.name "Suites CI"
+          git add .
+          git commit -am "remove vitest temp"
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Yarn
+        run: yarn --frozen-lockfile
+
+      - name: Run Verdaccio Docker
+        run: |
+          docker run -d --name verdaccio \
+          -p 4873:4873 \
+          -v ${{ github.workspace }}/e2e/config.yaml:/verdaccio/conf/config.yaml \
+          verdaccio/verdaccio
+
+      - name: Build
+        run: yarn build
+
+      - name: Setup Registry
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: http://localhost:4873
+          scope: '@suites'
+          always-auth: false
+
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Remove provenance from package.json files
+        run: |
+          find packages -name 'package.json' | while read filename; do
+            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
+          done
+
+      - name: Commit Change
+        run: |
+          git config --global user.email "e2e@suites.dev"
+          git config --global user.name "Suites e2e"
+          git add .
+          git commit -am "remove provenance"
+
+      - name: Publish Packages
+        run: |
+          yarn lerna publish from-package --yes \
+          --no-git-tag-version \
+          --no-push \
+          --no-changelog \
+          --no-commit-hooks \
+          --no-git-reset \
+          --exact \
+          --force-publish \
+          --dist-tag ci
+
+      - name: Setup and Test
+        run: |
+          IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
+          echo "FRAMEWORK=$framework" >> $GITHUB_ENV
+          echo "LIBRARY=$library" >> $GITHUB_ENV
+
+      - name: Clean Source
+        run: |
+          rm -rf packages
+          rm -rf node_modules
+
+      - name: Install Dependencies
+        run: |
+          cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
+          npm install --no-cache --no-package-lock
+          npm install --dev --no-package-lock @types/node@${{ matrix.node-version }}
+
+      - name: Execute Test
+        run: |
+          cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
+          npm test
+
+  publish:
+    name: Publish Packages
+    needs: [e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Registry
+        uses: actions/setup-node@v4
+        with:
+          registry-url: https://registry.npmjs.org/
+          scope: '@suites'
+          always-auth: true
+
+      - name: Yarn
+        run: yarn --frozen-lockfile
+
+      - name: Build
+        run: npx lerna run build
+
+      - name: Publish Packages
+        run: npx lerna publish ${{ github.event.inputs.strategy }} --yes --dist-tag ${{ github.event.inputs.dist_tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

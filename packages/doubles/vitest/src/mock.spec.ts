@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { mock } from './mock.static';
+import type { Mocked } from './types';
 
 interface ArbitraryMock {
   id: number;
@@ -8,6 +9,19 @@ interface ArbitraryMock {
   getNumberWithMockArg: (mock: never) => number;
   getSomethingWithArgs: (arg1: number, arg2: number) => number;
   getSomethingWithMoreArgs: (arg1: number, arg2: number, arg3: number) => number;
+}
+
+interface User {
+  id: string;
+  name: string;
+  age: number;
+}
+
+class Prisma {
+  public user: {
+    create: (data: User) => Promise<User>;
+    delete: (where: { id: string }) => Promise<User>;
+  };
 }
 
 class TestClass implements ArbitraryMock {
@@ -41,12 +55,12 @@ class TestClass implements ArbitraryMock {
 describe('Mocking Proxy Mechanism Unit Spec', () => {
   describe('basic functionality', () => {
     test('should allow assignment to itself even with private parts', () => {
-      const mockObject: TestClass = mock<TestClass>();
+      const mockObject: Mocked<TestClass> = mock<TestClass>();
       new TestClass(1).ofAnother(mockObject);
       expect(mockObject.getNumber).toHaveBeenCalledTimes(1);
     });
 
-    test('should create jest.fn() without any invocation', () => {
+    test('should create vi.fn() without any invocation', () => {
       const mockObject = mock<ArbitraryMock>();
       expect(mockObject.getNumber).toHaveBeenCalledTimes(0);
     });
@@ -133,6 +147,37 @@ describe('Mocking Proxy Mechanism Unit Spec', () => {
       expect(mockObject.date.getFullYear()).toBe(2000);
       expect(mockObject.date.getMonth()).toBe(0);
       expect(mockObject.date.getDate()).toBe(15);
+    });
+  });
+
+  describe('mocking nested objects', () => {
+    test('should allow mocking nested objects', () => {
+      const mockObject = mock<Prisma>();
+
+      mockObject.user.create({ id: '123', name: 'Mashu', age: 123 });
+
+      expect(mockObject.user.create).toHaveBeenCalledTimes(1);
+      expect(mockObject.user.create).toHaveBeenCalledWith({ id: '123', name: 'Mashu', age: 123 });
+    });
+
+    test('should allow mocking nested objects with promises', async () => {
+      const mockObject = mock<Prisma>();
+
+      mockObject.user.create.mockResolvedValue({ id: '123', name: 'Mashu', age: 123 });
+
+      await expect(
+        mockObject.user.create({ id: '123', name: 'Mashu', age: 123 })
+      ).resolves.toMatchObject({ id: '123', name: 'Mashu', age: 123 });
+    });
+
+    test('should allow mocking nested objects with promises and rejections', async () => {
+      const mockObject = mock<Prisma>();
+
+      mockObject.user.create.mockRejectedValue(new Error('Some error'));
+
+      await expect(
+        mockObject.user.create({ id: '123', name: 'Mashu', age: 123 })
+      ).rejects.toThrowError('Some error');
     });
   });
 });

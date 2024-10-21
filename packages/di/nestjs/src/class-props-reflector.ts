@@ -1,12 +1,9 @@
-import {
-  ClassInjectable,
-  InjectableReflectedType,
-  UndefinedDependencyError,
-} from '@suites/types.di';
-import { Type } from '@suites/types.common';
+import type { ClassInjectable, InjectableReflectedType } from '@suites/types.di';
+import { UndefinedDependencyError } from '@suites/types.di';
+import type { Type } from '@suites/types.common';
 import { PROPERTY_DEPS_METADATA } from '@nestjs/common/constants';
-import { MetadataReflector, ReflectedProperty } from './types';
-import { PropertyReflectionStrategy } from './property-reflection-strategies.static';
+import type { MetadataReflector, ReflectedProperty } from './types';
+import type { PropertyReflectionStrategy } from './property-reflection-strategies.static';
 
 export type ClassPropsReflector = ReturnType<typeof ClassPropsReflector>;
 
@@ -26,7 +23,7 @@ export function ClassPropsReflector(
       ) as InjectableReflectedType;
 
       if (!reflectedType && !reflectedValue) {
-        throw new UndefinedDependencyError(`Automock encountered an error while attempting to detect a token or type for the dependency for property '${key}' in the class '${targetClass.name}'.
+        throw new UndefinedDependencyError(`Suites encountered an error while attempting to detect a token or type for the dependency for property '${key}' in the class '${targetClass.name}'.
 This issue is commonly caused by either improper decoration of the property or a problem during the reflection of the parameter type.
 In some cases, this error may arise due to circular dependencies. If this is the case, please ensure that the circular dependency
 is resolved, or consider using 'forwardRef()' to address it.`);

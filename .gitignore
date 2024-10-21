@@ -41,3 +41,6 @@ junit.xml
 .gitconfig
 test-reports
 coverage-report.xml
+lcov-report
+lcov.info
+

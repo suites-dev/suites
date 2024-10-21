@@ -1,7 +1,7 @@
-import { DependencyInjectionAdapter } from '@suites/types.di';
-import { MockFunction } from '@suites/types.doubles';
+import type { DependencyInjectionAdapter } from '@suites/types.di';
+import type { DoublesAdapter } from '@suites/types.doubles';
 
-export class PackageResolver<TAdapter extends DependencyInjectionAdapter | MockFunction<unknown>> {
+export class PackageResolver<TAdapter extends DependencyInjectionAdapter | DoublesAdapter> {
   public constructor(private readonly adapters: Record<string, string>) {}
 
   public async resolveCorrespondingAdapter(): Promise<TAdapter | never> {

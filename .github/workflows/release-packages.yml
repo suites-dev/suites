@@ -1,0 +1,85 @@
+name: Prepare Release
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release Type'
+        type: choice
+        options:
+          - 'graduate'
+          - 'prerelease'
+        required: true
+        default: 'prerelease'
+      target_branch:
+        description: 'Target Branch'
+        type: choice
+        options:
+          - 'master'
+          - 'next'
+        required: true
+        default: 'next'
+      preid:
+        description: 'Prefix Id'
+        type: choice
+        options:
+          - 'latest'
+          - 'next'
+          - 'rc'
+          - 'dev'
+          - 'alpha'
+          - 'beta'
+        required: true
+        default: 'next'
+      exact_version:
+        description: 'Exact Version'
+        type: string
+        required: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  tag-version:
+    name: Tag Version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+          fetch-depth: 0
+
+      - name: Config Git User
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Prerelease Version (Exact Version)
+        if: ${{ github.event.inputs.release_type == 'prerelease' && github.event.inputs.exact_version }}
+        run: |
+          npx lerna version ${{ github.event.inputs.exact_version }} --yes --no-changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prerelease Version
+        if: ${{ github.event.inputs.release_type == 'prerelease' && !github.event.inputs.exact_version }}
+        run: |
+          npx lerna version prerelease --yes \
+          --preid ${{ github.event.inputs.preid }} \
+          --no-changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Graduate Version
+        if: ${{ github.event.inputs.release_type == 'graduate' }}
+        run: npx lerna version graduate --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Changes to Branch
+        run: |
+          git push origin ${{ github.event.inputs.target_branch }} --no-verify
+          git push origin --tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

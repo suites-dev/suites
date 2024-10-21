@@ -1,4 +1,4 @@
-# Contributing to Automock
+# Contributing to Suites
 
 ## Table of Contents
 
@@ -18,26 +18,26 @@
 
 ## Introduction
 
-Welcome to the Automock project! Automock is designed to streamline and enhance testing experiences for developers. As a
+Welcome to the Suites project! Suites is designed to streamline and enhance testing experiences for developers. As a
 monorepo project managed with Lerna and divided into several distinct packages, we aim to provide a comprehensive set of
-tools for testing. This document outlines guidelines for contributing to Automock. We strongly recommend reading
-the [Automock Documentation](https://automock.dev) to fully understand the project's functionality and goals.
+tools for testing. This document outlines guidelines for contributing to Suites. We strongly recommend reading
+the [Suites Documentation](https://suites.dev) to fully understand the project's functionality and goals.
 
-Joining Automock means contributing to a mission: enhancing the quality of unit testing and testing processes. Your
-involvement is key to driving this vision forward and improving Automock.
+Joining Suites means contributing to a mission: enhancing the quality of unit testing and testing processes. Your
+involvement is key to driving this vision forward and improving Suites.
 
 ## Prerequisites
 
 - **Node.js**: The project requires Node.js version 16.0.0 or higher.
-- **Yarn**: Automock uses Yarn for dependency management. Ensure Yarn is installed on your system.
+- **Yarn**: Suites uses Yarn for dependency management. Ensure Yarn is installed on your system.
 
 ## Getting Started
 
 ### Installation and Setup
 
-1. **Clone the Automock Repository**:
+1. **Clone the Suites Repository**:
     ```bash
-    git clone https://github.com/suites-dev/suites.git
+    git clone https://github.com/suites.dev/Suites.git
     ```
 2. **Install Dependencies**:
     ```bash
@@ -56,19 +56,19 @@ yarn test
 
 ### Reporting Issues and Bugs
 
-Discover a bug? First, check our [Issue Tracker](https://github.com/suites-dev/suites/issues). If it's a new issue,
+Discover a bug? First, check our [Issue Tracker](https://github.com/suites.dev/Suites/issues). If it's a new issue,
 create a detailed report including steps to reproduce, expected outcomes, and actual results.
 
 ### Feature Requests
 
 Ideas for new features are always welcome. Submit your proposal via our GitHub Repository, detailing the feature and its
-potential benefits to Automock.
+potential benefits to Suites.
 
 ## Making Changes
 
 ### Writing Code
 
-Contribute code that is clean, maintainable, and efficient, adhering to Automock's existing style and best practices.
+Contribute code that is clean, maintainable, and efficient, adhering to Suites's existing style and best practices.
 
 ### Tests and Quality Assurance
 
@@ -95,7 +95,7 @@ Use clear and semantic PR title. Specify the package affected as a prefix in you
 prefixes:
 
 - **common**: `packages/common` – General shared utilities and functions.
-- **core**: `packages/core` – Core functionalities of Automock.
+- **core**: `packages/core` – Core functionalities of Suites.
 - **types**: `packages/types` – Type definitions and interfaces.
 - **jest**: `packages/testbeds/jest` – Jest-specific testing utilities and integrations.
 - **sinon**: `packages/testbeds/sinon` – Sinon.js related testing functionalities.

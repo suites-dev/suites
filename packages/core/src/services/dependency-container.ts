@@ -1,29 +1,39 @@
 import isEqual from 'lodash.isequal';
-import { ClassInjectable, IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
-import { StubbedInstance } from '@suites/types.doubles';
-import { ConstantValue } from '@suites/types.common';
+import type { ClassInjectable, IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
+import type { Stub, StubbedInstance } from '@suites/types.doubles';
+import type { ConstantValue, DeepPartial, FinalValue } from '@suites/types.common';
 
-export type IdentifierToMock = [
+export type IdentifierToMockOrFinal = [
   Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },
-  StubbedInstance<unknown> | ConstantValue,
+  StubbedInstance<unknown> | FinalValue,
 ];
 
-export interface MocksContainer {
+export type IdentifierToFinal = [
+  Pick<ClassInjectable, 'identifier'> & { metadata?: never },
+  FinalValue,
+];
+
+export type IdentifierToMockImplWithCb = [
+  Pick<ClassInjectable, 'identifier'> & { metadata?: unknown },
+  (stubFn: () => Stub<unknown, any[]>) => DeepPartial<unknown>,
+];
+
+export interface DependencyContainer {
   resolve<TDependency = unknown>(
     identifier: InjectableIdentifier<TDependency>,
     metadata?: IdentifierMetadata
   ): StubbedInstance<TDependency> | ConstantValue;
 }
 
-export class MocksContainer {
-  public constructor(private readonly identifierToMocksTuples: IdentifierToMock[]) {}
+export class DependencyContainer {
+  public constructor(private readonly identifierToDependency: IdentifierToMockOrFinal[]) {}
 
   public resolve<TDependency = unknown>(
     identifier: InjectableIdentifier<TDependency>,
     metadata?: IdentifierMetadata
   ): StubbedInstance<TDependency> | ConstantValue | undefined {
     // If there is one identifier, it is enough to match, no need to check metadata
-    const identifiers = this.identifierToMocksTuples.filter(
+    const identifiers = this.identifierToDependency.filter(
       ([{ identifier: injectableIdentifier }]) => injectableIdentifier === identifier
     );
 
@@ -46,7 +56,7 @@ export class MocksContainer {
         : undefined;
     }
 
-    const foundIdentifier = this.identifierToMocksTuples.find(
+    const foundIdentifier = this.identifierToDependency.find(
       ([{ identifier: injectableIdentifier, metadata }]) =>
         injectableIdentifier === identifier && typeof metadata === 'undefined'
     );
@@ -56,7 +66,7 @@ export class MocksContainer {
       : undefined;
   }
 
-  public list() {
-    return this.identifierToMocksTuples;
+  public list(): IdentifierToMockOrFinal[] {
+    return this.identifierToDependency;
   }
 }

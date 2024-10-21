@@ -9,9 +9,42 @@ on:
         description: 'E2E Target Branch'
         required: true
 
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+  checks: write
+  statuses: write
+
 jobs:
+  status-pending:
+    name: Update PR Status
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+      checks: write
+      statuses: write
+    steps:
+      - name: Find Pull Request
+        uses: juliangruber/find-pull-request-action@v1
+        id: pull-request
+        with:
+          branch: ${{ inputs.target_branch }}
+
+      - name: Update PR e2e Status to Pending
+        run: |
+          curl \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
+          -d '{"state":"pending","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"Running..","context":"Suites e2e"}'
+
   e2e:
     name: Build and Test
+    needs: [status-pending]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -26,7 +59,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.target_branch }}
+          ref: ${{ inputs.target_branch }}
 
       - name: Remove Vitest If Needed
         if: ${{ matrix.node-version == '16.x' }}
@@ -63,17 +96,49 @@ jobs:
           scope: '@suites'
           always-auth: false
 
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Remove provenance from package.json files
+        run: |
+          find packages -name 'package.json' | while read filename; do
+            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
+          done
+
+      - name: Config Git
+        run: |
+          git config --global user.email "e2e@suites.dev"
+          git config --global user.name "Suites e2e"
+
+      - name: Commit Provenance Change
+        run: |
+          git add .
+          git commit -am "remove provenance"
+
+      - name: Version Packages
+        run: |
+          lerna version --yes \
+          --no-changelog \
+          --allow-branch ${{ inputs.target_branch }} \
+          --no-git-tag-version \
+          --no-push \
+          --force-publish \
+          --no-commit-hooks \
+          --conventional-commits
+
+      - name: Commit Packages Versions
+        run: |
+          git add .
+          git commit -am "bump versions"
+
       - name: Publish Packages
         run: |
           yarn lerna publish from-package --yes \
           --no-git-tag-version \
           --no-push \
-          --no-changelog \
-          --no-commit-hooks \
           --no-git-reset \
           --exact \
-          --force-publish \
-          --dist-tag e2e
+          --dist-tag ci
 
       - name: Setup and Test
         run: |
@@ -106,14 +171,14 @@ jobs:
       id-token: write
       checks: write
       statuses: write
-    needs: [e2e]
+    needs: [status-pending, e2e]
     if: always()
     steps:
       - name: Find Pull Request
         uses: juliangruber/find-pull-request-action@v1
         id: pull-request
         with:
-          branch: ${{ github.event.inputs.branch }}
+          branch: ${{ inputs.target_branch }}
 
       - name: Update PR e2e Status (Failed)
         if: needs.e2e.result == 'failure'
@@ -123,7 +188,7 @@ jobs:
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
-          -d '{"state":"failure","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"❌ Failed","context":"Suites e2e Tests"}'
+          -d '{"state":"failure","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"❌ Failed","context":"Suites e2e"}'
 
       - name: Update PR e2e Status (Success)
         if: needs.e2e.result == 'success'
@@ -133,4 +198,4 @@ jobs:
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
-          -d '{"state":"success","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"✅ Passed Successfully","context":"Suites e2e Tests"}'
+          -d '{"state":"success","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"✅ Passed Successfully","context":"Suites e2e"}'

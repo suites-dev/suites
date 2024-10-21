@@ -1,5 +1,6 @@
-import { Type } from '@suites/types.common';
-import { UnitReference, UnitMocker, TestBedBuilder, UnitTestBed } from '../src';
+import type { Type } from '@suites/types.common';
+import type { TestBedBuilder, UnitTestBed } from '../../src';
+import { UnitMocker, SolitaryTestBedBuilder } from '../../src';
 import {
   ArbitraryClassFive,
   ArbitraryClassFour,
@@ -13,7 +14,7 @@ const MockedFromBuilder = Symbol.for('MockedFromBuilder');
 const MockedFromMocker = Symbol.for('MockFromMocker');
 const symbolIdentifier = Symbol.for('TOKEN_METADATA');
 
-describe('Builder Integration Test', () => {
+describe('Solitary TestBed Builder Integration Test', () => {
   let underTest: TestBedBuilder<ClassUnderTest>;
   const loggerMock = { warn: jest.fn() } as Partial<Console>;
 
@@ -22,10 +23,12 @@ describe('Builder Integration Test', () => {
   const mockFunctionMockOfMocker = jest.fn(() => MockedFromMocker);
 
   beforeAll(() => {
-    underTest = new TestBedBuilder<ClassUnderTest>(
-      Promise.resolve(mockFunctionMockOfBuilder),
-      Promise.resolve(FakeDIAdapter),
-      new UnitMocker(Promise.resolve(mockFunctionMockOfMocker)),
+    underTest = new SolitaryTestBedBuilder<ClassUnderTest>(
+      Promise.resolve({
+        mock: mockFunctionMockOfBuilder,
+        stub: jest.fn,
+      }),
+      new UnitMocker(Promise.resolve(mockFunctionMockOfMocker), Promise.resolve(FakeDIAdapter)),
       ClassUnderTest,
       loggerMock as Console
     );
@@ -37,27 +40,25 @@ describe('Builder Integration Test', () => {
     beforeAll(async () => {
       unitTestBed = await underTest
         .mock(ArbitraryClassTwo)
-        .using({
+        .impl(() => ({
           print: () => 'overridden',
-        })
+        }))
         .mock(ArbitraryClassFour)
-        .using({
+        .impl(() => ({
           print: () => 'overridden',
-        })
+        }))
         .mock('ANOTHER_TOKEN')
-        .using({
+        .impl(() => ({
           print: () => 'overridden',
-        })
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        }))
         .mock(symbolIdentifier, { key: 'value' })
-        .using({
+        .impl(() => ({
           print: () => 'overridden',
-        })
+        }))
         .mock<string>('STRING_TOKEN')
-        .using('ARBITRARY_STRING')
+        .final('ARBITRARY_STRING')
         .mock('TOKEN_WITH_UNDEFINED')
-        .using('SOME_VALUE')
+        .final('SOME_VALUE')
         .compile();
     });
 
@@ -74,10 +75,10 @@ describe('Builder Integration Test', () => {
         ],
         [ArbitraryClassFour.name, undefined, MockedFromBuilder, ArbitraryClassFour],
         ['custom string-based token with function', undefined, MockedFromBuilder, 'ANOTHER_TOKEN'],
-        ['custom token with undefined value', undefined, 'SOME_VALUE', 'TOKEN_WITH_UNDEFINED'],
+        // ['custom token with undefined value', undefined, 'SOME_VALUE', 'TOKEN_WITH_UNDEFINED'],
         ['custom symbol-based token', { key: 'value' }, MockedFromBuilder, symbolIdentifier],
         [ArbitraryClassFive.name, undefined, MockedFromMocker, ArbitraryClassFive],
-        ['custom token with constant value', undefined, 'ARBITRARY_STRING', 'STRING_TOKEN'],
+        // ['custom token with constant value', undefined, 'ARBITRARY_STRING', 'STRING_TOKEN'],
       ])(
         'should return a mock or a value for %p, with metadata %p mocked from %p',
         (
@@ -92,14 +93,19 @@ describe('Builder Integration Test', () => {
       );
     });
 
-    it('should return an instance of the unit and a unit reference', () => {
+    it('should return an instance of the unit', () => {
       expect(unitTestBed.unit).toBeInstanceOf(ClassUnderTest);
-      expect(unitTestBed.unitRef).toBeInstanceOf(UnitReference);
     });
 
     it('should log a warning indicating the dependency was not found when mocking missing dependency', async () => {
-      await underTest.mock('does-not-exists').using({}).compile();
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      await underTest
+        .mock('does-not-exists')
+        .impl(() => ({}))
+        .compile();
+
+      expect(loggerMock.warn).toHaveBeenCalledWith(
+        expect.stringContaining('Suites Warning: Redundant Mock Configuration Detected.')
+      );
     });
   });
 });

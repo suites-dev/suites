@@ -1,4 +1,4 @@
-import { Type, ConstantValue } from '@suites/types.common';
+import type { Type, ConstantValue } from '@suites/types.common';
 
 export * from './errors';
 
@@ -65,7 +65,7 @@ export interface DependencyInjectionAdapter {
 /**
  * @since 3.0.0
  */
-export type IdentifierMetadata = Record<string | symbol, never>;
+export type IdentifierMetadata = Record<string | symbol, unknown>;
 
 /**
  * @since 3.0.0

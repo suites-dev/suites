@@ -1,54 +1,68 @@
-import { vi } from 'vitest';
-import { DeepPartial } from '@suites/types.common';
-import type { Mocked } from '@vitest/spy';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import type { DeepPartial } from '@suites/types.common';
+import type { Mock } from '@vitest/spy';
+import type { Mocked } from './types';
 
-type PropertyType = string | number | symbol;
+type ProxiedProperty = string | number | symbol;
 
-const createHandler = () => ({
-  get: (target: Mocked<unknown>, property: PropertyType) => {
-    if (!(property in target)) {
-      if (property === 'then') {
-        return undefined;
-      }
+const overrideMockImp = <T>(obj: DeepPartial<T>): Mocked<T> => {
+  const proxy = new Proxy<Mocked<T>>(obj as Mocked<T>, handler());
 
-      if (property === Symbol.iterator) {
-        return target[property as never];
-      }
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  for (const name of Object.keys(obj)) {
+    if (typeof obj[name as never] === 'object' && obj[name as never] !== null) {
       // @ts-ignore
-      target[property] = vi.fn();
-    }
-
-    if (target instanceof Date && typeof target[property as never] === 'function') {
-      return (target[property as never] as Mocked<any>).bind(target);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return target[property];
-  },
-});
-
-const applyMockImplementation = (initialObject: DeepPartial<never>) => {
-  const proxy = new Proxy<Mocked<never>>(initialObject, createHandler());
-
-  for (const key of Object.keys(initialObject)) {
-    if (typeof initialObject[key] === 'object' && initialObject[key] !== null) {
-      proxy[key] = applyMockImplementation(initialObject[key]);
+      proxy[name] = overrideMockImp(obj[name as never]);
     } else {
-      proxy[key] = initialObject[key];
+      // @ts-ignore
+      proxy[name] = obj[name];
     }
   }
 
   return proxy;
 };
 
-export const mock = <T, MockedType extends Mocked<T> = Mocked<T>>(
-  mockImpl: Partial<T> = {} as Partial<T>
-): MockedType => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  mockImpl._isMockObject = true;
-  return applyMockImplementation(mockImpl as never);
+const handler = <T>() => ({
+  set: (obj: Mocked<T>, property: ProxiedProperty, value: T) => {
+    // @ts-ignore https://github.com/microsoft/TypeScript/issues/1863
+    obj[property] = value;
+    return true;
+  },
+
+  get: (obj: Mocked<T>, property: ProxiedProperty) => {
+    // @ts-ignore
+    if (!(property in obj)) {
+      if (property === 'then') {
+        return undefined;
+      }
+
+      // Vitest's internal equality checking does some wierd stuff to check for iterable equality
+      if (property === Symbol.iterator) {
+        // @ts-ignore
+        return obj[property];
+      }
+
+      if (property !== 'calls') {
+        // @ts-ignore
+        obj[property] = new Proxy<Mock<T>>(vi.fn(), handler());
+        // @ts-ignore private property
+        obj[property as never]._isMockObject = true;
+      }
+    }
+
+    // @ts-ignore
+    if (obj instanceof Date && typeof obj[property] === 'function') {
+      // @ts-ignore
+      return obj[property].bind(obj);
+    }
+
+    // @ts-ignore
+    return obj[property];
+  },
+});
+
+export const mock = <T>(mockImplementation: DeepPartial<T> = {} as DeepPartial<T>): Mocked<T> => {
+  // @ts-ignore private property
+  mockImplementation!._isMockObject = true;
+
+  return overrideMockImp<T>(mockImplementation);
 };

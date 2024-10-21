@@ -1,0 +1,33 @@
+name: Tag and Push
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag Name (e.g. v1.0.0)'
+        required: true
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  tag-and-push:
+    name: Tag and Push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Config Git
+        run: |
+          git config --global user.email "omer.moradd@gmail.com"
+          git config --global user.name "Omer Morad"
+
+      - name: Tag and Push
+        run: |
+          git tag -a ${{ inputs.tag_name }} -m "Tag Version ${{ inputs.tag_name }}"
+          git push origin ${{ inputs.tag_name }}

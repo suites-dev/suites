@@ -99,29 +99,45 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq
 
-      - name: Remove provenance from publishConfig
+      - name: Remove provenance from package.json files
         run: |
           find packages -name 'package.json' | while read filename; do
             jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
           done
 
-      - name: Commit Change
+      - name: Config Git
         run: |
           git config --global user.email "e2e@suites.dev"
           git config --global user.name "Suites e2e"
+
+      - name: Commit Provenance Change
+        run: |
           git add .
           git commit -am "remove provenance"
+
+      - name: Version Packages
+        run: |
+          lerna version --yes \
+          --no-changelog \
+          --allow-branch ${{ inputs.target_branch }} \
+          --no-git-tag-version \
+          --no-push \
+          --force-publish \
+          --no-commit-hooks \
+          --conventional-commits
+
+      - name: Commit Packages Versions
+        run: |
+          git add .
+          git commit -am "bump versions"
 
       - name: Publish Packages
         run: |
           yarn lerna publish from-package --yes \
           --no-git-tag-version \
           --no-push \
-          --no-changelog \
-          --no-commit-hooks \
           --no-git-reset \
           --exact \
-          --force-publish \
           --dist-tag ci
 
       - name: Setup and Test

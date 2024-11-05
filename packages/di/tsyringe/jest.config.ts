@@ -4,8 +4,8 @@ import process from 'process';
 
 const config: Config = {
   ...baseConfig(process.env.COVERAGE_DIR),
-  id: 'di.tsyringe',
-  displayName: 'di.tsyringe',
+  id: 'di.nestjs',
+  displayName: 'di.nestjs',
   collectCoverageFrom: ['src/**/*.ts'],
   coveragePathIgnorePatterns: ['index.ts', '__test__/assets/integration.assets.ts'],
 };

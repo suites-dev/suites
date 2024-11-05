@@ -1,11 +1,11 @@
-import { Type } from '@suites/types.common';
+import type { Type } from '@suites/types.common';
+import type { ClassInjectable } from '@suites/types.di';
 import {
-  ClassInjectable,
   NonExistingDependency,
   UndefinedDependency,
   UndefinedDependencyError,
 } from '@suites/types.di';
-import {
+import type {
   IdentifierMetadata,
   MetadataReflector,
   TransformDescriptor,

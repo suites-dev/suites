@@ -1,5 +1,5 @@
-import { InjectionToken } from 'tsyringe';
-import { Type } from '@suites/types.common';
+import type { InjectionToken } from 'tsyringe';
+import type { Type } from '@suites/types.common';
 
 export interface TokenDescriptor {
   token: InjectionToken;

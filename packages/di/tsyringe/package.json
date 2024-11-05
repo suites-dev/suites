@@ -2,7 +2,7 @@
   "name": "@suites/di.tsyringe",
   "private": false,
   "version": "3.0.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
@@ -12,6 +12,9 @@
   "homepage": "https://suites.dev",
   "bugs": {
     "url": "https://github.com/suites-dev/suites/issues"
+  },
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },
   "contributors": [
     {
@@ -31,17 +34,18 @@
     "dist"
   ],
   "dependencies": {
-    "@suites/types.di": "^4.0.0",
-    "@suites/types.common": "^4.0.0",
-    "reflect-metadata": "^0.1.13"
+    "@suites/types.common": "^3.0.0",
+    "@suites/types.di": "^3.0.0"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "<1.0.0",
+    "tsyringe": ">4.0.0"
   },
   "devDependencies": {
     "tsyringe": "^4.0.0"
   },
-  "engines": {
-    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
-  },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   }
 }

@@ -605,6 +605,24 @@
   resolved "https://registry.yarnpkg.com/@hutson/parse-repository-url/-/parse-repository-url-3.0.2.tgz#98c23c950a3d9b6c8f0daed06da6c3af06981340"
   integrity sha512-H9XAx3hc0BQHY6l+IFSWHDySypcXsvsuLhgYLUGywmJ5pswRVQJUHpOsobnLYp2ZUaUlKiKDrgWWhosOwAEM8Q==
 
+"@inversifyjs/common@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@inversifyjs/common/-/common-1.3.2.tgz#883e5972b00e0065e21d300d6e959b188c42fc93"
+  integrity sha512-jIn8Kq8ZfQ/e6FrrKABS3Yju09PQ2L8tLSv+uoJPnBHhj2VHQYOB9qyvJvtCGIrvWC+mAvZ/5RmczXWyEioBjA==
+
+"@inversifyjs/core@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@inversifyjs/core/-/core-1.3.2.tgz#729bf6f704e74ee616b1c062371048213d92a5ed"
+  integrity sha512-SQLgqSMiCtmlpOBeCDl2PpXq1fisOqIgKD9I2qrEk6Mosg19Y9lx4pnPSsdFS+ggk5El9sVfy8X2owvTyokNAA==
+  dependencies:
+    "@inversifyjs/common" "1.3.2"
+    "@inversifyjs/reflect-metadata-utils" "0.2.2"
+
+"@inversifyjs/reflect-metadata-utils@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@inversifyjs/reflect-metadata-utils/-/reflect-metadata-utils-0.2.2.tgz#18eedd4f3a4083928772779668308c95a554cc12"
+  integrity sha512-LaiMbwe4XBzn3GJdYditg0TTSiDMDTY0WuwdQP2BmoGd1e2XSTCIpcjVNqbNLd2dhBLgAEcr7Ep17QLV+DVBAA==
+
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@isaacs/cliui/-/cliui-8.0.2.tgz#b37667b7bc181c168782259bab42474fbf52b550"
@@ -4559,9 +4577,12 @@ internal-slot@^1.0.7:
     side-channel "^1.0.4"
 
 inversify@^6.0.1:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/inversify/-/inversify-6.0.2.tgz#dc7fa0348213d789d35ffb719dea9685570989c7"
-  integrity sha512-i9m8j/7YIv4mDuYXUAcrpKPSaju/CIly9AHK5jvCBeoiM/2KEsuCQTTP+rzSWWpLYWRukdXFSl6ZTk2/uumbiA==
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/inversify/-/inversify-6.1.1.tgz#036ba9abb42de113223d76810c725171c30fdc4f"
+  integrity sha512-2GapY6C2E8lvamUnZtLEZUpPMV3htyBlMiUwB/DwI1EOh1JF4Q63rCRHtTVSKjuAs3AKenA8SoDsGURvph9E0w==
+  dependencies:
+    "@inversifyjs/common" "1.3.2"
+    "@inversifyjs/core" "1.3.2"
 
 ip@1.1.9:
   version "1.1.9"

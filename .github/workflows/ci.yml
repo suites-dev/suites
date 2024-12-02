@@ -31,12 +31,7 @@ jobs:
         if: ${{ matrix.node-version == '16.x'  }}
         run: rm -rf packages/doubles/vitest
 
-      - name: Install Dependencies Ignore Engine
-        if: ${{ matrix.node-version == '16.x'  }}
-        run: yarn install
-
       - name: Yarn
-        if: ${{ matrix.node-version != '16.x'  }}
         run: yarn install --immutable
 
       - name: Build

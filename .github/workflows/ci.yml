@@ -31,7 +31,12 @@ jobs:
         if: ${{ matrix.node-version == '16.x'  }}
         run: rm -rf packages/doubles/vitest
 
+      - name: Install Dependencies Ignore Engine
+        if: ${{ matrix.node-version == '16.x'  }}
+        run: yarn install
+
       - name: Yarn
+        if: ${{ matrix.node-version != '16.x'  }}
         run: yarn install --immutable
 
       - name: Build
@@ -52,7 +57,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '20.x'
 
       - uses: actions/cache@v2
         with:

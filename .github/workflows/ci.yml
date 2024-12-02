@@ -32,7 +32,7 @@ jobs:
         run: rm -rf packages/doubles/vitest
 
       - name: Yarn
-        run: yarn --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Build
         if: ${{ matrix.node-version != '16.x' }}
@@ -60,7 +60,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
-        run: yarn --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Lint
         run: yarn lint
@@ -89,7 +89,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Yarn
-        run: yarn --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Create Coverage Directory
         run: mkdir -p ${{ github.workspace }}/coverage

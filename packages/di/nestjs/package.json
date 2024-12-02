@@ -1,6 +1,5 @@
 {
   "name": "@suites/di.nestjs",
-  "private": false,
   "version": "3.0.0",
   "license": "Apache-2.0",
   "main": "dist/index.js",
@@ -24,10 +23,10 @@
   ],
   "scripts": {
     "postinstall": "node postinstall.js",
-    "prebuild": "yarn rimraf dist",
-    "build": "yarn tsc -p tsconfig.build.json",
+    "prebuild": "rimraf dist",
+    "build": "tsc -p tsconfig.build.json",
     "test": "jest --coverage --verbose",
-    "lint": "yarn eslint '{src,test}/**/*.ts'"
+    "lint": "eslint '{src,test}/**/*.ts'"
   },
   "files": [
     "postinstall.js",

@@ -1,6 +1,5 @@
 {
   "name": "@suites/types.doubles",
-  "private": false,
   "version": "3.0.0",
   "license": "Apache-2.0",
   "types": "index.d.ts",
@@ -20,10 +19,10 @@
     }
   ],
   "scripts": {
-    "prebuild": "yarn rimraf dist",
-    "build": "yarn tsc -p tsconfig.build.json",
+    "prebuild": "rimraf dist",
+    "build": "tsc -p tsconfig.build.json",
     "test": "jest --passWithNoTests",
-    "lint": "yarn eslint 'index.ts'"
+    "lint": "eslint 'index.ts'"
   },
   "files": [
     "index.d.ts"

@@ -47,7 +47,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.target_branch }}
+          ref: ${{ inputs.target_branch }}
 
       - name: Remove Vitest If Needed
         if: ${{ matrix.node-version == '16.x' }}
@@ -93,24 +93,40 @@ jobs:
             jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
           done
 
-      - name: Commit Change
+      - name: Config Git
         run: |
           git config --global user.email "e2e@suites.dev"
           git config --global user.name "Suites e2e"
+
+      - name: Commit Provenance Change
+        run: |
           git add .
           git commit -am "remove provenance"
+
+      - name: Version Packages
+        run: |
+          lerna version --yes \
+          --no-changelog \
+          --allow-branch ${{ inputs.target_branch }} \
+          --no-git-tag-version \
+          --no-push \
+          --force-publish \
+          --no-commit-hooks \
+          --conventional-commits
+
+      - name: Commit Packages Versions
+        run: |
+          git add .
+          git commit -am "bump versions"
 
       - name: Publish Packages
         run: |
           yarn lerna publish from-package --yes \
           --no-git-tag-version \
           --no-push \
-          --no-changelog \
-          --no-commit-hooks \
           --no-git-reset \
           --exact \
-          --force-publish \
-          --dist-tag ci
+          --dist-tag e2e
 
       - name: Setup and Test
         run: |
@@ -122,6 +138,8 @@ jobs:
         run: |
           rm -rf packages
           rm -rf node_modules
+          rm yarn.lock
+          rm package.json
 
       - name: Install Dependencies
         run: |

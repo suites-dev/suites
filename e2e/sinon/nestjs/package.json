@@ -3,11 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {
-    "@suites/di.nestjs": "ci",
-    "@suites/doubles.sinon": "ci",
-    "@suites/unit": "ci",
-    "@nestjs/core": "10.0.0",
-    "reflect-metadata": "^0.1.13"
+    "@suites/di.nestjs": "e2e",
+    "@suites/doubles.sinon": "e2e",
+    "@suites/unit": "e2e",
+    "@nestjs/core": "^10.4.15",
+    "reflect-metadata": "^0.2.0"
   },
   "scripts": {
     "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts"

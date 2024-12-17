@@ -39,11 +39,11 @@
   },
   "peerDependencies": {
     "@nestjs/common": ">= 8.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "<1.0.0"
   },
   "devDependencies": {
     "@nestjs/common": "^10.3.9",
-    "reflect-metadata": "^0.1.13",
+    "reflect-metadata": "<1.0.0",
     "rxjs": "^7.8.1"
   },
   "publishConfig": {

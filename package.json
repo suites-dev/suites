@@ -27,7 +27,8 @@
     "build": "yarn lerna run build",
     "lint": "yarn lerna run lint --parallel",
     "prepare": "husky",
-    "test": "yarn lerna exec yarn test"
+    "test": "yarn lerna exec yarn test",
+    "e2e": "sh local-e2e.sh"
   },
   "lint-staged": {
     "*.ts": [
@@ -42,6 +43,7 @@
     "titleTemplate": "{title}",
     "uniqueOutputName": "true"
   },
+  "packageManager": "yarn@1.22.1",
   "dependencies": {
     "@babel/traverse": "7.23.2",
     "@manypkg/cli": "^0.21.4",
@@ -69,6 +71,7 @@
     "madge": "^7.0.0",
     "micromatch": "4.0.6",
     "prettier": "^3.2.5",
+    "reflect-metadata": "<1.0.0",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",
     "sinon": "^16.1.0",

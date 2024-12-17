@@ -65,7 +65,7 @@ jobs:
         if: ${{ matrix.node-version == '16.x' }}
         run: |
           rm -rf packages/doubles/vitest
-          git config --global user.email "ci@suites.dev"
+          git config --global user.email "e2e@suites.dev"
           git config --global user.name "Suites CI"
           git add .
           git commit -am "remove vitest temp"
@@ -138,7 +138,7 @@ jobs:
           --no-push \
           --no-git-reset \
           --exact \
-          --dist-tag ci
+          --dist-tag e2e
 
       - name: Setup and Test
         run: |
@@ -150,6 +150,8 @@ jobs:
         run: |
           rm -rf packages
           rm -rf node_modules
+          rm yarn.lock
+          rm package.json
 
       - name: Install Dependencies
         run: |

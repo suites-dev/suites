@@ -6,7 +6,7 @@
     "@suites/di.inversify": "ci",
     "@suites/doubles.sinon": "ci",
     "@suites/unit": "ci",
-    "inversify": "^6.0.2",
+    "inversify": "6.0.0",
     "reflect-metadata": "^0.1.13"
   },
   "scripts": {

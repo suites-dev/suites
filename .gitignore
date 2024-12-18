@@ -44,3 +44,11 @@ coverage-report.xml
 lcov-report
 lcov.info
 
+
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

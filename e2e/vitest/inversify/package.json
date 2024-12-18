@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "dependencies": {
-    "@suites/di.inversify": "ci",
-    "@suites/doubles.vitest": "ci",
-    "@suites/unit": "ci",
+    "@suites/di.inversify": "e2e",
+    "@suites/doubles.vitest": "e2e",
+    "@suites/unit": "e2e",
     "inversify": "6.0.0",
     "reflect-metadata": "^0.1.13"
   },

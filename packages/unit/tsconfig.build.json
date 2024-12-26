@@ -4,8 +4,9 @@
     "rootDir": "src",
     "baseUrl": ".",
     "outDir": "dist",
-    "module": "esnext",
-    "target": "esnext",
+    "module": "es2022",
+    "target": "es2022",
+    "moduleResolution": "bundler",
     "skipLibCheck": true
   },
   "exclude": [

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ESNext",
     "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -10,15 +10,10 @@
     "skipLibCheck": true,
     "baseUrl": "./",
     "incremental": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "lib": [
-      "es6",
-      "es2015.reflect"
-    ]
+    "lib": ["es6", "es2015.reflect"]
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

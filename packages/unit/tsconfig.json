@@ -1,3 +1,14 @@
 {
-  "extends": "../../tsconfig.json"
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "jest", "vitest", "@types/sinon"],
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "rootDir": "src",
+    "outDir": "dist/esm",
+    "paths": {
+      "@suites/*": ["../*/src"]
+    }
+  },
+  "include": ["src/**/*"]
 }

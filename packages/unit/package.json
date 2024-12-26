@@ -5,9 +5,13 @@
   "license": "Apache-2.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "exports": {
-    "require": "./dist/cjs/index.js",
-    "import": "./dist/esm/index.js"
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
   },
   "keywords": [
     "unit testing",
@@ -61,13 +65,22 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "*.d.ts"
   ],
   "dependencies": {
     "@suites/core.unit": "^3.0.0",
     "@suites/types.common": "^3.0.0",
     "@suites/types.di": "^3.0.0",
-    "@suites/types.doubles": "^3.0.0"
+    "@suites/types.doubles": "^3.0.0",
+    "@suites/doubles.jest": "^3.0.0",
+    "@suites/doubles.vitest": "^3.0.0",
+    "@suites/doubles.sinon": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/sinon": "^17.0.0",
+    "vitest": "^1.0.0"
   },
   "publishConfig": {
     "access": "public",

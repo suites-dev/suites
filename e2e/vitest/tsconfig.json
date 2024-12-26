@@ -2,13 +2,9 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "module": "esnext",
+    "module": "es2022",
     "target": "esnext",
-    "lib": [
-      "esnext"
-    ],
-    "types": [
-      "vitest"
-    ]
+    "lib": ["esnext"],
+    "types": ["vitest"]
   }
 }

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es2022",
     "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "baseUrl": "./",
     "incremental": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "lib": [
@@ -18,7 +18,5 @@
       "es2015.reflect"
     ]
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

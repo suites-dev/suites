@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es2022",
     "declaration": true,
     "removeComments": false,
     "emitDecoratorMetadata": true,
@@ -12,17 +12,17 @@
     "incremental": false,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "types": [
-      "node",
-      "jest"
-    ],
-    "lib": [
-      "es6"
-    ],
-    "allowSyntheticDefaultImports": true
+    "types": ["node", "jest"],
+    "lib": ["es6"],
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@suites/*": [
+        "packages/*/src"
+      ]
+    }
   },
   "exclude": [
     "e2e",

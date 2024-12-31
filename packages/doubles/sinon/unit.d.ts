@@ -1,6 +1,6 @@
 /// <reference types="@types/sinon" />
 import type { DeepPartial, Type } from '@suites/types.common';
-import type { InjectableIdentifier, IdentifierMetadata } from '@suites/types.di';
+import type { IdentifierMetadata } from '@suites/types.di';
 import type { TestBedBuilder } from '@suites/core.unit';
 import type { Mocked as SinonMocked, Stub as SinonStub } from '@suites/doubles.sinon';
 import type { ArgsType } from '@suites/types.doubles';

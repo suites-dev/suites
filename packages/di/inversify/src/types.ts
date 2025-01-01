@@ -1,12 +1,9 @@
 import type { ClassInjectable } from '@suites/types.di';
 import type { Type } from '@suites/types.common';
-import { interfaces } from 'inversify';
+import type { interfaces } from 'inversify';
 
-import Metadata = interfaces.Metadata;
-import ServiceIdentifier = interfaces.ServiceIdentifier;
-
-export interface InversifyInjectableMetadata<T extends ServiceIdentifier<T> = never>
-  extends Metadata {
+export interface InversifyInjectableMetadata<T extends interfaces.ServiceIdentifier<T> = never>
+  extends interfaces.Metadata {
   key: 'inject' | 'multi_inject' | string;
   value: T | unknown | LazyServiceIdentifierToken;
 }

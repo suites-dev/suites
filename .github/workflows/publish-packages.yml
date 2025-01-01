@@ -21,6 +21,14 @@ on:
           - 'beta'
         required: true
         default: 'dev'
+      release_branch:
+        description: 'Release Branch'
+        type: choice
+        options:
+          - 'next'
+          - 'master'
+        required: true
+        default: 'next'
       strategy:
         description: 'Release Strategy'
         type: choice
@@ -37,7 +45,7 @@ jobs:
     strategy:
       matrix:
         e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
-        node-version: [16.x, 18.x, 20.x]
+        node-version: [16.x, 18.x, 20.x, 22.x]
         exclude:
           - e2e-project: 'vitest/inversify'
             node-version: '16.x'
@@ -47,7 +55,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.target_branch }}
+          ref: ${{ inputs.release_branch }}
 
       - name: Remove Vitest If Needed
         if: ${{ matrix.node-version == '16.x' }}
@@ -107,7 +115,7 @@ jobs:
         run: |
           lerna version --yes \
           --no-changelog \
-          --allow-branch ${{ inputs.target_branch }} \
+          --allow-branch ${{ inputs.release_branch }} \
           --no-git-tag-version \
           --no-push \
           --force-publish \

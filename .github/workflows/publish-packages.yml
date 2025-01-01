@@ -37,7 +37,14 @@ on:
           - 'from-package'
         required: true
         default: 'from-package'
-
+      target_branch:
+        description: 'Target branch to release from'
+        type: choice
+        options:
+          - 'next'
+          - 'master'
+        required: true
+        default: 'next'
 jobs:
   e2e:
     name: Build and Test
@@ -101,7 +108,7 @@ jobs:
             jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
           done
 
-      - name: Commit Change
+      - name: Config Git
         run: |
           git config --global user.email "e2e@suites.dev"
           git config --global user.name "Suites e2e"
@@ -167,6 +174,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
 
       - name: Setup Registry
         uses: actions/setup-node@v4

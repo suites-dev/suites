@@ -1,31 +1,49 @@
 {
   "name": "suites-monorepo",
-  "private": true,
   "version": "0.0.0",
-  "license": "MIT",
+  "private": true,
+  "homepage": "https://suites.dev",
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites.git"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git"
   },
-  "engines": {
-    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
-  },
-  "bugs": {
-    "url": "https://github.com/suites-dev/suites.git"
-  },
-  "homepage": "https://suites.dev",
+  "license": "MIT",
   "contributors": [
     {
       "name": "Omer Morad",
       "email": "omer.moradd@gmail.com"
     }
   ],
+  "workspaces": [
+    "packages/*",
+    "packages/di/*",
+    "packages/doubles/*",
+    "packages/types/*"
+  ],
   "scripts": {
     "build": "yarn lerna run build",
-    "test": "yarn lerna exec yarn test",
     "lint": "yarn lerna run lint --parallel",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "yarn lerna exec yarn test",
+    "e2e": "sh local-e2e.sh"
   },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --ext .ts --fix"
+    ]
+  },
+  "jest-junit": {
+    "ancestorSeparator": " › ",
+    "classNameTemplate": "{classname}",
+    "outputDirectory": "test-reports",
+    "suiteNameTemplate": "{filepath}",
+    "titleTemplate": "{title}",
+    "uniqueOutputName": "true"
+  },
+  "packageManager": "yarn@1.22.1",
   "dependencies": {
     "@babel/traverse": "7.23.2",
     "@manypkg/cli": "^0.21.4",
@@ -54,6 +72,7 @@
     "madge": "^7.0.0",
     "micromatch": "4.0.8",
     "prettier": "^3.2.5",
+    "reflect-metadata": "<1.0.0",
     "rimraf": "^5.0.5",
     "rxjs": "^7.8.1",
     "sinon": "^16.1.0",
@@ -62,24 +81,8 @@
     "ts-node": "^10.9.1",
     "typescript": "~5.2.2"
   },
-  "workspaces": [
-    "packages/*",
-    "packages/di/*",
-    "packages/doubles/*",
-    "packages/types/*"
-  ],
-  "lint-staged": {
-    "*.ts": [
-      "eslint --ext .ts --fix"
-    ]
-  },
-  "jest-junit": {
-    "outputDirectory": "test-reports",
-    "ancestorSeparator": " › ",
-    "uniqueOutputName": "true",
-    "suiteNameTemplate": "{filepath}",
-    "classNameTemplate": "{classname}",
-    "titleTemplate": "{title}"
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },
   "packageManager": "yarn@1.22.1"
 }

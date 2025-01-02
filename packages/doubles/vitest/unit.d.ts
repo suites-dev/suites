@@ -1,6 +1,6 @@
 /// <reference types="@vitest/spy" />
 import type { DeepPartial, Type } from '@suites/types.common';
-import type { InjectableIdentifier, IdentifierMetadata } from '@suites/types.di';
+import type { IdentifierMetadata } from '@suites/types.di';
 import type { TestBedBuilder } from '@suites/core.unit';
 import type { Mocked as VitestMocked, Stub as VitestStub } from '@suites/doubles.vitest';
 import type { ArgsType } from '@suites/types.doubles';

@@ -55,17 +55,36 @@ sleep 3
 
 # Clean up and build
 execute_with_emoji "🧪" "Cleaning up" yarn lerna run prebuild
-echo "🚧" "Building"
-yarn build
+
+echo "🚧" "Building Packages"
+
+yarn build --stream
 
 npm config set registry http://localhost:4873
+
+echo "Removing provenance from package.json"
 
 find packages -name 'package.json' | while read filename; do
   jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
 done
 
 git add .
-git commit -m "remove provenance"
+git commit -m "remove provenance [temp e2e]"
+
+echo "Versioning packages"
+
+yarn lerna version prerelease --yes \
+  --no-changelog \
+  --allow-branch "$(git branch --show-current)" \
+  --no-git-tag-version \
+  --no-push \
+  --force-publish \
+  --no-commit-hooks
+
+git add .
+git commit -m "version packages [temp e2e]"
+
+echo "Publishing packages"
 
 yarn lerna publish from-package --yes \
   --no-git-tag-version \
@@ -76,10 +95,12 @@ yarn lerna publish from-package --yes \
   --no-git-reset \
   --exact \
   --force-publish \
-  --dist-tag ci
+  --dist-tag e2e
 
-echo "Cleaning source packages.."
+echo "Cleaning sources"
 git rm -rf packages
+git rm -rf yarn.lock
+git rm -rf package.json
 
 # Test Matrix
 setup_and_test sinon nestjs
@@ -92,7 +113,7 @@ setup_and_test vitest inversify
 echo -e "🎉 Testing complete!"
 
 git stash
-git reset --hard HEAD~1
+git reset --hard HEAD~2
 
 docker kill verdaccio
 docker rm verdaccio

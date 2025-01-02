@@ -1,7 +1,7 @@
 {
   "name": "@suites/di.nestjs",
   "private": false,
-  "version": "3.0.0",
+  "version": "3.0.1",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "repository": {
@@ -39,11 +39,11 @@
   },
   "peerDependencies": {
     "@nestjs/common": ">= 8.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "<1.0.0"
   },
   "devDependencies": {
     "@nestjs/common": "^10.3.9",
-    "reflect-metadata": "^0.1.13",
+    "reflect-metadata": "<1.0.0",
     "rxjs": "^7.8.1"
   },
   "publishConfig": {

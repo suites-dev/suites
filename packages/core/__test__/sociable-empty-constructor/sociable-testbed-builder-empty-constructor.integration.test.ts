@@ -1,9 +1,12 @@
-import { TestDependService, TestService, TestSociableService } from "./assets/injectable-registry.fixture";
-import { FakeAdapter } from "./assets/integration.assets";
+import {
+  TestDependService,
+  TestService,
+  TestSociableService,
+} from './assets/injectable-registry.fixture';
+import { FakeAdapter } from './assets/integration.assets';
 import { mock } from '../mock.static';
 import type { UnitReference } from '../../src';
 import { SociableTestBedBuilder, UnitMocker } from '../../src';
-import Mock = jest.Mock;
 
 describe('Social TestBed Builder (Empty Constructor) Integration Tests', () => {
   let unitBuilder: SociableTestBedBuilder<TestService>;
@@ -13,22 +16,20 @@ describe('Social TestBed Builder (Empty Constructor) Integration Tests', () => {
   const loggerMock = { warn: jest.fn() } as unknown as jest.Mocked<Console>;
 
   beforeAll(async () => {
-      unitBuilder = new SociableTestBedBuilder(
-        Promise.resolve({
-          mock: mock,
-          stub: jest.fn,
-        }),
-        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
-        TestService,
-        loggerMock
-      );
+    unitBuilder = new SociableTestBedBuilder(
+      Promise.resolve({
+        mock: mock,
+        stub: jest.fn,
+      }),
+      new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+      TestService,
+      loggerMock
+    );
 
-      const testBed = await unitBuilder
-        .expose(TestSociableService)
-        .compile();
-  
-      testServiceAsIfItWasUnderTest = testBed.unit;
-      unitRef = testBed.unitRef;
+    const testBed = await unitBuilder.expose(TestSociableService).compile();
+
+    testServiceAsIfItWasUnderTest = testBed.unit;
+    unitRef = testBed.unitRef;
   });
 
   it('should instantiate UserService with all dependencies properly resolved', () => {
@@ -41,5 +42,4 @@ describe('Social TestBed Builder (Empty Constructor) Integration Tests', () => {
     testServiceAsIfItWasUnderTest.test();
     expect(testDependServiceMock.call).toHaveBeenCalledWith(true);
   });
-
 });

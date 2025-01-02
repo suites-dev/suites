@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 
 export class TestDependService {
   public call(bool: boolean) {
@@ -16,7 +16,7 @@ export class TestSociableService {
 export class TestService {
   constructor(
     private readonly testDependService: TestDependService,
-    private readonly testSociableService: TestSociableService,
+    private readonly testSociableService: TestSociableService
   ) {}
 
   public test(): void {

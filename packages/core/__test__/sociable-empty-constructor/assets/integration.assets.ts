@@ -9,11 +9,11 @@ import type {
 import type { Type } from '@suites/types.common';
 import { normalizeIdentifier } from '../../../src/normalize-identifier.static';
 import {
-    TestService,
-    TestDependService,
-    TestSociableService,
-    testServiceRegistry,
-    emptyRegistry,
+  TestService,
+  TestDependService,
+  TestSociableService,
+  testServiceRegistry,
+  emptyRegistry,
 } from './injectable-registry.fixture';
 
 const registryToClass: Map<Type, InjectableRegistry> = new Map<Type, InjectableRegistry>([

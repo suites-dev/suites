@@ -20,6 +20,7 @@ export type TSyringeReflectedInjectableIdentifier =
   | Type
   | string
   | symbol
+  // @TODO ???
   | { wrap: () => Type }
   | TransformDescriptor
   | TokenDescriptor;

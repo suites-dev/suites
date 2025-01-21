@@ -9,6 +9,7 @@ import {
   DependencySix,
   DependencyThree,
   DependencyTwo,
+  SymbolToken,
 } from './assets/integration.assets';
 
 describe('TSyringe Automock Adapter Integration Test', () => {
@@ -21,51 +22,55 @@ describe('TSyringe Automock Adapter Integration Test', () => {
       expect(injectablesContainer.list()).toStrictEqual<ClassInjectable[]>([
         {
           identifier: DependencyOne,
+          metadata: undefined,
           value: DependencyOne,
           type: 'PARAM',
         },
         {
           identifier: DependencyTwo,
+          metadata: undefined,
           value: DependencyTwo,
           type: 'PARAM',
         },
         {
           identifier: DependencyThree,
+          metadata: undefined,
           value: DependencyThree,
           type: 'PARAM',
         },
         {
-          identifier: 'SOME_TOKEN_FROM_REF',
-          value: DependencyFive,
+          identifier: DependencySix,
+          metadata: undefined,
+          value: DependencySix,
           type: 'PARAM',
         },
         {
-          identifier: DependencySix,
+          identifier: SymbolToken,
+          metadata: undefined,
           value: UndefinedDependency,
           type: 'PARAM',
         },
         {
-          identifier: 'CUSTOM_TOKEN',
-          value: Object,
-          type: 'PARAM',
-        },
-        {
           identifier: 'CUSTOM_TOKEN_SECOND',
+          metadata: undefined,
           value: UndefinedDependency,
           type: 'PARAM',
         },
         {
           identifier: 'ANOTHER_CUSTOM_TOKEN',
+          metadata: undefined,
           value: String,
           type: 'PARAM',
         },
         {
           identifier: 'LITERAL_VALUE_ARR',
+          metadata: undefined,
           value: Array,
           type: 'PARAM',
         },
         {
           identifier: 'LITERAL_VALUE_STR',
+          metadata: undefined,
           value: String,
           type: 'PARAM',
         },

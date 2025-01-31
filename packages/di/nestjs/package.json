@@ -42,7 +42,7 @@
     "reflect-metadata": "<1.0.0"
   },
   "devDependencies": {
-    "@nestjs/common": "^10.3.9",
+    "@nestjs/common": "^11.0.7",
     "reflect-metadata": "<1.0.0",
     "rxjs": "^7.8.1"
   },

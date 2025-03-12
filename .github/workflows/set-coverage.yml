@@ -47,7 +47,7 @@ jobs:
           COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 
       - name: Tests Results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         if: always()
         with:
           reporter: 'jest-junit'

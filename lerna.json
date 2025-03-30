@@ -3,33 +3,18 @@
   "command": {
     "publish": {
       "registry": "https://registry.npmjs.org/",
-      "allowBranch": [
-        "master",
-        "next"
-      ],
+      "allowBranch": ["master", "next"],
       "message": "chore(*): release packages [skip ci]",
       "conventionalCommits": true
     },
     "version": {
-      "allowBranch": [
-        "master",
-        "next"
-      ],
+      "allowBranch": ["master", "next"],
       "message": "chore(*): version packages [skip ci]",
       "conventionalCommits": true
     }
   },
-  "workspaces": [
-    "packages/*",
-    "packages/di/*",
-    "packages/doubles/*",
-    "packages/types/*"
-  ],
+  "workspaces": ["packages/*", "packages/di/*", "packages/doubles/*", "packages/types/*"],
   "npmClient": "yarn",
-  "packages": [
-    "packages/*",
-    "packages/di/*",
-    "packages/doubles/*",
-    "packages/types/*"
-  ]
+  "packages": ["packages/*", "packages/di/*", "packages/doubles/*", "packages/types/*"],
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }

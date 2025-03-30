@@ -1,7 +1,7 @@
 {
   "name": "@suites/unit",
   "private": false,
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.1",
   "license": "Apache-2.0",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -10,17 +10,17 @@
     "import": "./dist/esm/index.js"
   },
   "keywords": [
-    "unit",
+    "unit testing",
     "testing",
     "mocking",
-    "doubles",
+    "test doubles",
     "stubs",
     "mocks",
     "test",
     "jest",
     "sinon",
     "vitest",
-    "depdency injection",
+    "dependency injection",
     "nestjs",
     "inversify",
     "tsyringe"
@@ -64,13 +64,14 @@
     "README.md"
   ],
   "dependencies": {
-    "@suites/core.unit": "3.0.0-alpha.2",
-    "@suites/types.common": "3.0.0-alpha.2",
-    "@suites/types.di": "3.0.0-alpha.2",
-    "@suites/types.doubles": "3.0.0-alpha.2"
+    "@suites/core.unit": "^3.0.1",
+    "@suites/types.common": "^3.0.0",
+    "@suites/types.di": "^3.0.0",
+    "@suites/types.doubles": "^3.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

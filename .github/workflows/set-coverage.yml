@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ['jest', 'sinon', 'core', 'adapters.nestjs', 'adapters.inversify']
+        project: ['doubles.jest', 'doubles.sinon', 'core.unit', 'doubles.vitest', 'di.nestjs', 'di.inversify', 'unit']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18.17.0'
+          node-version: '18.x'
 
       - uses: actions/cache@v2
         with:
@@ -41,6 +41,8 @@ jobs:
         env:
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
           JEST_JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
+          JUNIT_OUTPUT_NAME: ${{ matrix.project }}
+          JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
           COVERAGE_DIR: ${{ github.workspace }}/coverage
           COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 
@@ -52,9 +54,6 @@ jobs:
           name: Tests Results (${{ matrix.project }})
           path: ${{ github.workspace }}/test-reports/${{ matrix.project }}.xml
           fail-on-error: false
-
-      - name: Build
-        run: yarn build
 
       - name: Upload Report to Codecov
         uses: codecov/codecov-action@v3

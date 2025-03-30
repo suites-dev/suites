@@ -4,30 +4,19 @@
 
 <h1 align="center">Suites (formerly Automock)</h1>
 
-Suites is an opinionated, flexible testing meta-framework aim at elevating the software testing experience within
-backend systems. By integrating a wide array of testing tools into a cohesive framework, Suites simplifies the process
-of creating reliable tests, thereby ensuring the development of high-quality software.
+**Suites is a progressive, flexible testing meta-framework aimed at elevating the software testing experience within
+backend systems working with dependency injection (DI) frameworks**.
+
+Suites provides a unified testing experience that combines best practices, industry standards, and a wide range of
+testing tools to help developers create robust, maintainable, and scalable test suites, thereby ensuring the development
+of high-quality software.
 
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/suites-dev/suites/master.svg?style=flat-square)](https://codecov.io/gh/suites-dev/suites)
 [![e2e](https://github.com/suites-dev/suites/actions/workflows/e2e.yml/badge.svg?branch=master)](https://github.com/suites-dev/suites/actions)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 ![npm downloads](https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest)
 
-[↗️ Visit Documentation](https://suites.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://suites.dev/api-reference)
-
-## Automock is now Suites! 🎉
-
-**We are excited to announce that Automock has been rebranded to Suites**!
-
-This change reflects our commitment to providing a comprehensive testing solution that caters to a broader range of
-testing scenarios. The core features and functionality of the framework remain the same, but with a new name and a fresh
-look.
-
-[↗️ More Information](https://suites.dev/overview/the-shift-from-automock)
-&nbsp;&nbsp;
-[↗️ Migration Guide](https://suites.dev/docs/getting-started/migrating-from-automock)
-&nbsp;&nbsp;
-[↗️ Change Log](https://suites.dev/docs/getting-started/change-log)
+[↗️ Visit Documentation](https://suites.dev/docs)
 
 ## Core Features
 
@@ -69,7 +58,7 @@ Let's create a unit test for this class:
 
 ```typescript
 import { TestBed, Mocked } from '@suites/unit';
-import { Database, UserService } from './user.service';
+import { Database, UserService } from './user.service'; 
 
 describe('User Service Unit Spec', () => {
   let userService: UserService; // 🧪 Declare the unit under test
@@ -102,18 +91,18 @@ With the use of the `TestBed`, an instance of the `UserService` class can be cre
 generated for its dependencies. During the test, we have direct access to the automatically generated mock object for
 the `Database` dependency (database).
 
-<p align="right"><a href="https://suites.dev/docs/getting-started/examples">↗️ For more comprehensive examples</a></p>
+<p align="right"><a href="https://suites.dev/docs/overview/quickstart">↗️ Quickstart Guide</a></p>
 
 ## :package: Installation
 
-First, install Suites' core package:
+First, install Suites' unit package:
 
 ```bash
 $ npm i -D @suites/unit
 ```
 
 Then, to fully integrate Suites into your mocking and dependency injection frameworks, install the corresponding
-adapters for your project. For example, to use Suites with Jest and NestJS you would run (alongside the core package):
+adapters for your project. For example, to use Suites with Jest and NestJS you would run (alongside the unit package):
 
 ```bash
 $ npm i -D @suites/doubles.jest @suites/di.nestjs
@@ -142,4 +131,4 @@ Suites will automatically detect the installed adapters and configure itself acc
 
 ## :scroll: License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the Apache (Apache-2.0) License. See `LICENSE` for more information.

@@ -1,7 +1,7 @@
 {
   "name": "@suites/di.inversify",
   "private": false,
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.1",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "repository": {
@@ -34,21 +34,22 @@
     "dist"
   ],
   "dependencies": {
-    "@suites/types.common": "3.0.0-alpha.2",
-    "@suites/types.di": "3.0.0-alpha.2",
+    "@suites/types.common": "^3.0.0",
+    "@suites/types.di": "^3.0.0",
     "lodash.isequal": "^4.5.0"
   },
   "peerDependencies": {
     "inversify": ">= 6.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "<1.0.0"
   },
   "devDependencies": {
     "@types/lodash.isequal": "^4.5.6",
-    "inversify": "^6.0.1",
-    "reflect-metadata": "^0.1.13"
+    "inversify": "6.0.1",
+    "reflect-metadata": "<1.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

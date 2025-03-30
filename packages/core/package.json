@@ -1,7 +1,7 @@
 {
   "name": "@suites/core.unit",
   "private": false,
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.1",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "repository": {
@@ -35,15 +35,16 @@
     "README.md"
   ],
   "dependencies": {
-    "@suites/types.common": "3.0.0-alpha.2",
-    "@suites/types.di": "3.0.0-alpha.2",
+    "@suites/types.common": "^3.0.0",
+    "@suites/types.di": "^3.0.0",
     "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {
     "@types/lodash.isequal": "^4.5.6"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

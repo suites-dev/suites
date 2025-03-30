@@ -1,6 +1,6 @@
 import type { StubbedInstance } from '@suites/types.doubles';
 import { FakeAdapter } from './assets/integration.assets';
-import { mock } from './assets/mock.static';
+import { mock } from '../mock.static';
 import type { Repository, User } from './assets/injectable-registry.fixture';
 import { Axios } from './assets/injectable-registry.fixture';
 import { HttpClient } from './assets/injectable-registry.fixture';

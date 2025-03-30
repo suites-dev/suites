@@ -49,7 +49,7 @@ export class DependencyResolver {
       }
 
       if (typeof identifier === 'function' && this.classesToExpose.includes(identifier)) {
-        this.instantiateClass(identifier, metadata);
+        return this.instantiateClass(identifier, metadata);
       }
 
       const mock = this.mockFunction();

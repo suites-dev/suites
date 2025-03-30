@@ -65,7 +65,7 @@ jobs:
         if: ${{ matrix.node-version == '16.x' }}
         run: |
           rm -rf packages/doubles/vitest
-          git config --global user.email "ci@suites.dev"
+          git config --global user.email "e2e@suites.dev"
           git config --global user.name "Suites CI"
           git add .
           git commit -am "remove vitest temp"
@@ -99,29 +99,45 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq
 
-#      - name: Remove provenance from publishConfig
-#        run: |
-#          find packages -name 'package.json' | while read filename; do
-#            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
-#          done
-#
-#      - name: Commit Change
-#        run: |
-#          git config --global user.email "e2e@suites.dev"
-#          git config --global user.name "Suites e2e"
-#          git add .
-#          git commit -am "remove provenance"
+      - name: Remove provenance from package.json files
+        run: |
+          find packages -name 'package.json' | while read filename; do
+            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
+          done
+
+      - name: Config Git
+        run: |
+          git config --global user.email "e2e@suites.dev"
+          git config --global user.name "Suites e2e"
+
+      - name: Commit Provenance Change
+        run: |
+          git add .
+          git commit -am "remove provenance"
+
+      - name: Version Packages
+        run: |
+          lerna version --yes \
+          --no-changelog \
+          --allow-branch ${{ inputs.target_branch }} \
+          --no-git-tag-version \
+          --no-push \
+          --force-publish \
+          --no-commit-hooks \
+          --conventional-commits
+
+      - name: Commit Packages Versions
+        run: |
+          git add .
+          git commit -am "bump versions"
 
       - name: Publish Packages
         run: |
           yarn lerna publish from-package --yes \
           --no-git-tag-version \
           --no-push \
-          --no-changelog \
-          --no-commit-hooks \
           --no-git-reset \
           --exact \
-          --force-publish \
           --dist-tag e2e
 
       - name: Setup and Test
@@ -134,6 +150,8 @@ jobs:
         run: |
           rm -rf packages
           rm -rf node_modules
+          rm yarn.lock
+          rm package.json
 
       - name: Install Dependencies
         run: |

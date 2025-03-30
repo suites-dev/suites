@@ -73,7 +73,7 @@ jobs:
 
       - name: Graduate Version
         if: ${{ github.event.inputs.release_type == 'graduate' }}
-        run: npx lerna version graduate --yes
+        run: npx lerna version --conventional-graduate --yes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

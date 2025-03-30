@@ -4,9 +4,12 @@
 
 <h1 align="center">Suites (formerly Automock)</h1>
 
-Suites is an opinionated, flexible testing meta-framework aim at elevating the software testing experience within
-backend systems. By integrating a wide array of testing tools into a cohesive framework, Suites simplifies the process
-of creating reliable tests, thereby ensuring the development of high-quality software.
+**Suites is a progressive, flexible unit-testing framework aimed at elevating the software testing experience within
+backend systems working with dependency injection frameworks**.
+
+Suites provides a unified testing experience that combines best practices, industry standards, and a wide range of
+testing tools to help developers create robust, maintainable, and scalable test suites, thereby ensuring the development
+of high-quality software.
 
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/suites-dev/suites/master.svg?style=flat-square)](https://codecov.io/gh/suites-dev/suites)
 [![e2e](https://github.com/suites-dev/suites/actions/workflows/e2e.yml/badge.svg?branch=master)](https://github.com/suites-dev/suites/actions)
@@ -14,41 +17,42 @@ of creating reliable tests, thereby ensuring the development of high-quality sof
 [![npm downloads](https://img.shields.io/npm/dm/@suites/unit.svg?label=%40suites%2Funit)](https://npmjs.org/package/@suites/unit "View this project on npm")
 ![npm downloads](https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest)
 
-[↗️ Visit Documentation](https://suites.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://suites.dev/api-reference)
+[↗️ Visit Documentation](https://suites.dev/docs)
 
-## Automock is now Suites! 🎉
+## ❤️ Share Your Suites Experience!
 
-**We are excited to announce that Automock has been rebranded to Suites**!
+**Are you using Suites in your projects?** We've created a [community discussion](https://github.com/suites-dev/suites/discussions/categories/q-a) where teams and companies can share how they're using Suites in production.
 
-This change reflects our commitment to providing a comprehensive testing solution that caters to a broader range of
-testing scenarios. The core features and functionality of the framework remain the same, but with a new name and a fresh
-look.
+👉 **[Join the discussion](https://github.com/suites-dev/suites/discussions/categories/q-a)** and tell us more :)
 
-[↗️ More Information](https://suites.dev/overview/the-shift-from-automock)
-&nbsp;&nbsp;
-[↗️ Migration Guide](https://suites.dev/docs/getting-started/migrating-from-automock)
-&nbsp;&nbsp;
-[↗️ Change Log](https://suites.dev/docs/getting-started/change-log)
+Your contributions help others discover best practices and see real-world applications of Suites!
 
-## Core Features
+## 🎯 What Problems Does Suites Solve?
 
-🚀 **Zero-Setup Mocking** - Automatically generate mock objects, eliminate manual setup, reduce boilerplate code.
+Suites addresses several common challenges in testing DI-based applications:
 
-🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects.
+- **⚙️ Complex Test Setup and Configuration** - Eliminate boilerplate with automated mocking and dependency wiring
+- **🧩 Inconsistent Testing Practices** - Standardize testing approaches across teams with a consistent API
+- **🧠 Steep Learning Curve** - Provide intuitive patterns that are easier for new developers to understand
+- **💔 Brittle Tests** - Create tests that focus on behavior rather than implementation details
+- **📈 Scaling Difficulties** - Maintain manageable complexity even as applications grow
+- **🔌 Integration Challenges** - Seamlessly connect testing libraries with DI frameworks
 
-📄 **Consistent Tests Structure** - Test suites will follow a consistent syntax and structure, making them easier to
-read and maintain.
+For more details, see our [full explanation of problems solved](https://suites.dev/docs/overview/problems-solved/).
 
-📈 **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster.
+## 🚀 Core Features
 
-🌐 **Community & Support** - Join a growing community of developers.
+- **Zero-Setup Mocking** - Automatically generate mock objects, eliminate manual setup, reduce boilerplate code
+- **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects
+- **Consistent Tests Structure** - Test suites follow a consistent syntax and structure, making them easier to read and
+  maintain
+- **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster
+- **Community & Support** - Join a growing community of developers
 
-## :computer: Quick Example
+## 💻 Quick Example
 
-Suites suggest an alternative approach to writing unit tests for classes instead of using the traditional mocking
-libraries and dependency injection frameworks.
-
-Take a look at the following example:
+Suites offers an alternative approach to writing unit tests for classes that greatly simplifies the process compared to
+traditional mocking libraries and dependency injection frameworks.
 
 Consider the following `UserService` and `Database` classes:
 
@@ -70,7 +74,7 @@ Let's create a unit test for this class:
 
 ```typescript
 import { TestBed, Mocked } from '@suites/unit';
-import { Database, UserService } from './user.service'; 
+import { Database, UserService } from './user.service';
 
 describe('User Service Unit Spec', () => {
   let userService: UserService; // 🧪 Declare the unit under test
@@ -82,7 +86,7 @@ describe('User Service Unit Spec', () => {
 
     userService = unit;
 
-    // 🔍 Retreive a dependency (mock) from the unit reference
+    // 🔍 Retrieve a dependency (mock) from the unit reference
     database = unitRef.get(Database);
   });
 
@@ -99,28 +103,34 @@ describe('User Service Unit Spec', () => {
 });
 ```
 
-With the use of the `TestBed`, an instance of the `UserService` class can be created with mock objects automatically
-generated for its dependencies. During the test, we have direct access to the automatically generated mock object for
-the `Database` dependency (database).
+With `TestBed`, an instance of `UserService` is created with mock objects automatically generated for its dependencies.
+During the test, you have direct access to the automatically generated mock object for the `Database` dependency.
 
-<p align="right"><a href="https://suites.dev/docs/getting-started/examples">↗️ For more comprehensive examples</a></p>
+<p align="right"><a href="https://suites.dev/docs/overview/quickstart">↗️ Quickstart Guide</a></p>
 
-## :package: Installation
+## 📦 Installation
 
-First, install Suites' core package:
+First, install Suites' unit package:
 
 ```bash
 $ npm i -D @suites/unit
 ```
 
-Then, to fully integrate Suites into your mocking and dependency injection frameworks, install the corresponding
-adapters for your project. For example, to use Suites with Jest and NestJS you would run (alongside the core package):
+Then, to fully integrate Suites with your dependency injection framework and testing library, install the corresponding
+adapters for your project:
 
 ```bash
 $ npm i -D @suites/doubles.jest @suites/di.nestjs
-````
+```
 
 Suites will automatically detect the installed adapters and configure itself accordingly.
+
+### Prerequisites
+
+- **TypeScript project**: With decorators and metadata reflection enabled
+- **Node.js environment**: Compatible with Node.js 16.x and above
+- **Dependency injection framework**: One of the supported frameworks
+- **Testing library**: One of the supported libraries
 
 ### Supported DI Frameworks
 
@@ -132,15 +142,23 @@ Suites will automatically detect the installed adapters and configure itself acc
 
 ### Supported Mocking Libraries
 
-| DI Framework | Package Name             |
-|--------------|--------------------------|
-| Jest         | `@suites/doubles.jest`   |
-| Sinon        | `@suites/doubles.sinon`  |
-| Vitest       | `@suites/doubles.vitest` |
-| Bun          | Soon!                    |
-| Deno         | Soon!                    |
+| Testing Library | Package Name             |
+|-----------------|--------------------------|
+| Jest            | `@suites/doubles.jest`   |
+| Sinon           | `@suites/doubles.sinon`  |
+| Vitest          | `@suites/doubles.vitest` |
+| Bun             | Soon!                    |
+| Deno            | Soon!                    |
 
+## 🔄 Migrating from Automock
 
-## :scroll: License
+If you're currently using Automock, we've created a comprehensive migration guide to help you transition to Suites. The
+guide covers all the changes and improvements, making the upgrade process smooth and straightforward.
 
-Distributed under the Apache (Apache-2.0) License. See `LICENSE` for more information.
+[↗️ Migrating from Automock Guide](https://suites.dev/docs/overview/migrating-from-automock/)
+
+Your support helps us continue improving Suites and developing new features!
+
+## 📜 License
+
+Distributed under the Apache (Apache-2.0) License. See `LICENSE` for more information. 

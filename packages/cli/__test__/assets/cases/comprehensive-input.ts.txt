@@ -104,4 +104,4 @@ describe('comprehensive migration test suite', () => {
   });
 
   describe('when compiling the builder and turning into testing unit', () => {});
-});
+}); 

@@ -1,0 +1,21 @@
+import { TestBed, UnitReference } from "@suites/unit";
+class ShorthandService {}
+class ShorthandDep {}
+describe('object destructuring test suite', () => {
+  it('should handle object shorthand destructuring', async () => {
+    const {
+      unit,
+      unitRef
+    } = await TestBed.solitary(ShorthandService).mock(ShorthandDep).final({
+      value: 'test'
+    }).compile();
+    expect(unit).toBeDefined();
+    expect(unitRef).toBeDefined();
+  });
+  it('should handle partial destructuring', async () => {
+    const {
+      unit
+    } = await TestBed.solitary(ShorthandService).compile();
+    expect(unit).toBeDefined();
+  });
+});

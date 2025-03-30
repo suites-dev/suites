@@ -11,7 +11,7 @@
     "index.ts",
     "node_modules",
     "__test__",
-    "**/*.spec.ts",
+    "**/*.test.ts",
     "jest.config.ts"
   ]
 }

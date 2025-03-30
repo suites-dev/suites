@@ -1,0 +1,22 @@
+import { TestBed, UnitReference, type Mocked } from "@suites/unit";
+import 'sinon';
+class ClassUnderTest {}
+describe('basic test suite', () => {
+  let unit: ClassUnderTest;
+  let unitRef: UnitReference;
+  let someMock: Mocked<SomeClass>;
+  beforeAll(async () => {
+    const {
+      unitRef: ref,
+      unit: underTest
+    } = await TestBed.solitary<ClassUnderTest>(ClassUnderTest).mock<string>('CONSTANT_VALUE').final('arbitrary-string').mock(SomeClass).impl(stubFn => ({
+      something: stubFn()
+    })).compile();
+    unitRef = ref;
+    unit = underTest;
+    someMock = unitRef.get(SomeClass);
+  });
+  it('should work', async () => {
+    expect(unit).toBeDefined();
+  });
+});

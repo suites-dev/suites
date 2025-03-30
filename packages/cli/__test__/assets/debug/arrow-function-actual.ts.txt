@@ -1,0 +1,19 @@
+import { TestBed } from "@suites/unit";
+class SimpleService {}
+describe('arrow function test suite', () => {
+  // Using arrow function
+  it('should test something with arrow function', async () => {
+    const {
+      unit
+    } = await TestBed.solitary(SimpleService).mock(Repository).impl(stubFn => ({
+      findOne: stubFn().mockResolvedValue({
+        id: 1
+      }),
+      id: 1
+    })).compile();
+    expect(unit).toBeDefined();
+  });
+
+  // Variaton with arrow function and no block
+  it('should test with arrow function no block', async () => expect((await TestBed.solitary(SimpleService).compile()).unit).toBeDefined());
+});

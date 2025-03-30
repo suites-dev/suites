@@ -49,7 +49,7 @@ export class ImportManager {
           const alreadyImported = this.alreadyImportedMocked(path);
           if (!alreadyImported) {
             const newImport = importDeclaration(
-              [importSpecifier(babelIdentifier('Mocked'), babelIdentifier('Mocked'))],
+              [this.createTypedMockedImportSpecifier()],
               stringLiteral('@suites/unit')
             );
             path.insertAfter(newImport);
@@ -76,16 +76,29 @@ export class ImportManager {
             isImportSpecifier(specifier) &&
             (specifier.imported as Identifier).name === 'Mocked'
           ) {
-            const newSpecifier = importSpecifier(
-              babelIdentifier('Mocked'),
-              babelIdentifier('Mocked')
+            const newImport = importDeclaration(
+              [this.createTypedMockedImportSpecifier()],
+              stringLiteral('@suites/unit')
             );
-            const newImport = importDeclaration([newSpecifier], stringLiteral('@suites/unit'));
             path.parentPath.node.body.push(newImport); // Add new import to the program body
             path.node.specifiers.splice(index, 1); // Remove the Mocked specifier from the current import
             if (path.node.specifiers.length === 0) {
               path.remove(); // If no other specifiers left, remove the whole import declaration
             }
+            modified = true;
+          }
+        });
+      }
+      
+      // Add 'type' keyword to any existing Mocked imports from @suites/unit
+      if (path.node.source.value === '@suites/unit') {
+        path.node.specifiers.forEach((specifier) => {
+          if (
+            isImportSpecifier(specifier) &&
+            (specifier.imported as Identifier).name === 'Mocked' &&
+            !specifier.importKind
+          ) {
+            specifier.importKind = 'type';
             modified = true;
           }
         });
@@ -114,6 +127,18 @@ export class ImportManager {
     }
 
     return modified;
+  }
+
+  /**
+   * Create an import specifier for Mocked with the 'type' keyword
+   */
+  private createTypedMockedImportSpecifier(): ImportSpecifier {
+    const mockedSpecifier = importSpecifier(
+      babelIdentifier('Mocked'),
+      babelIdentifier('Mocked')
+    );
+    mockedSpecifier.importKind = 'type';
+    return mockedSpecifier;
   }
 
   private alreadyImportedMocked(path: NodePath<Program>): boolean {

@@ -40,15 +40,6 @@ Suites addresses several common challenges in testing DI-based applications:
 
 For more details, see our [full explanation of problems solved](https://suites.dev/docs/overview/problems-solved/).
 
-## 🚀 Core Features
-
-- **Zero-Setup Mocking** - Automatically generate mock objects, eliminate manual setup, reduce boilerplate code
-- **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects
-- **Consistent Tests Structure** - Test suites follow a consistent syntax and structure, making them easier to read and
-  maintain
-- **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster
-- **Community & Support** - Join a growing community of developers
-
 ## 💻 Quick Example
 
 Suites offers an alternative approach to writing unit tests for classes that greatly simplifies the process compared to

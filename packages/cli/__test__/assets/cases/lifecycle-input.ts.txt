@@ -1,0 +1,36 @@
+import { TestBed } from '@automock/jest';
+import { UnitReference } from '@automock/core';
+
+class AnotherClass {}
+
+describe('lifecycle methods test suite', () => {
+  // Using beforeEach
+  beforeEach(() => {
+    const testBed = TestBed.create(AnotherClass)
+      .mock(SomeDependency)
+      .using({
+        find: jest.fn().mockReturnValue(['item1', 'item2']),
+        save: jest.fn().mockImplementation((data) => Promise.resolve(data))
+      })
+      .compile();
+  });
+
+  // Using beforeAll
+  beforeAll(() => {
+    const testBed = TestBed.create(AnotherClass).compile();
+  });
+
+  // Using afterEach
+  afterEach(() => {
+    const testBed = TestBed.create(AnotherClass).compile();
+  });
+
+  // Using afterAll
+  afterAll(() => {
+    const testBed = TestBed.create(AnotherClass).compile();
+  });
+
+  it('should work', () => {
+    expect(true).toBe(true);
+  });
+}); 

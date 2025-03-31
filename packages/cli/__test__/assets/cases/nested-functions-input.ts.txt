@@ -1,0 +1,20 @@
+import { TestBed } from '@automock/jest';
+
+class NestedService {}
+
+describe('nested function test suite', () => {
+  // Nested standard function
+  it('should test with nested functions', function() {
+    const testBed = TestBed.create(NestedService).compile();
+    const result = testBed.unit.doSomething();
+    expect(result).toBe('value');
+  });
+
+  // Nested with deeper nesting
+  describe('with deeper nesting', () => {
+    it('should support nested describe blocks', function() {
+      const testBed = TestBed.create(NestedService).compile();
+      expect(testBed.unit).toBeDefined();
+    });
+  });
+}); 

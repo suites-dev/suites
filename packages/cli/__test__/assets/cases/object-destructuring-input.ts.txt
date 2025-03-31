@@ -1,0 +1,22 @@
+import { TestBed } from '@automock/jest';
+import { UnitReference } from '@automock/core';
+
+class ShorthandService {}
+class ShorthandDep {}
+
+describe('object destructuring test suite', () => {
+  it('should handle object shorthand destructuring', () => {
+    const { unit, unitRef } = TestBed.create(ShorthandService)
+      .mock(ShorthandDep)
+      .using({ value: 'test' })
+      .compile();
+      
+    expect(unit).toBeDefined();
+    expect(unitRef).toBeDefined();
+  });
+  
+  it('should handle partial destructuring', () => {
+    const { unit } = TestBed.create(ShorthandService).compile();
+    expect(unit).toBeDefined();
+  });
+}); 

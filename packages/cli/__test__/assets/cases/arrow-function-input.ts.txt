@@ -1,0 +1,22 @@
+import { TestBed } from '@automock/jest';
+
+class SimpleService {}
+
+describe('arrow function test suite', () => {
+  // Using arrow function
+  it('should test something with arrow function', () => {
+    const { unit } = TestBed.create(SimpleService)
+      .mock(Repository)
+      .using({
+        findOne: jest.fn().mockResolvedValue({ id: 1 })
+      })
+      .compile();
+    
+    expect(unit).toBeDefined();
+  });
+
+  // Variaton with arrow function and no block
+  it('should test with arrow function no block', () => 
+    expect(TestBed.create(SimpleService).compile().unit).toBeDefined()
+  );
+}); 

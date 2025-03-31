@@ -1,0 +1,25 @@
+import { TestBed } from '@automock/jest';
+
+class ConditionalService {}
+class Dependency {}
+
+describe('conditional mocks test suite', () => {
+  it('should handle complex mocks', () => {
+    const mockFn = jest.fn().mockImplementation((arg) => {
+      if (arg > 10) {
+        return 'high';
+      }
+      return 'low';
+    });
+
+    const { unit } = TestBed.create(ConditionalService)
+      .mock(Dependency)
+      .using({
+        process: mockFn,
+        calculate: jest.fn().mockReturnValue(42)
+      })
+      .compile();
+      
+    expect(unit).toBeDefined();
+  });
+}); 

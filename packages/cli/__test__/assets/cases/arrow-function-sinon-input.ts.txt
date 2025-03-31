@@ -1,0 +1,20 @@
+import { TestBed } from '@automock/sinon';
+import { stub } from 'sinon';
+
+describe('arrow function test suite', () => {
+  it('should test something with arrow function', () => {
+    const { unit } = TestBed.create(SimpleService)
+      .mock(Repository)
+      .using({
+        findOne: sinon.stub().returns({ id: 1 })
+      })
+      .compile();
+
+    expect(unit).toBeDefined();
+  });
+
+  // Variaton with arrow function and no block
+  it('should test with arrow function no block', () =>
+    expect(TestBed.create(SimpleService).compile().unit).toBeDefined()
+  );
+});

@@ -1,86 +1,144 @@
 import type { NodePath } from '@babel/traverse';
 import type {
-  Identifier,
   ImportDeclaration,
   ImportSpecifier,
   Program,
   TSImportEqualsDeclaration,
 } from '@babel/types';
 import {
+  identifier,
   importDeclaration,
+  importSpecifier,
+  isIdentifier,
   isImportSpecifier,
   stringLiteral,
-  importSpecifier,
-  tsImportEqualsDeclaration,
-  identifier as babelIdentifier,
-  tsQualifiedName,
 } from '@babel/types';
+
+type TypedNodePath<T> = NodePath<T>;
 
 export class ImportManager {
   public manageImports(
-    path: NodePath<ImportDeclaration | TSImportEqualsDeclaration>,
+    path: TypedNodePath<ImportDeclaration | TSImportEqualsDeclaration>,
     modified: boolean
   ): boolean {
     if (path.isImportDeclaration()) {
-      if (
-        path.node.source.value === '@automock/jest' ||
-        path.node.source.value === '@automock/sinon'
-      ) {
-        path.node.source.value = '@suites/unit';
-        modified = true;
-      }
+      const source = path.node.source.value;
 
-      if (path.node.source.value === 'sinon') {
-        let sinonStubbedInstanceIndex = -1;
-        path.node.specifiers.forEach((specifier, index) => {
-          if (
+      // Case 1: @automock/jest or @automock/sinon to @suites/unit
+      if (source === '@automock/jest' || source === '@automock/sinon') {
+        path.node.source = stringLiteral('@suites/unit');
+
+        // If any of the imports are TestBed, we need to make sure the import specifier exists
+        const hasTestBed = path.node.specifiers.some(
+          (specifier) =>
             isImportSpecifier(specifier) &&
-            (specifier.imported as Identifier).name === 'SinonStubbedInstance'
-          ) {
-            sinonStubbedInstanceIndex = index;
-          }
-        });
+            isIdentifier(specifier.imported) &&
+            specifier.imported.name === 'TestBed'
+        );
 
-        if (sinonStubbedInstanceIndex !== -1) {
-          path.node.specifiers.splice(sinonStubbedInstanceIndex, 1);
+        if (hasTestBed) {
           modified = true;
-
-          // Add Mocked from @suites/unit if not already imported
-          const alreadyImported = this.alreadyImportedMocked(path);
-          if (!alreadyImported) {
-            const newImport = importDeclaration(
-              [this.createTypedMockedImportSpecifier()],
-              stringLiteral('@suites/unit')
-            );
-            path.insertAfter(newImport);
-          }
         }
       }
 
-      if (path.node.source.value === '@automock/core') {
-        path.node.specifiers.forEach((specifier) => {
-          if (
-            isImportSpecifier(specifier) &&
-            (specifier.imported as Identifier).name === 'UnitReference'
-          ) {
-            (specifier.imported as Identifier).name = 'UnitReference';
-            path.node.source.value = '@suites/unit';
-            modified = true;
-          }
-        });
+      // Case 2: @automock/core to @suites/unit
+      if (source === '@automock/core') {
+        path.node.source = stringLiteral('@suites/unit');
+        modified = true;
       }
 
-      if (path.node.source.value === 'jest') {
+      // Case 3: Remove sinon imports or replace with @suites/unit if they have SinonStubbedInstance
+      if (source === 'sinon') {
+        const hasSinonStubbedInstance = path.node.specifiers.some(
+          (specifier) =>
+            isImportSpecifier(specifier) &&
+            isIdentifier(specifier.imported) &&
+            specifier.imported.name === 'SinonStubbedInstance'
+        );
+
+        if (hasSinonStubbedInstance) {
+          // Find the import for @suites/unit or create it if it doesn't exist
+          const programPath = this.findProgramPath(path);
+
+          if (programPath) {
+            // First check if we already have an import from @suites/unit
+            let hasUnitImport = false;
+
+            programPath.node.body.forEach((node) => {
+              if (node.type === 'ImportDeclaration' && node.source.value === '@suites/unit') {
+                hasUnitImport = true;
+
+                // Check if Mocked is already imported
+                const importMocked = node.specifiers.some(
+                  (spec) =>
+                    isImportSpecifier(spec) &&
+                    isIdentifier(spec.imported) &&
+                    spec.imported.name === 'Mocked'
+                );
+
+                if (!importMocked) {
+                  // Add Mocked import to existing @suites/unit import
+                  node.specifiers.push(importSpecifier(identifier('Mocked'), identifier('Mocked')));
+                  // Add type keyword
+                  const lastSpecifier = node.specifiers[node.specifiers.length - 1];
+                  if (isImportSpecifier(lastSpecifier)) {
+                    lastSpecifier.importKind = 'type';
+                  }
+                }
+              }
+            });
+
+            // If no import from @suites/unit exists, create one with Mocked
+            if (!hasUnitImport) {
+              const newImport = importDeclaration(
+                [this.createTypedMockedImportSpecifier()],
+                stringLiteral('@suites/unit')
+              );
+              programPath.node.body.unshift(newImport);
+            }
+
+            // Combine multiple imports from @suites/unit
+            this.combineImports(programPath, '@suites/unit');
+          }
+
+          // Now remove the sinon import completely
+          path.remove();
+          modified = true;
+        } else {
+          // Just a regular sinon import - we need to add stubFn to @suites/unit
+          // Find or create import from @suites/unit
+          const programPath = this.findProgramPath(path);
+          if (programPath) {
+            this.ensureUnitImport(programPath);
+          }
+          
+          // Remove the sinon import completely - we'll use stubFn from @suites/unit instead
+          path.remove();
+          modified = true;
+        }
+      }
+
+      // Case 4: Imports from jest and handle jest.Mocked
+      if (source === 'jest') {
         path.node.specifiers.forEach((specifier, index) => {
           if (
             isImportSpecifier(specifier) &&
-            (specifier.imported as Identifier).name === 'Mocked'
+            isIdentifier(specifier.imported) &&
+            specifier.imported.name === 'Mocked'
           ) {
             const newImport = importDeclaration(
               [this.createTypedMockedImportSpecifier()],
               stringLiteral('@suites/unit')
             );
-            path.parentPath.node.body.push(newImport); // Add new import to the program body
+
+            // Need to find the program path to add the new import
+            const programPath = this.findProgramPath(path);
+            if (programPath) {
+              programPath.node.body.push(newImport);
+              // Combine multiple imports from @suites/unit
+              this.combineImports(programPath, '@suites/unit');
+            }
+
             path.node.specifiers.splice(index, 1); // Remove the Mocked specifier from the current import
             if (path.node.specifiers.length === 0) {
               path.remove(); // If no other specifiers left, remove the whole import declaration
@@ -89,91 +147,153 @@ export class ImportManager {
           }
         });
       }
-      
+
       // Add 'type' keyword to any existing Mocked imports from @suites/unit
-      if (path.node.source.value === '@suites/unit') {
+      if (source === '@suites/unit') {
         path.node.specifiers.forEach((specifier) => {
           if (
             isImportSpecifier(specifier) &&
-            (specifier.imported as Identifier).name === 'Mocked' &&
+            isIdentifier(specifier.imported) &&
+            specifier.imported.name === 'Mocked' &&
             !specifier.importKind
           ) {
             specifier.importKind = 'type';
             modified = true;
           }
         });
+
+        // Also try to combine multiple imports from @suites/unit
+        const programPath = this.findProgramPath(path);
+        if (programPath) {
+          this.combineImports(programPath, '@suites/unit');
+        }
       }
     } else if (path.isTSImportEqualsDeclaration()) {
-      // Specific handling for TypeScript style imports
-      const tsImport = path.node;
+      const moduleRef = path.node.moduleReference;
       if (
-        tsImport.moduleReference.type === 'TSQualifiedName' &&
-        tsImport.moduleReference.left.name === 'jest' &&
-        tsImport.moduleReference.right.name === 'Mocked'
+        moduleRef.type === 'TSQualifiedName' &&
+        moduleRef.left.type === 'Identifier' &&
+        moduleRef.left.name === 'jest' &&
+        moduleRef.right.name === 'Mocked'
       ) {
-        // Create a new TypeScript import equals declaration replacing jest.Mocked with Suites Mocked
-        const newTSImport = tsImportEqualsDeclaration(
-          babelIdentifier(tsImport.name.name),
-          tsQualifiedName(babelIdentifier('@suites/unit'), babelIdentifier('Mocked'))
-        );
-        path.replaceWith(newTSImport);
+        // Handle jest.Mocked import equals declarations by replacing with a proper import
+        const programPath = this.findProgramPath(path);
+        if (programPath) {
+          // Add a proper import for Mocked from @suites/unit
+          const newImport = importDeclaration(
+            [this.createTypedMockedImportSpecifier()],
+            stringLiteral('@suites/unit')
+          );
+          programPath.node.body.unshift(newImport);
+
+          // Combine multiple imports from @suites/unit
+          this.combineImports(programPath, '@suites/unit');
+        }
+
+        // Remove the original import equals declaration
+        path.remove();
         modified = true;
       }
-    }
-
-    // Combine imports if necessary
-    if (path.parentPath.isProgram()) {
-      this.combineImports(path.parentPath, '@suites/unit');
     }
 
     return modified;
   }
 
   /**
-   * Create an import specifier for Mocked with the 'type' keyword
+   * Create a typed import specifier for Mocked
    */
   private createTypedMockedImportSpecifier(): ImportSpecifier {
-    const mockedSpecifier = importSpecifier(
-      babelIdentifier('Mocked'),
-      babelIdentifier('Mocked')
-    );
-    mockedSpecifier.importKind = 'type';
-    return mockedSpecifier;
+    const specifier = importSpecifier(identifier('Mocked'), identifier('Mocked'));
+    specifier.importKind = 'type';
+    return specifier;
   }
 
-  private alreadyImportedMocked(path: NodePath<Program>): boolean {
-    // Look through the entire program to see if there's already an import for Mocked from @suites/unit
-    return path.parent.body.some(
-      (node: any) =>
-        node.type === 'ImportDeclaration' &&
-        node.source.value === '@suites/unit' &&
-        node.specifiers.some(
-          (specifier: any) =>
-            specifier.type === 'ImportSpecifier' &&
-            (specifier.imported.name === 'Mocked' || specifier.local.name === 'Mocked')
-        )
-    );
+  /**
+   * Find the program path from a child node path
+   */
+  private findProgramPath(path: NodePath): TypedNodePath<Program> | null {
+    let current: NodePath | null = path;
+    while (current && !current.isProgram()) {
+      current = current.parentPath;
+    }
+    return current as TypedNodePath<Program>;
   }
 
-  private combineImports(programPath: NodePath<Program>, source: string): void {
-    const importDeclarations = programPath
-      .get('body')
-      .filter((p: NodePath) => p.isImportDeclaration() && p.node.source.value === source);
+  /**
+   * Ensure there's an import from @suites/unit
+   */
+  private ensureUnitImport(programPath: TypedNodePath<Program>): void {
+    let hasUnitImport = false;
+    
+    programPath.node.body.forEach((node) => {
+      if (node.type === 'ImportDeclaration' && node.source.value === '@suites/unit') {
+        hasUnitImport = true;
+      }
+    });
+    
+    if (!hasUnitImport) {
+      const newImport = importDeclaration(
+        [], // Empty specifiers, will be combined later if needed
+        stringLiteral('@suites/unit')
+      );
+      programPath.node.body.unshift(newImport);
+    }
+  }
 
-    if (importDeclarations.length > 1) {
-      const combinedSpecifiers = importDeclarations.reduce((acc, declarationPath) => {
-        acc.push(...declarationPath.node.specifiers);
-        return acc;
-      }, [] as ImportSpecifier[]);
+  /**
+   * Combine multiple imports from the same source
+   */
+  private combineImports(programPath: TypedNodePath<Program>, source: string): void {
+    // Find all import declarations from the same source
+    const importNodes: ImportDeclaration[] = [];
+    const importPaths: NodePath[] = [];
 
-      // Create a new import declaration with combined specifiers
-      const newImportDeclaration = importDeclaration(combinedSpecifiers, stringLiteral(source));
+    programPath.node.body.forEach((node, index) => {
+      if (node.type === 'ImportDeclaration' && node.source.value === source) {
+        importNodes.push(node as ImportDeclaration);
+        try {
+          const importPath = programPath.get(`body.${index}`) as NodePath | null;
 
-      // Replace the first import declaration with the new one
-      importDeclarations[0].replaceWith(newImportDeclaration);
+          if (importPath) {
+            importPaths.push(importPath);
+          }
+        } catch (e) {}
+      }
+    });
 
-      // Remove the remaining import declarations
-      importDeclarations.slice(1).forEach((declarationPath) => declarationPath.remove());
+    // If we have multiple imports, combine them
+    if (importNodes.length > 1) {
+      // Create a set of import specifiers to deduplicate them
+      const combinedSpecifiers: ImportSpecifier[] = [];
+      const importedNames = new Set<string>();
+
+      importNodes.forEach((node) => {
+        node.specifiers.forEach((specifier) => {
+          if (isImportSpecifier(specifier) && isIdentifier(specifier.imported)) {
+            const importName = specifier.imported.name;
+            // Only add if we haven't seen this import before
+            if (!importedNames.has(importName)) {
+              importedNames.add(importName);
+              combinedSpecifiers.push(specifier as ImportSpecifier);
+            }
+          }
+        });
+      });
+
+      // Create a new import declaration with the combined specifiers
+      if (combinedSpecifiers.length > 0) {
+        const newImport = importDeclaration(combinedSpecifiers, stringLiteral(source));
+
+        // Replace the first import with the combined one
+        if (importPaths[0]) {
+          importPaths[0].replaceWith(newImport);
+
+          // Remove the other imports
+          for (let i = 1; i < importPaths.length; i++) {
+            importPaths[i].remove();
+          }
+        }
+      }
     }
   }
 }

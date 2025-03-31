@@ -21,6 +21,10 @@ describe('Code Migrator Test', () => {
       description: 'Using arrow functions with TestBed',
     },
     {
+      name: 'arrow-function-sinon',
+      description: 'Using arrow functions with TestBed and Sinon',
+    },
+    {
       name: 'nested-functions',
       description: 'Using nested functions with TestBed',
     },
@@ -42,55 +46,33 @@ describe('Code Migrator Test', () => {
     },
   ];
 
-  // Create the transformer once for all tests
   const codeTransformer = new CodeTransformer(parse, traverse, generate, new ImportManager());
 
-  // Test each case individually
   testCases.forEach(({ name, description }) => {
-    test(`Migrate: ${description}`, () => {
-      try {
-        // Try to load the individual test case
-        const inputPath = path.join(__dirname, `./assets/cases/${name}-input.ts.txt`);
+    test(`Migrate: ${description}`, async () => {
+      const inputPath = path.join(__dirname, `./assets/cases/${name}-input.ts.txt`);
+      const input = fs.readFileSync(inputPath, 'utf8');
 
-        // Read the input
-        const input = fs.readFileSync(inputPath, 'utf8');
+      const result = await codeTransformer.transformCode(input);
 
-        console.log(input);
+      expect(result.code).toMatchSnapshot();
+      expect(result.modified).toBe(true);
 
-        // Run the migration
-        const result = codeTransformer.transformCode(input);
+      expect(result.code).toContain('@suites/unit');
+      expect(result.code).not.toContain('@automock/jest');
+      expect(result.code).not.toContain('@automock/sinon');
+      expect(result.code).not.toContain('@automock/core');
+      expect(result.code).not.toContain('TestBed.create');
+      expect(result.code).toContain('TestBed.solitary');
+      expect(result.code).toContain('async ');
+      expect(result.code).toContain('await');
+      expect(result.code).not.toContain('.using');
+      expect(result.code).not.toContain('jest.fn()');
+      expect(result.code.includes('jest.Mocked')).toBe(false);
+      expect(result.code.includes('SinonStubbedInstance')).toBe(false);
 
-        // Save actual output for debug purposes
-        const debugDir = path.join(__dirname, './assets/debug');
-
-        fs.writeFileSync(path.join(debugDir, `${name}-actual.ts.txt`), result.code);
-
-        expect(result.code).toMatchSnapshot();
-
-        // Verify key transformations
-        expect(result.modified).toBe(true);
-
-        // Check for key transformations
-        expect(result.code).toContain('@suites/unit');
-        expect(result.code).not.toContain('@automock/jest');
-        expect(result.code).not.toContain('@automock/core');
-        expect(result.code).not.toContain('TestBed.create');
-        expect(result.code).toContain('TestBed.solitary');
-        expect(result.code).toContain('async ');
-        expect(result.code).toContain('await');
-        expect(result.code).not.toContain('.using');
-        expect(result.code).not.toContain('jest.fn()');
-
-        // Check for any remaining jest.Mocked
-        expect(result.code.includes('jest.Mocked')).toBe(false);
-
-        // Make sure we have either impl or final
-        if (input.includes('.using')) {
-          expect(result.code.includes('.impl') || result.code.includes('.final')).toBe(true);
-        }
-      } catch (error) {
-        console.error(`Error in test case "${name}":`, error);
-        throw error;
+      if (input.includes('.using')) {
+        expect(result.code.includes('.impl') || result.code.includes('.final')).toBe(true);
       }
     });
   });

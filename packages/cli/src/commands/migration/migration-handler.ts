@@ -10,8 +10,8 @@ export class MigrationHandler {
     private readonly transformer: CodeTransformer
   ) {}
 
-  public migrate(folderPath: string): void {
-    this.traverseDirectory(folderPath);
+  public async migrate(folderPath: string): Promise<void> {
+    await this.traverseDirectory(folderPath);
 
     this.fileSystem.appendFileSync(
       'migration.log',
@@ -23,9 +23,9 @@ export class MigrationHandler {
     );
   }
 
-  private updateFile(filePath: string): void {
+  private async updateFile(filePath: string): Promise<void> {
     const code = this.fileSystem.readFileSync(filePath, 'utf8');
-    const result = this.transformer.transformCode(code);
+    const result = await this.transformer.transformCode(code);
 
     if (result.modified) {
       this.fileSystem.writeFileSync(filePath, result.code);
@@ -35,15 +35,17 @@ export class MigrationHandler {
     }
   }
 
-  private traverseDirectory(dir: string): void {
-    this.fileSystem.readdirSync(dir).forEach((file) => {
+  private async traverseDirectory(dir: string): Promise<void> {
+    const files = this.fileSystem.readdirSync(dir);
+
+    for (const file of files) {
       const fullPath = path.join(dir, file);
 
       if (this.fileSystem.statSync(fullPath).isDirectory()) {
-        this.traverseDirectory(fullPath);
+        await this.traverseDirectory(fullPath);
       } else if (path.extname(fullPath) === '.ts') {
-        this.updateFile(fullPath);
+        await this.updateFile(fullPath);
       }
-    });
+    }
   }
 }

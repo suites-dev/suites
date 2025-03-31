@@ -1,20 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Code Migrator Test Migrate: Basic TestBed setup with beforeAll 1`] = `
-"import { TestBed, UnitReference, type Mocked } from "@suites/unit";
-import 'sinon';
+"import { TestBed, type Mocked, UnitReference } from '@suites/unit';
 class ClassUnderTest {}
 describe('basic test suite', () => {
   let unit: ClassUnderTest;
   let unitRef: UnitReference;
   let someMock: Mocked<SomeClass>;
   beforeAll(async () => {
-    const {
-      unitRef: ref,
-      unit: underTest
-    } = await TestBed.solitary<ClassUnderTest>(ClassUnderTest).mock<string>('CONSTANT_VALUE').final('arbitrary-string').mock(SomeClass).impl(stubFn => ({
-      something: stubFn()
-    })).compile();
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<ClassUnderTest>(ClassUnderTest)
+      .mock<string>('CONSTANT_VALUE')
+      .final('arbitrary-string')
+      .mock(SomeClass)
+      .impl((stubFn) => ({
+        stubProperty: stubFn(),
+      }))
+      .compile();
     unitRef = ref;
     unit = underTest;
     someMock = unitRef.get(SomeClass);
@@ -22,30 +23,34 @@ describe('basic test suite', () => {
   it('should work', async () => {
     expect(unit).toBeDefined();
   });
-});"
+});
+"
 `;
 
 exports[`Code Migrator Test Migrate: Comprehensive test including all cases 1`] = `
-"import { TestBed, UnitReference, type Mocked } from "@suites/unit";
-import 'sinon';
+"import { TestBed, type Mocked, UnitReference } from '@suites/unit';
 import { SomeOtherDep } from './some-dep';
 class ClassUnderTest {}
 describe('comprehensive migration test suite', () => {
   let unit: ClassUnderTest;
   let unitRef: UnitReference;
   let someMock: Mocked<SomeClass>;
-  let otherMock: SinonStubbedInstance<SomeOtherClass>;
+  let otherMock: Mocked<SomeOtherClass>;
 
   // Case 1: Basic TestBed setup with beforeAll (needs async)
   beforeAll(async () => {
-    const {
-      unitRef: ref,
-      unit: underTest
-    } = await TestBed.solitary<ClassUnderTest>(ClassUnderTest).mock<string>('CONSTANT_VALUE').final('arbitrary-string').mock(SomeClass).impl(stubFn => ({
-      something: stubFn()
-    })).mock(SomeOtherClass).impl(stubFn => ({
-      another: stubFn().mockResolvedValue('some-value')
-    })).compile();
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<ClassUnderTest>(ClassUnderTest)
+      .mock<string>('CONSTANT_VALUE')
+      .final('arbitrary-string')
+      .mock(SomeClass)
+      .impl((stubFn) => ({
+        stubProperty: stubFn(),
+      }))
+      .mock(SomeOtherClass)
+      .impl((stubFn) => ({
+        stubProperty: stubFn(),
+      }))
+      .compile();
     unitRef = ref;
     unit = underTest;
     someMock = unitRef.get(SomeClass);
@@ -53,22 +58,22 @@ describe('comprehensive migration test suite', () => {
 
   // Case 2: Another lifecycle method with TestBed (needs async)
   beforeEach(async () => {
-    const testBed = await TestBed.solitary(AnotherClass).mock(SomeDependency).impl(stubFn => ({
-      find: stubFn().mockReturnValue(['item1', 'item2']),
-      save: stubFn().mockImplementation(data => Promise.resolve(data))
-    })).compile();
+    const testBed = await TestBed.solitary(AnotherClass)
+      .mock(SomeDependency)
+      .impl((stubFn) => ({
+        stubProperty: stubFn(),
+      }))
+      .compile();
   });
 
   // Case 3: Using arrow function with TestBed
   it('should test something with arrow function', async () => {
-    const {
-      unit
-    } = await TestBed.solitary(SimpleService).mock(Repository).impl(stubFn => ({
-      findOne: stubFn().mockResolvedValue({
-        id: 1
-      }),
-      id: 1
-    })).compile();
+    const { unit } = await TestBed.solitary(SimpleService)
+      .mock(Repository)
+      .impl((stubFn) => ({
+        stubProperty: stubFn(),
+      }))
+      .compile();
     expect(unit).toBeDefined();
   });
 
@@ -82,18 +87,18 @@ describe('comprehensive migration test suite', () => {
   // Case 5: Conditional mock implementations
   describe('when testing conditional mock implementations', () => {
     it('should handle complex mocks', async () => {
-      const mockFn = stubFn().mockImplementation(arg => {
+      const mockFn = stubFn().mockImplementation((arg) => {
         if (arg > 10) {
           return 'high';
         }
         return 'low';
       });
-      const {
-        unit
-      } = await TestBed.solitary(ConditionalService).mock(Dependency).impl(stubFn => ({
-        process: mockFn,
-        calculate: stubFn().mockReturnValue(42)
-      })).compile();
+      const { unit } = await TestBed.solitary(ConditionalService)
+        .mock(Dependency)
+        .impl((stubFn) => ({
+          stubProperty: stubFn(),
+        }))
+        .compile();
     });
   });
 
@@ -104,27 +109,31 @@ describe('comprehensive migration test suite', () => {
       const test1 = await TestBed.solitary(Service1).compile();
 
       // Style 2: With mock override
-      const test2 = await TestBed.solitary(Service2).mock(Dependency1).impl(stubFn => ({
-        method: stubFn()
-      })).compile();
+      const test2 = await TestBed.solitary(Service2)
+        .mock(Dependency1)
+        .impl((stubFn) => ({
+          stubProperty: stubFn(),
+        }))
+        .compile();
     });
   });
 
   // Case 7: Object shorthand destructuring case
   it('should handle object shorthand destructuring', async () => {
-    const {
-      unit,
-      unitRef
-    } = await TestBed.solitary(ShorthandService).mock(ShorthandDep).final({
-      value: 'test'
-    }).compile();
+    const { unit, unitRef } = await TestBed.solitary(ShorthandService)
+      .mock(ShorthandDep)
+      .final({
+        value: 'test',
+      })
+      .compile();
   });
   describe('when compiling the builder and turning into testing unit', () => {});
-});"
+});
+"
 `;
 
 exports[`Code Migrator Test Migrate: Multiple TestBed usage patterns 1`] = `
-"import { TestBed } from "@suites/unit";
+"import { TestBed } from '@suites/unit';
 class Service1 {}
 class Service2 {}
 class Dependency1 {}
@@ -134,9 +143,12 @@ describe('multiple TestBed patterns', () => {
     const test1 = await TestBed.solitary(Service1).compile();
 
     // Style 2: With mock override
-    const test2 = await TestBed.solitary(Service2).mock(Dependency1).impl(stubFn => ({
-      method: stubFn()
-    })).compile();
+    const test2 = await TestBed.solitary(Service2)
+      .mock(Dependency1)
+      .impl((stubFn) => ({
+        stubProperty: stubFn(),
+      }))
+      .compile();
 
     // Style 3: Variable assignment first
     const builder = await TestBed.solitary(Service1);
@@ -145,43 +157,47 @@ describe('multiple TestBed patterns', () => {
     expect(test2.unit).toBeDefined();
     expect(test3.unit).toBeDefined();
   });
-});"
+});
+"
 `;
 
 exports[`Code Migrator Test Migrate: Object shorthand destructuring with TestBed 1`] = `
-"import { TestBed, UnitReference } from "@suites/unit";
+"import { TestBed } from '@suites/unit';
+import { UnitReference } from '@suites/unit';
 class ShorthandService {}
 class ShorthandDep {}
 describe('object destructuring test suite', () => {
   it('should handle object shorthand destructuring', async () => {
-    const {
-      unit,
-      unitRef
-    } = await TestBed.solitary(ShorthandService).mock(ShorthandDep).final({
-      value: 'test'
-    }).compile();
+    const { unit, unitRef } = await TestBed.solitary(ShorthandService)
+      .mock(ShorthandDep)
+      .final({
+        value: 'test',
+      })
+      .compile();
     expect(unit).toBeDefined();
     expect(unitRef).toBeDefined();
   });
   it('should handle partial destructuring', async () => {
-    const {
-      unit
-    } = await TestBed.solitary(ShorthandService).compile();
+    const { unit } = await TestBed.solitary(ShorthandService).compile();
     expect(unit).toBeDefined();
   });
-});"
+});
+"
 `;
 
 exports[`Code Migrator Test Migrate: TestBed with different lifecycle methods 1`] = `
-"import { TestBed, UnitReference } from "@suites/unit";
+"import { TestBed } from '@suites/unit';
+import { UnitReference } from '@suites/unit';
 class AnotherClass {}
 describe('lifecycle methods test suite', () => {
   // Using beforeEach
   beforeEach(async () => {
-    const testBed = await TestBed.solitary(AnotherClass).mock(SomeDependency).impl(stubFn => ({
-      find: stubFn().mockReturnValue(['item1', 'item2']),
-      save: stubFn().mockImplementation(data => Promise.resolve(data))
-    })).compile();
+    const testBed = await TestBed.solitary(AnotherClass)
+      .mock(SomeDependency)
+      .impl((stubFn) => ({
+        stubProperty: stubFn(),
+      }))
+      .compile();
   });
 
   // Using beforeAll
@@ -201,56 +217,78 @@ describe('lifecycle methods test suite', () => {
   it('should work', async () => {
     expect(true).toBe(true);
   });
-});"
+});
+"
 `;
 
 exports[`Code Migrator Test Migrate: Using arrow functions with TestBed 1`] = `
-"import { TestBed } from "@suites/unit";
+"import { TestBed } from '@suites/unit';
 class SimpleService {}
 describe('arrow function test suite', () => {
   // Using arrow function
   it('should test something with arrow function', async () => {
-    const {
-      unit
-    } = await TestBed.solitary(SimpleService).mock(Repository).impl(stubFn => ({
-      findOne: stubFn().mockResolvedValue({
-        id: 1
-      }),
-      id: 1
-    })).compile();
+    const { unit } = await TestBed.solitary(SimpleService)
+      .mock(Repository)
+      .impl((stubFn) => ({
+        stubProperty: stubFn(),
+      }))
+      .compile();
     expect(unit).toBeDefined();
   });
 
   // Variaton with arrow function and no block
-  it('should test with arrow function no block', async () => expect((await TestBed.solitary(SimpleService).compile()).unit).toBeDefined());
-});"
+  it('should test with arrow function no block', async () =>
+    expect((await TestBed.solitary(SimpleService).compile()).unit).toBeDefined());
+});
+"
+`;
+
+exports[`Code Migrator Test Migrate: Using arrow functions with TestBed and Sinon 1`] = `
+"import { TestBed } from '@suites/unit';
+describe('arrow function test suite', () => {
+  it('should test something with arrow function', async () => {
+    const { unit } = await TestBed.solitary(SimpleService)
+      .mock(Repository)
+      .impl((stubFn) => ({
+        stubProperty: stubFn(),
+      }))
+      .compile();
+    expect(unit).toBeDefined();
+  });
+
+  // Variaton with arrow function and no block
+  it('should test with arrow function no block', async () =>
+    expect((await TestBed.solitary(SimpleService).compile()).unit).toBeDefined());
+});
+"
 `;
 
 exports[`Code Migrator Test Migrate: Using conditional mock implementations 1`] = `
-"import { TestBed } from "@suites/unit";
+"import { TestBed } from '@suites/unit';
 class ConditionalService {}
 class Dependency {}
 describe('conditional mocks test suite', () => {
   it('should handle complex mocks', async () => {
-    const mockFn = stubFn().mockImplementation(arg => {
+    const mockFn = stubFn().mockImplementation((arg) => {
       if (arg > 10) {
         return 'high';
       }
       return 'low';
     });
-    const {
-      unit
-    } = await TestBed.solitary(ConditionalService).mock(Dependency).impl(stubFn => ({
-      process: mockFn,
-      calculate: stubFn().mockReturnValue(42)
-    })).compile();
+    const { unit } = await TestBed.solitary(ConditionalService)
+      .mock(Dependency)
+      .impl((stubFn) => ({
+        stubProperty: stubFn(),
+      }))
+      .compile();
     expect(unit).toBeDefined();
   });
-});"
+});
+"
 `;
 
 exports[`Code Migrator Test Migrate: Using nested functions with TestBed 1`] = `
-"import { TestBed } from "@suites/unit";
+"import { TestBed } from '@suites/unit';
 class NestedService {}
 describe('nested function test suite', () => {
   // Nested standard function
@@ -267,5 +305,6 @@ describe('nested function test suite', () => {
       expect(testBed.unit).toBeDefined();
     });
   });
-});"
+});
+"
 `;

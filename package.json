@@ -52,7 +52,7 @@
     "@types/node": "^20.12.12",
     "@types/sinon": "^10.0.19",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
-    "@typescript-eslint/parser": "^6.7.5",
+    "@typescript-eslint/parser": "^8.32.0",
     "axios": "1.7.4",
     "braces": "3.0.3",
     "eslint": "^8.57.0",

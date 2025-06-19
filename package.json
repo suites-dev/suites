@@ -65,7 +65,7 @@
     "inversify": "6.0.1",
     "ip": "2.0.1",
     "jest": "^29.7.0",
-    "jest-environment-node": "29.1.0",
+    "jest-environment-node": "30.0.2",
     "jest-junit": "^16.0.0",
     "lerna": "^7.3.1",
     "lint-staged": "^14.0.1",

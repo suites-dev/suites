@@ -47,7 +47,7 @@
   "dependencies": {
     "@babel/traverse": "7.23.2",
     "@manypkg/cli": "^0.21.4",
-    "@nestjs/common": "^10.3.9",
+    "@nestjs/common": "^11.1.5",
     "@types/jest": "29.5.12",
     "@types/node": "^20.12.12",
     "@types/sinon": "^10.0.19",

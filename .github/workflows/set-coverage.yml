@@ -18,7 +18,7 @@ jobs:
         project: ['doubles.jest', 'doubles.sinon', 'core.unit', 'doubles.vitest', 'di.nestjs', 'di.inversify', 'unit']
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
         uses: actions/setup-node@v3

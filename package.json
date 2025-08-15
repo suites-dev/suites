@@ -17,17 +17,12 @@
       "email": "omer.moradd@gmail.com"
     }
   ],
-  "workspaces": [
-    "packages/*",
-    "packages/di/*",
-    "packages/doubles/*",
-    "packages/types/*"
-  ],
+
   "scripts": {
-    "build": "yarn lerna run build",
-    "lint": "yarn lerna run lint --parallel",
+    "build": "pnpm lerna run build",
+    "lint": "pnpm lerna run lint --parallel",
     "prepare": "husky",
-    "test": "yarn lerna exec yarn test",
+    "test": "pnpm lerna exec pnpm test",
     "e2e": "sh local-e2e.sh"
   },
   "lint-staged": {
@@ -43,7 +38,7 @@
     "titleTemplate": "{title}",
     "uniqueOutputName": "true"
   },
-  "packageManager": "yarn@1.22.1",
+  "packageManager": "pnpm@8.15.0",
   "dependencies": {
     "@babel/traverse": "7.23.2",
     "@manypkg/cli": "^0.21.4",

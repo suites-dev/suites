@@ -20,10 +20,13 @@
     }
   ],
   "scripts": {
-    "prebuild": "yarn rimraf dist",
-    "build": "yarn tsc -p tsconfig.build.json",
+    "prebuild": "pnpm rimraf dist",
+    "build": "pnpm tsc -p tsconfig.build.json",
     "test": "jest --passWithNoTests",
-    "lint": "yarn eslint 'index.ts'"
+    "lint": "pnpm eslint 'index.ts'"
+  },
+  "dependencies": {
+    "@suites/types.common": "^3.0.0"
   },
   "files": [
     "index.d.ts"

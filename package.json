@@ -17,7 +17,6 @@
       "email": "omer.moradd@gmail.com"
     }
   ],
-
   "scripts": {
     "build": "pnpm lerna run build",
     "lint": "pnpm lerna run lint --parallel",
@@ -38,7 +37,7 @@
     "titleTemplate": "{title}",
     "uniqueOutputName": "true"
   },
-  "packageManager": "pnpm@8.15.0",
+  "packageManager": "pnpm@10.14.0",
   "engines": {
     "node": ">= 20"
   },

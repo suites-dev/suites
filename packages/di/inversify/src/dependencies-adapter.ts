@@ -1,4 +1,4 @@
-import isEqual from 'lodash.isequal';
+import { isDeepStrictEqual } from 'node:util';
 import type { Type } from '@suites/types.common';
 import type {
   DependencyInjectionAdapter,
@@ -44,7 +44,7 @@ export function DependenciesAdapter(
 
         if (metadata) {
           return injectables.find(({ metadata: injectableMetadata }) =>
-            isEqual(injectableMetadata, metadata)
+            isDeepStrictEqual(injectableMetadata, metadata)
           );
         }
 

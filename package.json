@@ -46,7 +46,6 @@
   "packageManager": "yarn@1.22.1",
   "dependencies": {
     "@babel/traverse": "7.28.3",
-    "@manypkg/cli": "^0.25.0",
     "@nestjs/common": "^10.4.20",
     "@types/jest": "29.5.12",
     "@types/node": "^20.19.11",

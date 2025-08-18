@@ -5,6 +5,8 @@ permissions:
   id-token: write
   contents: read
   actions: read
+  checks: write
+  pull-requests: write
 
 jobs:
   build:
@@ -52,7 +54,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '22.x'
 
       - uses: actions/cache@v4
         with:
@@ -81,7 +83,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '22.x'
 
       - uses: actions/cache@v4
         with:
@@ -105,16 +107,16 @@ jobs:
           COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 
       - name: Tests Results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         if: always()
         with:
-          reporter: 'jest-junit'
           name: Tests Results (${{ matrix.project }})
           path: ${{ github.workspace }}/test-reports/${{ matrix.project }}.xml
+          reporter: jest-junit
           fail-on-error: false
 
       - name: Upload Report to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           name: codecov-umbrella
           flags: ${{ matrix.project }}

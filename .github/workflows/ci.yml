@@ -68,7 +68,7 @@ jobs:
         run: yarn lint
 
       - name: Validate Packages
-        run: npx @manypkg/cli check
+        run: npx @manypkg/cli@0.21.4 check
 
   test:
     name: Test

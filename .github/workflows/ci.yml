@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x, 22.x]
+        node-version: [20.x, 22.x, 24.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,20 +29,11 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Remove Vitest If Needed
-        if: ${{ matrix.node-version == '16.x'  }}
-        run: rm -rf packages/doubles/vitest
-
       - name: Yarn
         run: yarn --frozen-lockfile
 
       - name: Build
-        if: ${{ matrix.node-version != '16.x' }}
         run: yarn build
-
-      - name: Build
-        if: ${{ matrix.node-version == '16.x' }}
-        run: yarn build --ignore @suites/doubles.vitest
 
   lint:
     name: Lint
@@ -68,7 +59,7 @@ jobs:
         run: yarn lint
 
       - name: Validate Packages
-        run: npx @manypkg/cli@0.21.4 check
+        run: npx @manypkg/cli check
 
   test:
     name: Test

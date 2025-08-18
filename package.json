@@ -45,7 +45,7 @@
   },
   "packageManager": "yarn@1.22.1",
   "engines": {
-    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+    "node": ">= 20"
   },
   "resolutions": {
     "ajv": "^6.12.6",

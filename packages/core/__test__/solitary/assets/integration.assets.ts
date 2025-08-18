@@ -1,4 +1,4 @@
-import isEqual from 'lodash.isequal';
+import { isDeepStrictEqual } from 'node:util';
 import {
   DependencyInjectionAdapter,
   ClassInjectable,
@@ -177,7 +177,7 @@ export const FakeDIAdapter: DependencyInjectionAdapter = {
           const subject = normalizeIdentifier(identifier, metadata as never);
           const toFind = normalizeIdentifier(injectable.identifier, injectable.metadata);
 
-          return isEqual(toFind, subject);
+          return isDeepStrictEqual(toFind, subject);
         });
       },
     };

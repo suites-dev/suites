@@ -4,7 +4,9 @@ on: [pull_request]
 permissions:
   id-token: write
   contents: read
+  actions: read
   checks: write
+  pull-requests: write
 
 jobs:
   build:
@@ -12,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x, 22.x]
+        node-version: [20.x, 22.x, 24.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -26,10 +28,6 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Remove Vitest If Needed
-        if: ${{ matrix.node-version == '16.x'  }}
-        run: rm -rf packages/doubles/vitest
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -40,12 +38,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        if: ${{ matrix.node-version != '16.x' }}
         run: pnpm build
-
-      - name: Build
-        if: ${{ matrix.node-version == '16.x' }}
-        run: pnpm build --ignore @suites/doubles.vitest
 
   lint:
     name: Lint
@@ -57,7 +50,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '22.x'
 
       - uses: actions/cache@v4
         with:
@@ -76,7 +69,7 @@ jobs:
         run: pnpm lint
 
       - name: Validate Packages
-        run: pnpm manypkg check
+        run: npx @manypkg/cli check
 
   test:
     name: Test
@@ -91,7 +84,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '22.x'
 
       - uses: actions/cache@v4
         with:
@@ -120,16 +113,16 @@ jobs:
           COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 
       - name: Tests Results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         if: always()
         with:
-          reporter: 'jest-junit'
           name: Tests Results (${{ matrix.project }})
           path: ${{ github.workspace }}/test-reports/${{ matrix.project }}.xml
+          reporter: jest-junit
           fail-on-error: false
 
       - name: Upload Report to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           name: codecov-umbrella
           flags: ${{ matrix.project }}

@@ -39,7 +39,7 @@
   },
   "peerDependencies": {
     "inversify": ">= 6.0",
-    "reflect-metadata": "0.2.2"
+    "reflect-metadata": "<1.0.0"
   },
   "devDependencies": {
     "inversify": "6.0.1",

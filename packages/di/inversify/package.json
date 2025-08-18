@@ -35,15 +35,13 @@
   ],
   "dependencies": {
     "@suites/types.common": "^3.0.0",
-    "@suites/types.di": "^3.0.0",
-    "lodash.isequal": "^4.5.0"
+    "@suites/types.di": "^3.0.0"
   },
   "peerDependencies": {
     "inversify": ">= 6.0",
     "reflect-metadata": "<1.0.0"
   },
   "devDependencies": {
-    "@types/lodash.isequal": "^4.5.6",
     "inversify": "6.0.1",
     "reflect-metadata": "<1.0.0"
   },

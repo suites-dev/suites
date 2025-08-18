@@ -19,5 +19,8 @@
     "ts-jest": "*",
     "ts-node": "*",
     "typescript": "^5.x"
+  },
+  "engines": {
+    "node": ">= 20"
   }
 }

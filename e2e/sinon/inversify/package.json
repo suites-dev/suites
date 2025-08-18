@@ -24,5 +24,8 @@
     "sinon": "*",
     "ts-mocha": "10.0.0",
     "typescript": "^5.x"
+  },
+  "engines": {
+    "node": ">= 20"
   }
 }

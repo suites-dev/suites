@@ -6,7 +6,8 @@
     "@suites/di.nestjs": "e2e",
     "@suites/doubles.sinon": "e2e",
     "@suites/unit": "e2e",
-    "@nestjs/core": "^10.4.15",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/core": "^11.1.6",
     "reflect-metadata": "^0.2.0"
   },
   "scripts": {
@@ -24,5 +25,8 @@
     "sinon": "*",
     "ts-mocha": "10.0.0",
     "typescript": "^5.x"
+  },
+  "engines": {
+    "node": ">= 20"
   }
 }

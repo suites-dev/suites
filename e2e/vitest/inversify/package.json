@@ -21,5 +21,8 @@
     "typescript": "^5.x",
     "unplugin-swc": "1.4.4",
     "vitest": "*"
+  },
+  "engines": {
+    "node": ">= 20"
   }
 }

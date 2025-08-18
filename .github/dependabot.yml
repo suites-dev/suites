@@ -7,6 +7,18 @@ updates:
     commit-message:
       prefix: "deps"
     open-pull-requests-limit: 10
+    groups:
+      security-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "security"
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
     ignore:
       - dependency-name: "jest"
         versions: ["<29.1.0"]

@@ -43,6 +43,7 @@ const handler = <T>() => ({
 
       if (property !== 'calls') {
         // @ts-ignore
+        // eslint-disable-next-line no-undef
         obj[property] = new Proxy<Mock<T>>(vi.fn(), handler());
         // @ts-ignore private property
         obj[property as never]._isMockObject = true;

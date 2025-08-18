@@ -4,6 +4,7 @@ on: [pull_request]
 permissions:
   id-token: write
   contents: read
+  actions: read
   checks: write
 
 jobs:
@@ -52,7 +53,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '22.x'
 
       - uses: actions/cache@v4
         with:
@@ -81,7 +82,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '22.x'
 
       - uses: actions/cache@v4
         with:
@@ -108,9 +109,9 @@ jobs:
         uses: dorny/test-reporter@v1
         if: always()
         with:
-          reporter: 'jest-junit'
           name: Tests Results (${{ matrix.project }})
           path: ${{ github.workspace }}/test-reports/${{ matrix.project }}.xml
+          reporter: jest-junit
           fail-on-error: false
 
       - name: Upload Report to Codecov

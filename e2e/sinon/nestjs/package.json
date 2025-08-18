@@ -10,7 +10,8 @@
     "reflect-metadata": "^0.2.0"
   },
   "scripts": {
-    "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts"
+    "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts",
+    "lint": "eslint '**/*.ts'"
   },
   "devDependencies": {
     "@types/chai": "^4.3.11",

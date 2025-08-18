@@ -20,6 +20,7 @@
     "vitest": "*"
   },
   "scripts": {
-    "test": "npx vitest --run && tsc --noEmit"
+    "test": "npx vitest --run && tsc --noEmit",
+    "lint": "eslint '**/*.ts'"
   }
 }

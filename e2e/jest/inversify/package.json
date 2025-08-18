@@ -10,7 +10,8 @@
     "reflect-metadata": "^0.2.0"
   },
   "scripts": {
-    "test": "jest && tsc --noEmit"
+    "test": "jest && tsc --noEmit",
+    "lint": "eslint '**/*.ts'"
   },
   "devDependencies": {
     "@types/jest": "^29.0.1",

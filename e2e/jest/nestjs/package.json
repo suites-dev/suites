@@ -18,6 +18,7 @@
     "typescript": "^5.x"
   },
   "scripts": {
-    "test": "jest && tsc --noEmit"
+    "test": "jest && tsc --noEmit",
+    "lint": "eslint '**/*.ts'"
   }
 }

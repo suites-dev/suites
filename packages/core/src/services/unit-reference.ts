@@ -1,4 +1,4 @@
-import isEqual from 'lodash.isequal';
+import { isDeepStrictEqual as isEqual } from 'node:util';
 import type { StubbedInstance } from '@suites/types.doubles';
 import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
 import type { Type } from '@suites/types.common';

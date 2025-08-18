@@ -1,4 +1,4 @@
-import isEqual from 'lodash.isequal';
+import { isDeepStrictEqual as isEqual } from 'node:util';
 import type {
   DependencyInjectionAdapter,
   ClassInjectable,

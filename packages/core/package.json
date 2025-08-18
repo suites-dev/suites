@@ -36,11 +36,7 @@
   ],
   "dependencies": {
     "@suites/types.common": "^3.0.0",
-    "@suites/types.di": "^3.0.0",
-    "lodash.isequal": "^4.5.0"
-  },
-  "devDependencies": {
-    "@types/lodash.isequal": "^4.5.6"
+    "@suites/types.di": "^3.0.0"
   },
   "publishConfig": {
     "access": "public",

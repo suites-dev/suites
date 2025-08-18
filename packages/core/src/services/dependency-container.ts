@@ -1,4 +1,4 @@
-import { isDeepStrictEqual as isEqual } from 'node:util';
+import { isDeepStrictEqual } from 'node:util';
 import type { ClassInjectable, IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
 import type { Stub, StubbedInstance } from '@suites/types.doubles';
 import type { ConstantValue, DeepPartial, FinalValue } from '@suites/types.common';
@@ -48,7 +48,7 @@ export class DependencyContainer {
     // If there are more than one injectable with the same identifier, we need to check the metadata as well
     if (metadata) {
       const identifierToMock = identifiers.find(([{ metadata: injectableMetadata }]) =>
-        isEqual(injectableMetadata, metadata)
+        isDeepStrictEqual(injectableMetadata, metadata)
       );
 
       return identifierToMock

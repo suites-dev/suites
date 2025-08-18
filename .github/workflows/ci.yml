@@ -6,6 +6,7 @@ permissions:
   contents: read
   actions: read
   checks: write
+  pull-requests: write
 
 jobs:
   build:
@@ -106,7 +107,7 @@ jobs:
           COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 
       - name: Tests Results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         if: always()
         with:
           name: Tests Results (${{ matrix.project }})

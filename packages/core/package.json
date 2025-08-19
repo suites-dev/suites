@@ -23,10 +23,10 @@
     "node": ">= 20"
   },
   "scripts": {
-    "prebuild": "yarn rimraf dist",
-    "build": "yarn tsc -p tsconfig.build.json",
+    "prebuild": "pnpm rimraf dist",
+    "build": "pnpm tsc -p tsconfig.build.json",
     "test": "jest --coverage --verbose",
-    "lint": "yarn eslint '{src,test}/**/*.ts'"
+    "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
   "files": [
     "dist",
@@ -36,7 +36,8 @@
   ],
   "dependencies": {
     "@suites/types.common": "^3.0.0",
-    "@suites/types.di": "^3.0.0"
+    "@suites/types.di": "^3.0.0",
+    "@suites/types.doubles": "^3.0.0"
   },
   "devDependencies": {},
   "publishConfig": {

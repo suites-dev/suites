@@ -213,8 +213,8 @@ importers:
   packages/types/doubles:
     dependencies:
       '@suites/types.common':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../common
 
   packages/unit:
     dependencies:
@@ -1063,10 +1063,6 @@ packages:
 
   '@sinonjs/text-encoding@0.7.3':
     resolution: {integrity: sha512-DE427ROAphMQzU4ENbliGYrBSYPXF+TtLg9S8vzeA+OF4ZKzoDdzfL8sxuMUGS/lgRhM6j1URSk9ghf7Xo1tyA==}
-
-  '@suites/types.common@3.0.0':
-    resolution: {integrity: sha512-+kCWmVAyEI01P4d/t3LbrOCq1xXQlh3SsPstn1uBuC/MDMW/pENHkU5xVC9G8VOW/pkXh53KXwbHIxpJImp4Zw==}
-    engines: {node: ^16.10.0 || ^18.12.0 || >=20.0.0}
 
   '@tokenizer/inflate@0.2.7':
     resolution: {integrity: sha512-MADQgmZT1eKjp06jpI2yozxaU9uVs4GzzgSL+uEq7bVcJ9V1ZXQkeGNql1fsSI0gMy1vhvNTNbUqrx+pZfJVmg==}
@@ -5336,8 +5332,6 @@ snapshots:
       type-detect: 4.1.0
 
   '@sinonjs/text-encoding@0.7.3': {}
-
-  '@suites/types.common@3.0.0': {}
 
   '@tokenizer/inflate@0.2.7':
     dependencies:

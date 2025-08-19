@@ -78,8 +78,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Run Verdaccio Docker
         run: |
@@ -89,7 +94,7 @@ jobs:
           verdaccio/verdaccio
 
       - name: Build
-        run: yarn build
+        run: pnpm build
 
       - name: Setup Registry
         uses: actions/setup-node@v4
@@ -136,7 +141,7 @@ jobs:
 
       - name: Publish Packages
         run: |
-          yarn lerna publish from-package --yes \
+          pnpm lerna publish from-package --yes \
           --no-git-tag-version \
           --no-push \
           --no-git-reset \
@@ -153,7 +158,7 @@ jobs:
         run: |
           rm -rf packages
           rm -rf node_modules
-          rm yarn.lock
+          rm pnpm-lock.yaml
           rm package.json
 
       - name: Install Dependencies
@@ -184,11 +189,16 @@ jobs:
           scope: '@suites'
           always-auth: true
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: npx lerna run build
+        run: pnpm lerna run build
 
       - name: Publish Packages
         run: npx lerna publish ${{ github.event.inputs.strategy }} --yes --dist-tag ${{ github.event.inputs.dist_tag }}

@@ -29,7 +29,7 @@
     "lint": "pnpm eslint 'index.ts'"
   },
   "dependencies": {
-    "@suites/types.common": "^3.0.0"
+    "@suites/types.common": "workspace:^3.0.0"
   },
   "dependencies": {
     "@suites/types.common": "^3.0.0"

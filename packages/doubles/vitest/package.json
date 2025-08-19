@@ -50,9 +50,9 @@
     "vitest": ">= 1.0"
   },
   "dependencies": {
-    "@suites/core.unit": "^3.0.1",
-    "@suites/types.common": "^3.0.0",
-    "@suites/types.doubles": "^3.0.0"
+    "@suites/core.unit": "workspace:^3.0.1",
+    "@suites/types.common": "workspace:^3.0.0",
+    "@suites/types.doubles": "workspace:^3.0.0"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^1.6.1",

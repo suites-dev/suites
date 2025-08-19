@@ -35,9 +35,9 @@
     "README.md"
   ],
   "dependencies": {
-    "@suites/types.common": "^3.0.0",
-    "@suites/types.di": "^3.0.0",
-    "@suites/types.doubles": "^3.0.0"
+    "@suites/types.common": "workspace:^3.0.0",
+    "@suites/types.di": "workspace:^3.0.0",
+    "@suites/types.doubles": "workspace:^3.0.0"
   },
   "devDependencies": {},
   "publishConfig": {

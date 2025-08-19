@@ -101,23 +101,23 @@ importers:
   packages/core:
     dependencies:
       '@suites/types.common':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../types/common
       '@suites/types.di':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../types/di
       '@suites/types.doubles':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../types/doubles
 
   packages/di/inversify:
     dependencies:
       '@suites/types.common':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../../types/common
       '@suites/types.di':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../../types/di
     devDependencies:
       inversify:
         specifier: 6.0.1
@@ -129,11 +129,11 @@ importers:
   packages/di/nestjs:
     dependencies:
       '@suites/types.common':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../../types/common
       '@suites/types.di':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../../types/di
     devDependencies:
       '@nestjs/common':
         specifier: ^10.4.20
@@ -148,14 +148,14 @@ importers:
   packages/doubles/jest:
     dependencies:
       '@suites/core.unit':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: workspace:^3.0.1
+        version: link:../../core
       '@suites/types.common':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../../types/common
       '@suites/types.doubles':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../../types/doubles
     devDependencies:
       jest:
         specifier: ^29.7.0
@@ -164,14 +164,14 @@ importers:
   packages/doubles/sinon:
     dependencies:
       '@suites/core.unit':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: workspace:^3.0.1
+        version: link:../../core
       '@suites/types.common':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../../types/common
       '@suites/types.doubles':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../../types/doubles
     devDependencies:
       '@types/sinon':
         specifier: ^10.0.20
@@ -183,14 +183,14 @@ importers:
   packages/doubles/vitest:
     dependencies:
       '@suites/core.unit':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: workspace:^3.0.1
+        version: link:../../core
       '@suites/types.common':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../../types/common
       '@suites/types.doubles':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../../types/doubles
     devDependencies:
       '@vitest/coverage-v8':
         specifier: ^1.6.1
@@ -207,29 +207,29 @@ importers:
   packages/types/di:
     dependencies:
       '@suites/types.common':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../common
 
   packages/types/doubles:
     dependencies:
       '@suites/types.common':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../common
 
   packages/unit:
     dependencies:
       '@suites/core.unit':
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: workspace:^3.0.1
+        version: link:../core
       '@suites/types.common':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../types/common
       '@suites/types.di':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../types/di
       '@suites/types.doubles':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: workspace:^3.0.0
+        version: link:../types/doubles
 
 packages:
 
@@ -1063,21 +1063,6 @@ packages:
 
   '@sinonjs/text-encoding@0.7.3':
     resolution: {integrity: sha512-DE427ROAphMQzU4ENbliGYrBSYPXF+TtLg9S8vzeA+OF4ZKzoDdzfL8sxuMUGS/lgRhM6j1URSk9ghf7Xo1tyA==}
-
-  '@suites/core.unit@3.0.1':
-    resolution: {integrity: sha512-X5xNg5EK1zAKXo4WS1fyBcViyvWvUWCEaA1fv/3ow5mD9AkKnIQajqm9pLAkUl/BM73baLQv9biLnmEHje1ghA==}
-    engines: {node: ^16.10.0 || ^18.12.0 || >=20.0.0}
-
-  '@suites/types.common@3.0.0':
-    resolution: {integrity: sha512-+kCWmVAyEI01P4d/t3LbrOCq1xXQlh3SsPstn1uBuC/MDMW/pENHkU5xVC9G8VOW/pkXh53KXwbHIxpJImp4Zw==}
-    engines: {node: ^16.10.0 || ^18.12.0 || >=20.0.0}
-
-  '@suites/types.di@3.0.0':
-    resolution: {integrity: sha512-RzvgfTsjg3KrJ3SRbo9J84g5mRfkMZMzinLTjAQO+yCBBz+YMhbwaUXDBX70RcFGiAHjTNPg0jWjis3FHPH8Dg==}
-    engines: {node: ^16.10.0 || ^18.12.0 || >=20.0.0}
-
-  '@suites/types.doubles@3.0.0':
-    resolution: {integrity: sha512-B5sHH98qU7Fq+ozA42J3LLv846xRJn2ndx1xfLr0oaKxEG6Xud/vmdJpH65F/2P7DNMJkxWo/VDIqXrN4UDcvg==}
 
   '@tokenizer/inflate@0.2.7':
     resolution: {integrity: sha512-MADQgmZT1eKjp06jpI2yozxaU9uVs4GzzgSL+uEq7bVcJ9V1ZXQkeGNql1fsSI0gMy1vhvNTNbUqrx+pZfJVmg==}
@@ -2862,10 +2847,6 @@ packages:
   locate-path@6.0.0:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
-
-  lodash.isequal@4.5.0:
-    resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
-    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.ismatch@4.4.0:
     resolution: {integrity: sha512-fPMfXjGQEV9Xsq/8MTSgUf255gawYRbjwMyDbcvDhXgV7enSZA0hynz6vMPnpAb5iONEzBHBPsT+0zes5Z301g==}
@@ -5352,20 +5333,6 @@ snapshots:
 
   '@sinonjs/text-encoding@0.7.3': {}
 
-  '@suites/core.unit@3.0.1':
-    dependencies:
-      '@suites/types.common': 3.0.0
-      '@suites/types.di': 3.0.0
-      lodash.isequal: 4.5.0
-
-  '@suites/types.common@3.0.0': {}
-
-  '@suites/types.di@3.0.0':
-    dependencies:
-      '@suites/types.common': 3.0.0
-
-  '@suites/types.doubles@3.0.0': {}
-
   '@tokenizer/inflate@0.2.7':
     dependencies:
       debug: 4.4.1
@@ -7551,8 +7518,6 @@ snapshots:
   locate-path@6.0.0:
     dependencies:
       p-locate: 5.0.0
-
-  lodash.isequal@4.5.0: {}
 
   lodash.ismatch@4.4.0: {}
 

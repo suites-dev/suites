@@ -19,6 +19,9 @@
       "email": "omer.moradd@gmail.com"
     }
   ],
+  "engines": {
+    "node": ">= 20"
+  },
   "scripts": {
     "prebuild": "pnpm rimraf dist",
     "build": "pnpm tsc -p tsconfig.build.json",

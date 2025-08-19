@@ -36,7 +36,8 @@
   ],
   "dependencies": {
     "@suites/types.common": "^3.0.0",
-    "@suites/types.di": "^3.0.0"
+    "@suites/types.di": "^3.0.0",
+    "@suites/types.doubles": "^3.0.0"
   },
   "devDependencies": {},
   "publishConfig": {

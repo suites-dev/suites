@@ -18,7 +18,7 @@
     }
   ],
   "scripts": {
-    "build": "pnpm lerna run build",
+    "build": "pnpm lerna run build --stream",
     "lint": "pnpm lerna run lint --parallel",
     "prepare": "husky",
     "test": "pnpm lerna exec pnpm test",

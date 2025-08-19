@@ -12,6 +12,7 @@
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
-    "vitest.config.ts"
+    "vitest.config.ts",
+    "dist"
   ]
 }

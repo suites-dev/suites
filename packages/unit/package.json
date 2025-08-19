@@ -54,10 +54,10 @@
     "node": ">= 20"
   },
   "scripts": {
-    "prebuild": "yarn rimraf dist",
+    "prebuild": "pnpm rimraf dist",
     "build": "sh ./build.sh",
     "test": "jest --coverage --verbose",
-    "lint": "yarn eslint '{src,test}/**/*.ts'"
+    "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
   "files": [
     "dist",

@@ -34,11 +34,11 @@
     "node": ">= 20"
   },
   "scripts": {
-    "prebuild": "yarn rimraf dist",
+    "prebuild": "pnpm rimraf dist",
     "postinstall": "node postinstall.mjs",
     "build": "sh build.sh",
-    "test": "VITE_CJS_IGNORE_WARNING=true yarn vitest run --coverage",
-    "lint": "yarn eslint '{src,test}/**/*.ts'"
+    "test": "VITE_CJS_IGNORE_WARNING=true pnpm vitest run --coverage",
+    "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
   "files": [
     "unit.d.ts",

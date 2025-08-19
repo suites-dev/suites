@@ -14,6 +14,7 @@
     "node_modules",
     "__test__",
     "**/*.spec.ts",
-    "jest.config.ts"
+    "jest.config.ts",
+    "dist"
   ]
 }

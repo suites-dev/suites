@@ -1,0 +1,5 @@
+packages:
+  - 'packages/*'
+  - 'packages/di/*'
+  - 'packages/doubles/*'
+  - 'packages/types/*'

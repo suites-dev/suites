@@ -112,6 +112,9 @@ importers:
       '@suites/types.di':
         specifier: workspace:^3.0.0
         version: link:../types/di
+      '@suites/types.doubles':
+        specifier: workspace:^3.0.0
+        version: link:../types/doubles
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0

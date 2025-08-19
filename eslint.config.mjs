@@ -8,6 +8,17 @@ import globals from 'globals';
 export default [
   js.configs.recommended,
   {
+    ignores: [
+      'node_modules/*',
+      'coverage/*',
+      'dist',
+      'dist/*',
+      '*.js',
+      '*.d.ts',
+      'index.ts'
+    ]
+  },
+  {
     files: ['**/*.{js,ts}'],
     languageOptions: {
       ecmaVersion: 2018,

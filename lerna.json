@@ -25,7 +25,7 @@
     "packages/doubles/*",
     "packages/types/*"
   ],
-  "npmClient": "yarn",
+  "npmClient": "pnpm",
   "packages": [
     "packages/*",
     "packages/di/*",

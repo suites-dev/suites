@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@babel/traverse": "7.28.3",
+    "@eslint/js": "9.8.0",
     "@nestjs/common": "^10.4.20",
     "@types/jest": "29.5.12",
     "@types/node": "^20.19.11",

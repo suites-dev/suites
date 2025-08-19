@@ -115,8 +115,7 @@ jobs:
           --no-push \
           --force-publish \
           --no-commit-hooks \
-          --conventional-commits \
-          --skip-npm
+          --conventional-commits
 
       - name: Commit Packages Versions
         run: |

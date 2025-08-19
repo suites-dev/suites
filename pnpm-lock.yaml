@@ -106,6 +106,9 @@ importers:
       '@suites/types.di':
         specifier: ^3.0.0
         version: 3.0.0
+      '@suites/types.doubles':
+        specifier: ^3.0.0
+        version: 3.0.0
 
   packages/di/inversify:
     dependencies:

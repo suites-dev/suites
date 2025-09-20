@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 const filePaths = [
-  path.join(__dirname, '..', 'unit', 'dist', 'esm', 'index.d.ts'),
-  path.join(__dirname, '..', 'unit', 'dist', 'cjs', 'index.d.ts'),
+  path.join(__dirname, '..', '..', 'unit', 'dist', 'esm', 'index.d.ts'),
+  path.join(__dirname, '..', '..', 'unit', 'dist', 'cjs', 'index.d.ts'),
 ];
 
 const newContent = '/// <reference types="@suites/doubles.jest/unit" />\n';

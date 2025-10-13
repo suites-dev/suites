@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
-import { mock } from './mock.static.js';
-export { Mocked, Stub } from './types.js';
+import { mock } from './mock.static';
+export { Mocked, Stub } from './types';
 import type { Mock } from '@vitest/spy';
 import { fn } from '@vitest/spy';
 
@@ -16,7 +16,7 @@ import { fn } from '@vitest/spy';
  */
 export const adapter = { mock, stub: (): Mock => fn() };
 
-export { mock } from './mock.static.js';
+export { mock } from './mock.static';
 
 /**
  * Represents a stub function

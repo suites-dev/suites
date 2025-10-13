@@ -17,7 +17,7 @@ export default defineConfig({
         '**/node_modules/**',
         '**/index.ts',
         '**/testbed-factory.ts',
-        'postinstall.mjs',
+        'postinstall.js',
       ],
       reportsDirectory: process.env.COVERAGE_DIR || 'coverage',
       reporter: [

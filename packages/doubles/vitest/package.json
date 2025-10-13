@@ -2,11 +2,16 @@
   "name": "@suites/doubles.vitest",
   "version": "3.0.1",
   "license": "Apache-2.0",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "type": "module",
+  "types": "./unit.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "exports": {
-    "require": "./dist/cjs/index.js",
-    "import": "./dist/esm/index.js"
+    ".": {
+      "types": "./unit.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
   },
   "keywords": [
     "mocking",
@@ -35,15 +40,15 @@
   },
   "scripts": {
     "prebuild": "pnpm rimraf dist",
-    "postinstall": "node postinstall.mjs",
-    "build": "sh build.sh",
-    "test": "VITE_CJS_IGNORE_WARNING=true pnpm vitest run --coverage",
+    "build": "pnpm tsc -p tsconfig.build.json",
+    "test": "pnpm vitest run --coverage",
+    "postinstall": "node postinstall.js",
     "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
   "files": [
     "unit.d.ts",
     "dist",
-    "postinstall.mjs"
+    "postinstall.js"
   ],
   "peerDependencies": {
     "@vitest/spy": ">= 1.0",

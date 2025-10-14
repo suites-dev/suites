@@ -74,7 +74,7 @@ jobs:
           git commit -am "remove vitest temp"
 
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -92,7 +92,7 @@ jobs:
         run: yarn build
 
       - name: Setup Registry
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: http://localhost:4873
@@ -178,7 +178,7 @@ jobs:
           ref: ${{ github.event.inputs.target_branch }}
 
       - name: Setup Registry
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           registry-url: https://registry.npmjs.org/
           scope: '@suites'

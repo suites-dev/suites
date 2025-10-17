@@ -1,4 +1,4 @@
-import { SuitesDIAdapters, SuitesDoublesAdapters, testBedBuilderFactory } from './testbed-builder';
+import { SuitesDIAdapters, SuitesDoublesAdapters, testBedBuilderFactory } from './testbed-builder.js';
 import type { Type } from '@suites/types.common';
 import {
   SociableTestBedBuilder as SociableTestBedBuilderCore,

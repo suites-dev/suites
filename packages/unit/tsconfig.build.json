@@ -3,10 +3,10 @@
   "compilerOptions": {
     "rootDir": "src",
     "baseUrl": ".",
-    "outDir": "dist",
-    "module": "esnext",
-    "target": "esnext",
-    "skipLibCheck": true
+    "target": "es2020",
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true
   },
   "exclude": [
     "typings.d.ts",

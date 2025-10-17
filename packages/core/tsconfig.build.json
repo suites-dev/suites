@@ -3,9 +3,10 @@
   "compilerOptions": {
     "rootDir": "src",
     "baseUrl": ".",
-    "outDir": "dist",
-    "target": "es6",
-    "skipLibCheck": true
+    "target": "es2020",
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true
   },
   "exclude": [
     "typings.d.ts",

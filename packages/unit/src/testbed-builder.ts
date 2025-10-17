@@ -4,7 +4,7 @@ import { SuitesError, SuitesErrorCode } from '@suites/types.common';
 import type { DependencyInjectionAdapter } from '@suites/types.di';
 import type { TestBedBuilder } from '@suites/core.unit';
 import { UnitMocker } from '@suites/core.unit';
-import { PackageResolver } from './package-resolver';
+import { PackageResolver } from './package-resolver.js';
 import type { DoublesAdapter } from '@suites/types.doubles';
 
 export class AdapterNotFoundError extends SuitesError {

@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "contributors": [
     {
       "name": "Omer Morad",

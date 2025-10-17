@@ -12,6 +12,9 @@ const config = (coverageDir?: string) => ({
       },
     ] as any,
   },
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
   coveragePathIgnorePatterns: ['/node_modules/', 'spec-assets.ts', '/__test__/'],
   testPathIgnorePatterns: ['/node_modules/', '/e2e/'],
   testEnvironment: 'node',

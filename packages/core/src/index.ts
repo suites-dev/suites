@@ -1,6 +1,6 @@
-export * from './services/unit-mocker';
-export * from './services/builders/solitary-unit-builder';
-export * from './services/builders/sociable-unit-builder';
-export type { UnitReference } from './services/unit-reference';
-export type { MockOverride, UnitTestBed } from './types';
-export type { TestBedBuilder } from './services/builders/testbed-builder';
+export * from './services/unit-mocker.js';
+export * from './services/builders/solitary-unit-builder.js';
+export * from './services/builders/sociable-unit-builder.js';
+export type { UnitReference } from './services/unit-reference.js';
+export type { MockOverride, UnitTestBed } from './types.js';
+export type { TestBedBuilder } from './services/builders/testbed-builder.js';

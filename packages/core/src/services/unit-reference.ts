@@ -3,9 +3,9 @@ import type { StubbedInstance } from '@suites/types.doubles';
 import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
 import type { Type } from '@suites/types.common';
 import { DependencyResolutionError } from '@suites/types.common';
-import type { DependencyContainer, IdentifierToFinal } from './dependency-container';
-import { referenceDependencyNotFoundError, stringifyIdentifier } from './functions.static';
-import { normalizeIdentifier } from '../normalize-identifier.static';
+import type { DependencyContainer, IdentifierToFinal } from './dependency-container.js';
+import { referenceDependencyNotFoundError, stringifyIdentifier } from './functions.static.js';
+import { normalizeIdentifier } from '../normalize-identifier.static.js';
 
 export interface UnitReference {
   get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;

@@ -1,5 +1,5 @@
-export { TestBed } from './testbed';
-export type { UnitTestBed, TestBedBuilder } from './types';
+export { TestBed } from './testbed.js';
+export type { UnitTestBed, TestBedBuilder } from './types.js';
 export type {
   UnitReference,
   MockOverride,

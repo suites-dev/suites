@@ -30,15 +30,13 @@
   },
   "scripts": {
     "prebuild": "pnpm rimraf dist",
-    "postinstall": "node postinstall.js",
     "build": "pnpm tsc -p tsconfig.build.json",
     "test": "jest --coverage --verbose",
     "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
   "files": [
     "unit.d.ts",
-    "dist",
-    "postinstall.js"
+    "dist"
   ],
   "peerDependencies": {
     "@types/sinon": "*",

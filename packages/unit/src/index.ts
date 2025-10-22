@@ -1,9 +1,10 @@
 export { TestBed } from './testbed';
-export type { StubbedInstance as Mocked } from '@suites/types.doubles';
-export type { UnitTestBed, TestBedBuilder } from './types';
 export type {
-  UnitReference,
-  MockOverride,
+  UnitTestBed,
+  TestBedBuilder,
+  Mocked,
   SolitaryTestBedBuilder,
   SociableTestBedBuilder,
-} from '@suites/core.unit';
+} from './types';
+export type { UnitReference, MockOverride } from '@suites/core.unit';
+export type { Stub } from '@suites/types.doubles';

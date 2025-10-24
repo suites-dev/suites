@@ -87,7 +87,9 @@ jobs:
       - name: Version Packages
         run: |
           BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
-          npx lerna version prerelease --yes \
+          npx lerna version --yes \
+          --conventional-commits \
+          --conventional-prerelease \
           --preid e2e \
           --no-changelog \
           --allow-branch "$BRANCH_NAME" \

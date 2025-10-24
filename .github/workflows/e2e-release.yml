@@ -89,7 +89,9 @@ jobs:
 
       - name: Version Packages
         run: |
-          npx lerna version prerelease --yes \
+          npx lerna version --yes \
+          --conventional-commits \
+          --conventional-prerelease \
           --preid e2e \
           --no-changelog \
           --allow-branch ${{ inputs.target_branch }} \

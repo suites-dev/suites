@@ -55,7 +55,7 @@
     "@suites/types.doubles": "^3.0.0"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/coverage-v8": "^4.0.3",
     "@vitest/spy": "^1.x",
     "vitest": "^1.1.3"
   },

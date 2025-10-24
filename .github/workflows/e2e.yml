@@ -1,4 +1,4 @@
-name: E2E Quick Test
+name: E2E Tests
 env:
   CI: true
 
@@ -20,14 +20,14 @@ permissions:
   id-token: write
 
 jobs:
-  e2e-quick:
-    name: Quick E2E (${{ matrix.e2e-project }}, Node ${{ matrix.node-version }})
+  e2e:
+    name: E2E (${{ matrix.e2e-project }}, Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        e2e-project: ['jest/nestjs', 'vitest/nestjs', 'sinon/inversify']
-        node-version: [20.x, 24.x]
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
+        node-version: [20.x, 22.x, 24.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v5

@@ -133,6 +133,7 @@ jobs:
           rm -rf node_modules
           rm pnpm-lock.yaml
           rm package.json
+          rm -f .npmrc
 
       - name: Install Dependencies from Verdaccio
         run: |

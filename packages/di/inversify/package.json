@@ -23,14 +23,13 @@
     }
   ],
   "scripts": {
-    "postinstall": "node postinstall.js",
     "prebuild": "pnpm rimraf dist",
     "build": "pnpm tsc -p tsconfig.build.json",
     "test": "jest --coverage --verbose",
     "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
   "files": [
-    "postinstall.js",
+    "types.d.ts",
     "dist"
   ],
   "dependencies": {

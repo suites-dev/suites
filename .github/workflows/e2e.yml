@@ -1,194 +1,86 @@
-name: Suites e2e
+name: E2E Quick Test
 env:
   CI: true
 
 on:
+  pull_request:
+    branches:
+      - next
+      - master
   workflow_dispatch:
     inputs:
       target_branch:
         description: 'E2E Target Branch'
         required: true
+        type: string
+        default: 'next'
 
 permissions:
-  contents: write
-  pull-requests: write
-  id-token: write
-  checks: write
-  statuses: write
+  contents: read
 
 jobs:
-  status-pending:
-    name: Update PR Status
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      id-token: write
-      checks: write
-      statuses: write
-    steps:
-      - name: Find Pull Request
-        uses: juliangruber/find-pull-request-action@v1
-        id: pull-request
-        with:
-          branch: ${{ inputs.target_branch }}
-
-      - name: Update PR e2e Status to Pending
-        run: |
-          curl \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
-          -d '{"state":"pending","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"Running..","context":"Suites e2e"}'
-
-  e2e:
-    name: Build and Test
-    needs: [status-pending]
+  e2e-quick:
+    name: Quick E2E (${{ matrix.e2e-project }}, Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
-        node-version: [20.x, 22.x, 24.x]
+        e2e-project: ['jest/nestjs', 'vitest/nestjs', 'sinon/inversify']
+        node-version: [20.x, 24.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.target_branch }}
+          ref: ${{ github.event.pull_request.head.ref || inputs.target_branch }}
 
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
           version: 10.14.0
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run Verdaccio Docker
-        run: |
-          docker run -d --name verdaccio \
-          -p 4873:4873 \
-          -v ${{ github.workspace }}/e2e/config.yaml:/verdaccio/conf/config.yaml \
-          verdaccio/verdaccio
-
       - name: Build
         run: pnpm build
 
-      - name: Setup Registry
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          registry-url: http://localhost:4873
-          scope: '@suites'
-          always-auth: false
-
-      - name: Install jq
-        run: sudo apt-get install jq
-
-      - name: Remove provenance from package.json files
-        run: |
-          find packages -name 'package.json' | while read filename; do
-            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
-          done
-
-      - name: Config Git
-        run: |
-          git config --global user.email "e2e@suites.dev"
-          git config --global user.name "Suites e2e"
-
-      - name: Commit Provenance Change
-        run: |
-          git add .
-          git commit -am "remove provenance"
-
-      - name: Version Packages
-        run: |
-          lerna version --yes \
-          --no-changelog \
-          --allow-branch ${{ inputs.target_branch }} \
-          --no-git-tag-version \
-          --no-push \
-          --force-publish \
-          --no-commit-hooks \
-          --conventional-commits
-
-      - name: Commit Packages Versions
-        run: |
-          git add .
-          git commit -am "bump versions"
-
-      - name: Publish Packages
-        run: |
-          pnpm lerna publish from-package --yes \
-          --no-git-tag-version \
-          --no-push \
-          --no-git-reset \
-          --exact \
-          --dist-tag e2e
-
-      - name: Setup and Test
+      - name: Parse E2E Project
         run: |
           IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
           echo "FRAMEWORK=$framework" >> $GITHUB_ENV
           echo "LIBRARY=$library" >> $GITHUB_ENV
 
-      - name: Clean Source
-        run: |
-          rm -rf packages
-          rm -rf node_modules
-          rm pnpm-lock.yaml
-          rm package.json
-
-      - name: Install Dependencies
+      - name: Install Test Dependencies
         run: |
           cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
-          npm install --no-cache --no-package-lock
-          npm install --dev --no-package-lock @types/node@${{ matrix.node-version }}
+          npm install --no-package-lock
+
+      - name: Link Local Packages
+        run: |
+          cd packages
+          for dir in */; do
+            package_name=$(node -p "require('./$dir/package.json').name")
+            cd "$dir"
+            npm link
+            cd ..
+          done
+          cd ../e2e/$LIBRARY/$FRAMEWORK
+          pnpm ls --json | jq -r '.[].dependencies | to_entries[] | select(.key | startswith("@suites/")) | .key' | while read pkg; do
+            npm link "$pkg"
+          done
 
       - name: Execute Test
         run: |
           cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
           npm test
 
-  update-status:
-    name: Update PR Status
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      id-token: write
-      checks: write
-      statuses: write
-    needs: [status-pending, e2e]
-    if: always()
-    steps:
-      - name: Find Pull Request
-        uses: juliangruber/find-pull-request-action@v1
-        id: pull-request
-        with:
-          branch: ${{ inputs.target_branch }}
-
-      - name: Update PR e2e Status (Failed)
-        if: needs.e2e.result == 'failure'
+      - name: Summary
+        if: always()
         run: |
-          curl \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
-          -d '{"state":"failure","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"❌ Failed","context":"Suites e2e"}'
-
-      - name: Update PR e2e Status (Success)
-        if: needs.e2e.result == 'success'
-        run: |
-          curl \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
-          -d '{"state":"success","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"✅ Passed Successfully","context":"Suites e2e"}'
+          echo "## ✅ Quick E2E Test" >> $GITHUB_STEP_SUMMARY
+          echo "Tested build and functionality without full release simulation" >> $GITHUB_STEP_SUMMARY

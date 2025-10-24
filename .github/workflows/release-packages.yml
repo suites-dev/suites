@@ -40,15 +40,41 @@ permissions:
   id-token: write
 
 jobs:
+  e2e:
+    name: E2E Release Simulation
+    uses: ./.github/workflows/e2e-release.yml
+    with:
+      target_branch: ${{ github.event.inputs.target_branch }}
+    permissions:
+      contents: write
+      id-token: write
+
   tag-version:
     name: Tag Version
+    needs: [e2e]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.event.inputs.target_branch }}
           fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
 
       - name: Config Git User
         run: |
@@ -85,3 +111,19 @@ jobs:
           git push origin --tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Release Summary
+        run: |
+          echo "## ✅ Release Prepared" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.event.inputs.target_branch }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Release Type:** \`${{ github.event.inputs.release_type }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Preid:** \`${{ github.event.inputs.preid }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Tagged Packages" >> $GITHUB_STEP_SUMMARY
+          git tag --sort=-creatordate | head -10 | while read tag; do
+            echo "- \`$tag\`" >> $GITHUB_STEP_SUMMARY
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🚀 Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "Run the **Publish Packages** workflow to publish to npm" >> $GITHUB_STEP_SUMMARY

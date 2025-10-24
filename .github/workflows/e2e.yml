@@ -84,17 +84,13 @@ jobs:
           git add .
           git commit -am "remove provenance"
 
-      - name: Temporarily Allow Any Branch in Lerna
-        run: |
-          jq '.command.version.allowBranch = ["*"]' lerna.json > temp.json && mv temp.json lerna.json
-          git add lerna.json
-          git commit -m "temp: allow any branch for e2e"
-
       - name: Version Packages
         run: |
+          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
           npx lerna version prerelease --yes \
           --preid e2e \
           --no-changelog \
+          --allow-branch "$BRANCH_NAME" \
           --no-git-tag-version \
           --no-push \
           --force-publish \

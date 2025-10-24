@@ -65,7 +65,9 @@ jobs:
       - name: Prerelease Version
         if: ${{ github.event.inputs.release_type == 'prerelease' && !github.event.inputs.exact_version }}
         run: |
-          npx lerna version prerelease --yes \
+          npx lerna version --yes \
+          --conventional-commits \
+          --conventional-prerelease \
           --preid ${{ github.event.inputs.preid }} \
           --no-changelog
         env:

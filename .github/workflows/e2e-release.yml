@@ -1,16 +1,18 @@
-name: E2E Tests
+name: E2E Release Simulation
 env:
   CI: true
 
 on:
-  pull_request:
-    branches:
-      - next
-      - master
+  workflow_call:
+    inputs:
+      target_branch:
+        description: 'Branch to test release from'
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       target_branch:
-        description: 'E2E Target Branch'
+        description: 'Branch to test release from'
         required: true
         type: string
         default: 'next'
@@ -20,76 +22,8 @@ permissions:
   id-token: write
 
 jobs:
-  version-preview:
-    name: Version Preview
-    runs-on: ubuntu-latest
-    outputs:
-      versions: ${{ steps.capture.outputs.versions }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ github.event.pull_request.head.ref || inputs.target_branch }}
-          fetch-depth: 0
-
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: '22.x'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.14.0
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Config Git
-        run: |
-          git config --global user.email "e2e@suites.dev"
-          git config --global user.name "Suites e2e"
-
-      - name: Version Packages (Preview)
-        run: |
-          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
-          npx lerna version --yes \
-          --conventional-commits \
-          --conventional-prerelease \
-          --preid e2e \
-          --no-changelog \
-          --allow-branch "$BRANCH_NAME" \
-          --no-git-tag-version \
-          --no-push \
-          --force-publish \
-          --no-commit-hooks
-
-      - name: Capture Versions
-        id: capture
-        run: |
-          echo "## 📦 E2E Version Preview" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "These versions will be tested in the e2e workflow:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          lerna ls --json | jq -r '.[] | "- **\(.name)** → `v\(.version)`"' >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 🧪 Testing Matrix" >> $GITHUB_STEP_SUMMARY
-          echo "- **Projects**: 6 (jest/nestjs, sinon/nestjs, vitest/nestjs, jest/inversify, sinon/inversify, vitest/inversify)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Node versions**: 3 (20.x, 22.x, 24.x)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Total jobs**: 18 (54 with matrix expansion)" >> $GITHUB_STEP_SUMMARY
-
-          # Save versions for artifacts
-          lerna ls --json > versions.json
-
-      - name: Upload Version Info
-        uses: actions/upload-artifact@v4
-        with:
-          name: version-preview
-          path: versions.json
-
-  e2e:
-    name: E2E (${{ matrix.e2e-project }}, Node ${{ matrix.node-version }})
-    needs: [version-preview]
+  e2e-full:
+    name: Full E2E (${{ matrix.e2e-project }}, Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -100,7 +34,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.pull_request.head.ref || inputs.target_branch }}
+          ref: ${{ inputs.target_branch }}
+          fetch-depth: 0
 
       - name: Setup Node ${{ matrix.node-version }}
         uses: actions/setup-node@v6
@@ -154,13 +89,12 @@ jobs:
 
       - name: Version Packages
         run: |
-          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
           npx lerna version --yes \
           --conventional-commits \
           --conventional-prerelease \
           --preid e2e \
           --no-changelog \
-          --allow-branch "$BRANCH_NAME" \
+          --allow-branch ${{ inputs.target_branch }} \
           --no-git-tag-version \
           --no-push \
           --force-publish \
@@ -170,6 +104,15 @@ jobs:
         run: |
           git add .
           git commit -am "bump versions"
+
+      - name: Capture Versions for Report
+        run: |
+          echo "## 📦 E2E Release Simulation (Node ${{ matrix.node-version }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Project:** ${{ matrix.e2e-project }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Simulated Versions:" >> $GITHUB_STEP_SUMMARY
+          lerna ls --json | jq -r '.[] | "- **\(.name)** → `v\(.version)`"' >> $GITHUB_STEP_SUMMARY
 
       - name: Publish Packages to Verdaccio
         run: |
@@ -204,3 +147,9 @@ jobs:
         run: |
           cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
           npm test
+
+      - name: Test Success Summary
+        if: success()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Test Passed** - Packages work correctly when published" >> $GITHUB_STEP_SUMMARY

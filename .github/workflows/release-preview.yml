@@ -1,0 +1,173 @@
+name: Release Preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Branch to preview release from'
+        type: choice
+        options:
+          - 'next'
+          - 'master'
+        required: true
+        default: 'next'
+      release_type:
+        description: 'Release Type'
+        type: choice
+        options:
+          - 'prerelease'
+          - 'graduate'
+          - 'auto'
+        required: true
+        default: 'auto'
+      preid:
+        description: 'Prerelease ID (for prerelease type)'
+        type: choice
+        options:
+          - 'next'
+          - 'rc'
+          - 'alpha'
+          - 'beta'
+          - 'dev'
+        required: false
+        default: 'next'
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    name: Preview Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.target_branch }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install conventional-changelog-cli
+        run: npm install -g conventional-changelog-cli
+
+      - name: Config Git
+        run: |
+          git config --global user.email "preview@suites.dev"
+          git config --global user.name "Release Preview Bot"
+
+      - name: Show Changed Packages
+        run: |
+          echo "## 📦 Changed Packages" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Packages that have changed since last release:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          npx lerna changed --json 2>/dev/null | jq -r '.[] | "- **\(.name)** (current: `v\(.version)`)"' >> $GITHUB_STEP_SUMMARY || echo "No changed packages" >> $GITHUB_STEP_SUMMARY
+
+      - name: Preview Versions (Prerelease)
+        if: ${{ inputs.release_type == 'prerelease' }}
+        run: |
+          npx lerna version prerelease --yes \
+            --preid ${{ inputs.preid }} \
+            --no-git-tag-version \
+            --no-push \
+            --allow-branch ${{ inputs.target_branch }}
+
+      - name: Preview Versions (Graduate)
+        if: ${{ inputs.release_type == 'graduate' }}
+        run: |
+          npx lerna version --yes \
+            --conventional-graduate \
+            --no-git-tag-version \
+            --no-push \
+            --allow-branch ${{ inputs.target_branch }}
+
+      - name: Preview Versions (Auto - Conventional Commits)
+        if: ${{ inputs.release_type == 'auto' }}
+        run: |
+          npx lerna version --yes \
+            --conventional-commits \
+            --no-git-tag-version \
+            --no-push \
+            --allow-branch ${{ inputs.target_branch }}
+
+      - name: Generate Version Summary
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🎯 Proposed Versions" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Release Type:** \`${{ inputs.release_type }}\`" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ inputs.release_type }}" = "prerelease" ]; then
+            echo "**Prerelease ID:** \`${{ inputs.preid }}\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          npx lerna ls --json | jq -r '.[] | "- **\(.name)** → `v\(.version)`"' >> $GITHUB_STEP_SUMMARY
+
+      - name: Show Git Diff
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📝 Package.json Changes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```diff' >> $GITHUB_STEP_SUMMARY
+          git diff packages/*/package.json packages/*/*/package.json | head -100 >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate Changelog Preview
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📰 Changelog Preview" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Generate changelog using conventional-changelog-cli via lerna exec
+          npx lerna exec --concurrency 1 --stream -- \
+            'conventional-changelog --preset angular --release-count 1 \
+            --commit-path $PWD --pkg $PWD/package.json' \
+            >> $GITHUB_STEP_SUMMARY 2>&1 || echo "No changelog entries generated" >> $GITHUB_STEP_SUMMARY
+
+      - name: Show Conventional Commit Analysis
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔍 Commit Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Count commit types
+          breaking=$(git log --oneline --no-merges $(git describe --tags --abbrev=0)..HEAD 2>/dev/null | grep -c "!" || echo "0")
+          features=$(git log --oneline --no-merges $(git describe --tags --abbrev=0)..HEAD 2>/dev/null | grep -c "^[a-z0-9]* feat" || echo "0")
+          fixes=$(git log --oneline --no-merges $(git describe --tags --abbrev=0)..HEAD 2>/dev/null | grep -c "^[a-z0-9]* fix" || echo "0")
+
+          echo "- **Breaking Changes**: $breaking" >> $GITHUB_STEP_SUMMARY
+          echo "- **Features**: $features" >> $GITHUB_STEP_SUMMARY
+          echo "- **Fixes**: $fixes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$breaking" -gt 0 ]; then
+            echo "⚠️ **This release contains breaking changes!**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          git reset --hard HEAD
+          git clean -fd
+
+      - name: Summary Footer
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "💡 **This is a preview only.** No changes have been committed or pushed." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "To proceed with this release:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Run **Prepare Release** workflow" >> $GITHUB_STEP_SUMMARY
+          echo "2. Then run **Publish Packages** workflow" >> $GITHUB_STEP_SUMMARY

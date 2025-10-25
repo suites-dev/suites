@@ -1,8 +1,8 @@
-import type { IdentifierToFinal, IdentifierToMockImplWithCb } from '../dependency-container';
+import type { IdentifierToFinal, IdentifierToMockImplWithCb } from '../dependency-container.js';
 import type { DeepPartial, FinalValue, Type } from '@suites/types.common';
 import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
-import { normalizeIdentifier } from '../../normalize-identifier.static';
-import type { MockOverride, UnitTestBed } from '../../types';
+import { normalizeIdentifier } from '../../normalize-identifier.static.js';
+import type { MockOverride, UnitTestBed } from '../../types.js';
 import type { ArgsType, Stub } from '@suites/types.doubles';
 
 export abstract class TestBedBuilder<TClass> implements TestBedBuilder<TClass> {

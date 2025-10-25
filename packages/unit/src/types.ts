@@ -8,6 +8,15 @@ import type {
   MockOverride as MockOverrideCore,
 } from '@suites/core.unit';
 
+/**
+ * Base abstract type for mocked instances. Adapters can augment this with
+ * library-specific implementations (Jest, Vitest, Sinon) via module augmentation.
+ *
+ * @template T The type being mocked
+ * @since 4.0.0
+ */
+export type Mocked<T> = StubbedInstance<T>;
+
 export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCore<TClass> {
   /**
    * Exposes a dependency to be included in the test environment in its real or partially mocked state.

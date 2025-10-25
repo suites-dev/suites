@@ -1,7 +1,7 @@
 import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
 import type { FinalValue, Type } from '@suites/types.common';
 import type { StubbedInstance } from '@suites/types.doubles';
-import type { IdentifierToMockOrFinal } from './dependency-container';
+import type { IdentifierToMockOrFinal } from './dependency-container.js';
 
 export class DependencyMap {
   private readonly resolvedDependencies: IdentifierToMockOrFinal[] = [];

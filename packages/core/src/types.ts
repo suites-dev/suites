@@ -1,7 +1,7 @@
 import type { DeepPartial } from '@suites/types.common';
 import type { ArgsType, Stub } from '@suites/types.doubles';
-import type { UnitReference } from './services/unit-reference';
-import type { TestBedBuilder } from './services/builders/testbed-builder';
+import type { UnitReference } from './services/unit-reference.js';
+import type { TestBedBuilder } from './services/builders/testbed-builder.js';
 
 /**
  * Represents the testing environment for a specific class, encapsulating both the instance

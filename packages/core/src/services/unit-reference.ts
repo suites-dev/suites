@@ -1,11 +1,11 @@
-import isEqual from 'lodash.isequal';
+import { isDeepStrictEqual } from 'node:util';
 import type { StubbedInstance } from '@suites/types.doubles';
 import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
 import type { Type } from '@suites/types.common';
 import { DependencyResolutionError } from '@suites/types.common';
-import type { DependencyContainer, IdentifierToFinal } from './dependency-container';
-import { referenceDependencyNotFoundError, stringifyIdentifier } from './functions.static';
-import { normalizeIdentifier } from '../normalize-identifier.static';
+import type { DependencyContainer, IdentifierToFinal } from './dependency-container.js';
+import { referenceDependencyNotFoundError, stringifyIdentifier } from './functions.static.js';
+import { normalizeIdentifier } from '../normalize-identifier.static.js';
 
 export interface UnitReference {
   get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;
@@ -68,7 +68,7 @@ export class UnitReference {
     if (
       this.fakedDependencies
         .map(([identifier]) => identifier)
-        .some((id) => isEqual(id, injectableIdentifier))
+        .some((id) => isDeepStrictEqual(id, injectableIdentifier))
     ) {
       const identifierString = stringifyIdentifier(identifier, identifierMetadata);
 

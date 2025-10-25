@@ -19,7 +19,7 @@ describe('ClassCtorReflector Unit Tests', () => {
   describe('Error Handling', () => {
     it('should throw UndefinedDependencyError when parameter has no metadata and no TypeScript type', () => {
       class TestClass {
-        constructor(dependency: any) {}
+        constructor(_dependency: any) {}
       }
 
       mockGetClassMetadata.mockReturnValue({
@@ -45,7 +45,7 @@ describe('ClassCtorReflector Unit Tests', () => {
 
     it('should include parameter index in error message', () => {
       class TestClass {
-        constructor(dep1: string, dep2: any, dep3: string) {}
+        constructor(_dep1: string, _dep2: any, _dep3: string) {}
       }
 
       mockGetClassMetadata.mockReturnValue({
@@ -69,7 +69,7 @@ describe('ClassCtorReflector Unit Tests', () => {
 
     it('should include class name in error message', () => {
       class MySpecialClass {
-        constructor(dependency: any) {}
+        constructor(_dependency: any) {}
       }
 
       mockGetClassMetadata.mockReturnValue({
@@ -94,7 +94,7 @@ describe('ClassCtorReflector Unit Tests', () => {
     it('should use TypeScript type as identifier when no decorator is present', () => {
       class Dependency {}
       class TestClass {
-        constructor(dep: Dependency) {}
+        constructor(_dep: Dependency) {}
       }
 
       mockGetClassMetadata.mockReturnValue({
@@ -125,7 +125,7 @@ describe('ClassCtorReflector Unit Tests', () => {
       class Dep2 {}
       class Dep3 {}
       class TestClass {
-        constructor(dep1: Dep1, dep2: Dep2, dep3: Dep3) {}
+        constructor(_dep1: Dep1, _dep2: Dep2, _dep3: Dep3) {}
       }
 
       mockGetClassMetadata.mockReturnValue({
@@ -152,7 +152,7 @@ describe('ClassCtorReflector Unit Tests', () => {
       class Dep1 {}
       class Dep2 {}
       class TestClass {
-        constructor(dep1: Dep1, dep2: Dep2) {}
+        constructor(_dep1: Dep1, _dep2: Dep2) {}
       }
 
       mockGetClassMetadata.mockReturnValue({
@@ -203,7 +203,7 @@ describe('ClassCtorReflector Unit Tests', () => {
 
     it('should handle when design:paramtypes is not available', () => {
       class TestClass {
-        constructor(dep: any) {}
+        constructor(_dep: any) {}
       }
 
       mockGetClassMetadata.mockReturnValue({
@@ -250,7 +250,7 @@ describe('ClassCtorReflector Unit Tests', () => {
 
     it('should use UndefinedDependency when paramType is missing but decorator exists', () => {
       class TestClass {
-        constructor(dep: any) {}
+        constructor(_dep: any) {}
       }
 
       mockGetClassMetadata.mockReturnValue({
@@ -278,7 +278,7 @@ describe('ClassCtorReflector Unit Tests', () => {
     it('should correctly reflect constructor arguments with inject decorators', () => {
       class Dependency {}
       class TestClass {
-        constructor(dep: Dependency) {}
+        constructor(_dep: Dependency) {}
       }
 
       mockGetClassMetadata.mockReturnValue({
@@ -317,7 +317,7 @@ describe('ClassCtorReflector Unit Tests', () => {
       class Dep2 {}
       class Dep3 {}
       class TestClass {
-        constructor(dep1: Dep1, dep2: Dep2, dep3: Dep3) {}
+        constructor(_dep1: Dep1, _dep2: Dep2, _dep3: Dep3) {}
       }
 
       mockGetClassMetadata.mockReturnValue({

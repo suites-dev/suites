@@ -1,7 +1,7 @@
 {
   "name": "@suites/di.inversify",
   "private": false,
-  "version": "3.0.1",
+  "version": "3.0.2-dev.0",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "repository": {
@@ -23,19 +23,18 @@
     }
   ],
   "scripts": {
-    "postinstall": "node postinstall.js",
     "prebuild": "pnpm rimraf dist",
     "build": "pnpm tsc -p tsconfig.build.json",
     "test": "jest --coverage --verbose",
     "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
   "files": [
-    "postinstall.js",
+    "types.d.ts",
     "dist"
   ],
   "dependencies": {
-    "@suites/types.common": "workspace:^3.0.0",
-    "@suites/types.di": "workspace:^3.0.0"
+    "@suites/types.common": "workspace:^3.0.1-dev.0",
+    "@suites/types.di": "workspace:^3.0.1-dev.0"
   },
   "peerDependencies": {
     "inversify": ">= 6.0",

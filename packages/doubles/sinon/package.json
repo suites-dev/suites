@@ -1,6 +1,6 @@
 {
   "name": "@suites/doubles.sinon",
-  "version": "3.0.1",
+  "version": "3.0.2-dev.0",
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "keywords": [
@@ -43,9 +43,9 @@
     "sinon": "*"
   },
   "dependencies": {
-    "@suites/core.unit": "workspace:^3.0.1",
-    "@suites/types.common": "workspace:^3.0.0",
-    "@suites/types.doubles": "workspace:^3.0.0"
+    "@suites/core.unit": "workspace:^3.0.2-dev.0",
+    "@suites/types.common": "workspace:^3.0.1-dev.0",
+    "@suites/types.doubles": "workspace:^3.0.1-dev.0"
   },
   "devDependencies": {
     "@types/sinon": "^10.0.20",

@@ -53,8 +53,8 @@ importers:
         specifier: ^8.0.3
         version: 8.0.3
       inversify:
-        specifier: 6.0.1
-        version: 6.0.1
+        specifier: 7.2.0
+        version: 7.2.0(reflect-metadata@0.2.2)
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.11)(ts-node@10.9.2(@types/node@20.19.11)(typescript@5.2.2))
@@ -2421,9 +2421,6 @@ packages:
   inquirer@8.2.7:
     resolution: {integrity: sha512-UjOaSel/iddGZJ5xP/Eixh6dY1XghiBw4XK13rCCIJcJfyhhoul/7KhLLUGtebEj6GDYM6Vnx/mVsjx2L/mFIA==}
     engines: {node: '>=12.0.0'}
-
-  inversify@6.0.1:
-    resolution: {integrity: sha512-B3ex30927698TJENHR++8FfEaJGqoWOgI6ZY5Ht/nLUsFCwHn6akbwtnUAPCgUepAnTpe2qHxhDNjoKLyz6rgQ==}
 
   inversify@7.2.0:
     resolution: {integrity: sha512-zPXKp7ybicPsrhlNZaJscZ9yeg0DZtnCGuNfMpMsso9Jx1tNepSS2CqPrrP8Pc75nH/5d/qB2rYKiv1BEI1gFQ==}
@@ -6864,8 +6861,6 @@ snapshots:
       wrap-ansi: 6.2.0
     transitivePeerDependencies:
       - '@types/node'
-
-  inversify@6.0.1: {}
 
   inversify@7.2.0(reflect-metadata@0.2.2):
     dependencies:

@@ -18,4 +18,21 @@ export const adapter = { mock, stub: (): SinonStub => sinonStub() };
 
 export { mock } from './mock.static';
 
+/**
+ * Creates a stub function for mocking method implementations in tests.
+ *
+ * This is an alias for Sinon's `stub()`, providing a consistent API across
+ * different testing frameworks in the Suites ecosystem.
+ *
+ * @since 3.0.0
+ * @alias sinon.stub
+ * @see https://sinonjs.org/releases/latest/stubs/
+ * @see https://suites.dev/docs/api-reference
+ *
+ * @example
+ * import { stub } from '@suites/doubles.sinon';
+ *
+ * const mockFn = stub();
+ * mockFn.returns('mocked value');
+ */
 export const stub = sinonStub();

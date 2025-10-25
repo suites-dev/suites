@@ -1,3 +1,22 @@
+/**
+ * @fileoverview Type augmentation for Sinon testing framework integration with Suites.
+ *
+ * This file implements the **augmentation layer** of Suites' abstraction/augmentation architecture.
+ * It uses TypeScript module augmentation to override abstract types from `@suites/unit` and
+ * `@suites/core.unit` with Sinon-specific implementations.
+ *
+ * **Architecture Pattern:**
+ * - **Abstraction Layer** (`@suites/unit`): Defines base types like `Mocked<T>`, `Stub`, `UnitReference`
+ * - **Augmentation Layer** (this file): Overrides those types with Sinon-specific implementations
+ * - **User Choice**: Developers activate this augmentation by referencing this file in their `global.d.ts`
+ *
+ * This pattern allows Suites to provide a unified API across different testing frameworks (Jest, Vitest, Sinon)
+ * while maintaining full type safety for each framework's specific mock types.
+ *
+ * @see https://suites.dev/docs/architecture/type-augmentation
+ * @since 3.0.0
+ */
+
 /// <reference types="@types/sinon" />
 import type { DeepPartial, Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';

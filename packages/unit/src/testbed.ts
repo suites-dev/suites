@@ -65,7 +65,6 @@ export class TestBed {
    *   .compile();
    *
    * @see https://suites.dev/docs/developer-guide/unit-tests
-   * @since 3.0.0
    */
   public static sociable<TClass = any>(
     targetClass: Type<TClass>

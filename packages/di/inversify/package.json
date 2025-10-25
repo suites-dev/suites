@@ -53,11 +53,14 @@
     "@suites/types.di": "workspace:^3.0.0"
   },
   "peerDependencies": {
-    "inversify": ">= 6.0",
-    "reflect-metadata": "<1.0.0"
+    "inversify": ">= 7.0",
+    "reflect-metadata": "~0.2.2"
   },
   "devDependencies": {
-    "inversify": "6.0.1",
+    "@inversifyjs/common": "1.5.0",
+    "@inversifyjs/container": "1.6.0",
+    "@inversifyjs/core": "5.1.0",
+    "inversify": "7.2.0",
     "reflect-metadata": "0.2.2"
   },
   "publishConfig": {

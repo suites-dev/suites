@@ -10,10 +10,7 @@ const InversifyJSDIAdapter: DependencyInjectionAdapter = ((
   classCtorReflector: ClassCtorReflector
 ) => {
   return DependenciesAdapter(classPropsReflector, classCtorReflector);
-})(
-  ClassPropsReflector(Reflect, IdentifierBuilder()),
-  ClassCtorReflector(Reflect, IdentifierBuilder())
-);
+})(ClassPropsReflector(IdentifierBuilder()), ClassCtorReflector(IdentifierBuilder()));
 
 export { IdentifierMetadata } from './types.js';
 export const adapter = InversifyJSDIAdapter;

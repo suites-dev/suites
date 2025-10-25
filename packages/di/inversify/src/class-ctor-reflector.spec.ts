@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import 'reflect-metadata';
 import { getClassMetadata } from '@inversifyjs/core';
 import { ClassCtorReflector } from './class-ctor-reflector';

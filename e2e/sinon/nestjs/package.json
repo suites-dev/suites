@@ -2,6 +2,7 @@
   "name": "suites-sinon-nestjs",
   "private": true,
   "version": "0.0.0",
+  "type": "commonjs",
   "dependencies": {
     "@suites/di.nestjs": "e2e",
     "@suites/doubles.sinon": "e2e",

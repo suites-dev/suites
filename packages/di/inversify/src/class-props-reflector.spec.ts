@@ -27,8 +27,8 @@ describe('ClassPropsReflector Unit Tests', () => {
         constructorArguments: [],
         properties: new Map([[propertyKey, undefined as any]]),
         lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+          postConstructMethodName: undefined,
+          preDestroyMethodName: undefined,
         },
         scope: undefined,
       });
@@ -53,8 +53,8 @@ describe('ClassPropsReflector Unit Tests', () => {
         constructorArguments: [],
         properties: new Map([[propertyKey, undefined as any]]),
         lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+          postConstructMethodName: undefined,
+          preDestroyMethodName: undefined,
         },
         scope: undefined,
       });
@@ -76,8 +76,8 @@ describe('ClassPropsReflector Unit Tests', () => {
         constructorArguments: [],
         properties: new Map([[propertyKey, undefined as any]]),
         lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+          postConstructMethodName: undefined,
+          preDestroyMethodName: undefined,
         },
         scope: undefined,
       });
@@ -98,8 +98,8 @@ describe('ClassPropsReflector Unit Tests', () => {
         constructorArguments: [],
         properties: new Map(),
         lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+          postConstructMethodName: undefined,
+          preDestroyMethodName: undefined,
         },
         scope: undefined,
       });
@@ -120,8 +120,8 @@ describe('ClassPropsReflector Unit Tests', () => {
         constructorArguments: [],
         properties: new Map(),
         lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+          postConstructMethodName: undefined,
+          preDestroyMethodName: undefined,
         },
         scope: undefined,
       });
@@ -160,8 +160,8 @@ describe('ClassPropsReflector Unit Tests', () => {
             ],
           ]),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -172,7 +172,7 @@ describe('ClassPropsReflector Unit Tests', () => {
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result).toHaveLength(1);
-      expect(result[0].property.key).toBe(symbolKey);
+      expect(result[0].property?.key).toBe(symbolKey);
       expect(result[0].identifier).toBe('SERVICE_ID');
     });
 
@@ -187,8 +187,8 @@ describe('ClassPropsReflector Unit Tests', () => {
         constructorArguments: [],
         properties: new Map([[symbolKey, undefined as any]]),
         lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+          postConstructMethodName: undefined,
+          preDestroyMethodName: undefined,
         },
         scope: undefined,
       });
@@ -225,8 +225,8 @@ describe('ClassPropsReflector Unit Tests', () => {
             ],
           ]),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -260,8 +260,8 @@ describe('ClassPropsReflector Unit Tests', () => {
           ],
         ]),
         lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+          postConstructMethodName: undefined,
+          preDestroyMethodName: undefined,
         },
         scope: undefined,
       });
@@ -292,8 +292,8 @@ describe('ClassPropsReflector Unit Tests', () => {
           ],
         ]),
         lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+          postConstructMethodName: undefined,
+          preDestroyMethodName: undefined,
         },
         scope: undefined,
       });
@@ -329,8 +329,8 @@ describe('ClassPropsReflector Unit Tests', () => {
             ],
           ]),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -399,8 +399,8 @@ describe('ClassPropsReflector Unit Tests', () => {
             ],
           ]),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -411,12 +411,12 @@ describe('ClassPropsReflector Unit Tests', () => {
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result).toHaveLength(3);
-      expect(result[0].metadata).toEqual({ name: 'named1' });
-      expect(result[0].property.key).toBe('prop1');
-      expect(result[1].metadata).toEqual({ tag: 'value' });
-      expect(result[1].property.key).toBe('prop2');
-      expect(result[2].metadata).toBeUndefined();
-      expect(result[2].property.key).toBe('prop3');
+      expect('metadata' in result[0] ? result[0].metadata : undefined).toEqual({ name: 'named1' });
+      expect(result[0].property?.key).toBe('prop1');
+      expect('metadata' in result[1] ? result[1].metadata : undefined).toEqual({ tag: 'value' });
+      expect(result[1].property?.key).toBe('prop2');
+      expect('metadata' in result[2] ? result[2].metadata : undefined).toBeUndefined();
+      expect(result[2].property?.key).toBe('prop3');
     });
 
     it('should handle properties with no metadata but valid TypeScript types', () => {
@@ -442,8 +442,8 @@ describe('ClassPropsReflector Unit Tests', () => {
             ],
           ]),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -483,8 +483,8 @@ describe('ClassPropsReflector Unit Tests', () => {
             ],
           ]),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -494,7 +494,7 @@ describe('ClassPropsReflector Unit Tests', () => {
       const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
-      expect(result[0].property.key).toBe('string-key');
+      expect(result[0].property?.key).toBe('string-key');
     });
 
     it('should create new instance for each property reflection', () => {
@@ -535,8 +535,8 @@ describe('ClassPropsReflector Unit Tests', () => {
             ],
           ]),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },

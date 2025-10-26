@@ -5,13 +5,16 @@ import { IdentifierBuilder } from './identifier-builder.static';
 import { UndefinedDependencyError } from '@suites/types.di';
 import type { Type } from '@suites/types.common';
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 describe('ClassCtorReflector Unit Tests', () => {
   function createMetadataReaderStub(
     classMetadata: ClassMetadata,
-    paramTypes?: Type[]
+    paramTypes?: (Type | undefined)[] | undefined
   ): MetadataReader {
     return {
       getClassMetadata: () => classMetadata,
+      // @ts-expect-error - Test stub intentionally allows undefined in array for error testing
       getParamTypes: () => paramTypes,
     };
   }
@@ -27,8 +30,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           constructorArguments: [undefined as any],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -59,8 +62,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           ],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -82,8 +85,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           constructorArguments: [undefined as any],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -110,8 +113,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           constructorArguments: [undefined as any],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -143,8 +146,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           constructorArguments: [undefined as any, undefined as any, undefined as any],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -175,8 +178,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           ],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -189,7 +192,7 @@ describe('ClassCtorReflector Unit Tests', () => {
       expect(result).toHaveLength(2);
       expect(result[0].identifier).toBe('CUSTOM_TOKEN');
       expect(result[1].identifier).toBe(Dep2);
-      expect(result[1].metadata).toBeUndefined();
+      expect('metadata' in result[1] ? result[1].metadata : undefined).toBeUndefined();
     });
   });
 
@@ -202,8 +205,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           constructorArguments: [],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -229,8 +232,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           ],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -254,8 +257,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           constructorArguments: [],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -280,8 +283,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           ],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -316,8 +319,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           ],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -368,8 +371,8 @@ describe('ClassCtorReflector Unit Tests', () => {
           ],
           properties: new Map(),
           lifecycle: {
-            postConstructMethodNames: new Set(),
-            preDestroyMethodNames: new Set(),
+            postConstructMethodName: undefined,
+            preDestroyMethodName: undefined,
           },
           scope: undefined,
         },
@@ -380,9 +383,9 @@ describe('ClassCtorReflector Unit Tests', () => {
       const result = classCtorReflector.reflectInjectables(TestClass);
 
       expect(result).toHaveLength(3);
-      expect(result[0].metadata).toEqual({ name: 'named1' });
-      expect(result[1].metadata).toEqual({ tag: 'value' });
-      expect(result[2].metadata).toBeUndefined();
+      expect('metadata' in result[0] ? result[0].metadata : undefined).toEqual({ name: 'named1' });
+      expect('metadata' in result[1] ? result[1].metadata : undefined).toEqual({ tag: 'value' });
+      expect('metadata' in result[2] ? result[2].metadata : undefined).toBeUndefined();
     });
   });
 });

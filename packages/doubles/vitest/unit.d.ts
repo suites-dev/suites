@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Type augmentation for Vitest-specific mock types.
+ *
+ * Augments abstract types from `@suites/unit` with Vitest implementations.
+ * Reference this file in your `global.d.ts` to enable Vitest type support.
+ *
+ * @see https://suites.dev/docs
+ * @since 3.0.0
+ */
+
 /// <reference types="@vitest/spy" />
 import type { DeepPartial, Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
@@ -14,7 +24,7 @@ declare module '@suites/unit' {
    * @template T The return type of the stub function.
    * @template TArgs The arguments type of the stub function.
    * @alias vi.Mock
-   * @see https://suites.dev/docs/api-reference
+   * @see https://suites.dev/docs
    */
   export type Stub<TArgs extends any[]> = VitestStub<TArgs>;
 
@@ -24,7 +34,7 @@ declare module '@suites/unit' {
    *
    * @since 3.0.0
    * @template T The type of the object being mocked.
-   * @see https://suites.dev/docs/api-reference
+   * @see https://suites.dev/docs
    */
   export type Mocked<T> = VitestMocked<T>;
 }
@@ -37,7 +47,7 @@ declare module '@suites/core.unit' {
    * offering a flexible approach to access and manipulate mocked dependencies within unit tests.
    *
    * @since 3.0.0
-   * @see https://suites.dev/docs/api-reference
+   * @see https://suites.dev/docs
    */
   export interface UnitReference {
     /**

@@ -1,6 +1,6 @@
 import type { Type, ConstantValue } from '@suites/types.common';
 
-export * from './errors';
+export * from './errors.js';
 
 /**
  * Symbol used to mark dependencies that could not be resolved during reflection.

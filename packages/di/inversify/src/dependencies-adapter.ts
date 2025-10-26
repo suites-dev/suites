@@ -7,9 +7,9 @@ import type {
   InjectableIdentifier,
   WithMetadata,
 } from '@suites/types.di';
-import type { ClassPropsReflector } from './class-props-reflector';
-import type { ClassCtorReflector } from './class-ctor-reflector';
-import type { IdentifierMetadata } from './types';
+import type { ClassPropsReflector } from './class-props-reflector.js';
+import type { ClassCtorReflector } from './class-ctor-reflector.js';
+import type { IdentifierMetadata } from './types.js';
 
 export type DependenciesAdapter = (
   classPropsReflector: ClassPropsReflector,

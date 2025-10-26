@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import type { DependencyInjectionAdapter } from '@suites/types.di';
-import { ClassPropsReflector } from './class-props-reflector';
-import { ClassCtorReflector } from './class-ctor-reflector';
-import { IdentifierBuilder } from './identifier-builder.static';
-import { DependenciesAdapter } from './dependencies-adapter';
+import { ClassPropsReflector } from './class-props-reflector.js';
+import { ClassCtorReflector } from './class-ctor-reflector.js';
+import { IdentifierBuilder } from './identifier-builder.static.js';
+import { DependenciesAdapter } from './dependencies-adapter.js';
 
 const InversifyJSDIAdapter: DependencyInjectionAdapter = ((
   classPropsReflector: ClassPropsReflector,
@@ -15,5 +15,5 @@ const InversifyJSDIAdapter: DependencyInjectionAdapter = ((
   ClassCtorReflector(Reflect, IdentifierBuilder())
 );
 
-export { IdentifierMetadata } from './types';
+export { IdentifierMetadata } from './types.js';
 export const adapter = InversifyJSDIAdapter;

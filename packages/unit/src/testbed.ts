@@ -7,32 +7,52 @@ import {
 import type { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/core.unit';
 
 /**
- * @description
- * Provides a testing framework for unit testing classes in both isolated (solitary) and integrated (sociable)
- * environments. This class facilitates building configurable test environments tailored to specific unit tests.
+ * The main entry point for creating isolated test environments with Suites.
  *
- * @class TestBed
- * @see https://suites.dev/docs/api-reference
+ * TestBed provides two testing modes:
+ * - **Solitary**: Complete isolation with all dependencies mocked
+ * - **Sociable**: Selective real implementations with other dependencies mocked
+ *
+ * TestBed uses a Virtual DI Container to analyze the target class metadata, automatically
+ * generate type-safe mocks, and wire everything together without boilerplate.
+ *
  * @since 3.0.0
+ * @see {@link https://suites.dev/docs/api-reference/testbed TestBed Documentation}
+ * @see {@link TestBed.solitary} for isolated testing
+ * @see {@link TestBed.sociable} for integration testing
  */
 export class TestBed {
   /**
-   * @description
-   * Initializes a solitary test environment builder for a specified class. In a solitary environment,
-   * all dependencies are mocked by default, ensuring that tests are isolated to the class under test only.
-   * This method is ideal for testing the internal logic of the class without external interactions.
+   * Creates a test environment where all dependencies are automatically mocked for complete isolation.
    *
-   * @since 3.0.0
-   * @template TClass The type of the class to be tested.
-   * @param {Type<TClass>} targetClass The class for which the test environment is constructed.
-   * @returns {SolitaryTestBedBuilder<TClass>} A builder to configure the solitary test environment.
-   * @see https://suites.dev/docs/developer-guide/unit-tests
+   * In solitary mode, every dependency is replaced with an auto-generated mock, this enables:
+   * - Test units in complete isolation
+   * - Control all inputs and outputs precisely
+   * - Focus on specific behavior and edge cases
+   * - Achieve fast, deterministic tests
+   *
+   * @template TClass The type of the class under test
+   * @param targetClass The class constructor to test in isolation
+   * @returns A builder for configuring mocks before compilation
+   *
+   * @remarks
+   * Solitary tests follow the London/Mockist TDD style where all collaborators are mocked.
+   * This provides maximum control and speed at the cost of not catching integration issues.
+   * For testing real interactions between components, use {@link TestBed.sociable}.
    *
    * @example
-   * import { TestBed } from '@suites/unit';
-   * import { MyService } from './my-service';
+   * // Pre-configure mocks with .mock()
+   * const { unit, unitRef } = await TestBed.solitary(UserService)
+   *   .mock(UserRepository)
+   *   .impl(stubFn => ({
+   *     findById: stubFn().mockResolvedValue(testUser),
+   *     save: stubFn().mockResolvedValue(void 0)
+   *   }))
+   *   .compile();
    *
-   * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
+   * @since 3.0.0
+   * @see {@link https://suites.dev/docs/api-reference/testbed-solitary Solitary Testing Guide}
+   * @see {@link TestBed.sociable} for integration testing
    */
   public static solitary<TClass = any>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
@@ -41,31 +61,31 @@ export class TestBed {
   }
 
   /**
-   * @description
-   * Initializes a sociable test environment builder for a specified class. In a sociable environment,
-   * dependencies can be either real or mocked based on the test requirements, allowing for integrated testing.
-   * It's essential to use the `.expose()` method at least once to define which dependencies should be real,
-   * as this method sets the stage for more complex interaction testing between the class under test and its dependencies.
+   * Creates a test environment that selectively uses real implementations alongside mocks.
    *
-   * @since 3.0.0
-   * @template TClass The type of the class to be tested.
-   * @param {Type<TClass>} targetClass The class for which the test environment is constructed.
-   * @returns A builder to configure the sociable test environment with 'expose' as the first step,
-   * with the ability to selectively expose dependencies.
+   * In sociable mode, you explicitly choose which dependencies run real code
+   * while everything else remains mocked. This allows to:
+   * - Test interactions between multiple real components
+   * - Catch integration bugs while maintaining test speed
+   * - Validate business logic flows across boundaries
+   * - Keep external I/O dependencies mocked
+   *
+   * @template TClass The type of the class under test
+   * @param targetClass The class constructor to test with selective real dependencies
+   * @returns A builder requiring `.expose()` to specify real implementations
    *
    * @example
-   * import { TestBed } from '@suites/unit';
-   * import { MyService, DependencyOne, DependencyTwo, Logger } from './my-service';
-   *
-   * const { unit, unitRef } = await TestBed.sociable(MyService)
-   *   .expose(DependencyOne)
-   *   .expose(DependencyTwo)
-   *   .mock(Logger)
-   *   .impl({ log: jest.fn().mockReturnValue('overridden') })
+   * // Cannot retrieve exposed dependencies
+   * const { unit, unitRef } = await TestBed.sociable(OrderService)
+   *   .expose(PriceCalculator)
    *   .compile();
    *
-   * @see https://suites.dev/docs/developer-guide/unit-tests
+   * // This will throw - exposed dependencies are not available
+   * // const calculator = unitRef.get(PriceCalculator); // ❌ Error
+   *
    * @since 3.0.0
+   * @see {@link https://suites.dev/docs/api-reference/testbed-sociable Sociable API Reference}
+   * @see {@link https://suites.dev/docs/guides/testbed-sociable Sociable Guide}
    */
   public static sociable<TClass = any>(
     targetClass: Type<TClass>

@@ -9,11 +9,20 @@ import type {
 } from '@suites/core.unit';
 
 /**
- * Base abstract type for mocked instances. Adapters can augment this with
- * library-specific implementations (Jest, Vitest, Sinon) via module augmentation.
+ * Represents a test double instance where all methods and properties are stubbed.
  *
- * @template T The type being mocked
- * @since 3.1.0
+ * This abstract type provides the foundation for creating test doubles in unit tests.
+ * When a testing adapter is installed, this type is automatically augmented with
+ * framework-specific capabilities through TypeScript module augmentation.
+ *
+ * @template T The type of the object being transformed into a test double
+ *
+ * @remarks
+ * This is a base abstraction that adapters enhance with concrete implementations.
+ * The actual runtime behavior depends on which testing adapter is installed.
+ *
+ * @since 3.0.0
+ * @see {@link https://suites.dev/docs/api-reference/types Type Reference}
  */
 export type Mocked<T> = StubbedInstance<T>;
 
@@ -34,7 +43,7 @@ export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCo
    *
    * const { unit, unitRef } = await TestBed.sociable(MyService).expose(AnotherService).compile();
    * // MyService is now tested with AnotherService exposed and not fully mocked.
-   * @see https://suites.dev/docs/developer-guide/unit-tests
+   * @see https://suites.dev/docs
    * @param dependency
    */
   expose(dependency: Type): SociableTestBedBuilder<TClass>;
@@ -43,10 +52,31 @@ export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCo
 export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {}
 
 /**
- * Provides a reference to mock objects that have been mocked for testing
- * purposes within the test environment.
+ * Provides access to mocked dependencies in the test environment.
  *
- * @see https://suites.dev/api-reference/api/unitreference-api
+ * The `unitRef` allows you to retrieve mocked instances of dependencies
+ * to configure their behavior or verify interactions. This is essential for
+ * controlling how mocked dependencies respond during tests.
+ *
+ * The return type of `.get()` is augmented by adapter packages to provide
+ * framework-specific mock types. Configure augmentation by referencing the
+ * adapter's unit.d.ts in your global.d.ts.
+ *
+ * @since 3.0.0
+ * @see https://suites.dev/docs
+ *
+ * @example
+ * import { TestBed } from '@suites/unit';
+ *
+ * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
+ *
+ * // Get a mocked dependency
+ * const mockLogger = unitRef.get(Logger);
+ * mockLogger.log.mockReturnValue('test');
+ *
+ * // Verify interactions
+ * unit.doSomething();
+ * expect(mockLogger.log).toHaveBeenCalled();
  */
 export interface UnitReference extends UnitReferenceCore {
   /**
@@ -170,7 +200,7 @@ export interface UnitReference extends UnitReferenceCore {
 /**
  * A factory interface for creating UnitTestBed instances for testing classes.
  *
- * @see https://suites.dev/docs/api-reference
+ * @see https://suites.dev/docs
  * @since 3.0.0
  * @example
  * import { TestBed } from '@suites/unit';
@@ -185,7 +215,7 @@ export interface TestBed {
    * It sets up the necessary dependencies and mocks, ensuring that the class under test is the primary
    * focus without interference from other components.
    *
-   * @see https://suites.dev/docs/developer-guide/unit-tests
+   * @see https://suites.dev/docs
    * @since 3.0.0
    * @template TClass - The class to be tested.
    * @param {Type<TClass>} targetClass - The class to be tested.
@@ -202,10 +232,10 @@ export interface TestBed {
   /**
    * Creates a TestBedBuilder instance for the given target class for sociable testing.
    * Sociable testing allows for the inclusion of real implementations or partial mocks of certain dependencies.
-   * This method returns a subset of the SociableTestBedBuilder's methods, focimpl on exposing
+   * This method returns a subset of the SociableTestBedBuilder's methods, focusing on exposing
    * specific dependencies that should be included in their real or partially mocked state.
    *
-   * @see https://suites.dev/docs/developer-guide/unit-tests
+   * @see https://suites.dev/docs
    * @template TClass - The type of the target class.
    * @param {Type<TClass>} targetClass - The target class to be tested.
    * @returns {Pick<SociableTestBedBuilder<TClass>, 'expose'>} - A subset of the SociableTestBedBuilder's methods
@@ -226,7 +256,7 @@ export interface TestBed {
  * Represents the outcome when a `TestBedBuilder` is compiled.
  *
  * @template TClass The class type being tested.
- * @see https://suites.dev/api-reference/api/unittestbed-api
+ * @see https://suites.dev/docs
  */
 export interface UnitTestBed<TClass> {
   /**
@@ -250,26 +280,44 @@ export interface UnitTestBed<TClass> {
  *
  * @template TDependency The type of the dependency to be mocked.
  * @template TClass The type of the class under test.
- * @see https://suites.dev/api-reference/api/mockoverride-api
+ * @see https://suites.dev/docs
  */
 export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDependency, TClass> {
   /**
-   * Specifies the mock implementation to be used for the mocked dependency.
+   * Provides a mock implementation using stub functions for methods.
+   *
+   * Use this when you need fine-grained control over method behavior with stub functions.
+   * The stub function is automatically provided for creating mocked methods.
    *
    * @since 3.0.0
-   * @param mockImplementation - The mock implementation for the mocked dependency.
-   * @returns `TestBedBuilder` instance for chaining further configuration.
+   * @param mockImplementation Function that receives a stub creator and returns the mock
+   * @returns TestBedBuilder for chaining
+   *
+   * @example
+   * await TestBed.solitary(MyService)
+   *   .mock(Logger)
+   *   .impl((stub) => ({ log: stub().mockReturnValue(undefined) }))
+   *   .compile();
    */
   impl(
     mockImplementation: (stubFn: Stub<any, ArgsType<TDependency>>) => DeepPartial<TDependency>
   ): TestBedBuilder<TClass>;
 
   /**
-   * Specifies the final implementation to be used for the mocked dependency.
+   * Provides a final implementation with concrete values or functions.
+   *
+   * Use this when you want to directly provide the mock implementation without stubs,
+   * useful for simple mocks or when providing constant values.
    *
    * @since 3.0.0
-   * @param finalImplementation - The final implementation for the mocked dependency.
-   * @returns `TestBedBuilder` instance for chaining further configuration.
+   * @param finalImplementation The mock implementation object
+   * @returns TestBedBuilder for chaining
+   *
+   * @example
+   * await TestBed.solitary(MyService)
+   *   .mock(ConfigService)
+   *   .final({ apiUrl: 'http://test.api', timeout: 5000 })
+   *   .compile();
    */
   final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
 }
@@ -278,11 +326,11 @@ export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDep
  * Provides methods to configure and finalize the `TestBed`.
  *
  * @template TClass The class type being tested.
- * @see https://suites.dev/api-reference/api/testbedbuilder-api
+ * @see https://suites.dev/docs
  */
 export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   /**
-   * Declares a dependency to be mocked impl its type.
+   * Declares a dependency to be mocked using its type.
    *
    * @since 3.0.0
    * @param type The type of the dependency.
@@ -292,7 +340,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   mock<TDependency>(type: Type<TDependency>): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked impl its type along with a corresponding metadata object.
+   * Declares a dependency to be mocked using its type along with a corresponding metadata object.
    *
    * @since 3.0.0
    * @param type The type of the dependency.
@@ -306,7 +354,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   ): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked impl a string-based token.
+   * Declares a dependency to be mocked using a string-based token.
    *
    * @since 3.0.0
    * @param token The token string representing the dependency to be mocked.
@@ -316,7 +364,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   mock<TDependency>(token: string): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked impl a string-based token along with a corresponding
+   * Declares a dependency to be mocked using a string-based token along with a corresponding
    * metadata object.
    *
    * @since 3.0.0
@@ -331,7 +379,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   ): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked impl a symbol-based token.
+   * Declares a dependency to be mocked using a symbol-based token.
    *
    * @since 3.0.0
    * @param token - The token symbol representing the dependency to be mocked.
@@ -341,7 +389,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   mock<TDependency>(token: symbol): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked impl a symbol-based token along with a corresponding
+   * Declares a dependency to be mocked using a symbol-based token along with a corresponding
    * metadata object.
    *
    * @since 3.0.0
@@ -356,8 +404,7 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   ): MockOverride<TDependency, TClass>;
 
   /**
-   * Declares a dependency to be mocked impl a symbol-based token along with a corresponding
-   * metadata object.
+   * Declares a dependency to be mocked using a flexible identifier.
    *
    * @since 3.0.0
    * @param identifier The identifier representing the dependency. It can be of type
@@ -371,10 +418,18 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
     identifierMetadata?: IdentifierMetadata
   ): MockOverride<TDependency, TClass>;
   /**
-   * Finalizes the mocking setup and creates a new UnitTestBed.
+   * Finalizes the test environment configuration and builds the test instance.
+   *
+   * This method completes the builder chain and returns the configured test environment
+   * with the unit under test and references to all mocked dependencies.
    *
    * @since 3.0.0
-   * @returns UnitTestBed instance representing the compiled unit.
+   * @returns Promise resolving to UnitTestBed with unit and unitRef
+   *
+   * @example
+   * const { unit, unitRef } = await TestBed.solitary(MyService)
+   *   .mock(Logger).impl((stub) => ({ log: stub() }))
+   *   .compile();
    */
   compile(): Promise<UnitTestBed<TClass>>;
 }

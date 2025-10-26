@@ -5,8 +5,32 @@ import { normalizeIdentifier } from '../../normalize-identifier.static.js';
 import type { MockOverride, UnitTestBed } from '../../types.js';
 import type { ArgsType, Stub } from '@suites/types.doubles';
 
+/**
+ * Abstract base class for building test environments in both solitary and sociable modes.
+ *
+ * This class implements the core builder pattern for configuring mock dependencies before
+ * compilation. It maintains two collections:
+ * - Dependencies to be mocked with stub functions (`.impl()`)
+ * - Dependencies to be replaced with concrete values (`.final()`)
+ *
+ * Subclasses (SolitaryTestBedBuilder, SociableTestBedBuilder) extend this to provide
+ * mode-specific compilation logic.
+ *
+ * @internal This is an internal implementation class extended by builder implementations
+ * @since 3.0.0
+ * @template TClass The type of the class being tested
+ */
 export abstract class TestBedBuilder<TClass> implements TestBedBuilder<TClass> {
+  /**
+   * Tracks dependencies configured with `.mock().impl()` for stub-based mocking.
+   * Each entry contains the normalized identifier and the mock implementation callback.
+   */
   protected readonly identifiersToBeMocked: IdentifierToMockImplWithCb[] = [];
+
+  /**
+   * Tracks dependencies configured with `.mock().final()` for concrete value replacement.
+   * Each entry contains the normalized identifier and the final implementation value.
+   */
   protected readonly identifiersToBeFinalized: IdentifierToFinal[] = [];
 
   public mock<TDependency>(type: Type<TDependency>): MockOverride<TDependency, TClass>;
@@ -28,6 +52,34 @@ export abstract class TestBedBuilder<TClass> implements TestBedBuilder<TClass> {
     identifier: Type<TDependency> | string | symbol,
     identifierMetadata?: IdentifierMetadata
   ): MockOverride<TDependency, TClass>;
+  /**
+   * Declares a dependency to be mocked and returns a MockOverride for configuration.
+   *
+   * This method implements the builder pattern by returning an object with two methods:
+   * - `.impl()`: Configures the mock with stub functions (for method spies/mocks)
+   * - `.final()`: Replaces the dependency with a concrete value (for simple fakes)
+   *
+   * The dependency identifier is normalized and stored in the appropriate collection
+   * for later processing during compilation.
+   *
+   * @since 3.0.0
+   * @template TDependency The type of the dependency being mocked
+   * @param identifier The dependency identifier (class type, string token, or symbol token)
+   * @param metadata Optional metadata for token-based dependencies
+   * @returns MockOverride object with impl() and final() configuration methods
+   *
+   * @example
+   * // Mock with stub functions
+   * testBedBuilder
+   *   .mock(Logger)
+   *   .impl((stub) => ({ log: stub().mockReturnValue(undefined) }));
+   *
+   * @example
+   * // Mock with concrete value
+   * testBedBuilder
+   *   .mock('API_URL')
+   *   .final('https://test.api.com');
+   */
   public mock<TDependency>(
     identifier: InjectableIdentifier,
     metadata?: IdentifierMetadata
@@ -38,6 +90,7 @@ export abstract class TestBedBuilder<TClass> implements TestBedBuilder<TClass> {
           stubFn: () => Stub<TDependency, ArgsType<TDependency>>
         ) => DeepPartial<TDependency>
       ): TestBedBuilder<TClass> => {
+        // Store the mock implementation for later compilation
         this.identifiersToBeMocked.push([
           normalizeIdentifier(identifier, metadata as never),
           mockImplementation,
@@ -46,6 +99,7 @@ export abstract class TestBedBuilder<TClass> implements TestBedBuilder<TClass> {
         return this;
       },
       final: (finalImplementation: FinalValue<TDependency>): TestBedBuilder<TClass> => {
+        // Store the final implementation for later compilation
         this.identifiersToBeFinalized.push([
           normalizeIdentifier(identifier, metadata as never),
           finalImplementation,

@@ -1,20 +1,20 @@
 import 'reflect-metadata';
-import { getClassMetadata } from '@inversifyjs/core';
-import { ClassPropsReflector } from './class-props-reflector';
+import type { ClassMetadata } from '@inversifyjs/core';
+import { ClassPropsReflector, type PropertyMetadataReader } from './class-props-reflector';
 import { IdentifierBuilder } from './identifier-builder.static';
 import { UndefinedDependency, UndefinedDependencyError } from '@suites/types.di';
-
-jest.mock('@inversifyjs/core');
-
-const mockGetClassMetadata = getClassMetadata as jest.MockedFunction<typeof getClassMetadata>;
+import type { Type } from '@suites/types.common';
 
 describe('ClassPropsReflector Unit Tests', () => {
-  let classPropsReflector: ReturnType<typeof ClassPropsReflector>;
-
-  beforeEach(() => {
-    classPropsReflector = ClassPropsReflector(IdentifierBuilder());
-    jest.clearAllMocks();
-  });
+  function createMetadataReaderStub(
+    classMetadata: ClassMetadata,
+    propertyTypeMap: Map<string | symbol, Type | undefined> = new Map()
+  ): PropertyMetadataReader {
+    return {
+      getClassMetadata: () => classMetadata,
+      getPropertyType: (_target, propertyKey) => propertyTypeMap.get(propertyKey),
+    };
+  }
 
   describe('Error Handling', () => {
     it('should throw UndefinedDependencyError when property has no metadata and no TypeScript type', () => {
@@ -23,7 +23,7 @@ describe('ClassPropsReflector Unit Tests', () => {
       }
 
       const propertyKey = 'property';
-      mockGetClassMetadata.mockReturnValue({
+      const metadataReader = createMetadataReaderStub({
         constructorArguments: [],
         properties: new Map([[propertyKey, undefined as any]]),
         lifecycle: {
@@ -33,7 +33,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         scope: undefined,
       });
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(undefined);
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
 
       expect(() => classPropsReflector.reflectInjectables(TestClass)).toThrow(
         UndefinedDependencyError
@@ -49,7 +49,7 @@ describe('ClassPropsReflector Unit Tests', () => {
       }
 
       const propertyKey = 'mySpecialProperty';
-      mockGetClassMetadata.mockReturnValue({
+      const metadataReader = createMetadataReaderStub({
         constructorArguments: [],
         properties: new Map([[propertyKey, undefined as any]]),
         lifecycle: {
@@ -59,7 +59,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         scope: undefined,
       });
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(undefined);
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
 
       expect(() => classPropsReflector.reflectInjectables(TestClass)).toThrow(
         /mySpecialProperty/
@@ -72,7 +72,7 @@ describe('ClassPropsReflector Unit Tests', () => {
       }
 
       const propertyKey = 'property';
-      mockGetClassMetadata.mockReturnValue({
+      const metadataReader = createMetadataReaderStub({
         constructorArguments: [],
         properties: new Map([[propertyKey, undefined as any]]),
         lifecycle: {
@@ -82,7 +82,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         scope: undefined,
       });
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(undefined);
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
 
       expect(() => classPropsReflector.reflectInjectables(MyAwesomeClass)).toThrow(
         /MyAwesomeClass/
@@ -94,7 +94,7 @@ describe('ClassPropsReflector Unit Tests', () => {
     it('should return empty array when class has no injectable properties', () => {
       class TestClass {}
 
-      mockGetClassMetadata.mockReturnValue({
+      const metadataReader = createMetadataReaderStub({
         constructorArguments: [],
         properties: new Map(),
         lifecycle: {
@@ -104,6 +104,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         scope: undefined,
       });
 
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result).toHaveLength(0);
@@ -115,7 +116,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         regularProperty = 'not injectable';
       }
 
-      mockGetClassMetadata.mockReturnValue({
+      const metadataReader = createMetadataReaderStub({
         constructorArguments: [],
         properties: new Map(),
         lifecycle: {
@@ -125,6 +126,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         scope: undefined,
       });
 
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result).toEqual([]);
@@ -141,29 +143,32 @@ describe('ClassPropsReflector Unit Tests', () => {
 
       class Dependency {}
 
-      mockGetClassMetadata.mockReturnValue({
-        constructorArguments: [],
-        properties: new Map([
-          [
-            symbolKey,
-            {
-              kind: 1,
-              value: 'SERVICE_ID',
-              optional: false,
-              name: undefined,
-              tags: new Map(),
-            } as any,
-          ],
-        ]),
-        lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+      const propertyTypeMap = new Map<string | symbol, Type>([[symbolKey, Dependency]]);
+      const metadataReader = createMetadataReaderStub(
+        {
+          constructorArguments: [],
+          properties: new Map([
+            [
+              symbolKey,
+              {
+                kind: 1,
+                value: 'SERVICE_ID',
+                optional: false,
+                name: undefined,
+                tags: new Map(),
+              } as any,
+            ],
+          ]),
+          lifecycle: {
+            postConstructMethodNames: new Set(),
+            preDestroyMethodNames: new Set(),
+          },
+          scope: undefined,
         },
-        scope: undefined,
-      });
+        propertyTypeMap
+      );
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(Dependency);
-
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result).toHaveLength(1);
@@ -178,7 +183,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         [symbolKey]: any;
       }
 
-      mockGetClassMetadata.mockReturnValue({
+      const metadataReader = createMetadataReaderStub({
         constructorArguments: [],
         properties: new Map([[symbolKey, undefined as any]]),
         lifecycle: {
@@ -188,7 +193,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         scope: undefined,
       });
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(undefined);
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
 
       expect(() => classPropsReflector.reflectInjectables(TestClass)).toThrow(
         UndefinedDependencyError
@@ -203,29 +208,32 @@ describe('ClassPropsReflector Unit Tests', () => {
         property: Dependency;
       }
 
-      mockGetClassMetadata.mockReturnValue({
-        constructorArguments: [],
-        properties: new Map([
-          [
-            'property',
-            {
-              kind: 1,
-              value: 'SERVICE_ID',
-              optional: false,
-              name: undefined,
-              tags: new Map(),
-            } as any,
-          ],
-        ]),
-        lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+      const propertyTypeMap = new Map<string | symbol, Type>([['property', Dependency]]);
+      const metadataReader = createMetadataReaderStub(
+        {
+          constructorArguments: [],
+          properties: new Map([
+            [
+              'property',
+              {
+                kind: 1,
+                value: 'SERVICE_ID',
+                optional: false,
+                name: undefined,
+                tags: new Map(),
+              } as any,
+            ],
+          ]),
+          lifecycle: {
+            postConstructMethodNames: new Set(),
+            preDestroyMethodNames: new Set(),
+          },
+          scope: undefined,
         },
-        scope: undefined,
-      });
+        propertyTypeMap
+      );
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(Dependency);
-
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result[0].value).toBe(Dependency);
@@ -237,7 +245,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         property: any;
       }
 
-      mockGetClassMetadata.mockReturnValue({
+      const metadataReader = createMetadataReaderStub({
         constructorArguments: [],
         properties: new Map([
           [
@@ -258,8 +266,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         scope: undefined,
       });
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(undefined);
-
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result[0].value).toBe(ServiceClass);
@@ -270,7 +277,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         property: any;
       }
 
-      mockGetClassMetadata.mockReturnValue({
+      const metadataReader = createMetadataReaderStub({
         constructorArguments: [],
         properties: new Map([
           [
@@ -291,8 +298,7 @@ describe('ClassPropsReflector Unit Tests', () => {
         scope: undefined,
       });
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(undefined);
-
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result[0].value).toBe(UndefinedDependency);
@@ -306,29 +312,32 @@ describe('ClassPropsReflector Unit Tests', () => {
         property: Dependency;
       }
 
-      mockGetClassMetadata.mockReturnValue({
-        constructorArguments: [],
-        properties: new Map([
-          [
-            'property',
-            {
-              kind: 1,
-              value: 'SERVICE_ID',
-              optional: false,
-              name: undefined,
-              tags: new Map(),
-            } as any,
-          ],
-        ]),
-        lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+      const propertyTypeMap = new Map<string | symbol, Type>([['property', Dependency]]);
+      const metadataReader = createMetadataReaderStub(
+        {
+          constructorArguments: [],
+          properties: new Map([
+            [
+              'property',
+              {
+                kind: 1,
+                value: 'SERVICE_ID',
+                optional: false,
+                name: undefined,
+                tags: new Map(),
+              } as any,
+            ],
+          ]),
+          lifecycle: {
+            postConstructMethodNames: new Set(),
+            preDestroyMethodNames: new Set(),
+          },
+          scope: undefined,
         },
-        scope: undefined,
-      });
+        propertyTypeMap
+      );
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(Dependency);
-
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result).toHaveLength(1);
@@ -351,53 +360,54 @@ describe('ClassPropsReflector Unit Tests', () => {
         prop3: Dep3;
       }
 
-      mockGetClassMetadata.mockReturnValue({
-        constructorArguments: [],
-        properties: new Map([
-          [
-            'prop1',
-            {
-              kind: 1,
-              value: 'TOKEN1',
-              optional: false,
-              name: 'named1',
-              tags: new Map(),
-            } as any,
-          ],
-          [
-            'prop2',
-            {
-              kind: 0,
-              value: 'TOKEN2',
-              optional: false,
-              name: undefined,
-              tags: new Map([['tag', 'value']]),
-              chained: false,
-            } as any,
-          ],
-          [
-            'prop3',
-            {
-              kind: 2, // unmanaged
-            } as any,
-          ],
-        ]),
-        lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+      const propertyTypeMap = new Map<string | symbol, Type>([
+        ['prop1', Dep1],
+        ['prop2', Dep2],
+        ['prop3', Dep3],
+      ]);
+
+      const metadataReader = createMetadataReaderStub(
+        {
+          constructorArguments: [],
+          properties: new Map([
+            [
+              'prop1',
+              {
+                kind: 1,
+                value: 'TOKEN1',
+                optional: false,
+                name: 'named1',
+                tags: new Map(),
+              } as any,
+            ],
+            [
+              'prop2',
+              {
+                kind: 0,
+                value: 'TOKEN2',
+                optional: false,
+                name: undefined,
+                tags: new Map([['tag', 'value']]),
+                chained: false,
+              } as any,
+            ],
+            [
+              'prop3',
+              {
+                kind: 2, // unmanaged
+              } as any,
+            ],
+          ]),
+          lifecycle: {
+            postConstructMethodNames: new Set(),
+            preDestroyMethodNames: new Set(),
+          },
+          scope: undefined,
         },
-        scope: undefined,
-      });
+        propertyTypeMap
+      );
 
-      jest
-        .spyOn(Reflect, 'getMetadata')
-        .mockImplementation((key, target, propertyKey) => {
-          if (propertyKey === 'prop1') return Dep1;
-          if (propertyKey === 'prop2') return Dep2;
-          if (propertyKey === 'prop3') return Dep3;
-          return undefined;
-        });
-
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result).toHaveLength(3);
@@ -415,29 +425,32 @@ describe('ClassPropsReflector Unit Tests', () => {
         property: Dependency;
       }
 
-      mockGetClassMetadata.mockReturnValue({
-        constructorArguments: [],
-        properties: new Map([
-          [
-            'property',
-            {
-              kind: 1,
-              value: Dependency,
-              optional: false,
-              name: undefined,
-              tags: new Map(),
-            } as any,
-          ],
-        ]),
-        lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+      const propertyTypeMap = new Map<string | symbol, Type>([['property', Dependency]]);
+      const metadataReader = createMetadataReaderStub(
+        {
+          constructorArguments: [],
+          properties: new Map([
+            [
+              'property',
+              {
+                kind: 1,
+                value: Dependency,
+                optional: false,
+                name: undefined,
+                tags: new Map(),
+              } as any,
+            ],
+          ]),
+          lifecycle: {
+            postConstructMethodNames: new Set(),
+            preDestroyMethodNames: new Set(),
+          },
+          scope: undefined,
         },
-        scope: undefined,
-      });
+        propertyTypeMap
+      );
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(Dependency);
-
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result).toHaveLength(1);
@@ -453,29 +466,32 @@ describe('ClassPropsReflector Unit Tests', () => {
         'string-key': Dependency;
       }
 
-      mockGetClassMetadata.mockReturnValue({
-        constructorArguments: [],
-        properties: new Map([
-          [
-            'string-key',
-            {
-              kind: 1,
-              value: 'SERVICE_ID',
-              optional: false,
-              name: undefined,
-              tags: new Map(),
-            } as any,
-          ],
-        ]),
-        lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+      const propertyTypeMap = new Map<string | symbol, Type>([['string-key', Dependency]]);
+      const metadataReader = createMetadataReaderStub(
+        {
+          constructorArguments: [],
+          properties: new Map([
+            [
+              'string-key',
+              {
+                kind: 1,
+                value: 'SERVICE_ID',
+                optional: false,
+                name: undefined,
+                tags: new Map(),
+              } as any,
+            ],
+          ]),
+          lifecycle: {
+            postConstructMethodNames: new Set(),
+            preDestroyMethodNames: new Set(),
+          },
+          scope: undefined,
         },
-        scope: undefined,
-      });
+        propertyTypeMap
+      );
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(Dependency);
-
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result[0].property.key).toBe('string-key');
@@ -488,39 +504,46 @@ describe('ClassPropsReflector Unit Tests', () => {
         prop2: Dependency;
       }
 
-      mockGetClassMetadata.mockReturnValue({
-        constructorArguments: [],
-        properties: new Map([
-          [
-            'prop1',
-            {
-              kind: 1,
-              value: 'TOKEN',
-              optional: false,
-              name: undefined,
-              tags: new Map(),
-            } as any,
-          ],
-          [
-            'prop2',
-            {
-              kind: 1,
-              value: 'TOKEN',
-              optional: false,
-              name: undefined,
-              tags: new Map(),
-            } as any,
-          ],
-        ]),
-        lifecycle: {
-          postConstructMethodNames: new Set(),
-          preDestroyMethodNames: new Set(),
+      const propertyTypeMap = new Map<string | symbol, Type>([
+        ['prop1', Dependency],
+        ['prop2', Dependency],
+      ]);
+
+      const metadataReader = createMetadataReaderStub(
+        {
+          constructorArguments: [],
+          properties: new Map([
+            [
+              'prop1',
+              {
+                kind: 1,
+                value: 'TOKEN',
+                optional: false,
+                name: undefined,
+                tags: new Map(),
+              } as any,
+            ],
+            [
+              'prop2',
+              {
+                kind: 1,
+                value: 'TOKEN',
+                optional: false,
+                name: undefined,
+                tags: new Map(),
+              } as any,
+            ],
+          ]),
+          lifecycle: {
+            postConstructMethodNames: new Set(),
+            preDestroyMethodNames: new Set(),
+          },
+          scope: undefined,
         },
-        scope: undefined,
-      });
+        propertyTypeMap
+      );
 
-      jest.spyOn(Reflect, 'getMetadata').mockReturnValue(Dependency);
-
+      const classPropsReflector = ClassPropsReflector(IdentifierBuilder(), metadataReader);
       const result = classPropsReflector.reflectInjectables(TestClass);
 
       expect(result).toHaveLength(2);

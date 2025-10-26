@@ -7,13 +7,24 @@ import type { IdentifierBuilder } from './identifier-builder.static.js';
 
 export type ClassCtorReflector = ReturnType<typeof ClassCtorReflector>;
 
-export function ClassCtorReflector(identifierBuilder: IdentifierBuilder) {
+export type MetadataReader = {
+  getClassMetadata: typeof getClassMetadata;
+  getParamTypes: (target: Type) => Type[] | undefined;
+};
+
+export function ClassCtorReflector(
+  identifierBuilder: IdentifierBuilder,
+  metadataReader: MetadataReader = {
+    getClassMetadata,
+    getParamTypes: (target) => Reflect.getMetadata('design:paramtypes', target),
+  }
+) {
   function reflectInjectables(targetClass: Type): ClassInjectable[] | never {
-    const classMetadata = getClassMetadata(targetClass);
+    const classMetadata = metadataReader.getClassMetadata(targetClass);
     const constructorArguments = classMetadata.constructorArguments;
 
     // Get TypeScript design:paramtypes for fallback type information
-    const paramTypes: Type[] = Reflect.getMetadata('design:paramtypes', targetClass) || [];
+    const paramTypes: Type[] = metadataReader.getParamTypes(targetClass) || [];
 
     return constructorArguments.map((elementMetadata, index) => {
       const paramType = paramTypes[index];

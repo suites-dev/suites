@@ -7,9 +7,20 @@ import type { IdentifierObject, IdentifierBuilder } from './identifier-builder.s
 
 export type ClassPropsReflector = ReturnType<typeof ClassPropsReflector>;
 
-export function ClassPropsReflector(identifierBuilder: IdentifierBuilder) {
+export type PropertyMetadataReader = {
+  getClassMetadata: typeof getClassMetadata;
+  getPropertyType: (target: any, propertyKey: string | symbol) => Type | undefined;
+};
+
+export function ClassPropsReflector(
+  identifierBuilder: IdentifierBuilder,
+  metadataReader: PropertyMetadataReader = {
+    getClassMetadata,
+    getPropertyType: (target, propertyKey) => Reflect.getMetadata('design:type', target, propertyKey),
+  }
+) {
   function reflectInjectables(targetClass: Type): ClassInjectable[] {
-    const classMetadata = getClassMetadata(targetClass);
+    const classMetadata = metadataReader.getClassMetadata(targetClass);
     const properties = classMetadata.properties;
 
     if (properties.size === 0) {
@@ -20,9 +31,7 @@ export function ClassPropsReflector(identifierBuilder: IdentifierBuilder) {
     const result: ClassInjectable[] = [];
 
     for (const [propertyKey, elementMetadata] of properties.entries()) {
-      const propertyParamType = Reflect.getMetadata('design:type', classInstance, propertyKey) as
-        | Type
-        | undefined;
+      const propertyParamType = metadataReader.getPropertyType(classInstance, propertyKey);
 
       if (!elementMetadata && !propertyParamType) {
         throw new UndefinedDependencyError(`Suites encountered an error while attempting to detect a token or type for the dependency for property '${String(propertyKey)}' in the class '${targetClass.name}'.

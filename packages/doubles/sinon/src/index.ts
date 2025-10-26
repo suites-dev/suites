@@ -1,8 +1,8 @@
 /// <reference types="@types/sinon" />
-import { mock } from './mock.static';
+import { mock } from './mock.static.js';
 import type { SinonStub } from 'sinon';
 import { stub as sinonStub } from 'sinon';
-export { Mocked, Stub } from './types';
+export { Mocked, Stub } from './types.js';
 
 /**
  * Adapter for a Sinon mocking library to be used with Suites framework.
@@ -16,6 +16,6 @@ export { Mocked, Stub } from './types';
  */
 export const adapter = { mock, stub: (): SinonStub => sinonStub() };
 
-export { mock } from './mock.static';
+export { mock } from './mock.static.js';
 
 export const stub = sinonStub();

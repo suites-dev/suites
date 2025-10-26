@@ -100,16 +100,14 @@ describe('InversifyJS Suites DI Adapter Integration Test', () => {
           {
             identifier: DependencyEight,
             metadata: {
-              named: 'arbitrary-name',
+              name: 'arbitrary-name',
             } as never,
             type: 'PARAM',
             value: DependencyEight,
           },
           {
             identifier: DependencyNine,
-            metadata: {
-              unmanaged: true,
-            } as never,
+            metadata: undefined,
             type: 'PARAM',
             value: DependencyNine,
           },

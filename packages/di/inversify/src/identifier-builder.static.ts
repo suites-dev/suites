@@ -1,49 +1,57 @@
-import { LazyServiceIdentifer } from 'inversify';
+import { LazyServiceIdentifier } from '@inversifyjs/common';
+import { ClassElementMetadataKind } from '@inversifyjs/core';
 import type { Type } from '@suites/types.common';
-import type { IdentifierMetadata, InjectableIdentifier, WithMetadata } from '@suites/types.di';
-import type { InversifyInjectableMetadata } from './types.js';
-import { INVERSIFY_PRESERVED_KEYS } from './types.js';
+import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
+import type { InversifyClassElementMetadata } from './types.js';
 
 export type IdentifierObject = {
   identifier: InjectableIdentifier;
-  metadata: undefined | Pick<WithMetadata<IdentifierMetadata>, 'metadata'>;
+  metadata: IdentifierMetadata | undefined;
 };
 
 export type IdentifierBuilder = ReturnType<typeof IdentifierBuilder>;
 
 export function IdentifierBuilder() {
   function toIdentifierObject(
-    inversifyInjectableMetadataItems: InversifyInjectableMetadata[],
+    elementMetadata: InversifyClassElementMetadata,
     paramType: Type
   ): IdentifierObject {
-    const obj = inversifyInjectableMetadataItems.reduce(
-      (acc: IdentifierObject, metadataItem: InversifyInjectableMetadata) => {
-        const { key: metadataKey, value: metadataValue } = metadataItem;
-
-        if (INVERSIFY_PRESERVED_KEYS.includes(metadataKey)) {
-          if (metadataValue instanceof LazyServiceIdentifer) {
-            const unwrappedValue = metadataValue.unwrap();
-
-            if (typeof unwrappedValue === 'undefined') {
-              throw new Error('Undefined dependency identifier detected');
-            }
-
-            return { ...acc, identifier: unwrappedValue };
-          }
-
-          return { ...acc, identifier: metadataValue };
-        }
-
-        return { ...acc, metadata: { [metadataKey]: metadataValue } };
-      },
-      {} as IdentifierObject
-    ) as IdentifierObject;
-
-    if (typeof obj.identifier === 'undefined') {
-      return { identifier: paramType, metadata: obj.metadata };
+    // Handle unmanaged dependencies
+    if (elementMetadata.kind === ClassElementMetadataKind.unmanaged) {
+      return { identifier: paramType, metadata: undefined };
     }
 
-    return obj;
+    // Extract identifier from metadata
+    let identifier: InjectableIdentifier;
+    const { value } = elementMetadata;
+
+    if (value instanceof LazyServiceIdentifier) {
+      const unwrappedValue = value.unwrap();
+
+      if (typeof unwrappedValue === 'undefined') {
+        throw new Error('Undefined dependency identifier detected');
+      }
+
+      identifier = unwrappedValue as InjectableIdentifier;
+    } else {
+      identifier = value as InjectableIdentifier;
+    }
+
+    // Build metadata object from name and tags
+    let metadata: IdentifierMetadata = {};
+
+    if ('name' in elementMetadata && elementMetadata.name !== undefined) {
+      metadata.name = elementMetadata.name;
+    }
+
+    if ('tags' in elementMetadata && elementMetadata.tags.size > 0) {
+      metadata = { ...metadata, ...Object.fromEntries(elementMetadata.tags) };
+    }
+
+    return {
+      identifier,
+      metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
+    };
   }
 
   return { toIdentifierObject };

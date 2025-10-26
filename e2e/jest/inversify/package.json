@@ -6,7 +6,7 @@
     "@suites/di.inversify": "e2e",
     "@suites/doubles.jest": "e2e",
     "@suites/unit": "e2e",
-    "inversify": "6.0.1",
+    "inversify": "7.2.0",
     "reflect-metadata": "^0.2.0"
   },
   "scripts": {

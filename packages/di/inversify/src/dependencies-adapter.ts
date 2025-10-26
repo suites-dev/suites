@@ -53,7 +53,7 @@ export function DependenciesAdapter(
             identifier === injectableIdentifier && typeof injectableMetadata === 'undefined'
         );
 
-        return foundInjectable ? foundInjectable : undefined;
+        return foundInjectable;
       },
       list(): ClassInjectable[] {
         return allInjectables;

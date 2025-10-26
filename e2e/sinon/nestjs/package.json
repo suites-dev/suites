@@ -23,7 +23,8 @@
     "chai-as-promised": "^7.1.1",
     "mocha": "10.0.0",
     "sinon": "*",
-    "ts-mocha": "10.0.0",
+    "ts-mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.x"
   },
   "engines": {

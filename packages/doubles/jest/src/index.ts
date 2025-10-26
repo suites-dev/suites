@@ -1,6 +1,6 @@
 /// <reference types="jest" />
-import { mock } from './mock.static';
-export { Mocked, Stub } from './types';
+import { mock } from './mock.static.js';
+export { Mocked, Stub } from './types.js';
 /**
  * Adapter for a Jest mocking library to be used with Suites framework.
  *
@@ -13,7 +13,7 @@ export { Mocked, Stub } from './types';
  */
 export const adapter = { mock, stub: (): jest.Mock => jest.fn() };
 
-export { mock } from './mock.static';
+export { mock } from './mock.static.js';
 
 /**
  * Creates a stub function for mocking method implementations in tests.

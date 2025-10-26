@@ -6,8 +6,8 @@ import type {
   InversifyInjectableIdentifierMetadata,
   InversifyInjectableMetadata,
   MetadataReflector,
-} from './types';
-import type { IdentifierBuilder } from './identifier-builder.static';
+} from './types.js';
+import type { IdentifierBuilder } from './identifier-builder.static.js';
 
 const { PARAM_TYPES, TAGGED } = METADATA_KEY;
 

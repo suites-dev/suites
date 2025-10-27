@@ -1,7 +1,7 @@
 {
   "name": "@suites/types.doubles",
   "private": false,
-  "version": "3.0.0",
+  "version": "4.0.0-alpha.0",
   "license": "Apache-2.0",
   "type": "commonjs",
   "main": "./dist/cjs/index.js",
@@ -45,7 +45,7 @@
     "lint": "pnpm eslint 'index.ts'"
   },
   "dependencies": {
-    "@suites/types.common": "workspace:^3.0.0"
+    "@suites/types.common": "workspace:^4.0.0-alpha.0"
   },
   "files": [
     "index.d.ts"

@@ -1,6 +1,6 @@
 {
   "name": "@suites/doubles.vitest",
-  "version": "3.0.1",
+  "version": "4.0.0-alpha.0",
   "license": "Apache-2.0",
   "type": "module",
   "types": "./unit.d.ts",
@@ -53,9 +53,9 @@
     "vitest": ">= 1.0"
   },
   "dependencies": {
-    "@suites/core.unit": "workspace:^3.0.1",
-    "@suites/types.common": "workspace:^3.0.0",
-    "@suites/types.doubles": "workspace:^3.0.0"
+    "@suites/core.unit": "workspace:^4.0.0-alpha.0",
+    "@suites/types.common": "workspace:^4.0.0-alpha.0",
+    "@suites/types.doubles": "workspace:^4.0.0-alpha.0"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^1.6.1",

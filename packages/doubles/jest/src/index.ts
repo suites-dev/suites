@@ -1,10 +1,10 @@
 /// <reference types="jest" />
-import { mock } from './mock.static';
-export { Mocked, Stub } from './types';
+import { mock } from './mock.static.js';
+export { Mocked, Stub } from './types.js';
 /**
  * Adapter for a Jest mocking library to be used with Suites framework.
  *
- * @see https://suites.dev/docs/api-reference
+ * @see https://suites.dev/docs
  * @since 3.0.0
  * @example
  * import { adapter } from '@suites/doubles.jest';
@@ -13,15 +13,23 @@ export { Mocked, Stub } from './types';
  */
 export const adapter = { mock, stub: (): jest.Mock => jest.fn() };
 
-export { mock } from './mock.static';
+export { mock } from './mock.static.js';
 
 /**
- * Represents a stub function
+ * Creates a stub function for mocking method implementations in tests.
+ *
+ * This is an alias for Jest's `jest.fn()`, providing a consistent API across
+ * different testing frameworks in the Suites ecosystem.
  *
  * @since 3.0.0
- * functions replaced by stubs.
  * @alias jest.fn
  * @see https://jestjs.io/docs/mock-function-api#jestfnimplementation
- * @see https://suites.dev/docs/api-reference
+ * @see https://suites.dev/docs
+ *
+ * @example
+ * import { stub } from '@suites/doubles.jest';
+ *
+ * const mockFn = stub();
+ * mockFn.mockReturnValue('mocked value');
  */
 export const stub = jest.fn();

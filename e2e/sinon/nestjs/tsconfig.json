@@ -1,7 +1,18 @@
 {
   "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "include": [
-    "*e2e.test.ts"
+    "*e2e.test.ts",
+    "global.d.ts"
   ],
   "exclude": [
     "node_modules"

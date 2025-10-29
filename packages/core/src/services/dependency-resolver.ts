@@ -7,8 +7,8 @@ import type {
   InjectableIdentifier,
   WithMetadata,
 } from '@suites/types.di';
-import type { DependencyContainer, IdentifierToMockOrFinal } from './dependency-container';
-import { DependencyMap } from './dependency-map';
+import type { DependencyContainer, IdentifierToMockOrFinal } from './dependency-container.js';
+import { DependencyMap } from './dependency-map.js';
 
 export class DependencyResolver {
   private readonly dependencyMap = new DependencyMap();

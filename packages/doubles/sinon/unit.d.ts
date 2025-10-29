@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Type augmentation for Sinon-specific mock types.
+ *
+ * Augments abstract types from `@suites/unit` with Sinon implementations.
+ * Reference this file in your `global.d.ts` to enable Sinon type support.
+ *
+ * @see https://suites.dev/docs
+ * @since 3.0.0
+ */
+
 /// <reference types="@types/sinon" />
 import type { DeepPartial, Type } from '@suites/types.common';
 import type { IdentifierMetadata } from '@suites/types.di';
@@ -13,7 +23,7 @@ declare module '@suites/unit' {
    * @since 3.0.0
    * @template TArgs The arguments type of the stub function.
    * @alias {SinonStub}
-   * @see https://suites.dev/docs/api-reference
+   * @see https://suites.dev/docs
    */
   export type Stub<TArgs extends any[]> = SinonStub<TArgs>;
 
@@ -24,7 +34,7 @@ declare module '@suites/unit' {
    * @since 3.0.0
    * @template T The type of the object being mocked.
    * @see https://sinonjs.org/releases/latest/stubs
-   * @see https://suites.dev/docs/api-reference
+   * @see https://suites.dev/docs
    */
   export type Mocked<TType> = SinonMocked<TType>;
 }
@@ -37,7 +47,7 @@ declare module '@suites/core.unit' {
    * offering a flexible approach to access and manipulate mocked dependencies within unit tests.
    *
    * @since 3.0.0
-   * @see https://suites.dev/docs/api-reference
+   * @see https://suites.dev/docs
    */
   export interface UnitReference {
     /**

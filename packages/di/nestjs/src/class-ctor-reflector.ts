@@ -2,8 +2,8 @@ import { SELF_DECLARED_DEPS_METADATA, PARAMTYPES_METADATA } from '@nestjs/common
 import type { ClassInjectable } from '@suites/types.di';
 import { UndefinedDependencyError } from '@suites/types.di';
 import type { Type } from '@suites/types.common';
-import type { MetadataReflector, NestInjectableIdentifier } from './types';
-import type { NestCustomToken, ParamsTokensReflector } from './params-token-resolver';
+import type { MetadataReflector, NestInjectableIdentifier } from './types.js';
+import type { NestCustomToken, ParamsTokensReflector } from './params-token-resolver.js';
 
 export type ClassCtorReflector = ReturnType<typeof ClassCtorReflector>;
 
@@ -27,6 +27,7 @@ the parameter type. In some cases, this error may arise due to circular dependen
 please ensure that the circular dependency is resolved, or consider using 'forwardRef()' to address it.`);
 
       if (isToken) {
+        // eslint-disable-next-line no-useless-catch
         try {
           const resolved = resolveParamTokenCb(typeOrUndefined, paramIndex);
           return { ...resolved, type: 'PARAM' };

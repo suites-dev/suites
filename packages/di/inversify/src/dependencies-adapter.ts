@@ -1,4 +1,4 @@
-import isEqual from 'lodash.isequal';
+import { isDeepStrictEqual } from 'node:util';
 import type { Type } from '@suites/types.common';
 import type {
   DependencyInjectionAdapter,
@@ -7,9 +7,9 @@ import type {
   InjectableIdentifier,
   WithMetadata,
 } from '@suites/types.di';
-import type { ClassPropsReflector } from './class-props-reflector';
-import type { ClassCtorReflector } from './class-ctor-reflector';
-import type { IdentifierMetadata } from './types';
+import type { ClassPropsReflector } from './class-props-reflector.js';
+import type { ClassCtorReflector } from './class-ctor-reflector.js';
+import type { IdentifierMetadata } from './types.js';
 
 export type DependenciesAdapter = (
   classPropsReflector: ClassPropsReflector,
@@ -44,7 +44,7 @@ export function DependenciesAdapter(
 
         if (metadata) {
           return injectables.find(({ metadata: injectableMetadata }) =>
-            isEqual(injectableMetadata, metadata)
+            isDeepStrictEqual(injectableMetadata, metadata)
           );
         }
 
@@ -53,7 +53,7 @@ export function DependenciesAdapter(
             identifier === injectableIdentifier && typeof injectableMetadata === 'undefined'
         );
 
-        return foundInjectable ? foundInjectable : undefined;
+        return foundInjectable;
       },
       list(): ClassInjectable[] {
         return allInjectables;

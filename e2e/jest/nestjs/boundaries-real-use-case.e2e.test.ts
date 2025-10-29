@@ -6,6 +6,7 @@ import {
   UserValidator,
   UserFormatter,
   User,
+  UserRepository,
 } from './e2e-assets-boundaries';
 
 describe('Boundaries Real Use Case - Testing Business Logic with Expensive Dependencies', () => {
@@ -20,7 +21,7 @@ describe('Boundaries Real Use Case - Testing Business Logic with Expensive Depen
         .compile();
 
       // Setup the expensive service mock
-      const mockRepo = unitRef.get('USER_REPOSITORY');
+      const mockRepo = unitRef.get<UserRepository>('USER_REPOSITORY');
       mockRepo.findById = jest.fn().mockResolvedValue({
         id: '123',
         email: 'user@example.com',
@@ -48,7 +49,7 @@ describe('Boundaries Real Use Case - Testing Business Logic with Expensive Depen
       // No need to expose them explicitly!
 
       // Setup mocks
-      const mockRepo = unitRef.get('USER_REPOSITORY');
+      const mockRepo = unitRef.get<UserRepository>('USER_REPOSITORY');
       mockRepo.findById = jest.fn().mockResolvedValue({
         id: '123',
         email: 'premium@example.com',
@@ -78,7 +79,7 @@ describe('Boundaries Real Use Case - Testing Business Logic with Expensive Depen
         .boundaries([RecommendationEngine])
         .compile();
 
-      const mockRepo = unitRef.get('USER_REPOSITORY');
+      const mockRepo = unitRef.get<UserRepository>('USER_REPOSITORY');
 
       // Invalid user - REAL UserValidator will catch this
       mockRepo.findById = jest.fn().mockResolvedValue({
@@ -99,7 +100,7 @@ describe('Boundaries Real Use Case - Testing Business Logic with Expensive Depen
         .boundaries([RecommendationEngine])
         .compile();
 
-      const mockRepo = unitRef.get('USER_REPOSITORY');
+      const mockRepo = unitRef.get<UserRepository>('USER_REPOSITORY');
       const mockRec = unitRef.get(RecommendationEngine);
       mockRec.computeRecommendations = jest.fn().mockResolvedValue([]);
 
@@ -142,7 +143,7 @@ describe('Boundaries Real Use Case - Testing Business Logic with Expensive Depen
 
       // USER_REPOSITORY token is auto-mocked (natural boundary)
       // We didn't need to add it to boundaries!
-      const mockRepo = unitRef.get('USER_REPOSITORY');
+      const mockRepo = unitRef.get<UserRepository>('USER_REPOSITORY');
       expect(mockRepo).toBeDefined();
     });
   });

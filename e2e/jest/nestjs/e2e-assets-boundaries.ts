@@ -8,6 +8,11 @@ export interface User {
   name: string;
 }
 
+export interface UserRepository {
+  findById(id: string): Promise<User>;
+  save(user: User): Promise<void>;
+}
+
 // This is an EXPENSIVE service (heavy computation)
 // Good candidate for boundary - we don't want to run real computation in tests
 @Injectable()
@@ -55,7 +60,7 @@ export class UserProfileService {
     private readonly userPreferences: UserPreferencesService, // REAL - business logic
     private readonly userValidator: UserValidator, // REAL - validation logic
     private readonly userFormatter: UserFormatter, // REAL - simple logic
-    @Inject('USER_REPOSITORY') private readonly userRepo: any // Token - auto-mocked
+    @Inject('USER_REPOSITORY') private readonly userRepo: UserRepository // Token - auto-mocked
   ) {}
 
   public async getUserProfile(userId: string): Promise<{

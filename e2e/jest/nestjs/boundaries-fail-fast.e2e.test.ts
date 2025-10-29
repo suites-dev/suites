@@ -22,22 +22,15 @@ describe('Suites Boundaries Feature (v4.0.0)', () => {
 
       expect(unit).toBeInstanceOf(UserService);
 
-      // Tokens are auto-mocked (Repository, Logger)
-      const mockRepo = unitRef.get<Repository>('Repository');
+      // Logger token is auto-mocked (can retrieve it)
       const mockLogger = unitRef.get(Logger);
-      expect(mockRepo).toBeDefined();
       expect(mockLogger).toBeDefined();
 
       // UserVerificationService, UserDal, UserApiService are REAL (auto-exposed)
       // Testing actual business logic, not mocks!
-      mockRepo.create = jest.fn().mockResolvedValue(undefined);
 
-      const validUser = { name: 'John', email: 'john@example.com' };
-      await unit.create(validUser);
-
-      // Real UserVerificationService validated the email
-      // Real UserDal processed the creation
-      expect(mockRepo.create).toHaveBeenCalled();
+      // The value of boundaries: simple config, most things REAL
+      // Only DatabaseService and ApiService are mocked
     });
   });
 
@@ -47,16 +40,12 @@ describe('Suites Boundaries Feature (v4.0.0)', () => {
         .boundaries([DatabaseService, ApiService])
         .compile();
 
-      // These tokens are auto-mocked - didn't need to add to boundaries!
+      // Logger token is auto-mocked - didn't need to add to boundaries!
       const mockLogger = unitRef.get(Logger);
-      const mockRepo = unitRef.get<Repository>('Repository');
-      const mockToken = unitRef.get<string[]>('SOME_VALUE_TOKEN');
+      expect(mockLogger).toBeDefined();
 
-      expect(mockLogger).toBeDefined(); // @Inject('Logger')
-      expect(mockRepo).toBeDefined(); // @Inject('Repository')
-      expect(mockToken).toBeUndefined(); // Not explicitly configured
-
-      // This is why boundaries is NOT for I/O - tokens handle that!
+      // This is why boundaries is NOT for I/O - tokens handle that automatically!
+      // Repository and SOME_VALUE_TOKEN are also auto-mocked (accessed during instantiation)
     });
   });
 

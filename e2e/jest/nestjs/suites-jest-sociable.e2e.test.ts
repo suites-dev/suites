@@ -24,6 +24,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
       .impl((stubFn) => ({ log: stubFn().mockReturnValue('overridden') }))
       .mock<string[]>('SOME_VALUE_TOKEN')
       .final(['1', '2', '3'])
+      .disableFailFast() // v3.x behavior - ApiService and UserVerificationService auto-mocked
       .compile();
 
     // For type checking only, no runtime effect

@@ -12,56 +12,51 @@ import {
 } from './e2e-assets-sociable';
 
 describe('Suites Boundaries Feature (v4.0.0)', () => {
-  describe('Real use case - mock only I/O boundaries', () => {
-    it('should allow simple configuration by specifying only what to mock', async () => {
-      // The VALUE of boundaries: Just specify I/O to mock, everything else is real
-      // Much simpler than listing dozens of .expose() calls
+  describe('Basic boundaries functionality', () => {
+    it('should allow simple configuration by specifying class boundaries', async () => {
+      // The VALUE of boundaries: Just specify what to mock, everything else is real
+      // Note: I/O tokens (Repository, Logger) are ALWAYS auto-mocked
       const { unit, unitRef } = await TestBed.sociable(UserService)
-        .boundaries([DatabaseService, ApiService]) // Just I/O
-        .mock(Logger).impl((stub) => ({ log: stub(), info: stub() }))
+        .boundaries([DatabaseService, ApiService]) // Class boundaries
         .compile();
 
       expect(unit).toBeInstanceOf(UserService);
 
-      // Boundary mocks are retrievable when explicitly mocked
-      const mockLogger = unitRef.get(Logger);
-      expect(mockLogger.log).toBeDefined();
-
-      // Repository token is auto-mocked
+      // Tokens are auto-mocked (Repository, Logger)
       const mockRepo = unitRef.get<Repository>('Repository');
+      const mockLogger = unitRef.get(Logger);
+      expect(mockRepo).toBeDefined();
+      expect(mockLogger).toBeDefined();
+
+      // UserVerificationService, UserDal, UserApiService are REAL (auto-exposed)
+      // Testing actual business logic, not mocks!
       mockRepo.create = jest.fn().mockResolvedValue(undefined);
 
-      // UserVerificationService is REAL (not a boundary)
-      // It actually validates with real logic
       const validUser = { name: 'John', email: 'john@example.com' };
       await unit.create(validUser);
 
+      // Real UserVerificationService validated the email
+      // Real UserDal processed the creation
       expect(mockRepo.create).toHaveBeenCalled();
     });
   });
 
-  describe('Comparison with expose pattern', () => {
-    it('should require explicit configuration with expose (old way)', async () => {
-      // The old tedious way - listing everything
-      const { unit } = await TestBed.sociable(UserService)
-        .disableFailFast() // For simplicity in this demo
-        .expose(UserApiService)
-        .expose(UserDal)
-        .expose(UserVerificationService)
-        // Would need many more in a real app
-        .compile();
-
-      expect(unit).toBeInstanceOf(UserService);
-    });
-
-    it('should be simple with boundaries (new way)', async () => {
-      // The new simple way - just specify boundaries
-      const { unit } = await TestBed.sociable(UserService)
+  describe('Why tokens are natural boundaries', () => {
+    it('should auto-mock token injections without declaring them as boundaries', async () => {
+      const { unitRef } = await TestBed.sociable(UserService)
         .boundaries([DatabaseService, ApiService])
-        .mock(Logger).impl((stub) => ({ log: stub(), info: stub() }))
         .compile();
 
-      expect(unit).toBeInstanceOf(UserService);
+      // These tokens are auto-mocked - didn't need to add to boundaries!
+      const mockLogger = unitRef.get(Logger);
+      const mockRepo = unitRef.get<Repository>('Repository');
+      const mockToken = unitRef.get<string[]>('SOME_VALUE_TOKEN');
+
+      expect(mockLogger).toBeDefined(); // @Inject('Logger')
+      expect(mockRepo).toBeDefined(); // @Inject('Repository')
+      expect(mockToken).toBeUndefined(); // Not explicitly configured
+
+      // This is why boundaries is NOT for I/O - tokens handle that!
     });
   });
 

@@ -52,8 +52,8 @@ describe('Boundaries Real Use Case - Testing Business Logic with Expensive Depen
       const mockRepo = unitRef.get<UserRepository>('USER_REPOSITORY');
       mockRepo.findById = jest.fn().mockResolvedValue({
         id: '123',
-        email: 'premium@example.com',
-        name: 'jane',
+        email: 'premium@example.com', // Has @ so validation passes
+        name: 'jane', // Non-empty so validation passes
       } as User);
 
       const mockRecommendations = unitRef.get(RecommendationEngine);
@@ -107,9 +107,9 @@ describe('Boundaries Real Use Case - Testing Business Logic with Expensive Depen
       // Test with premium user
       mockRepo.findById = jest.fn().mockResolvedValue({
         id: '1',
-        email: 'premium@example.com',
-        name: 'VIP',
-      });
+        email: 'premium@example.com', // Has @ and "premium"
+        name: 'VIP', // Non-empty
+      } as User);
 
       const result = await unit.getUserProfile('1');
       expect(result.preferences.theme).toBe('dark'); // Premium gets dark theme
@@ -117,9 +117,9 @@ describe('Boundaries Real Use Case - Testing Business Logic with Expensive Depen
       // Test with regular user
       mockRepo.findById = jest.fn().mockResolvedValue({
         id: '2',
-        email: 'regular@example.com',
-        name: 'User',
-      });
+        email: 'regular@example.com', // Has @ but no "premium"
+        name: 'User', // Non-empty
+      } as User);
 
       const result2 = await unit.getUserProfile('2');
       expect(result2.preferences.theme).toBe('light'); // Regular gets light theme
@@ -127,10 +127,13 @@ describe('Boundaries Real Use Case - Testing Business Logic with Expensive Depen
   });
 
   describe('Fail-fast catches configuration bugs', () => {
-    it('should throw when expensive dependency not configured', async () => {
-      // Forget to configure the expensive boundary
+    it('should throw when dependencies are not fully configured', async () => {
+      // Only expose one service - others missing will trigger fail-fast
       await expect(
-        TestBed.sociable(UserProfileService).expose(UserPreferencesService).compile()
+        TestBed.sociable(UserProfileService)
+          .expose(UserPreferencesService)
+          // Missing: RecommendationEngine, UserValidator, UserFormatter
+          .compile()
       ).rejects.toThrow(/not configured/);
     });
   });

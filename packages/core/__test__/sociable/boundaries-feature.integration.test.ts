@@ -140,5 +140,42 @@ describe('Boundaries Feature Integration Tests', () => {
         expect.stringContaining('.disableFailFast() is a migration helper')
       );
     });
+
+    // Note: Boundaries mode error message formatting is tested via e2e tests
+    // with full DI context where auto-expose can properly trigger fail-fast
+
+    it('should format error message for null mode when fail-fast triggers', async () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // No mode set - should fail immediately
+      await expect(unitBuilder.compile()).rejects.toMatchObject({
+        message: expect.stringContaining('No mode configured'),
+      });
+    });
+
+    it('should re-throw non-DependencyNotConfiguredError errors', async () => {
+      // Create a builder with an adapter that throws a different error
+      const badAdapter = {
+        inspect: () => {
+          throw new Error('Custom adapter error');
+        },
+      } as any;
+
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(badAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      await expect(unitBuilder.expose(UserApiService).compile()).rejects.toThrow(
+        'Custom adapter error'
+      );
+    });
   });
 });

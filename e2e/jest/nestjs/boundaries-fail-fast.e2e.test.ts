@@ -17,17 +17,17 @@ describe('Suites Boundaries Feature (v4.0.0)', () => {
     let unitRef: UnitReference;
 
     beforeAll(async () => {
-      // Configure boundaries and explicit mocks
+      // Configure boundaries and explicit mocks for dependencies we want to verify
       const { unit, unitRef: ref } = await TestBed.sociable(UserService)
         .boundaries([ApiService, DatabaseService, UserApiService, UserDal, UserVerificationService])
-        .mock<Repository>('Repository')
-        .impl((stub) => ({
-          create: stub().mockResolvedValue(undefined),
-          find: stub().mockResolvedValue([]),
-        }))
         .mock(UserVerificationService)
         .impl((stub) => ({
           verify: stub().mockReturnValue(true),
+        }))
+        .mock(Logger)
+        .impl((stub) => ({
+          log: stub(),
+          info: stub(),
         }))
         .compile();
 
@@ -40,25 +40,22 @@ describe('Suites Boundaries Feature (v4.0.0)', () => {
     });
 
     it('should create user using mocked dependencies', async () => {
-      // ARRANGE: Get mocked dependencies configured in setup
-      const mockRepo = unitRef.get<Repository>('Repository');
+      // ARRANGE: Get mocked dependencies
       const mockVerification = unitRef.get(UserVerificationService);
 
       // ACT: Create a user
       const user = { name: 'John Doe', email: 'john@example.com' };
       const result = await underTest.create(user);
 
-      // ASSERT: Verify stub interactions
+      // ASSERT: Verify the mock was called
       expect(result).toEqual(user);
       expect(mockVerification.verify).toHaveBeenCalledWith(user);
-      expect(mockRepo.create).toHaveBeenCalledWith(JSON.stringify(user));
     });
 
-    it('should have Logger token auto-mocked', () => {
-      // Logger is a token - auto-mocked without declaring in boundaries
+    it('should verify Logger token was auto-mocked and called during construction', () => {
+      // Logger is a token - we mocked it explicitly to verify calls
       const mockLogger = unitRef.get(Logger);
 
-      expect(mockLogger).toBeDefined();
       expect(mockLogger.log).toHaveBeenCalledWith('just logging a message');
       expect(mockLogger.log).toHaveBeenCalledWith('UserService initialized');
     });

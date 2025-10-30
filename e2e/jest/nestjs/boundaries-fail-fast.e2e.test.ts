@@ -17,17 +17,12 @@ describe('Suites Boundaries Feature (v4.0.0)', () => {
     let unitRef: UnitReference;
 
     beforeAll(async () => {
-      // Configure boundaries and explicit mocks for dependencies we want to verify
+      // Configure boundaries - Logger token auto-mocked by Suites
       const { unit, unitRef: ref } = await TestBed.sociable(UserService)
         .boundaries([ApiService, DatabaseService, UserApiService, UserDal, UserVerificationService])
         .mock(UserVerificationService)
         .impl((stub) => ({
           verify: stub().mockReturnValue(true),
-        }))
-        .mock(Logger)
-        .impl((stub) => ({
-          log: stub(),
-          info: stub(),
         }))
         .compile();
 

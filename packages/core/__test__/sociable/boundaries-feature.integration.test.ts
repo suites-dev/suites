@@ -18,8 +18,8 @@ describe('Boundaries Feature Integration Tests', () => {
     loggerMock.warn.mockClear();
   });
 
-  describe('boundaries() method - basic functionality', () => {
-    it('should successfully compile when all dependencies are boundaries', async () => {
+  describe('boundaries() method - API verification', () => {
+    it('should compile with boundaries (proves API works)', async () => {
       const unitBuilder = new SociableTestBedBuilder(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
@@ -27,7 +27,8 @@ describe('Boundaries Feature Integration Tests', () => {
         loggerMock
       );
 
-      // All class dependencies as boundaries - they'll be auto-mocked
+      // Note: Using all deps as boundaries due to FakeAdapter constraints
+      // Real value of partial boundaries is demonstrated in e2e tests with full DI
       const { unit } = await unitBuilder
         .boundaries([
           UserApiService,
@@ -42,7 +43,7 @@ describe('Boundaries Feature Integration Tests', () => {
       expect(unit).toBeInstanceOf(UserService);
     });
 
-    it('should work with boundaries and explicit mocks combined', async () => {
+    it('should allow explicit mock to override boundary auto-mock', async () => {
       const unitBuilder = new SociableTestBedBuilder(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
@@ -50,8 +51,8 @@ describe('Boundaries Feature Integration Tests', () => {
         loggerMock
       );
 
-      // Boundaries define what to mock, .mock() allows retrieving them
-      const { unit } = await unitBuilder
+      // Explicitly mock a boundary to verify it takes precedence
+      const { unitRef } = await unitBuilder
         .boundaries([
           UserApiService,
           UserDal,
@@ -60,12 +61,21 @@ describe('Boundaries Feature Integration Tests', () => {
           UserVerificationService,
           UserDigestService,
         ])
-        .mock(DatabaseService)
-        .impl(() => ({ findData: jest.fn(), saveData: jest.fn() }))
+        .mock(UserApiService)
+        .impl((stub) => ({
+          getUserData: stub().mockResolvedValue('custom-data'),
+          verifyUser: stub(),
+        }))
         .compile();
 
-      expect(unit).toBeInstanceOf(UserService);
-      // Note: Full boundary mock retrieval will be tested in e2e tests
+      // Explicit mock should be retrievable (UserApiService is directly used by UserService)
+      const mockUserApi = unitRef.get(UserApiService);
+      expect(mockUserApi).toBeDefined();
+      expect(mockUserApi.getUserData).toBeDefined();
+
+      // Verify it's our custom mock, not auto-mock
+      const result = await mockUserApi.getUserData('test');
+      expect(result).toBe('custom-data');
     });
   });
 

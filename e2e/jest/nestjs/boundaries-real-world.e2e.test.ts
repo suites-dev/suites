@@ -108,21 +108,29 @@ describe('Boundaries Real-World Scenario - Order Processing', () => {
   });
 
   describe('Tokens are natural boundaries', () => {
-    it('should auto-mock ORDER_REPOSITORY token without declaring it', async () => {
-      const { unitRef } = await TestBed.sociable(OrderService)
-        .boundaries([RecommendationEngine])
+    it('should work without declaring token in boundaries array', async () => {
+      // Notice: ORDER_REPOSITORY is NOT in boundaries array
+      // It's a token, so it's auto-mocked automatically
+      const { unit, unitRef } = await TestBed.sociable(OrderService)
+        .boundaries([RecommendationEngine]) // Only class boundary, NO tokens!
         .mock<OrderRepository>('ORDER_REPOSITORY')
         .impl((stub) => ({
-          save: stub(),
+          save: stub().mockResolvedValue(undefined),
+        }))
+        .mock(RecommendationEngine)
+        .impl((stub) => ({
+          getRecommendations: stub().mockResolvedValue([]),
         }))
         .compile();
 
-      // ORDER_REPOSITORY is a token - auto-mocked, didn't need to add to boundaries!
-      const mockRepo = unitRef.get<OrderRepository>('ORDER_REPOSITORY');
-      expect(mockRepo).toBeDefined();
-      expect(mockRepo.save).toBeDefined();
+      // Process an order - ORDER_REPOSITORY is used but wasn't in boundaries
+      await unit.processOrder('user', 100);
 
-      // This is why boundaries is NOT for I/O - tokens handle that!
+      // Token was auto-mocked (didn't need to add to boundaries array)
+      const mockRepo = unitRef.get<OrderRepository>('ORDER_REPOSITORY');
+      expect(mockRepo.save).toHaveBeenCalled();
+
+      // Proves: Tokens are natural boundaries - I/O already isolated!
     });
   });
 });

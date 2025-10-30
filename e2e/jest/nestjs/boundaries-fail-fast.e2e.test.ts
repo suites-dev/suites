@@ -1,4 +1,6 @@
+import type { UnitReference } from '@suites/unit';
 import { TestBed } from '@suites/unit';
+import type { Repository } from './e2e-assets-sociable';
 import {
   Logger,
   DatabaseService,
@@ -10,13 +12,55 @@ import {
 } from './e2e-assets-sociable';
 
 describe('Suites Boundaries Feature (v4.0.0)', () => {
-  describe('Boundaries API works correctly', () => {
-    it('should compile successfully with boundaries', async () => {
-      const { unit } = await TestBed.sociable(UserService)
+  describe('Testing user creation with boundaries', () => {
+    let underTest: UserService;
+    let unitRef: UnitReference;
+
+    beforeAll(async () => {
+      // Configure boundaries and explicit mocks
+      const { unit, unitRef: ref } = await TestBed.sociable(UserService)
         .boundaries([ApiService, DatabaseService, UserApiService, UserDal, UserVerificationService])
+        .mock<Repository>('Repository')
+        .impl((stub) => ({
+          create: stub().mockResolvedValue(undefined),
+          find: stub().mockResolvedValue([]),
+        }))
+        .mock(UserVerificationService)
+        .impl((stub) => ({
+          verify: stub().mockReturnValue(true),
+        }))
         .compile();
 
-      expect(unit).toBeInstanceOf(UserService);
+      underTest = unit;
+      unitRef = ref;
+    });
+
+    it('should instantiate UserService', () => {
+      expect(underTest).toBeInstanceOf(UserService);
+    });
+
+    it('should create user using mocked dependencies', async () => {
+      // ARRANGE: Get mocked dependencies configured in setup
+      const mockRepo = unitRef.get<Repository>('Repository');
+      const mockVerification = unitRef.get(UserVerificationService);
+
+      // ACT: Create a user
+      const user = { name: 'John Doe', email: 'john@example.com' };
+      const result = await underTest.create(user);
+
+      // ASSERT: Verify stub interactions
+      expect(result).toEqual(user);
+      expect(mockVerification.verify).toHaveBeenCalledWith(user);
+      expect(mockRepo.create).toHaveBeenCalledWith(JSON.stringify(user));
+    });
+
+    it('should have Logger token auto-mocked', () => {
+      // Logger is a token - auto-mocked without declaring in boundaries
+      const mockLogger = unitRef.get(Logger);
+
+      expect(mockLogger).toBeDefined();
+      expect(mockLogger.log).toHaveBeenCalledWith('just logging a message');
+      expect(mockLogger.log).toHaveBeenCalledWith('UserService initialized');
     });
   });
 

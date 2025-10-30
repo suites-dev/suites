@@ -179,39 +179,9 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
   });
 
-  describe('Mode enforcement', () => {
-    it('should throw error when using expose after boundaries', () => {
-      const unitBuilder = new SociableTestBedBuilder(
-        Promise.resolve({ mock, stub: jest.fn }),
-        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
-        UserService,
-        loggerMock
-      );
-
-      unitBuilder.boundaries([ApiService]);
-
-      // Runtime check still exists for JavaScript users
-      expect(() => {
-        unitBuilder.expose(UserDal);
-      }).toThrow(/Cannot use \.expose\(\) after \.boundaries\(\)/);
-    });
-
-    it('should throw error when using boundaries after expose', () => {
-      const unitBuilder = new SociableTestBedBuilder(
-        Promise.resolve({ mock, stub: jest.fn }),
-        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
-        UserService,
-        loggerMock
-      );
-
-      unitBuilder.expose(UserDal);
-
-      // Runtime check for JavaScript users
-      expect(() => {
-        unitBuilder.boundaries([ApiService]);
-      }).toThrow(/Cannot use \.boundaries\(\) after \.expose\(\)/);
-    });
-  });
+  // Note: Mode mutual exclusivity is enforced at TYPE level (compile-time)
+  // Runtime checks exist for JavaScript users but not tested here
+  // E2E tests verify the error messages for user-facing scenarios
 
   describe('Error message formatting', () => {
     it('should include helpful context in expose mode error', async () => {

@@ -133,4 +133,19 @@ describe('Boundaries Real-World Scenario - Order Processing', () => {
       // Proves: Tokens are natural boundaries - I/O already isolated!
     });
   });
+
+  describe('Mode mutual exclusivity - user-facing errors', () => {
+    it('should prevent using expose after boundaries (for JS users)', () => {
+      // TypeScript prevents this at compile time, but JS users get runtime error
+      expect(() => {
+        TestBed.sociable(OrderService).boundaries([RecommendationEngine]).expose(PricingService);
+      }).toThrow(/Cannot use \.expose\(\) after \.boundaries\(\)/);
+    });
+
+    it('should prevent using boundaries after expose (for JS users)', () => {
+      expect(() => {
+        TestBed.sociable(OrderService).expose(PricingService).boundaries([RecommendationEngine]);
+      }).toThrow(/Cannot use \.boundaries\(\) after \.expose\(\)/);
+    });
+  });
 });

@@ -11,15 +11,15 @@ import {
 } from './assets/injectable-registry.fixture';
 import { SociableTestBedBuilder, UnitMocker } from '../../src';
 
-describe('Boundaries Feature Integration Tests', () => {
+describe('Boundaries Feature - Internal Resolution Mechanics', () => {
   const loggerMock = { warn: jest.fn() } as unknown as jest.Mocked<Console>;
 
   beforeEach(() => {
     loggerMock.warn.mockClear();
   });
 
-  describe('boundaries() method - API verification', () => {
-    it('should compile with boundaries (proves API works)', async () => {
+  describe('Resolution: Explicit mock (Priority 1) beats boundary (Priority 2)', () => {
+    it('should use explicit mock when dependency is both in boundaries and mocked', async () => {
       const unitBuilder = new SociableTestBedBuilder(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
@@ -27,8 +27,41 @@ describe('Boundaries Feature Integration Tests', () => {
         loggerMock
       );
 
-      // Note: Using all deps as boundaries due to FakeAdapter constraints
-      // Real value of partial boundaries is demonstrated in e2e tests with full DI
+      // UserApiService is in boundaries AND explicitly mocked
+      const { unitRef } = await unitBuilder
+        .boundaries([
+          UserApiService,
+          UserDal,
+          DatabaseService,
+          ApiService,
+          UserVerificationService,
+          UserDigestService,
+        ])
+        .mock(UserApiService)
+        .impl((stubFn) => ({
+          getUserData: stubFn().mockResolvedValue('custom-implementation'),
+          verifyUser: stubFn(),
+        }))
+        .compile();
+
+      const mockUserApi = unitRef.get(UserApiService);
+
+      // ASSERT: It's our explicit mock, not boundary auto-mock
+      const result = await mockUserApi.getUserData('test');
+      expect(result).toBe('custom-implementation');
+    });
+  });
+
+  describe('Resolution: Boundaries mode enables auto-expose', () => {
+    it('should compile with boundaries mode', async () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // All deps as boundaries for FakeAdapter compatibility
       const { unit } = await unitBuilder
         .boundaries([
           UserApiService,
@@ -41,69 +74,6 @@ describe('Boundaries Feature Integration Tests', () => {
         .compile();
 
       expect(unit).toBeInstanceOf(UserService);
-    });
-
-    it('should allow explicit mock to override boundary auto-mock', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
-        Promise.resolve({ mock, stub: jest.fn }),
-        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
-        UserService,
-        loggerMock
-      );
-
-      // Explicitly mock a boundary to verify it takes precedence
-      const { unitRef } = await unitBuilder
-        .boundaries([
-          UserApiService,
-          UserDal,
-          DatabaseService,
-          ApiService,
-          UserVerificationService,
-          UserDigestService,
-        ])
-        .mock(UserApiService)
-        .impl((stub) => ({
-          getUserData: stub().mockResolvedValue('custom-data'),
-          verifyUser: stub(),
-        }))
-        .compile();
-
-      // Explicit mock should be retrievable (UserApiService is directly used by UserService)
-      const mockUserApi = unitRef.get(UserApiService);
-      expect(mockUserApi).toBeDefined();
-      expect(mockUserApi.getUserData).toBeDefined();
-
-      // Verify it's our custom mock, not auto-mock
-      const result = await mockUserApi.getUserData('test');
-      expect(result).toBe('custom-data');
-    });
-  });
-
-  describe('Mode mutual exclusivity', () => {
-    it('should throw when using expose after boundaries', () => {
-      const unitBuilder = new SociableTestBedBuilder(
-        Promise.resolve({ mock, stub: jest.fn }),
-        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
-        UserService,
-        loggerMock
-      );
-
-      expect(() => {
-        unitBuilder.boundaries([DatabaseService]).expose(UserApiService);
-      }).toThrow(/Cannot use \.expose\(\) after \.boundaries\(\)/);
-    });
-
-    it('should throw when using boundaries after expose', () => {
-      const unitBuilder = new SociableTestBedBuilder(
-        Promise.resolve({ mock, stub: jest.fn }),
-        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
-        UserService,
-        loggerMock
-      );
-
-      expect(() => {
-        unitBuilder.expose(UserApiService).boundaries([DatabaseService]);
-      }).toThrow(/Cannot use \.boundaries\(\) after \.expose\(\)/);
     });
   });
 

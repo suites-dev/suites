@@ -8,10 +8,34 @@ import type { UnitTestBed } from '../../types.js';
 import { TestBedBuilder } from './testbed-builder.js';
 import { DependencyNotConfiguredError } from '../../errors/dependency-not-configured.error.js';
 
-export interface SociableTestBedBuilder<TClass> {
-  expose(dependency: Type): SociableTestBedBuilder<TClass>;
-  boundaries(dependencies: Type[]): SociableTestBedBuilder<TClass>;
+/**
+ * Builder in expose mode - can only use expose(), not boundaries()
+ * @since 4.0.0
+ */
+export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuilder<TClass> {
+  expose(dependency: Type): SociableTestBedBuilderInExposeMode<TClass>;
+  disableFailFast(): SociableTestBedBuilderInExposeMode<TClass>;
+  compile(): Promise<UnitTestBed<TClass>>;
+}
+
+/**
+ * Builder in boundaries mode - can only use boundaries(), not expose()
+ * @since 4.0.0
+ */
+export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedBuilder<TClass> {
+  disableFailFast(): SociableTestBedBuilderInBoundariesMode<TClass>;
+  compile(): Promise<UnitTestBed<TClass>>;
+}
+
+/**
+ * Initial builder - can choose either expose() or boundaries()
+ * @since 4.0.0
+ */
+export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
+  expose(dependency: Type): SociableTestBedBuilderInExposeMode<TClass>;
+  boundaries(dependencies: Type[]): SociableTestBedBuilderInBoundariesMode<TClass>;
   disableFailFast(): SociableTestBedBuilder<TClass>;
+  compile(): Promise<UnitTestBed<TClass>>;
 }
 
 /**
@@ -58,7 +82,7 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    *   .compile();
    * ```
    */
-  public expose(dependency: Type): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass> {
+  public expose(dependency: Type): SociableTestBedBuilderInExposeMode<TClass> {
     if (this.mode === 'boundaries') {
       throw new Error(
         'Cannot use .expose() after .boundaries().\n' +
@@ -72,7 +96,7 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
     this.mode = 'expose';
     this.classesToExpose.push(dependency);
 
-    return this;
+    return this as SociableTestBedBuilderInExposeMode<TClass>;
   }
 
   /**
@@ -100,7 +124,7 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    *   .compile();
    * ```
    */
-  public boundaries(dependencies: Type[]): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass> {
+  public boundaries(dependencies: Type[]): SociableTestBedBuilderInBoundariesMode<TClass> {
     if (this.mode === 'expose') {
       throw new Error(
         'Cannot use .boundaries() after .expose().\n' +
@@ -114,7 +138,7 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
     this.mode = 'boundaries';
     this.boundaryClasses.push(...dependencies);
 
-    return this;
+    return this as SociableTestBedBuilderInBoundariesMode<TClass>;
   }
 
   /**
@@ -138,7 +162,7 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    *   .compile();
    * ```
    */
-  public disableFailFast(): SociableTestBedBuilder<TClass> & TestBedBuilder<TClass> {
+  public disableFailFast(): this {
     this.logger.warn(
       'Suites Warning: .disableFailFast() is a migration helper.\n' +
         'Disabling fail-fast means unconfigured dependencies will return undefined,\n' +

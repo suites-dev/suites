@@ -157,5 +157,97 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         'Custom adapter error'
       );
     });
+
+    it('should format error message for expose mode with helpful suggestions', async () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      try {
+        await unitBuilder.expose(UserApiService).compile();
+        fail('Should have thrown');
+      } catch (error: any) {
+        expect(error.message).toContain('In expose mode');
+        expect(error.message).toContain('all dependencies are mocked by default');
+        expect(error.message).toContain('.expose(');
+        expect(error.message).toContain('.mock(');
+        expect(error.message).toContain('.disableFailFast()');
+      }
+    });
+  });
+
+  describe('Mode enforcement', () => {
+    it('should throw error when using expose after boundaries', () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      unitBuilder.boundaries([ApiService]);
+
+      // Runtime check still exists for JavaScript users
+      expect(() => {
+        unitBuilder.expose(UserDal);
+      }).toThrow(/Cannot use \.expose\(\) after \.boundaries\(\)/);
+    });
+
+    it('should throw error when using boundaries after expose', () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      unitBuilder.expose(UserDal);
+
+      // Runtime check for JavaScript users
+      expect(() => {
+        unitBuilder.boundaries([ApiService]);
+      }).toThrow(/Cannot use \.boundaries\(\) after \.expose\(\)/);
+    });
+  });
+
+  describe('Error message formatting', () => {
+    it('should include helpful context in expose mode error', async () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      try {
+        await unitBuilder.expose(UserApiService).compile();
+      } catch (error: any) {
+        // Error is for whichever dep is hit first (ApiService in this case)
+        expect(error.message).toContain('not configured');
+        expect(error.message).toContain('In expose mode');
+        expect(error.message).toContain('all dependencies are mocked by default');
+        expect(error.message).toContain('.expose(');
+        expect(error.message).toContain('.mock(');
+      }
+    });
+
+    it('should provide migration path in error message', async () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      try {
+        await unitBuilder.expose(UserApiService).compile();
+      } catch (error: any) {
+        expect(error.message).toContain('https://suites.dev/docs/v4-migration');
+        expect(error.message).toContain('.disableFailFast()');
+      }
+    });
   });
 });

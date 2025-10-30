@@ -320,7 +320,7 @@ For detailed instructions and best practices, refer to our documentation: https:
       `${suggestions}\n` +
       '  - Use .disableFailFast() to restore v3.x behavior (not recommended)\n' +
       '\n' +
-      'Learn more: https://suites.dev/docs'
+      'Learn more: https://suites.dev/docs/v4-migration'
     );
   }
 }

@@ -12,104 +12,91 @@ import {
 } from './e2e-assets-sociable';
 
 describe('Suites Boundaries Feature (v4.0.0)', () => {
-  describe('Boundaries simplifies test configuration', () => {
-    it('should work with all class dependencies as boundaries', async () => {
-      // When all class deps are boundaries, it's similar to mocking everything
-      // But demonstrates boundaries API works correctly
-      const { unit } = await TestBed.sociable(UserService)
-        .boundaries([
-          DatabaseService,
-          ApiService,
-          UserApiService,
-          UserDal,
-          UserVerificationService,
-        ])
+  describe('Boundaries - mock specific class, rest is real', () => {
+    let underTest: UserService;
+    let unitRef: UnitReference;
+
+    beforeAll(async () => {
+      // Mock ONLY ApiService class as boundary
+      // Everything else: either real (classes) or auto-mocked (tokens)
+      const { unit, unitRef: ref } = await TestBed.sociable(UserService)
+        .boundaries([ApiService]) // Just this one class!
         .compile();
 
-      expect(unit).toBeInstanceOf(UserService);
+      underTest = unit;
+      unitRef = ref;
     });
 
-    it('should demonstrate the value vs expose pattern', async () => {
-      // OLD WAY with expose - must list everything to make real
-      const { unit: unit1 } = await TestBed.sociable(UserService)
-        .disableFailFast()
-        .expose(UserApiService)
-        .expose(UserDal)
-        .expose(UserVerificationService)
-        // Imagine 20+ more expose calls in a real app
-        .compile();
+    it('should instantiate with real business logic services', () => {
+      expect(underTest).toBeInstanceOf(UserService);
+    });
 
-      expect(unit1).toBeInstanceOf(UserService);
+    it('should use REAL UserVerificationService for validation', async () => {
+      // UserVerificationService is REAL (not a boundary)
+      const mockRepo = unitRef.get<Repository>('Repository');
+      mockRepo.create = jest.fn().mockResolvedValue(undefined);
 
-      // NEW WAY with boundaries - just list what to mock
-      const { unit: unit2 } = await TestBed.sociable(UserService)
-        .boundaries([DatabaseService, ApiService])
-        // Everything else auto-exposed (but will fail-fast if missing deps)
-        .mock(UserVerificationService).impl(() => ({ verify: jest.fn().mockReturnValue(true) }))
-        .compile();
+      // Valid email - REAL UserVerificationService accepts it
+      const validUser = { name: 'John', email: 'john@example.com' };
+      const created = await underTest.create(validUser);
+      expect(created).toEqual(validUser);
 
-      expect(unit2).toBeInstanceOf(UserService);
+      // Invalid email - REAL UserVerificationService rejects it
+      const invalidUser = { name: 'Jane', email: 'invalid' };
+      await expect(underTest.create(invalidUser)).rejects.toThrow('Invalid user data');
+    });
+
+    it('should mock ApiService as specified in boundaries', async () => {
+      // ApiService is a boundary - it's mocked
+      const mockApi = unitRef.get(ApiService);
+      expect(mockApi).toBeDefined();
+      expect(mockApi.fetchData).toBeDefined();
+    });
+
+    it('should auto-mock tokens (Logger, Repository) without declaring them', () => {
+      // These are tokens - auto-mocked regardless of boundaries
+      const mockLogger = unitRef.get(Logger);
+      const mockRepo = unitRef.get<Repository>('Repository');
+
+      expect(mockLogger).toBeDefined();
+      expect(mockRepo).toBeDefined();
+
+      // Proves: Tokens are natural boundaries, don't need to declare!
     });
   });
 
-  describe('Tokens are natural boundaries', () => {
-    it('should auto-mock token injections without declaring them', async () => {
-      const { unitRef } = await TestBed.sociable(UserService)
-        .boundaries([
-          DatabaseService,
-          ApiService,
-          UserApiService,
-          UserDal,
-          UserVerificationService,
-        ])
-        .compile();
+  describe('Mode mutual exclusivity', () => {
+    it('should prevent using expose after boundaries', () => {
+      expect(() => {
+        TestBed.sociable(UserService).boundaries([ApiService]).expose(UserDal);
+      }).toThrow(/Cannot use \.expose\(\) after \.boundaries\(\)/);
+    });
 
-      // Logger is a token - auto-mocked without being in boundaries array
-      const mockLogger = unitRef.get(Logger);
-      expect(mockLogger).toBeDefined();
-
-      // Repository is also a token - auto-mocked
-      const mockRepo = unitRef.get<Repository>('Repository');
-      expect(mockRepo).toBeDefined();
-
-      // This proves: Boundaries is NOT for I/O - tokens handle that!
+    it('should prevent using boundaries after expose', () => {
+      expect(() => {
+        TestBed.sociable(UserService).expose(UserDal).boundaries([ApiService]);
+      }).toThrow(/Cannot use \.boundaries\(\) after \.expose\(\)/);
     });
   });
 
   describe('Fail-fast prevents lying tests', () => {
-    it('should throw when dependency is not configured (catch bugs)', async () => {
-      // This catches configuration mistakes
+    it('should throw when dependency not configured in expose mode', async () => {
       await expect(
         TestBed.sociable(UserService)
-          .expose(UserApiService) // Only expose one thing
-          // Missing: UserDal, DatabaseService, ApiService, etc.
+          .expose(UserApiService)
+          // Missing: UserDal, DatabaseService, etc.
           .compile()
       ).rejects.toThrow(/not configured/);
     });
 
-    it('should allow opting out with disableFailFast for migration', async () => {
-      // Migration path: temporarily disable fail-fast
+    it('should allow migration with disableFailFast', async () => {
       const { unit } = await TestBed.sociable(UserService)
-        .disableFailFast() // Opt-out
+        .disableFailFast()
         .expose(UserApiService)
         // Other deps auto-mocked (v3.x behavior)
         .compile();
 
       expect(unit).toBeInstanceOf(UserService);
-    });
-  });
-
-  describe('Mode mutual exclusivity', () => {
-    it('should prevent mixing expose and boundaries', async () => {
-      expect(() => {
-        TestBed.sociable(UserService).boundaries([DatabaseService]).expose(UserApiService);
-      }).toThrow(/Cannot use \.expose\(\) after \.boundaries\(\)/);
-    });
-
-    it('should prevent mixing boundaries and expose', async () => {
-      expect(() => {
-        TestBed.sociable(UserService).expose(UserApiService).boundaries([DatabaseService]);
-      }).toThrow(/Cannot use \.boundaries\(\) after \.expose\(\)/);
     });
   });
 });

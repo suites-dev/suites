@@ -8,10 +8,15 @@ import {
   Order,
 } from './e2e-assets-boundaries-simple';
 
+interface OrderRepository {
+  save(order: Order): Promise<void>;
+  findById(id: string): Promise<Order>;
+}
+
 describe('Boundaries Real-World Scenario - Order Processing', () => {
   describe('Testing order processing with REAL business logic', () => {
     let orderService: OrderService;
-    let mockRepo: Mocked<any>;
+    let mockRepo: Mocked<OrderRepository>;
     let mockRecommendations: Mocked<RecommendationEngine>;
 
     beforeAll(async () => {
@@ -23,14 +28,14 @@ describe('Boundaries Real-World Scenario - Order Processing', () => {
         .impl((stub) => ({
           getRecommendations: stub().mockResolvedValue(['rec1', 'rec2']),
         }))
-        .mock('ORDER_REPOSITORY')
+        .mock<OrderRepository>('ORDER_REPOSITORY')
         .impl((stub) => ({
           save: stub().mockResolvedValue(undefined),
         }))
         .compile();
 
       orderService = unit;
-      mockRepo = unitRef.get('ORDER_REPOSITORY');
+      mockRepo = unitRef.get<OrderRepository>('ORDER_REPOSITORY');
       mockRecommendations = unitRef.get(RecommendationEngine);
     });
 
@@ -88,7 +93,7 @@ describe('Boundaries Real-World Scenario - Order Processing', () => {
         .impl((stub) => ({
           getRecommendations: stub().mockResolvedValue([]),
         }))
-        .mock('ORDER_REPOSITORY')
+        .mock<OrderRepository>('ORDER_REPOSITORY')
         .impl((stub) => ({
           save: stub().mockResolvedValue(undefined),
         }))
@@ -106,14 +111,14 @@ describe('Boundaries Real-World Scenario - Order Processing', () => {
     it('should auto-mock ORDER_REPOSITORY token without declaring it', async () => {
       const { unitRef } = await TestBed.sociable(OrderService)
         .boundaries([RecommendationEngine])
-        .mock('ORDER_REPOSITORY')
+        .mock<OrderRepository>('ORDER_REPOSITORY')
         .impl((stub) => ({
           save: stub(),
         }))
         .compile();
 
       // ORDER_REPOSITORY is a token - auto-mocked, didn't need to add to boundaries!
-      const mockRepo = unitRef.get('ORDER_REPOSITORY');
+      const mockRepo = unitRef.get<OrderRepository>('ORDER_REPOSITORY');
       expect(mockRepo).toBeDefined();
       expect(mockRepo.save).toBeDefined();
 

@@ -13,24 +13,58 @@ export interface MockedUnit<TClass> {
     mocks: { metadata?: unknown; identifier: Type }[];
     exposes: Type[];
   };
+  autoExposedClasses: Type[];
 }
 
+/**
+ * Options for configuring dependency resolution behavior in sociable tests.
+ * @since 4.0.0
+ */
+export interface ResolverOptions {
+  /** The current testing mode: expose (whitelist) or boundaries (blacklist) */
+  mode: 'expose' | 'boundaries' | null;
+  /** Array of classes to treat as boundaries (mocked in boundaries mode) */
+  boundaryClasses: Type[];
+  /** Whether to throw errors for unconfigured dependencies (default: true) */
+  failFastEnabled: boolean;
+  /** Whether to auto-expose non-boundary dependencies (true in boundaries mode) */
+  autoExposeEnabled: boolean;
+}
+
+/**
+ * Service responsible for constructing unit test instances with their dependencies.
+ * Orchestrates dependency resolution, mocking, and instantiation.
+ *
+ * @since 3.0.0
+ */
 export class UnitMocker {
   public constructor(
     private readonly mockFunction: Promise<MockFunction>,
     private readonly diAdapter: Promise<DependencyInjectionAdapter>
   ) {}
 
+  /**
+   * Constructs a unit test instance with configured dependencies.
+   *
+   * @param targetClass The class to instantiate for testing
+   * @param classesToExpose Array of classes to expose as real instances
+   * @param mockContainer Container with pre-configured mocks
+   * @param options Configuration for dependency resolution behavior
+   * @returns Promise resolving to the constructed unit with its container and resolution info
+   * @since 3.0.0
+   */
   public async constructUnit<TClass>(
     targetClass: Type<TClass>,
     classesToExpose: Type[],
-    mockContainer: DependencyContainer
+    mockContainer: DependencyContainer,
+    options: ResolverOptions
   ): Promise<MockedUnit<TClass>> {
     const dependencyResolver = new DependencyResolver(
       classesToExpose,
       mockContainer,
       await this.diAdapter,
-      await this.mockFunction
+      await this.mockFunction,
+      options
     );
 
     const instance = dependencyResolver.instantiateClass(targetClass);
@@ -43,6 +77,7 @@ export class UnitMocker {
       container: new DependencyContainer(identifierToDependency),
       instance: instance as TClass,
       resolution: dependencyResolver.getResolutionSummary(),
+      autoExposedClasses: dependencyResolver.getAutoExposedClasses(),
     };
   }
 }

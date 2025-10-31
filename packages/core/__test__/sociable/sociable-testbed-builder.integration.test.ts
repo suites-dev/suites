@@ -22,7 +22,7 @@ describe('Social TestBed Builder Integration Tests', () => {
   let userServiceAsIfItWasUnderTest: UserService;
   let unitRef: UnitReference;
 
-  const loggerMock = { warn: jest.fn() } as unknown as jest.Mocked<Console>;
+  const loggerMock = mock<Console>();
 
   beforeAll(async () => {
     unitBuilder = new SociableTestBedBuilder(
@@ -36,6 +36,7 @@ describe('Social TestBed Builder Integration Tests', () => {
     );
 
     const testBed = await unitBuilder
+      .disableFailFast() // v3.x compatibility - not all deps configured
       .expose(UserApiService)
       .expose(UserDal)
       .expose(HttpClient)
@@ -57,12 +58,18 @@ describe('Social TestBed Builder Integration Tests', () => {
   });
 
   it('should have log a warning message about http client cannot be exposed because it is not a direct dependency', () => {
+    // Warning #1 is now from disableFailFast()
     expect(loggerMock.warn).toHaveBeenNthCalledWith(
       1,
+      expect.stringContaining('.disableFailFast() is a migration helper')
+    );
+    // Warnings #2 and #3 are about unreachable config
+    expect(loggerMock.warn).toHaveBeenNthCalledWith(
+      2,
       expect.stringContaining('Suites Warning: Unreachable Mock Configuration Detected')
     );
     expect(loggerMock.warn).toHaveBeenNthCalledWith(
-      2,
+      3,
       expect.stringContaining('Suites Warning: Unreachable Exposed Dependency Detected')
     );
   });

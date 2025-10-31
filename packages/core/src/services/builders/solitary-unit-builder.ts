@@ -41,7 +41,14 @@ export class SolitaryTestBedBuilder<TClass>
     const { container, instance, resolution } = await this.unitMocker.constructUnit<TClass>(
       this.targetClass,
       [],
-      new DependencyContainer([...identifiersToMocksImpls, ...identifiersToFinal])
+      new DependencyContainer([...identifiersToMocksImpls, ...identifiersToFinal]),
+      {
+        mode: null,
+        boundaryClasses: [],
+        // Solitary tests mock everything, no fail-fast needed
+        failFastEnabled: false,
+        autoExposeEnabled: false,
+      }
     );
 
     if (resolution.notFound.length > 0) {

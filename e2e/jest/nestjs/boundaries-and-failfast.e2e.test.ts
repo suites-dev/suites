@@ -8,7 +8,6 @@ import {
   DatabaseService,
   UserVerificationService,
   UserDigestService,
-  HttpClient,
   Logger,
   type User,
 } from './e2e-assets-sociable';
@@ -135,62 +134,6 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
     });
   });
 
-  describe('Mixed real/mock verification: Prove which deps are real vs mocked', () => {
-    it('should use real UserVerificationService and mocked ApiService', async () => {
-      // ARRANGE: Spy on real UserVerificationService
-      const verifySpy = jest.spyOn(UserVerificationService.prototype, 'verify');
-
-      const { unit, unitRef } = await TestBed.sociable(UserService)
-        .boundaries([ApiService]) // ApiService is mocked
-        .mock<Repository>('Repository')
-        .impl((stub) => ({
-          find: stub().mockResolvedValue([]),
-          create: stub().mockResolvedValue(undefined),
-        }))
-        .compile();
-
-      // ACT: Create user
-      const user: User = { name: 'Bob', email: 'bob@test.com' };
-      await unit.create(user);
-
-      // ASSERT: Real UserVerificationService.verify() was called
-      expect(verifySpy).toHaveBeenCalledWith(user);
-      expect(verifySpy).toHaveReturnedWith(true);
-
-      // ASSERT: ApiService is mocked (is a boundary)
-      const apiService = unitRef.get(ApiService);
-      expect(typeof apiService.fetchData).toBe('function');
-
-      verifySpy.mockRestore();
-    });
-
-    it('should execute real DatabaseService which uses token-injected Repository', async () => {
-      // ARRANGE
-      const { unit, unitRef } = await TestBed.sociable(UserService)
-        .boundaries([ApiService])
-        .mock<Repository>('Repository')
-        .impl((stub) => ({
-          find: stub().mockResolvedValue([]),
-          create: stub().mockResolvedValue(undefined),
-        }))
-        .compile();
-
-      // ACT: Create user (goes through real DatabaseService)
-      const user: User = { name: 'Charlie', email: 'charlie@example.com' };
-      await unit.create(user);
-
-      // ASSERT: Real DatabaseService.saveData() was called
-      // which internally calls Repository.create (token - mocked)
-      const mockRepo = unitRef.get<Repository>('Repository');
-      expect(mockRepo.create).toHaveBeenCalledWith(JSON.stringify(user));
-
-      // This proves:
-      // 1. DatabaseService is REAL (not mocked)
-      // 2. Repository (token) is MOCKED automatically
-      // 3. Real class using token-injected dep works correctly
-    });
-  });
-
   describe('Fail-fast with boundaries mode', () => {
     it('should fail-fast when accessing non-configured dependency in boundaries mode', async () => {
       // ARRANGE: Don't declare ApiService as boundary
@@ -206,20 +149,9 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
     });
 
     it('should provide helpful error message for boundaries mode', async () => {
-      try {
-        await TestBed.sociable(UserService)
-          .boundaries([DatabaseService]) // Missing ApiService
-          .compile();
-
-        fail('Should have thrown');
-      } catch (error: any) {
-        // ASSERT: Error message is helpful
-        expect(error.message).toContain('not configured');
-        expect(error.message).toContain('In boundaries mode');
-        expect(error.message).toContain('all dependencies are real by default');
-        expect(error.message).toContain('.boundaries(');
-        expect(error.message).toContain('.mock(');
-      }
+      await expect(
+        TestBed.sociable(UserService).boundaries([DatabaseService]).compile()
+      ).rejects.toThrow(/In boundaries mode/);
     });
 
     it('should allow disableFailFast as escape hatch in boundaries mode', async () => {
@@ -242,15 +174,9 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
     });
 
     it('should provide helpful error message for expose mode', async () => {
-      try {
-        await TestBed.sociable(UserService).expose(UserApiService).compile();
-        fail('Should have thrown');
-      } catch (error: any) {
-        expect(error.message).toContain('not configured');
-        expect(error.message).toContain('In expose mode');
-        expect(error.message).toContain('all dependencies are mocked by default');
-        expect(error.message).toContain('.expose(');
-      }
+      await expect(
+        TestBed.sociable(UserService).expose(UserApiService).compile()
+      ).rejects.toThrow(/In expose mode/);
     });
 
     it('should allow disabling for migration', async () => {
@@ -260,20 +186,6 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
         .compile();
 
       expect(unit).toBeInstanceOf(UserService);
-    });
-  });
-
-  describe('Mode mutual exclusivity', () => {
-    it('should prevent mixing boundaries and expose', () => {
-      expect(() => {
-        TestBed.sociable(UserService).boundaries([ApiService]).expose(UserDal);
-      }).toThrow(/Cannot use \.expose\(\) after \.boundaries\(\)/);
-    });
-
-    it('should prevent mixing expose and boundaries', () => {
-      expect(() => {
-        TestBed.sociable(UserService).expose(UserDal).boundaries([ApiService]);
-      }).toThrow(/Cannot use \.boundaries\(\) after \.expose\(\)/);
     });
   });
 

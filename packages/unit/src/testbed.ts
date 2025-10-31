@@ -66,9 +66,9 @@ export class TestBed {
    *   .compile();
    *
    * @example
-   * // Boundaries mode - blacklist mocked dependencies
+   * // Boundaries mode - mock expensive/flaky class dependencies
    * const { unit } = await TestBed.sociable(MyService)
-   *   .boundaries([DatabaseService, HttpClient])
+   *   .boundaries([RecommendationEngine, CacheService])
    *   .compile();
    *
    * @see https://suites.dev/docs/sociable-tests

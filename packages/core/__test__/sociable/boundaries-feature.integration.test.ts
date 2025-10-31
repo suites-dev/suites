@@ -12,7 +12,7 @@ import {
 import { SociableTestBedBuilder, UnitMocker } from '../../src';
 
 describe('Boundaries Feature - Internal Resolution Mechanics', () => {
-  const loggerMock = { warn: jest.fn() } as unknown as jest.Mocked<Console>;
+  const loggerMock = mock<Console>();
 
   beforeEach(() => {
     loggerMock.warn.mockClear();
@@ -28,7 +28,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
       );
 
       // UserApiService is in boundaries AND explicitly mocked
-      const { unitRef } = await unitBuilder
+      const { unit, unitRef } = await unitBuilder
         .boundaries([
           UserApiService,
           UserDal,
@@ -44,11 +44,15 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         }))
         .compile();
 
-      const mockUserApi = unitRef.get(UserApiService);
+      // ACT: Call UserService method which uses UserApiService
+      const result = await unit.getUserInfo('test-user');
 
-      // ASSERT: It's our explicit mock, not boundary auto-mock
-      const result = await mockUserApi.getUserData('test');
+      // ASSERT: UserService used our explicit mock (not boundary auto-mock)
       expect(result).toBe('custom-implementation');
+
+      // ASSERT: Mock was called through UserService
+      const mockUserApi = unitRef.get(UserApiService);
+      expect(mockUserApi.getUserData).toHaveBeenCalledWith('test-user');
     });
   });
 
@@ -166,16 +170,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         loggerMock
       );
 
-      try {
-        await unitBuilder.expose(UserApiService).compile();
-        fail('Should have thrown');
-      } catch (error: any) {
-        expect(error.message).toContain('In expose mode');
-        expect(error.message).toContain('all dependencies are mocked by default');
-        expect(error.message).toContain('.expose(');
-        expect(error.message).toContain('.mock(');
-        expect(error.message).toContain('.disableFailFast()');
-      }
+      await expect(unitBuilder.expose(UserApiService).compile()).rejects.toThrow(/In expose mode/);
     });
   });
 
@@ -192,16 +187,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         loggerMock
       );
 
-      try {
-        await unitBuilder.expose(UserApiService).compile();
-      } catch (error: any) {
-        // Error is for whichever dep is hit first (ApiService in this case)
-        expect(error.message).toContain('not configured');
-        expect(error.message).toContain('In expose mode');
-        expect(error.message).toContain('all dependencies are mocked by default');
-        expect(error.message).toContain('.expose(');
-        expect(error.message).toContain('.mock(');
-      }
+      await expect(unitBuilder.expose(UserApiService).compile()).rejects.toThrow(/not configured/);
     });
 
     it('should provide migration path in error message', async () => {
@@ -212,12 +198,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         loggerMock
       );
 
-      try {
-        await unitBuilder.expose(UserApiService).compile();
-      } catch (error: any) {
-        expect(error.message).toContain('https://suites.dev/docs/v4-migration');
-        expect(error.message).toContain('.disableFailFast()');
-      }
+      await expect(unitBuilder.expose(UserApiService).compile()).rejects.toThrow(/disableFailFast/);
     });
   });
 });

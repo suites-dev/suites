@@ -104,12 +104,13 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * Sets the builder to "boundaries mode" where all dependencies are real by default
    * and only boundary dependencies are mocked.
    *
-   * This is useful when you want most dependencies to be real and only want to isolate
-   * specific boundaries like I/O services, external APIs, or expensive operations.
+   * This is useful when you want most dependencies to be real and only want to mock
+   * expensive class dependencies, flaky services, or external SDK classes.
    *
    * Cannot be used after calling `.expose()`.
    *
    * Note: Token injections (e.g., @Inject('TOKEN')) are automatically mocked regardless of mode.
+   * I/O services injected via tokens don't need to be declared as boundaries.
    *
    * @param dependencies Array of class types to treat as boundaries (will be mocked)
    * @returns The builder instance for method chaining
@@ -118,9 +119,9 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    *
    * @example
    * ```typescript
-   * // Mock only I/O boundaries, everything else is real
+   * // Mock expensive/flaky class dependencies, everything else is real
    * TestBed.sociable(UserService)
-   *   .boundaries([DatabaseService, HttpClient])
+   *   .boundaries([RecommendationEngine, CacheService])
    *   .compile();
    * ```
    */

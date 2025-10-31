@@ -79,6 +79,48 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
 
       expect(unit).toBeInstanceOf(UserService);
     });
+
+    it('should auto-expose leaf classes that are not in boundaries', async () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // UserVerificationService and TestLogger are leaf classes - NOT in boundaries array
+      // They should be auto-exposed (made real) in boundaries mode
+      const testUser = { name: 'Test', email: 'test@example.com' };
+
+      const { unit, unitRef } = await unitBuilder
+        .boundaries([
+          UserApiService,
+          DatabaseService,
+          ApiService,
+          UserDigestService,
+          // Remove UserDal to test real dependency chain
+          // NOT UserVerificationService - it's a leaf, should be auto-exposed
+          // NOT TestLogger - it's a leaf, should be auto-exposed
+        ])
+        .mock('Repository')
+        .impl((stubFn) => ({
+          find: stubFn().mockResolvedValue([]),
+          create: stubFn().mockResolvedValue(undefined),
+        }))
+        .mock('SOME_VALUE_TOKEN')
+        .final(['test', 'value'])
+        .compile();
+
+      // Call create which uses UserDal -> UserVerificationService
+      // UserVerificationService should be REAL (not mocked)
+      // If real, it runs: user.email.includes('@') → true
+      const result = await unit.create(testUser);
+
+      // This proves UserVerificationService was REAL:
+      // - Real verify() logic ran and returned true
+      // - create() succeeded and returned the user
+      expect(result).toEqual(testUser);
+    });
   });
 
   describe('Fail-fast behavior', () => {

@@ -19,10 +19,12 @@ import { DependencyNotConfiguredError } from '../errors/dependency-not-configure
  * Resolution priority:
  * 1. Explicit mocks (.mock().impl() or .mock().final())
  * 2. Boundaries (in boundaries mode)
- * 3. Tokens/Primitives (always mocked)
+ * 3. Tokens/Primitives (always mocked, except leaf classes in boundaries mode are auto-exposed)
  * 4. Auto-expose (in boundaries mode)
  * 5. Explicit expose (in expose mode)
  * 6. Fail-fast or auto-mock
+ *
+ * Note: Leaf classes (classes with no dependencies) are auto-exposed in boundaries mode.
  *
  * @since 3.0.0
  */
@@ -95,6 +97,12 @@ export class DependencyResolver {
       // Special case: exposed leaf classes in expose mode
       if (typeof identifier === 'function' && this.classesToExpose.includes(identifier)) {
         return this.instantiateClass(identifier, metadata);
+      }
+
+      // Special case: leaf classes in boundaries mode should be auto-exposed
+      if (typeof identifier === 'function' && this.options.autoExposeEnabled) {
+        this.autoExposedClasses.add(identifier as Type);
+        return this.instantiateClass(identifier as Type, metadata);
       }
 
       const mock = this.mockFunction();

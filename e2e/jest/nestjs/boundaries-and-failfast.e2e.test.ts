@@ -89,6 +89,41 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
     });
   });
 
+  describe('Leaf class auto-exposure: Leaf classes are auto-exposed in boundaries mode', () => {
+    it('should auto-expose leaf classes that are not in boundaries array', async () => {
+      // ARRANGE: UserVerificationService is a leaf class (no dependencies)
+      // It's NOT in boundaries array, so it should be auto-exposed (made real)
+      const { unit } = await TestBed.sociable(UserService)
+        .boundaries([ApiService, DatabaseService, UserDal, UserApiService, UserDigestService])
+        // NOT UserVerificationService - it's a leaf, should be auto-exposed
+        .mock<Repository>('Repository')
+        .impl((stub) => ({
+          find: stub().mockResolvedValue([]),
+          create: stub().mockResolvedValue(undefined),
+        }))
+        .compile();
+
+      // ACT: Create user with valid email
+      const validUser: User = { name: 'Test', email: 'test@example.com' };
+      const result = await unit.create(validUser);
+
+      // ASSERT: Success proves UserVerificationService was REAL
+      // If it was mocked, verify() would return undefined → create() would fail
+      // But it's real, so verify() runs: email.includes('@') → true → create succeeds
+      expect(result).toEqual(validUser);
+
+      // ACT: Create user with invalid email
+      const invalidUser: User = { name: 'Test', email: 'invalid' };
+
+      // ASSERT: Real UserVerificationService.verify() logic runs
+      // email.includes('@') → false → create() throws
+      await expect(unit.create(invalidUser)).rejects.toThrow('invalid user data');
+
+      // This proves UserVerificationService is REAL (not mocked) even though
+      // it wasn't explicitly exposed and wasn't in boundaries array
+    });
+  });
+
   describe('Token auto-mocking: Tokens are natural boundaries', () => {
     it('should auto-mock token injections without declaring them as boundaries', async () => {
       // ARRANGE: Don't declare 'Repository' or 'SOME_VALUE_TOKEN' as boundaries

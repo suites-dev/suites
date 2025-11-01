@@ -15,9 +15,7 @@ import { DependencyNotConfiguredError } from '../../errors/dependency-not-config
  * In expose mode:
  * - All dependencies are mocked by default
  * - Only explicitly exposed dependencies are real
- * - You can call `.expose()` multiple times to whitelist more dependencies
- *
- * **Cannot switch to boundaries mode** - the mode is locked once you call `.expose()`.
+ * - Call `.expose()` multiple times to whitelist more dependencies
  *
  * **Available methods:**
  * - `expose()` - Add more real dependencies
@@ -91,8 +89,6 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
  * - Leaf classes (no dependencies) are auto-exposed
  * - Token injections are always auto-mocked
  *
- * **Cannot switch to expose mode** - the mode is locked once you call `.boundaries()`.
- *
  * **Auto-expose behavior:**
  * Any class dependency NOT in the boundaries array is automatically made real.
  * This simplifies configuration for large dependency trees.
@@ -101,8 +97,6 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
  * - `mock()` - Configure custom mocks (inherited from TestBedBuilder)
  * - `disableFailFast()` - Disable fail-fast for migration
  * - `compile()` - Finalize and create test bed
- *
- * **Note:** `.expose()` is NOT available - mode is already set to boundaries.
  *
  * @template TClass The type of the class under test
  * @since 4.0.0
@@ -186,11 +180,8 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * - Only explicitly exposed dependencies are real
    * - Call `.expose()` multiple times to whitelist dependencies
    *
-   * **Cannot be used after calling `.boundaries()`** - modes are mutually exclusive.
-   *
    * @param dependency - The class type to expose as a real instance
-   * @returns Builder in expose mode (can only call expose, not boundaries)
-   * @throws Error if `.boundaries()` was called before (mode conflict)
+   * @returns Builder in expose mode
    * @since 3.0.0
    *
    * @example
@@ -202,6 +193,28 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * @see https://suites.dev/docs
    */
   expose(dependency: Type): SociableTestBedBuilderInExposeMode<TClass>;
+
+  /**
+   * Enables boundaries mode with no boundaries (all dependencies are real).
+   * Switches the builder to **boundaries mode** where everything is auto-exposed.
+   *
+   * **Use this when:**
+   * - You want all business logic classes to be real
+   * - You want the simplest sociable test configuration
+   * - Tokens will still be auto-mocked (I/O boundaries)
+   *
+   * @returns Builder in boundaries mode
+   * @since 4.0.0
+   *
+   * @example
+   * // All business logic real, only tokens mocked
+   * await TestBed.sociable(UserService)
+   *   .boundaries()  // No boundaries - everything real
+   *   .compile();
+   *
+   * @see https://suites.dev/docs
+   */
+  boundaries(): SociableTestBedBuilderInBoundariesMode<TClass>;
 
   /**
    * Declares dependencies as boundaries (to be mocked) in the test.
@@ -220,14 +233,12 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * **Note:** Token injections (@Inject('TOKEN')) are always auto-mocked.
    * Leaf classes (no dependencies) are auto-exposed in boundaries mode.
    *
-   * **Cannot be used after calling `.expose()`** - modes are mutually exclusive.
-   *
    * @param dependencies - Array of class types to treat as boundaries (will be mocked)
-   * @returns Builder in boundaries mode (cannot call expose anymore)
-   * @throws Error if `.expose()` was called before (mode conflict)
+   * @returns Builder in boundaries mode
    * @since 4.0.0
    *
    * @example
+   * // Mock specific expensive services
    * await TestBed.sociable(UserService)
    *   .boundaries([RecommendationEngine, CacheService])
    *   .compile();
@@ -304,8 +315,6 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * Sets the builder to "expose mode" where dependencies are mocked by default
    * and only explicitly exposed dependencies are real.
    *
-   * Cannot be used after calling `.boundaries()`.
-   *
    * @param dependency The class type to expose as a real instance
    * @returns The builder instance for method chaining
    * @throws Error if `.boundaries()` was called before
@@ -336,6 +345,8 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
     return this as SociableTestBedBuilderInExposeMode<TClass>;
   }
 
+  public boundaries(): SociableTestBedBuilderInBoundariesMode<TClass>;
+  public boundaries(dependencies: Type[]): SociableTestBedBuilderInBoundariesMode<TClass>;
   /**
    * Declares dependencies as boundaries (to be mocked) in the test.
    * Sets the builder to "boundaries mode" where all dependencies are real by default
@@ -344,12 +355,12 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * This is useful when you want most dependencies to be real and only want to mock
    * expensive class dependencies, flaky services, or external SDK classes.
    *
-   * Cannot be used after calling `.expose()`.
+   * Call without arguments to auto-expose all dependencies (no boundaries).
    *
    * Note: Token injections (e.g., @Inject('TOKEN')) are automatically mocked regardless of mode.
    * I/O services injected via tokens don't need to be declared as boundaries.
    *
-   * @param dependencies Array of class types to treat as boundaries (will be mocked)
+   * @param dependencies Array of class types to treat as boundaries (optional, defaults to empty array)
    * @returns The builder instance for method chaining
    * @throws Error if `.expose()` was called before
    * @since 4.0.0
@@ -361,8 +372,16 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    *   .boundaries([RecommendationEngine, CacheService])
    *   .compile();
    * ```
+   *
+   * @example
+   * ```typescript
+   * // No boundaries - all business logic is real
+   * TestBed.sociable(UserService)
+   *   .boundaries()  // No arguments - everything auto-exposed
+   *   .compile();
+   * ```
    */
-  public boundaries(dependencies: Type[]): SociableTestBedBuilderInBoundariesMode<TClass> {
+  public boundaries(dependencies?: Type[]): SociableTestBedBuilderInBoundariesMode<TClass> {
     if (this.mode === 'expose') {
       throw new Error(
         'Cannot use .boundaries() after .expose().\n' +
@@ -374,7 +393,7 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
     }
 
     this.mode = 'boundaries';
-    this.boundaryClasses.push(...dependencies);
+    this.boundaryClasses.push(...(dependencies || []));
 
     return this as SociableTestBedBuilderInBoundariesMode<TClass>;
   }

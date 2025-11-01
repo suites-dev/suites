@@ -56,6 +56,75 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
   });
 
+  describe('boundaries() no-arg overload', () => {
+    it('should accept no arguments (same as empty array)', async () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // Call boundaries() without args - should work
+      const builder = unitBuilder.boundaries();
+
+      // Should return boundaries mode builder
+      expect(builder).toBeDefined();
+
+      // For FakeAdapter compatibility, mock everything to avoid instantiation
+      const { unit } = await builder
+        .mock('Repository')
+        .impl((stubFn) => ({
+          find: stubFn().mockResolvedValue([]),
+          create: stubFn().mockResolvedValue(undefined),
+        }))
+        .mock('SOME_VALUE_TOKEN')
+        .final(['test'])
+        .mock(UserApiService).impl(() => ({ getUserData: jest.fn(), verifyUser: jest.fn() }))
+        .mock(UserDal).impl(() => ({ createUser: jest.fn() }))
+        .compile();
+
+      expect(unit).toBeInstanceOf(UserService);
+    });
+  });
+
+  describe('CRITICAL: Retrieval rules in boundaries mode', () => {
+    it('should ALLOW retrieving boundary classes (mocked) but NOT auto-exposed classes (real)', async () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      const { unitRef } = await unitBuilder
+        .boundaries([UserDal, DatabaseService, ApiService, UserDigestService])
+        // UserApiService NOT in boundaries → auto-exposed (REAL)
+        .mock('Repository')
+        .impl((stubFn) => ({
+          find: stubFn().mockResolvedValue([]),
+          create: stubFn().mockResolvedValue(undefined),
+        }))
+        .mock('SOME_VALUE_TOKEN')
+        .final(['test'])
+        .compile();
+
+      // UserDal is in boundaries → MOCKED → CAN retrieve
+      const userDalMock = unitRef.get(UserDal);
+      expect(userDalMock).toBeDefined();
+      expect(typeof userDalMock.createUser).toBe('function');
+
+      // UserApiService is auto-exposed → REAL → CANNOT retrieve
+      expect(() => {
+        unitRef.get(UserApiService);
+      }).toThrow(/marked as an exposed dependency/);
+
+      // This is CORRECT:
+      // - Boundaries = mocked = retrievable
+      // - Auto-exposed = real = not retrievable
+    });
+  });
+
   describe('Resolution: Boundaries mode enables auto-expose', () => {
     it('should compile with boundaries mode', async () => {
       const unitBuilder = new SociableTestBedBuilder(
@@ -92,7 +161,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
       // They should be auto-exposed (made real) in boundaries mode
       const testUser = { name: 'Test', email: 'test@example.com' };
 
-      const { unit, unitRef } = await unitBuilder
+      const { unit } = await unitBuilder
         .boundaries([
           UserApiService,
           DatabaseService,

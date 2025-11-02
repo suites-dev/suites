@@ -22,7 +22,7 @@ import type {
  *
  * @template T The type being mocked
  * @since 4.0.0
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference/types
  */
 export type Mocked<T> = StubbedInstance<T>;
 
@@ -43,7 +43,7 @@ export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCo
    *
    * const { unit, unitRef } = await TestBed.sociable(MyService).expose(AnotherService).compile();
    * // MyService is now tested with AnotherService exposed and not fully mocked.
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/testbed-sociable
    * @param dependency
    */
   expose(dependency: Type): SociableTestBedBuilder<TClass>;
@@ -63,7 +63,7 @@ export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
  * adapter's unit.d.ts in your global.d.ts.
  *
  * @since 3.0.0
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference/unit-reference
  *
  * @example
  * import { TestBed } from '@suites/unit';
@@ -200,7 +200,7 @@ export interface UnitReference extends UnitReferenceCore {
 /**
  * A factory interface for creating UnitTestBed instances for testing classes.
  *
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference
  * @since 3.0.0
  * @example
  * import { TestBed } from '@suites/unit';
@@ -215,7 +215,7 @@ export interface TestBed {
    * It sets up the necessary dependencies and mocks, ensuring that the class under test is the primary
    * focus without interference from other components.
    *
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/testbed-solitary
    * @since 3.0.0
    * @template TClass - The class to be tested.
    * @param {Type<TClass>} targetClass - The class to be tested.
@@ -235,7 +235,7 @@ export interface TestBed {
    * This method returns a subset of the SociableTestBedBuilder's methods, focusing on exposing
    * specific dependencies that should be included in their real or partially mocked state.
    *
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/testbed-sociable
    * @template TClass - The type of the target class.
    * @param {Type<TClass>} targetClass - The target class to be tested.
    * @returns {Pick<SociableTestBedBuilder<TClass>, 'expose'>} - A subset of the SociableTestBedBuilder's methods
@@ -256,7 +256,7 @@ export interface TestBed {
  * Represents the outcome when a `TestBedBuilder` is compiled.
  *
  * @template TClass The class type being tested.
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference
  */
 export interface UnitTestBed<TClass> {
   /**
@@ -280,7 +280,7 @@ export interface UnitTestBed<TClass> {
  *
  * @template TDependency The type of the dependency to be mocked.
  * @template TClass The type of the class under test.
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference/mock-configuration
  */
 export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDependency, TClass> {
   /**
@@ -326,7 +326,7 @@ export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDep
  * Provides methods to configure and finalize the `TestBed`.
  *
  * @template TClass The class type being tested.
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference
  */
 export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   /**

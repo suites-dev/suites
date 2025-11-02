@@ -12,7 +12,7 @@ import type { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/cor
  * environments. This class facilitates building configurable test environments tailored to specific unit tests.
  *
  * @class TestBed
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference
  * @since 3.0.0
  */
 export class TestBed {
@@ -26,7 +26,7 @@ export class TestBed {
    * @template TClass The type of the class to be tested.
    * @param {Type<TClass>} targetClass The class for which the test environment is constructed.
    * @returns {SolitaryTestBedBuilder<TClass>} A builder to configure the solitary test environment.
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/testbed-solitary
    *
    * @example
    * import { TestBed } from '@suites/unit';
@@ -71,7 +71,7 @@ export class TestBed {
    *   .boundaries([RecommendationEngine, CacheService])
    *   .compile();
    *
-   * @see https://suites.dev/docs/sociable-tests
+   * @see https://suites.dev/docs/api-reference/testbed-sociable
    */
   public static sociable<TClass = any>(
     targetClass: Type<TClass>

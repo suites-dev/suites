@@ -16,7 +16,7 @@ export interface UnitTestBed<TClass> {
    * The instance of the class being tested. This property provides direct access to the class,
    * allowing tests to interact with it as needed.
    * @since 3.0.0
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference
    * @template TClass The type of the class under test.
    * @property {TClass} unit The instance of the class under test.
    */
@@ -26,7 +26,7 @@ export interface UnitTestBed<TClass> {
    * A reference to the mocked dependencies of the class. This object allows tests to manipulate,
    * access, and verify the interactions with the class's dependencies, crucial for thorough testing.
    * @since 3.0.0
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/unit-reference
    * @property {UnitReference} unitRef The reference to the mocked dependencies of the class.
    */
   unitRef: UnitReference;

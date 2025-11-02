@@ -25,7 +25,7 @@ import { DependencyNotConfiguredError } from '../../errors/dependency-not-config
  *
  * @template TClass The type of the class under test
  * @since 4.0.0
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference/testbed-sociable
  */
 export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuilder<TClass> {
   /**
@@ -45,7 +45,7 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
    *   .expose(Logger)
    *   .compile();
    *
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/testbed-sociable
    */
   expose(dependency: Type): SociableTestBedBuilderInExposeMode<TClass>;
 
@@ -55,14 +55,14 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
    * In expose mode, this allows non-exposed dependencies to return undefined
    * instead of throwing errors (v3.x behavior).
    *
-   * **WARNING:** Can lead to "lying tests" that pass when they should fail.
+   * **WARNING:** Can lead to false positives (tests that pass when they should fail).
    * **Will be removed in v5.0.0.**
    *
    * @returns The same builder in expose mode with fail-fast disabled
    * @deprecated Will be removed in v5.0.0
    * @since 4.0.0
    *
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/fail-fast
    */
   disableFailFast(): SociableTestBedBuilderInExposeMode<TClass>;
 
@@ -100,7 +100,7 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
  *
  * @template TClass The type of the class under test
  * @since 4.0.0
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference/testbed-sociable
  */
 export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedBuilder<TClass> {
   /**
@@ -116,7 +116,7 @@ export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedB
    * @deprecated Will be removed in v5.0.0
    * @since 4.0.0
    *
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/fail-fast
    */
   disableFailFast(): SociableTestBedBuilderInBoundariesMode<TClass>;
 
@@ -155,7 +155,7 @@ export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedB
  *
  * @template TClass The type of the class under test
  * @since 4.0.0
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference/testbed-sociable
  *
  * @example
  * // Expose mode - whitelist real dependencies
@@ -190,7 +190,7 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    *   .expose(DatabaseService)
    *   .compile();
    *
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/testbed-sociable
    */
   expose(dependency: Type): SociableTestBedBuilderInExposeMode<TClass>;
 
@@ -212,7 +212,7 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    *   .boundaries()  // No boundaries - everything real
    *   .compile();
    *
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/testbed-sociable
    */
   boundaries(): SociableTestBedBuilderInBoundariesMode<TClass>;
 
@@ -226,9 +226,10 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * - Everything else executes with real business logic
    *
    * **Use boundaries for:**
-   * - Expensive class dependencies (ML/AI services, heavy computation)
-   * - Flaky/external services (third-party APIs)
-   * - Test scope control (limit blast radius)
+   * - Classes with complex logic tested elsewhere
+   * - Legacy code that's hard to set up
+   * - Third-party SDKs you don't control
+   * - Non-deterministic classes (random, time-based)
    *
    * **Note:** Token injections (@Inject('TOKEN')) are always auto-mocked.
    * Leaf classes (no dependencies) are auto-exposed in boundaries mode.
@@ -238,12 +239,12 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * @since 4.0.0
    *
    * @example
-   * // Mock specific expensive services
+   * // Avoid specific complex classes
    * await TestBed.sociable(UserService)
-   *   .boundaries([RecommendationEngine, CacheService])
+   *   .boundaries([ComplexTaxEngine, LegacyAdapter])
    *   .compile();
    *
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/testbed-sociable
    */
   boundaries(dependencies: Type[]): SociableTestBedBuilderInBoundariesMode<TClass>;
 
@@ -251,8 +252,8 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * Disables fail-fast behavior for this test (migration helper).
    *
    * **WARNING:** This restores v3.x behavior where unconfigured dependencies
-   * return undefined instead of throwing errors. This can lead to "lying tests"
-   * that pass when they should fail.
+   * return undefined instead of throwing errors. This can lead to false positives
+   * (tests that pass when they should fail).
    *
    * **This method will be removed in v5.0.0.**
    *
@@ -262,7 +263,7 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * @deprecated Will be removed in v5.0.0
    * @since 4.0.0
    *
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/fail-fast
    */
   disableFailFast(): SociableTestBedBuilder<TClass>;
 
@@ -281,7 +282,7 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * @throws Error if configuration conflicts detected
    * @since 3.0.0
    *
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/testbed-sociable
    */
   compile(): Promise<UnitTestBed<TClass>>;
 }
@@ -352,13 +353,13 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * Sets the builder to "boundaries mode" where all dependencies are real by default
    * and only boundary dependencies are mocked.
    *
-   * This is useful when you want most dependencies to be real and only want to mock
-   * expensive class dependencies, flaky services, or external SDK classes.
+   * List classes you want to avoid testing in this specific test:
+   * complex logic tested elsewhere, legacy code, third-party SDKs, non-deterministic classes.
    *
    * Call without arguments to auto-expose all dependencies (no boundaries).
    *
    * Note: Token injections (e.g., @Inject('TOKEN')) are automatically mocked regardless of mode.
-   * I/O services injected via tokens don't need to be declared as boundaries.
+   * Token-injected dependencies don't need to be declared as boundaries.
    *
    * @param dependencies Array of class types to treat as boundaries (optional, defaults to empty array)
    * @returns The builder instance for method chaining
@@ -367,9 +368,9 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    *
    * @example
    * ```typescript
-   * // Mock expensive/flaky class dependencies, everything else is real
+   * // Avoid specific complex classes, everything else is real
    * TestBed.sociable(UserService)
-   *   .boundaries([RecommendationEngine, CacheService])
+   *   .boundaries([ComplexTaxEngine, LegacyAdapter])
    *   .compile();
    * ```
    *
@@ -423,7 +424,7 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
     this.logger.warn(
       'Suites Warning: .disableFailFast() is a migration helper.\n' +
         'Disabling fail-fast means unconfigured dependencies will return undefined,\n' +
-        'which can lead to "lying tests" that pass when they should fail.\n' +
+        'which can lead to false positives (tests that pass when they should fail).\n' +
         'Consider explicitly configuring all dependencies instead.\n' +
         'This method will be removed in v5.0.0.\n' +
         'Learn more: https://suites.dev/docs/v4-migration'

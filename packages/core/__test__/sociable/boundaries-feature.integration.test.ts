@@ -301,6 +301,18 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
       await expect(unitBuilder.expose(UserApiService).compile()).rejects.toThrow(/not configured/);
     });
 
+    it('should format error message for null mode', async () => {
+      const unitBuilder = new SociableTestBedBuilder(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // No mode configured - should trigger null mode error
+      await expect(unitBuilder.compile()).rejects.toThrow(/No mode configured/);
+    });
+
     it('should provide migration path in error message', async () => {
       const unitBuilder = new SociableTestBedBuilder(
         Promise.resolve({ mock, stub: jest.fn }),

@@ -17,7 +17,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
 
   beforeAll(async () => {
     const { unitRef: ref, unit } = await TestBed.sociable(UserService)
-      .disableFailFast() // v3.x behavior - ApiService and UserVerificationService auto-mocked
+      .failFast({ enabled: false }) // v3.x behavior - ApiService and UserVerificationService auto-mocked
       .expose(UserApiService)
       .expose(UserDal)
       .expose(DatabaseService)

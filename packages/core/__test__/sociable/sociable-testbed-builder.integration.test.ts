@@ -36,7 +36,7 @@ describe('Social TestBed Builder Integration Tests', () => {
     );
 
     const testBed = await unitBuilder
-      .disableFailFast() // v3.x compatibility - not all deps configured
+      .failFast({ enabled: false }) // v3.x compatibility - not all deps configured
       .expose(UserApiService)
       .expose(UserDal)
       .expose(HttpClient)
@@ -58,10 +58,10 @@ describe('Social TestBed Builder Integration Tests', () => {
   });
 
   it('should have log a warning message about http client cannot be exposed because it is not a direct dependency', () => {
-    // Warning #1 is now from disableFailFast()
+    // Warning #1 is now from failFast({ enabled: false })
     expect(loggerMock.warn).toHaveBeenNthCalledWith(
       1,
-      expect.stringContaining('.disableFailFast() is a migration helper')
+      expect.stringContaining('Disabling fail-fast is not recommended')
     );
     // Warnings #2 and #3 are about unreachable config
     expect(loggerMock.warn).toHaveBeenNthCalledWith(

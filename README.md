@@ -1,22 +1,35 @@
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
+  <img width="150" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
 </p>
 
 <h1 align="center">Suites</h1>
 
-**Suites is a unit-testing framework for TypeScript backend systems working with dependency injection.**
-
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/suites-dev/suites/master.svg?style=flat-square)](https://codecov.io/gh/suites-dev/suites)
-[![e2e](https://github.com/suites-dev/suites/actions/workflows/e2e.yml/badge.svg?branch=master)](https://github.com/suites-dev/suites/actions)
-[![npm downloads](https://img.shields.io/npm/dm/@suites/unit.svg?label=%40suites%2Funit)](https://npmjs.org/package/@suites/unit "View this project on npm")
-![npm downloads](https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest)
-
 <p align="center">
-  <a href="https://suites.dev">Documentation</a> | 
-  <a href="https://suites.dev/docs/getting-started">Getting Started</a> | 
-  <a href="https://suites.dev/docs/why-suites">Why Suites</a> |
-  <a href="https://suites.dev/docs/developer-guide/unit-tests">Learn Suites</a>
+A unit-testing framework for TypeScript backend systems working with dependency injection.<br />
+by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
 </p>
+
+<div align="center">
+  <a href="https://codecov.io/gh/suites-dev/suites">
+    <img src="https://img.shields.io/codecov/c/github/suites-dev/suites/master.svg?style=flat-square" alt="Codecov Coverage" />
+  </a>
+  <a href="https://github.com/suites-dev/suites/actions/workflows/e2e.yml">
+    <img src="https://github.com/suites-dev/suites/actions/workflows/e2e.yml/badge.svg?branch=master" alt="e2e" />
+  </a>
+  <a href="https://opensource.org/licenses/Apache-2.0">
+    <img src="https://img.shields.io/badge/license-Apache_2.0-blue.svg" alt="license" />
+  </a>
+  <a href="https://npmjs.org/package/@suites/unit">
+    <img src="https://img.shields.io/npm/dm/@suites/unit.svg?label=%40suites%2Funit" alt="npm downloads" />
+  </a>
+</div>
+
+<h3 align="center">
+  <a href="https://suites.dev">Docs</a> •  
+  <a href="https://suites.dev/docs/overview/quickstartd">Getting Started</a> •  
+  <a href="https://suites.dev/docs/overview/why-suites">Why Suites</a> • 
+  <a href="https://suites.dev/docs/developer-guide/unit-tests">Learn Suites</a>
+</h3>
 
 <p align="center">
 Works with: <a href="https://nestjs.com">NestJS</a> (<a href="https://docs.nestjs.com/recipes/suites">official</a>), <a href="https://inversify.io/">Inversify</a>, <a href="https://vitest.dev">Vitest</a>, <a href="https://sinonjs.org">Sinon</a>, <a href="https://jestjs.io">Jest</a>, and more

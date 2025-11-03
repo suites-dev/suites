@@ -191,7 +191,7 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
 
     it('should allow disabling for migration', async () => {
       const { unit } = await TestBed.sociable(UserService)
-        .disableFailFast()
+        .failFast({ enabled: false })
         .expose(UserApiService)
         .compile();
 

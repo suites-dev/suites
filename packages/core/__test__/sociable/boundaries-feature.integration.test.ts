@@ -208,7 +208,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
       await expect(unitBuilder.expose(UserApiService).compile()).rejects.toThrow(/not configured/);
     });
 
-    it('should NOT fail when disableFailFast is used', async () => {
+    it('should NOT fail when failFast is disabled', async () => {
       const unitBuilder = new SociableTestBedBuilder(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
@@ -216,12 +216,12 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         loggerMock
       );
 
-      const { unit } = await unitBuilder.expose(UserApiService).disableFailFast().compile();
+      const { unit } = await unitBuilder.expose(UserApiService).failFast({ enabled: false }).compile();
 
       expect(unit).toBeInstanceOf(UserService);
     });
 
-    it('should log warning when disableFailFast is used', () => {
+    it('should log warning when failFast is disabled', () => {
       const unitBuilder = new SociableTestBedBuilder(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
@@ -229,10 +229,10 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         loggerMock
       );
 
-      unitBuilder.disableFailFast();
+      unitBuilder.failFast({ enabled: false });
 
       expect(loggerMock.warn).toHaveBeenCalledWith(
-        expect.stringContaining('.disableFailFast() is a migration helper')
+        expect.stringContaining('Disabling fail-fast is not recommended')
       );
     });
 
@@ -321,7 +321,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         loggerMock
       );
 
-      await expect(unitBuilder.expose(UserApiService).compile()).rejects.toThrow(/disableFailFast/);
+      await expect(unitBuilder.expose(UserApiService).compile()).rejects.toThrow(/failFast.*enabled.*false/);
     });
   });
 });

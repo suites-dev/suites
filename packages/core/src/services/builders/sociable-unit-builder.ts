@@ -20,7 +20,7 @@ import { DependencyNotConfiguredError } from '../../errors/dependency-not-config
  * **Available methods:**
  * - `expose()` - Add more real dependencies
  * - `mock()` - Configure custom mocks (inherited from TestBedBuilder)
- * - `disableFailFast()` - Disable fail-fast for migration
+ * - `failFast()` - Configure fail-fast behavior
  * - `compile()` - Finalize and create test bed
  *
  * @template TClass The type of the class under test
@@ -50,21 +50,18 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
   expose(dependency: Type): SociableTestBedBuilderInExposeMode<TClass>;
 
   /**
-   * Disables fail-fast behavior for this test (migration helper).
+   * Configure fail-fast behavior for dependency resolution.
    *
-   * In expose mode, this allows non-exposed dependencies to return undefined
-   * instead of throwing errors (v3.x behavior).
+   * When enabled (default), throws helpful errors for unconfigured dependencies.
+   * When disabled, unconfigured dependencies return undefined (v3.x behavior).
    *
-   * **WARNING:** Can lead to false positives (tests that pass when they should fail).
-   * **Will be removed in v5.0.0.**
-   *
-   * @returns The same builder in expose mode with fail-fast disabled
-   * @deprecated Will be removed in v5.0.0
+   * @param config Configuration object for fail-fast behavior
+   * @returns The same builder in expose mode
    * @since 4.0.0
    *
    * @see https://suites.dev/docs/api-reference/fail-fast
    */
-  disableFailFast(): SociableTestBedBuilderInExposeMode<TClass>;
+  failFast(config: { enabled: boolean }): SociableTestBedBuilderInExposeMode<TClass>;
 
   /**
    * Compiles the test bed with expose mode configuration.
@@ -95,7 +92,7 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
  *
  * **Available methods:**
  * - `mock()` - Configure custom mocks (inherited from TestBedBuilder)
- * - `disableFailFast()` - Disable fail-fast for migration
+ * - `failFast()` - Configure fail-fast behavior
  * - `compile()` - Finalize and create test bed
  *
  * @template TClass The type of the class under test
@@ -104,21 +101,18 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
  */
 export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedBuilder<TClass> {
   /**
-   * Disables fail-fast behavior for this test (migration helper).
+   * Configure fail-fast behavior for dependency resolution.
    *
-   * In boundaries mode, fail-fast rarely triggers due to auto-expose,
-   * but this method is available for consistency and edge cases.
+   * When enabled (default), throws helpful errors for unconfigured dependencies.
+   * In boundaries mode, fail-fast rarely triggers due to auto-expose.
    *
-   * **WARNING:** Can lead to unexpected undefined values.
-   * **Will be removed in v5.0.0.**
-   *
-   * @returns The same builder in boundaries mode with fail-fast disabled
-   * @deprecated Will be removed in v5.0.0
+   * @param config Configuration object for fail-fast behavior
+   * @returns The same builder in boundaries mode
    * @since 4.0.0
    *
    * @see https://suites.dev/docs/api-reference/fail-fast
    */
-  disableFailFast(): SociableTestBedBuilderInBoundariesMode<TClass>;
+  failFast(config: { enabled: boolean }): SociableTestBedBuilderInBoundariesMode<TClass>;
 
   /**
    * Compiles the test bed with boundaries mode configuration.
@@ -146,7 +140,7 @@ export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedB
  *
  * **v4.0.0 Changes:**
  * - Fail-fast is enabled by default (throws on unconfigured dependencies)
- * - Use `.disableFailFast()` for gradual migration from v3.x
+ * - Use `.failFast({ enabled: false })` for gradual migration from v3.x
  * - New `.boundaries()` method for blacklist strategy
  *
  * **Mode Selection Guide:**
@@ -249,23 +243,18 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
   boundaries(dependencies: Type[]): SociableTestBedBuilderInBoundariesMode<TClass>;
 
   /**
-   * Disables fail-fast behavior for this test (migration helper).
+   * Configure fail-fast behavior for dependency resolution.
    *
-   * **WARNING:** This restores v3.x behavior where unconfigured dependencies
-   * return undefined instead of throwing errors. This can lead to false positives
-   * (tests that pass when they should fail).
+   * When enabled (default), throws helpful errors for unconfigured dependencies.
+   * When disabled, unconfigured dependencies return undefined (v3.x behavior).
    *
-   * **This method will be removed in v5.0.0.**
-   *
-   * **Recommended alternative:** Configure all dependencies explicitly instead.
-   *
-   * @returns The same builder with fail-fast disabled
-   * @deprecated Will be removed in v5.0.0
+   * @param config Configuration object for fail-fast behavior
+   * @returns The same builder
    * @since 4.0.0
    *
    * @see https://suites.dev/docs/api-reference/fail-fast
    */
-  disableFailFast(): SociableTestBedBuilder<TClass>;
+  failFast(config: { enabled: boolean }): SociableTestBedBuilder<TClass>;
 
   /**
    * Compiles the test bed configuration and creates the unit test environment.
@@ -275,7 +264,7 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    *
    * **Fail-fast validation (v4.0.0):**
    * - Throws errors for unconfigured dependencies by default
-   * - Use `.disableFailFast()` to restore v3.x behavior (not recommended)
+   * - Use `.failFast({ enabled: false })` to restore v3.x behavior (not recommended)
    *
    * @returns Promise resolving to the compiled unit test bed with unit and unitRef
    * @throws {DependencyNotConfiguredError} If fail-fast enabled and dependency not configured
@@ -400,37 +389,46 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
   }
 
   /**
-   * Disables fail-fast behavior for this test.
-   * When disabled, accessing unconfigured dependencies returns undefined instead of throwing.
+   * Configure fail-fast behavior for dependency resolution.
    *
-   * WARNING: This is a migration helper for v3.x compatibility and is discouraged.
-   * Consider explicitly configuring all dependencies instead.
-   * This method will be removed in v5.0.0.
+   * Fail-fast is enabled by default in v4.0.0. When enabled, the test bed
+   * throws a helpful error if you access a dependency that wasn't configured.
+   * This catches configuration mistakes early.
    *
+   * You can disable fail-fast for migration from v3.x, but this is discouraged
+   * as it can lead to false positives (tests that pass when they should fail).
+   *
+   * @param config Configuration object for fail-fast behavior
    * @returns The builder instance for method chaining
    * @since 4.0.0
-   * @deprecated Will be removed in v5.0.0
    *
    * @example
    * ```typescript
-   * // Temporary workaround during migration
+   * // Disable for migration (not recommended)
    * TestBed.sociable(UserService)
+   *   .failFast({ enabled: false })
    *   .expose(AuthService)
-   *   .disableFailFast() // Not recommended
+   *   .compile();
+   *
+   * // Explicit enable (default, shown for clarity)
+   * TestBed.sociable(UserService)
+   *   .failFast({ enabled: true })
+   *   .expose(AuthService)
    *   .compile();
    * ```
    */
-  public disableFailFast(): this {
-    this.logger.warn(
-      'Suites Warning: .disableFailFast() is a migration helper.\n' +
-        'Disabling fail-fast means unconfigured dependencies will return undefined,\n' +
-        'which can lead to false positives (tests that pass when they should fail).\n' +
-        'Consider explicitly configuring all dependencies instead.\n' +
-        'This method will be removed in v5.0.0.\n' +
-        'Learn more: https://suites.dev/docs/v4-migration'
-    );
+  public failFast(config: { enabled: boolean }): this {
+    if (!config.enabled) {
+      this.logger.warn(
+        'Suites Warning: Disabling fail-fast is not recommended.\n' +
+          'When fail-fast is disabled, unconfigured dependencies return undefined,\n' +
+          'which can cause tests to pass incorrectly (false positives).\n' +
+          'Consider explicitly configuring all dependencies instead.\n' +
+          'Learn more: https://suites.dev/docs/fail-fast'
+      );
+    }
 
-    this.failFastEnabled = false;
+    this.failFastEnabled = config.enabled;
 
     return this;
   }
@@ -576,7 +574,7 @@ For detailed instructions and best practices, refer to our documentation: https:
       '\n' +
       'To fix this:\n' +
       `${suggestions}\n` +
-      '  - Use .disableFailFast() to restore v3.x behavior (not recommended)\n' +
+      '  - Use .failFast({ enabled: false }) to restore v3.x behavior (not recommended)\n' +
       '\n' +
       'Learn more: https://suites.dev/docs/v4-migration'
     );

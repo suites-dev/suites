@@ -220,6 +220,30 @@ describe('DependencyResolver - Unit Tests', () => {
       // Token should be mocked at Priority 3, not Priority 2
       expect(result).toEqual({ mock: true });
     });
+
+    it('should mock leaf class if explicitly in boundaries array (Priority 2 beats Priority 3)', () => {
+      // LeafService has no dependencies, so it would normally be auto-exposed at Priority 3
+      // But since it's explicitly in boundaries array, it should be mocked at Priority 2
+      const registries = new Map<Type, InjectableRegistry>([[LeafService, createEmptyRegistry()]]);
+      const adapter = createAdapter(registries);
+      const resolver = new DependencyResolver(
+        [],
+        new DependencyContainer([]),
+        adapter,
+        mockFn,
+        { mode: 'boundaries', boundaryClasses: [LeafService], failFastEnabled: false, autoExposeEnabled: true }
+      );
+
+      const result = resolver.resolveOrMock(LeafService);
+
+      // Should be mocked at Priority 2 (boundaries), not auto-exposed at Priority 3
+      expect(result).toEqual({ mock: true });
+      expect(mockFn).toHaveBeenCalled();
+
+      // Verify it was NOT added to auto-exposed classes
+      const autoExposed = resolver.getAutoExposedClasses();
+      expect(autoExposed).not.toContain(LeafService);
+    });
   });
 
   describe('resolveOrMock() - Priority 3: Tokens and Leaf Classes', () => {

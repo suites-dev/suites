@@ -26,7 +26,7 @@ by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
 
 <h3 align="center">
   <a href="https://suites.dev">Docs</a> •  
-  <a href="https://suites.dev/docs/overview/quickstartd">Getting Started</a> •  
+  <a href="https://suites.dev/docs/overview/quickstart">Getting Started</a> •  
   <a href="https://suites.dev/docs/overview/why-suites">Why Suites</a> • 
   <a href="https://suites.dev/docs/developer-guide/unit-tests">Learn Suites</a>
 </h3>

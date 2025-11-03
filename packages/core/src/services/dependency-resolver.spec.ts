@@ -418,7 +418,7 @@ describe('DependencyResolver - Unit Tests', () => {
 
   describe('resolveOrMock() - Priority 6: Fail-Fast', () => {
     it('should throw DependencyNotConfiguredError when fail-fast enabled and dep not configured', () => {
-      const registries = new Map([
+      const registries = new Map<Type, InjectableRegistry>([
         [ServiceA, createRegistryForServiceA()],
         [LeafService, createEmptyRegistry()],
       ]);
@@ -435,7 +435,7 @@ describe('DependencyResolver - Unit Tests', () => {
     });
 
     it('should include mode in error (expose mode)', () => {
-      const registries = new Map([
+      const registries = new Map<Type, InjectableRegistry>([
         [ServiceA, createRegistryForServiceA()],
         [LeafService, createEmptyRegistry()],
       ]);
@@ -481,7 +481,7 @@ describe('DependencyResolver - Unit Tests', () => {
     });
 
     it('should include mode in error (null mode)', () => {
-      const registries = new Map([
+      const registries = new Map<Type, InjectableRegistry>([
         [ServiceA, createRegistryForServiceA()],
         [LeafService, createEmptyRegistry()],
       ]);
@@ -825,7 +825,7 @@ describe('DependencyResolver - Unit Tests', () => {
 
   describe('getResolvedDependencies()', () => {
     it('should return all resolved dependencies', () => {
-      const registries = new Map([
+      const registries = new Map<Type, InjectableRegistry>([
         [ServiceB, createRegistryWithDependency(ServiceA)],
         [ServiceA, createEmptyRegistry()],
       ]);
@@ -864,7 +864,7 @@ describe('DependencyResolver - Unit Tests', () => {
     });
 
     it('should handle recursive dependency resolution', () => {
-      const registries = new Map([
+      const registries = new Map<Type, InjectableRegistry>([
         [ServiceB, createRegistryWithDependency(ServiceA)],
         [ServiceA, createEmptyRegistry()],
       ]);
@@ -942,7 +942,7 @@ describe('DependencyResolver - Unit Tests', () => {
         [{ identifier: ServiceA, metadata: undefined }, explicitMockForServiceC],
       ]);
 
-      const registries = new Map([
+      const registries = new Map<Type, InjectableRegistry>([
         [ServiceB, createRegistryWithDependency(ServiceA)],
         [ServiceA, createEmptyRegistry()],
         [LeafService, createEmptyRegistry()],

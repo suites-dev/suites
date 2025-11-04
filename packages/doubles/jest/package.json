@@ -1,6 +1,6 @@
 {
   "name": "@suites/doubles.jest",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-beta.0",
   "license": "Apache-2.0",
   "type": "commonjs",
   "main": "./dist/cjs/index.js",
@@ -59,7 +59,7 @@
     "jest": "> 26.0"
   },
   "dependencies": {
-    "@suites/core.unit": "workspace:^4.0.0-alpha.0",
+    "@suites/core.unit": "workspace:^4.0.0-beta.0",
     "@suites/types.common": "workspace:^4.0.0-alpha.0",
     "@suites/types.doubles": "workspace:^4.0.0-alpha.0"
   },

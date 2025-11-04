@@ -156,7 +156,7 @@ importers:
   packages/doubles/jest:
     dependencies:
       '@suites/core.unit':
-        specifier: workspace:^4.0.0-alpha.0
+        specifier: workspace:^4.0.0-beta.0
         version: link:../../core
       '@suites/types.common':
         specifier: workspace:^4.0.0-alpha.0
@@ -172,7 +172,7 @@ importers:
   packages/doubles/sinon:
     dependencies:
       '@suites/core.unit':
-        specifier: workspace:^4.0.0-alpha.0
+        specifier: workspace:^4.0.0-beta.0
         version: link:../../core
       '@suites/types.common':
         specifier: workspace:^4.0.0-alpha.0
@@ -191,7 +191,7 @@ importers:
   packages/doubles/vitest:
     dependencies:
       '@suites/core.unit':
-        specifier: workspace:^4.0.0-alpha.0
+        specifier: workspace:^4.0.0-beta.0
         version: link:../../core
       '@suites/types.common':
         specifier: workspace:^4.0.0-alpha.0
@@ -227,7 +227,7 @@ importers:
   packages/unit:
     dependencies:
       '@suites/core.unit':
-        specifier: workspace:^4.0.0-alpha.0
+        specifier: workspace:^4.0.0-beta.0
         version: link:../core
       '@suites/types.common':
         specifier: workspace:^4.0.0-alpha.0

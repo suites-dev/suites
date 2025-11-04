@@ -22,6 +22,9 @@ by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
   <a href="https://npmjs.org/package/@suites/unit">
     <img src="https://img.shields.io/npm/dm/@suites/unit.svg?label=%40suites%2Funit" alt="npm downloads" />
   </a>
+  <a href="https://buymeacoffee.com/omermoradd">
+    <img src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee" alt="Buy Me A Coffee" />
+  </a>
 </div>
 
 <h3 align="center">
@@ -153,7 +156,7 @@ pnpm add -D @suites/doubles.jest @suites/di.nestjs
 
 We welcome contributions to Suites! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for more information.
 
-## ❤️ Share Your Suites Experience!
+## Share Your Suites Experience!
 
 **Are you using Suites in your projects?** We've created a [community discussion](https://github.com/suites-dev/suites/discussions/categories/q-a) where teams and companies can share how they're using Suites in production.
 
@@ -161,7 +164,7 @@ We welcome contributions to Suites! Please see the [CONTRIBUTING.md](CONTRIBUTIN
 
 Your contributions help others discover best practices and see real-world applications of Suites!
 
-## 🔄 Migrating from Automock
+## Migrating from Automock
 
 If you're currently using Automock, we've created a comprehensive migration guide to help you transition to Suites. The
 guide covers all the changes and improvements, making the upgrade process smooth and straightforward.
@@ -169,6 +172,10 @@ guide covers all the changes and improvements, making the upgrade process smooth
 [↗️ Migrating from Automock Guide](https://suites.dev/docs/overview/migrating-from-automock/)
 
 Your support helps us continue improving Suites and developing new features!
+
+## Support the Project
+
+<a href="https://buymeacoffee.com/omermoradd" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 ## 📜 License
 

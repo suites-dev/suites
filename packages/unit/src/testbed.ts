@@ -12,7 +12,7 @@ import type { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/cor
  * environments. This class facilitates building configurable test environments tailored to specific unit tests.
  *
  * @class TestBed
- * @see https://suites.dev/docs
+ * @see https://suites.dev/docs/api-reference
  * @since 3.0.0
  */
 export class TestBed {
@@ -26,7 +26,7 @@ export class TestBed {
    * @template TClass The type of the class to be tested.
    * @param {Type<TClass>} targetClass The class for which the test environment is constructed.
    * @returns {SolitaryTestBedBuilder<TClass>} A builder to configure the solitary test environment.
-   * @see https://suites.dev/docs
+   * @see https://suites.dev/docs/api-reference/testbed-solitary
    *
    * @example
    * import { TestBed } from '@suites/unit';
@@ -43,32 +43,39 @@ export class TestBed {
   /**
    * @description
    * Initializes a sociable test environment builder for a specified class. In a sociable environment,
-   * dependencies can be either real or mocked based on the test requirements, allowing for integrated testing.
-   * It's essential to use the `.expose()` method at least once to define which dependencies should be real,
-   * as this method sets the stage for more complex interaction testing between the class under test and its dependencies.
+   * dependencies can be configured as either real or mocked based on test requirements.
+   *
+   * Supports two mutually exclusive testing strategies:
+   * - **Expose mode**: Whitelist specific dependencies to be real (default mocks everything)
+   * - **Boundaries mode**: Blacklist specific dependencies to be mocked (default makes everything real)
+   *
+   * v4.0.0: Fail-fast is enabled by default to prevent "lying tests" where unconfigured
+   * dependencies return undefined silently. Use `.disableFailFast()` for gradual migration.
    *
    * @since 3.0.0
    * @template TClass The type of the class to be tested.
    * @param {Type<TClass>} targetClass The class for which the test environment is constructed.
-   * @returns A builder to configure the sociable test environment with 'expose' as the first step,
-   * with the ability to selectively expose dependencies.
+   * @returns A builder to configure the sociable test environment
    *
    * @example
-   * import { TestBed } from '@suites/unit';
-   * import { MyService, DependencyOne, DependencyTwo, Logger } from './my-service';
-   *
-   * const { unit, unitRef } = await TestBed.sociable(MyService)
+   * // Expose mode - whitelist real dependencies
+   * const { unit } = await TestBed.sociable(MyService)
    *   .expose(DependencyOne)
    *   .expose(DependencyTwo)
-   *   .mock(Logger)
-   *   .impl({ log: jest.fn().mockReturnValue('overridden') })
+   *   .mock(Logger).impl((stub) => ({ log: stub() }))
    *   .compile();
    *
-   * @see https://suites.dev/docs
+   * @example
+   * // Boundaries mode - mock expensive/flaky class dependencies
+   * const { unit } = await TestBed.sociable(MyService)
+   *   .boundaries([RecommendationEngine, CacheService])
+   *   .compile();
+   *
+   * @see https://suites.dev/docs/api-reference/testbed-sociable
    */
   public static sociable<TClass = any>(
     targetClass: Type<TClass>
-  ): Pick<SociableTestBedBuilder<TClass>, 'expose'> {
+  ): SociableTestBedBuilder<TClass> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
       SociableTestBedBuilderCore<TClass>
     );

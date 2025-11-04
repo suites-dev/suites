@@ -42,7 +42,7 @@ export interface UnitReference {
  *
  * @internal This is an internal implementation class used by TestBed builders
  * @since 3.0.0
- * @see https://suites.dev/api-reference/api/unitreference-api
+ * @see https://suites.dev/docs/api-reference/unit-reference
  */
 export class UnitReference {
   /**
@@ -117,7 +117,7 @@ export class UnitReference {
       throw new DependencyResolutionError(`The dependency associated with the specified identifier ${identifierString} could not be retrieved from the
 current testing context, as it is marked as a faked dependency.
 Faked dependencies are not intended for direct retrieval and should be accessed through the appropriate
-testing context or container. Refer to the docs for further information: https://suites.dev/docs`);
+testing context or container. Refer to the docs for further information: https://suites.dev/docs/api-reference/unit-reference`);
     }
 
     // Validation 2: Prevent access to exposed dependencies (configured with .expose())
@@ -125,7 +125,7 @@ testing context or container. Refer to the docs for further information: https:/
       throw new DependencyResolutionError(`The dependency associated with the specified identifier '${identifier.name}' could not be retrieved from the
 current testing context, as it is marked as an exposed dependency.
 Exposed dependencies are not intended for direct retrieval and should be accessed through the appropriate
-testing context or container. Refer to the docs for further information: https://suites.dev/docs`);
+testing context or container. Refer to the docs for further information: https://suites.dev/docs/api-reference/unit-reference`);
     }
 
     // Resolve the dependency from the mocks container

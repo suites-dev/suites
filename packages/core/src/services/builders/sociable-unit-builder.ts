@@ -52,16 +52,16 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
   /**
    * Configure fail-fast behavior for dependency resolution.
    *
-   * When enabled (default), throws helpful errors for unconfigured dependencies.
-   * When disabled, unconfigured dependencies return undefined (v3.x behavior).
+   * Fail-fast is enabled by default in v4.0.0. This method allows disabling it
+   * for migration purposes, but this is not recommended as it can lead to false positives.
    *
-   * @param config Configuration object for fail-fast behavior
+   * @param config Configuration object - only { enabled: false } is accepted
    * @returns The same builder in expose mode
    * @since 4.0.0
    *
    * @see https://suites.dev/docs/api-reference/fail-fast
    */
-  failFast(config: { enabled: boolean }): SociableTestBedBuilderInExposeMode<TClass>;
+  failFast(config: { enabled: false }): SociableTestBedBuilderInExposeMode<TClass>;
 
   /**
    * Compiles the test bed with expose mode configuration.
@@ -103,16 +103,16 @@ export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedB
   /**
    * Configure fail-fast behavior for dependency resolution.
    *
-   * When enabled (default), throws helpful errors for unconfigured dependencies.
-   * In boundaries mode, fail-fast rarely triggers due to auto-expose.
+   * Fail-fast is enabled by default in v4.0.0. This method allows disabling it
+   * for migration purposes. In boundaries mode, fail-fast rarely triggers due to auto-expose.
    *
-   * @param config Configuration object for fail-fast behavior
+   * @param config Configuration object - only { enabled: false } is accepted
    * @returns The same builder in boundaries mode
    * @since 4.0.0
    *
    * @see https://suites.dev/docs/api-reference/fail-fast
    */
-  failFast(config: { enabled: boolean }): SociableTestBedBuilderInBoundariesMode<TClass>;
+  failFast(config: { enabled: false }): SociableTestBedBuilderInBoundariesMode<TClass>;
 
   /**
    * Compiles the test bed with boundaries mode configuration.
@@ -245,16 +245,16 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
   /**
    * Configure fail-fast behavior for dependency resolution.
    *
-   * When enabled (default), throws helpful errors for unconfigured dependencies.
-   * When disabled, unconfigured dependencies return undefined (v3.x behavior).
+   * Fail-fast is enabled by default in v4.0.0. This method allows disabling it
+   * for migration purposes, but this is not recommended as it can lead to false positives.
    *
-   * @param config Configuration object for fail-fast behavior
+   * @param config Configuration object - only { enabled: false } is accepted
    * @returns The same builder
    * @since 4.0.0
    *
    * @see https://suites.dev/docs/api-reference/fail-fast
    */
-  failFast(config: { enabled: boolean }): SociableTestBedBuilder<TClass>;
+  failFast(config: { enabled: false }): SociableTestBedBuilder<TClass>;
 
   /**
    * Compiles the test bed configuration and creates the unit test environment.
@@ -398,7 +398,7 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    * You can disable fail-fast for migration from v3.x, but this is discouraged
    * as it can lead to false positives (tests that pass when they should fail).
    *
-   * @param config Configuration object for fail-fast behavior
+   * @param config Configuration object - only { enabled: false } is accepted
    * @returns The builder instance for method chaining
    * @since 4.0.0
    *
@@ -409,24 +409,16 @@ export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
    *   .failFast({ enabled: false })
    *   .expose(AuthService)
    *   .compile();
-   *
-   * // Explicit enable (default, shown for clarity)
-   * TestBed.sociable(UserService)
-   *   .failFast({ enabled: true })
-   *   .expose(AuthService)
-   *   .compile();
    * ```
    */
-  public failFast(config: { enabled: boolean }): this {
-    if (!config.enabled) {
-      this.logger.warn(
-        'Suites Warning: Disabling fail-fast is not recommended.\n' +
-          'When fail-fast is disabled, unconfigured dependencies return undefined,\n' +
-          'which can cause tests to pass incorrectly (false positives).\n' +
-          'Consider explicitly configuring all dependencies instead.\n' +
-          'Learn more: https://suites.dev/docs/fail-fast'
-      );
-    }
+  public failFast(config: { enabled: false }): this {
+    this.logger.warn(
+      'Suites Warning: Disabling fail-fast is not recommended.\n' +
+        'When fail-fast is disabled, unconfigured dependencies return undefined,\n' +
+        'which can cause tests to pass incorrectly (false positives).\n' +
+        'Consider explicitly configuring all dependencies instead.\n' +
+        'Learn more: https://suites.dev/docs/api-reference/fail-fast'
+    );
 
     this.failFastEnabled = config.enabled;
 

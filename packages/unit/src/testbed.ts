@@ -1,7 +1,7 @@
 import { SuitesDIAdapters, SuitesDoublesAdapters, testBedBuilderFactory } from './testbed-builder.js';
 import type { Type } from '@suites/types.common';
 import {
-  SociableTestBedBuilder as SociableTestBedBuilderCore,
+  SociableTestBedBuilderImpl,
   SolitaryTestBedBuilder as SolitaryTestBedBuilderCore,
 } from '@suites/core.unit';
 import type { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/core.unit';
@@ -77,7 +77,7 @@ export class TestBed {
     targetClass: Type<TClass>
   ): SociableTestBedBuilder<TClass> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
-      SociableTestBedBuilderCore<TClass>
+      SociableTestBedBuilderImpl<TClass>
     );
   }
 }

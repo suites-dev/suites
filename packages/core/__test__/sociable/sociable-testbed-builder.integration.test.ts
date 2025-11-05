@@ -14,7 +14,7 @@ import {
   DatabaseService,
 } from './assets/injectable-registry.fixture';
 import type { UnitReference } from '../../src';
-import { SociableTestBedBuilder, UnitMocker } from '../../src';
+import { SociableTestBedBuilderImpl, UnitMocker } from '../../src';
 import Mock = jest.Mock;
 
 describe('Social TestBed Builder Integration Tests', () => {
@@ -25,7 +25,7 @@ describe('Social TestBed Builder Integration Tests', () => {
   const loggerMock = mock<Console>();
 
   beforeAll(async () => {
-    unitBuilder = new SociableTestBedBuilder(
+    unitBuilder = new SociableTestBedBuilderImpl(
       Promise.resolve({
         mock: mock,
         stub: jest.fn,
@@ -154,6 +154,7 @@ describe('Social TestBed Builder Integration Tests', () => {
 
   it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
     await unitBuilder
+      .expose(UserApiService) // Must call expose or boundaries before mock
       .mock('non-existing-dep')
       .impl(() => ({}))
       .compile();
@@ -165,6 +166,7 @@ describe('Social TestBed Builder Integration Tests', () => {
 
   it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
     await unitBuilder
+      .expose(UserApiService) // Must call expose or boundaries before mock
       .mock(UserDal)
       .impl(() => ({}))
       .compile();

@@ -9,7 +9,7 @@ import {
   DatabaseService,
   UserDigestService,
 } from './assets/injectable-registry.fixture';
-import { SociableTestBedBuilder, UnitMocker } from '../../src';
+import { SociableTestBedBuilderImpl, UnitMocker } from '../../src';
 
 describe('Boundaries Feature - Internal Resolution Mechanics', () => {
   const loggerMock = mock<Console>();
@@ -20,7 +20,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
 
   describe('Resolution: Explicit mock (Priority 1) beats boundary (Priority 2)', () => {
     it('should use explicit mock when dependency is both in boundaries and mocked', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -58,7 +58,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
 
   describe('boundaries() no-arg overload', () => {
     it('should accept no arguments (same as empty array)', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -90,7 +90,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
 
   describe('CRITICAL: Retrieval rules in boundaries mode', () => {
     it('should ALLOW retrieving boundary classes (mocked) but NOT auto-exposed classes (real)', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -127,7 +127,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
 
   describe('Resolution: Boundaries mode enables auto-expose', () => {
     it('should compile with boundaries mode', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -150,7 +150,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
 
     it('should auto-expose leaf classes that are not in boundaries', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -197,7 +197,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     // where we have full NestJS DI and real service registries
 
     it('should fail-fast for unconfigured dependency in expose mode', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -209,7 +209,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
 
     it('should NOT fail when failFast is disabled', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -222,7 +222,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
 
     it('should log warning when failFast is disabled', () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -240,7 +240,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     // with full DI context where auto-expose can properly trigger fail-fast
 
     it('should format error message for null mode when fail-fast triggers', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -261,7 +261,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         },
       } as any;
 
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(badAdapter)),
         UserService,
@@ -274,7 +274,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
 
     it('should format error message for expose mode with helpful suggestions', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -291,7 +291,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
 
   describe('Error message formatting', () => {
     it('should include helpful context in expose mode error', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -302,7 +302,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
 
     it('should format error message for null mode', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,
@@ -314,7 +314,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
 
     it('should provide migration path in error message', async () => {
-      const unitBuilder = new SociableTestBedBuilder(
+      const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
         UserService,

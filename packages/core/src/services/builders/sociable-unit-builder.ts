@@ -147,6 +147,9 @@ export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedB
  * - Use **expose mode** when you want fine-grained control (few real dependencies)
  * - Use **boundaries mode** when most dependencies should be real (few boundaries)
  *
+ * **Note:** The `.mock()` method is NOT available at this stage.
+ * Call `.expose()` or `.boundaries()` first to access `.mock()` for custom configurations.
+ *
  * @template TClass The type of the class under test
  * @since 4.0.0
  * @see https://suites.dev/docs/api-reference/testbed-sociable
@@ -164,7 +167,7 @@ export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedB
  *   .boundaries([RecommendationEngine, CacheService])
  *   .compile();
  */
-export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
+export interface SociableTestBedBuilder<TClass> {
   /**
    * Declares a dependency to be exposed (made real) in the test.
    * Switches the builder to **expose mode** (whitelist strategy).
@@ -277,15 +280,19 @@ export interface SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
 }
 
 /**
- * Builder for creating sociable unit tests with configurable dependency behavior.
- * Supports two mutually exclusive modes:
- * - Expose mode: Explicitly declare which dependencies should be real (default mocks everything)
- * - Boundaries mode: Explicitly declare which dependencies should be mocked (default makes everything real)
+ * @internal
+ * Internal implementation class for SociableTestBedBuilder.
+ *
+ * This class is exported for framework usage but should not be used directly by consumers.
+ * Use `TestBed.sociable()` factory method which returns the `SociableTestBedBuilder` interface type.
+ *
+ * The class name is intentionally different from the interface to prevent TypeScript's declaration
+ * merging, which would expose the inherited `.mock()` method in the public API.
  *
  * @template TClass The type of the class under test
  * @since 3.0.0
  */
-export class SociableTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
+export class SociableTestBedBuilderImpl<TClass> extends TestBedBuilder<TClass> implements SociableTestBedBuilder<TClass> {
   private readonly classesToExpose: Type[] = [];
   private readonly boundaryClasses: Type[] = [];
   private mode: 'expose' | 'boundaries' | null = null;

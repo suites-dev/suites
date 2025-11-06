@@ -77,20 +77,21 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
 }
 
 /**
- * Builder interface in **boundaries mode** (blacklist strategy).
+ * Builder interface in **collaborate mode** (blacklist strategy).
  *
- * You entered this mode by calling `.boundaries()` on the initial builder.
- * In boundaries mode:
- * - All dependencies are real by default (auto-exposed)
- * - Only boundary dependencies are mocked
+ * You entered this mode by calling `.collaborate()` on the initial builder.
+ * In collaborate mode:
+ * - All dependencies collaborate (are real) by default
+ * - Only excluded dependencies are mocked
  * - Leaf classes (no dependencies) are auto-exposed
- * - Token injections are always auto-mocked
+ * - Token injections are always auto-mocked (natural boundaries)
  *
  * **Auto-expose behavior:**
- * Any class dependency NOT in the boundaries array is automatically made real.
+ * Any class dependency NOT in the exclude array is automatically made real.
  * This simplifies configuration for large dependency trees.
  *
  * **Available methods:**
+ * - `exclude()` - Exclude dependencies from collaboration (they will be mocked)
  * - `mock()` - Configure custom mocks (inherited from TestBedBuilder)
  * - `failFast()` - Configure fail-fast behavior
  * - `compile()` - Finalize and create test bed
@@ -99,26 +100,48 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
  * @since 4.0.0
  * @see https://suites.dev/docs/api-reference/testbed-sociable
  */
-export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedBuilder<TClass> {
+export interface SociableTestBedBuilderInCollaborateMode<TClass> extends TestBedBuilder<TClass> {
+  /**
+   * Exclude dependencies from collaboration (they will be auto-mocked).
+   *
+   * Use this to exclude expensive, external, or already-tested classes
+   * from the collaboration. Excluded classes will be auto-stubbed.
+   *
+   * **Must provide at least one class to exclude.**
+   *
+   * @param classes - Array of class types to exclude (minimum 1 required)
+   * @returns The same builder in collaborate mode
+   * @since 4.0.0
+   *
+   * @example
+   * await TestBed.sociable(UserService)
+   *   .collaborate()
+   *   .exclude([ExpensiveService, ThirdPartySDK])
+   *   .compile();
+   *
+   * @see https://suites.dev/docs/api-reference/testbed-sociable
+   */
+  exclude(classes: [Type, ...Type[]]): SociableTestBedBuilderInCollaborateMode<TClass>;
+
   /**
    * Configure fail-fast behavior for dependency resolution.
    *
    * Fail-fast is enabled by default in v4.0.0. This method allows disabling it
-   * for migration purposes. In boundaries mode, fail-fast rarely triggers due to auto-expose.
+   * for migration purposes. In collaborate mode, fail-fast rarely triggers due to auto-expose.
    *
    * @param config Configuration object - only { enabled: false } is accepted
-   * @returns The same builder in boundaries mode
+   * @returns The same builder in collaborate mode
    * @since 4.0.0
    *
    * @see https://suites.dev/docs/api-reference/fail-fast
    */
-  failFast(config: { enabled: false }): SociableTestBedBuilderInBoundariesMode<TClass>;
+  failFast(config: { enabled: false }): SociableTestBedBuilderInCollaborateMode<TClass>;
 
   /**
-   * Compiles the test bed with boundaries mode configuration.
+   * Compiles the test bed with collaborate mode configuration.
    *
-   * All non-boundary dependencies will be auto-exposed (made real).
-   * Only boundary dependencies will be mocked.
+   * All non-excluded dependencies will be auto-exposed (made real).
+   * Only excluded dependencies will be mocked.
    * Leaf classes are auto-exposed. Tokens are auto-mocked.
    *
    * @returns Promise resolving to the unit test bed
@@ -134,21 +157,21 @@ export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedB
  *
  * **Two mutually exclusive modes available:**
  * - **Expose mode**: Whitelist real dependencies (call `.expose()`)
- * - **Boundaries mode**: Blacklist mocked dependencies (call `.boundaries()`)
+ * - **Collaborate mode**: All dependencies real by default (call `.collaborate()`)
  *
- * Once you call `.expose()` or `.boundaries()`, the mode is locked for this test.
+ * Once you call `.expose()` or `.collaborate()`, the mode is locked for this test.
  *
  * **v4.0.0 Changes:**
  * - Fail-fast is enabled by default (throws on unconfigured dependencies)
  * - Use `.failFast({ enabled: false })` for gradual migration from v3.x
- * - New `.boundaries()` method for blacklist strategy
+ * - New `.collaborate()` method for blacklist strategy (replaces `.boundaries()`)
  *
  * **Mode Selection Guide:**
  * - Use **expose mode** when you want fine-grained control (few real dependencies)
- * - Use **boundaries mode** when most dependencies should be real (few boundaries)
+ * - Use **collaborate mode** when most dependencies should be real (natural collaboration)
  *
  * **Note:** The `.mock()` method is NOT available at this stage.
- * Call `.expose()` or `.boundaries()` first to access `.mock()` for custom configurations.
+ * Call `.expose()` or `.collaborate()` first to access `.mock()` for custom configurations.
  *
  * @template TClass The type of the class under test
  * @since 4.0.0
@@ -162,9 +185,10 @@ export interface SociableTestBedBuilderInBoundariesMode<TClass> extends TestBedB
  *   .compile();
  *
  * @example
- * // Boundaries mode - blacklist mocked dependencies
+ * // Collaborate mode - all real except exclusions
  * await TestBed.sociable(UserService)
- *   .boundaries([RecommendationEngine, CacheService])
+ *   .collaborate()
+ *   .exclude([RecommendationEngine, CacheService])
  *   .compile();
  */
 export interface SociableTestBedBuilder<TClass> {
@@ -192,58 +216,39 @@ export interface SociableTestBedBuilder<TClass> {
   expose(dependency: Type): SociableTestBedBuilderInExposeMode<TClass>;
 
   /**
-   * Enables boundaries mode with no boundaries (all dependencies are real).
-   * Switches the builder to **boundaries mode** where everything is auto-exposed.
+   * Enables collaborate mode where all dependencies are real by default.
+   * Switches the builder to **collaborate mode** (blacklist strategy).
+   *
+   * **Collaborate Mode Behavior:**
+   * - All dependencies collaborate (are real) by default
+   * - Use `.exclude()` to blacklist specific dependencies (they will be mocked)
+   * - Token injections are always auto-mocked (natural boundaries)
+   * - Use `.mock()` for custom mock implementations
    *
    * **Use this when:**
-   * - You want all business logic classes to be real
+   * - You want all business logic classes to collaborate naturally
+   * - You only need to exclude specific expensive/external dependencies
    * - You want the simplest sociable test configuration
-   * - Tokens will still be auto-mocked (I/O boundaries)
    *
-   * @returns Builder in boundaries mode
+   * @returns Builder in collaborate mode
    * @since 4.0.0
    *
    * @example
    * // All business logic real, only tokens mocked
    * await TestBed.sociable(UserService)
-   *   .boundaries()  // No boundaries - everything real
+   *   .collaborate()
    *   .compile();
-   *
-   * @see https://suites.dev/docs/api-reference/testbed-sociable
-   */
-  boundaries(): SociableTestBedBuilderInBoundariesMode<TClass>;
-
-  /**
-   * Declares dependencies as boundaries (to be mocked) in the test.
-   * Switches the builder to **boundaries mode** (blacklist strategy).
-   *
-   * **Boundaries Mode Behavior:**
-   * - All dependencies are real by default (auto-exposed)
-   * - Only boundary dependencies are mocked
-   * - Everything else executes with real business logic
-   *
-   * **Use boundaries for:**
-   * - Classes with complex logic tested elsewhere
-   * - Legacy code that's hard to set up
-   * - Third-party SDKs you don't control
-   * - Non-deterministic classes (random, time-based)
-   *
-   * **Note:** Token injections (@Inject('TOKEN')) are always auto-mocked.
-   * Leaf classes (no dependencies) are auto-exposed in boundaries mode.
-   *
-   * @param dependencies - Array of class types to treat as boundaries (will be mocked)
-   * @returns Builder in boundaries mode
-   * @since 4.0.0
    *
    * @example
-   * // Avoid specific complex classes
+   * // Exclude specific expensive services
    * await TestBed.sociable(UserService)
-   *   .boundaries([ComplexTaxEngine, LegacyAdapter])
+   *   .collaborate()
+   *   .exclude([ExpensiveMLService, ThirdPartySDK])
    *   .compile();
    *
    * @see https://suites.dev/docs/api-reference/testbed-sociable
    */
-  boundaries(dependencies: Type[]): SociableTestBedBuilderInBoundariesMode<TClass>;
+  collaborate(): SociableTestBedBuilderInCollaborateMode<TClass>;
 
   /**
    * Configure fail-fast behavior for dependency resolution.
@@ -262,7 +267,7 @@ export interface SociableTestBedBuilder<TClass> {
   /**
    * Compiles the test bed configuration and creates the unit test environment.
    *
-   * Processes all configured mocks, exposed dependencies, and boundaries,
+   * Processes all configured mocks, exposed dependencies, and exclusions,
    * then instantiates the unit under test with its dependency graph.
    *
    * **Fail-fast validation (v4.0.0):**
@@ -294,8 +299,8 @@ export interface SociableTestBedBuilder<TClass> {
  */
 export class SociableTestBedBuilderImpl<TClass> extends TestBedBuilder<TClass> implements SociableTestBedBuilder<TClass> {
   private readonly classesToExpose: Type[] = [];
-  private readonly boundaryClasses: Type[] = [];
-  private mode: 'expose' | 'boundaries' | null = null;
+  private readonly excludedClasses: Type[] = [];
+  private mode: 'expose' | 'collaborate' | null = null;
   private failFastEnabled: boolean = true;
 
   public constructor(
@@ -314,7 +319,7 @@ export class SociableTestBedBuilderImpl<TClass> extends TestBedBuilder<TClass> i
    *
    * @param dependency The class type to expose as a real instance
    * @returns The builder instance for method chaining
-   * @throws Error if `.boundaries()` was called before
+   * @throws Error if `.collaborate()` was called before
    * @since 3.0.0
    *
    * @example
@@ -326,12 +331,12 @@ export class SociableTestBedBuilderImpl<TClass> extends TestBedBuilder<TClass> i
    * ```
    */
   public expose(dependency: Type): SociableTestBedBuilderInExposeMode<TClass> {
-    if (this.mode === 'boundaries') {
+    if (this.mode === 'collaborate') {
       throw new Error(
-        'Cannot use .expose() after .boundaries().\n' +
+        'Cannot use .expose() after .collaborate().\n' +
           'These represent opposite testing strategies:\n' +
           '  - .expose(): Start with all mocked, selectively make real (whitelist)\n' +
-          '  - .boundaries(): Start with all real, selectively mock boundaries (blacklist)\n' +
+          '  - .collaborate(): Start with all real, selectively exclude from collaboration (blacklist)\n' +
           'Choose one approach for your test.'
       );
     }
@@ -342,57 +347,88 @@ export class SociableTestBedBuilderImpl<TClass> extends TestBedBuilder<TClass> i
     return this as SociableTestBedBuilderInExposeMode<TClass>;
   }
 
-  public boundaries(): SociableTestBedBuilderInBoundariesMode<TClass>;
-  public boundaries(dependencies: Type[]): SociableTestBedBuilderInBoundariesMode<TClass>;
   /**
-   * Declares dependencies as boundaries (to be mocked) in the test.
-   * Sets the builder to "boundaries mode" where all dependencies are real by default
-   * and only boundary dependencies are mocked.
+   * Enables collaborate mode where all dependencies are real by default.
+   * Sets the builder to "collaborate mode" where all dependencies collaborate naturally,
+   * and you can selectively exclude specific dependencies using `.exclude()`.
    *
-   * List classes you want to avoid testing in this specific test:
-   * complex logic tested elsewhere, legacy code, third-party SDKs, non-deterministic classes.
-   *
-   * Call without arguments to auto-expose all dependencies (no boundaries).
+   * In collaborate mode:
+   * - All class dependencies are real by default
+   * - Use `.exclude()` to blacklist specific classes (they will be mocked)
+   * - Token injections are always auto-mocked (natural boundaries)
+   * - Use `.mock()` for custom mock implementations
    *
    * Note: Token injections (e.g., @Inject('TOKEN')) are automatically mocked regardless of mode.
-   * Token-injected dependencies don't need to be declared as boundaries.
    *
-   * @param dependencies Array of class types to treat as boundaries (optional, defaults to empty array)
-   * @returns The builder instance for method chaining
+   * @returns The builder instance in collaborate mode
    * @throws Error if `.expose()` was called before
    * @since 4.0.0
    *
    * @example
    * ```typescript
-   * // Avoid specific complex classes, everything else is real
+   * // All business logic real, only tokens mocked
    * TestBed.sociable(UserService)
-   *   .boundaries([ComplexTaxEngine, LegacyAdapter])
+   *   .collaborate()
    *   .compile();
    * ```
    *
    * @example
    * ```typescript
-   * // No boundaries - all business logic is real
+   * // Exclude specific expensive services
    * TestBed.sociable(UserService)
-   *   .boundaries()  // No arguments - everything auto-exposed
+   *   .collaborate()
+   *   .exclude([ComplexTaxEngine, ThirdPartySDK])
    *   .compile();
    * ```
    */
-  public boundaries(dependencies?: Type[]): SociableTestBedBuilderInBoundariesMode<TClass> {
+  public collaborate(): SociableTestBedBuilderInCollaborateMode<TClass> {
     if (this.mode === 'expose') {
       throw new Error(
-        'Cannot use .boundaries() after .expose().\n' +
+        'Cannot use .collaborate() after .expose().\n' +
           'These represent opposite testing strategies:\n' +
           '  - .expose(): Start with all mocked, selectively make real (whitelist)\n' +
-          '  - .boundaries(): Start with all real, selectively mock boundaries (blacklist)\n' +
+          '  - .collaborate(): Start with all real, selectively exclude from collaboration (blacklist)\n' +
           'Choose one approach for your test.'
       );
     }
 
-    this.mode = 'boundaries';
-    this.boundaryClasses.push(...(dependencies || []));
+    this.mode = 'collaborate';
 
-    return this as SociableTestBedBuilderInBoundariesMode<TClass>;
+    return this as SociableTestBedBuilderInCollaborateMode<TClass>;
+  }
+
+  /**
+   * Exclude dependencies from collaboration (they will be auto-mocked).
+   * Can only be called in collaborate mode.
+   *
+   * Use this to exclude expensive, external, or already-tested classes
+   * from the collaboration. Excluded classes will be auto-stubbed.
+   *
+   * @param classes - Array of class types to exclude (minimum 1 required)
+   * @returns The builder instance for method chaining
+   * @throws Error if not in collaborate mode
+   * @since 4.0.0
+   *
+   * @example
+   * ```typescript
+   * TestBed.sociable(UserService)
+   *   .collaborate()
+   *   .exclude([ExpensiveService, ThirdPartySDK])
+   *   .compile();
+   * ```
+   */
+  public exclude(classes: [Type, ...Type[]]): SociableTestBedBuilderInCollaborateMode<TClass> {
+    if (this.mode !== 'collaborate') {
+      throw new Error(
+        'Cannot use .exclude() without calling .collaborate() first.\n' +
+          '.exclude() is only available in collaborate mode.\n' +
+          'Call .collaborate() before using .exclude().'
+      );
+    }
+
+    this.excludedClasses.push(...classes);
+
+    return this as SociableTestBedBuilderInCollaborateMode<TClass>;
   }
 
   /**
@@ -473,9 +509,9 @@ export class SociableTestBedBuilderImpl<TClass> extends TestBedBuilder<TClass> i
         new DependencyContainer([...identifiersToMocks, ...identifiersToFinal]),
         {
           mode: this.mode,
-          boundaryClasses: [...this.boundaryClasses], // Immutable copy
+          boundaryClasses: [...this.excludedClasses], // Immutable copy (excludedClasses = boundaries in collaborate mode)
           failFastEnabled: this.failFastEnabled,
-          autoExposeEnabled: this.mode === 'boundaries',
+          autoExposeEnabled: this.mode === 'collaborate',
         }
       );
 
@@ -516,10 +552,10 @@ For detailed instructions and best practices, refer to our documentation: https:
       });
     }
 
-    // In boundaries mode, include auto-exposed classes
+    // In collaborate mode, include auto-exposed classes
     // These should not be retrievable via unitRef (same as explicitly exposed)
     const allExposedClasses =
-      this.mode === 'boundaries'
+      this.mode === 'collaborate'
         ? [...this.classesToExpose, ...autoExposedClasses]
         : this.classesToExpose;
 
@@ -545,12 +581,12 @@ For detailed instructions and best practices, refer to our documentation: https:
     let modeExplanation = '';
     let suggestions = '';
 
-    if (mode === 'boundaries') {
+    if (mode === 'collaborate') {
       modeExplanation =
-        'In boundaries mode, all dependencies are real by default.\n' +
-        'Only dependencies in the boundaries array are mocked.';
+        'In collaborate mode, all dependencies are real by default.\n' +
+        'Only excluded dependencies are mocked.';
       suggestions =
-        `  - Add ${identifier} to boundaries: .boundaries([${identifier}, ...])\n` +
+        `  - Add ${identifier} to exclusions: .collaborate().exclude([${identifier}, ...])\n` +
         `  - Or use .mock(${identifier}).impl(...) for custom mock behavior`;
     } else if (mode === 'expose') {
       modeExplanation =

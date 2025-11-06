@@ -14,20 +14,21 @@ import {
 } from './e2e-assets-sociable';
 
 /**
- * E2E tests for Boundaries and Fail-Fast features (v4.0.0)
+ * E2E tests for Collaborate and Fail-Fast features (v4.0.0)
  *
  * These tests simulate real-world usage from the user's perspective.
- * Goal: Verify that boundaries mode works as intended for QozbroQqn's use case:
+ * Goal: Verify that collaborate mode works as intended:
  * - Most dependencies are real (business logic executes)
- * - Only expensive/external services are mocked (boundaries)
- * - Tokens are auto-mocked (don't need boundaries declaration)
+ * - Only expensive/external services are excluded (mocked)
+ * - Tokens are auto-mocked (natural boundaries - don't need exclusion declaration)
  */
-describe('Boundaries and Fail-Fast - Real World E2E', () => {
-  describe('Real-world boundaries usage: Mock only expensive services', () => {
-    it('should execute real business logic while mocking only expensive ApiService', async () => {
-      // ARRANGE: Mock only the expensive HTTP service, everything else real
+describe('Collaborate and Fail-Fast - Real World E2E', () => {
+  describe('Real-world collaborate usage: Exclude only expensive services', () => {
+    it('should execute real business logic while excluding only expensive ApiService', async () => {
+      // ARRANGE: Exclude only the expensive HTTP service, everything else real
       const { unit, unitRef } = await TestBed.sociable(UserService)
-        .boundaries([ApiService]) // Only mock expensive HTTP calls
+        .collaborate()
+        .exclude([ApiService]) // Only exclude expensive HTTP calls
         .mock<Repository>('Repository') // Token - must be explicitly mocked for verification
         .impl((stub) => ({
           find: stub().mockResolvedValue([]),
@@ -53,7 +54,8 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
     it('should execute real validation logic and throw for invalid users', async () => {
       // ARRANGE
       const { unit } = await TestBed.sociable(UserService)
-        .boundaries([ApiService]) // Only mock expensive service
+        .collaborate()
+        .exclude([ApiService]) // Only exclude expensive service
         .mock<Repository>('Repository')
         .impl((stub) => ({
           find: stub().mockResolvedValue([]),
@@ -69,10 +71,11 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
       // This proves UserVerificationService.verify() actually ran with real logic
     });
 
-    it('should work with mocked boundary when calling API methods', async () => {
-      // ARRANGE: ApiService is boundary (mocked)
+    it('should work with excluded service when calling API methods', async () => {
+      // ARRANGE: ApiService is excluded (mocked)
       const { unit, unitRef } = await TestBed.sociable(UserService)
-        .boundaries([ApiService])
+        .collaborate()
+        .exclude([ApiService])
         .mock(ApiService)
         .impl((stub) => ({
           fetchData: stub().mockResolvedValue('mocked-api-response'),
@@ -90,13 +93,14 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
     });
   });
 
-  describe('Leaf class auto-exposure: Leaf classes are auto-exposed in boundaries mode', () => {
-    it('should auto-expose leaf classes that are not in boundaries array', async () => {
+  describe('Leaf class auto-exposure: Leaf classes are auto-exposed in collaborate mode', () => {
+    it('should auto-expose leaf classes that are not excluded', async () => {
       // ARRANGE: UserVerificationService is a leaf class (no dependencies)
-      // It's NOT in boundaries array, so it should be auto-exposed (made real)
+      // It's NOT excluded, so it should be auto-exposed (made real)
       const { unit } = await TestBed.sociable(UserService)
-        .boundaries([ApiService, UserApiService, UserDigestService])
-        // UserDal is NOT in boundaries - it's real, uses real UserVerificationService
+        .collaborate()
+        .exclude([ApiService, UserApiService, UserDigestService])
+        // UserDal is NOT excluded - it's real, uses real UserVerificationService
         // UserVerificationService is a leaf - should be auto-exposed
         .mock<Repository>('Repository')
         .impl((stub) => ({
@@ -122,15 +126,16 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
       await expect(unit.create(invalidUser)).rejects.toThrow('invalid user data');
 
       // This proves UserVerificationService is REAL (not mocked) even though
-      // it wasn't explicitly exposed and wasn't in boundaries array
+      // it wasn't explicitly exposed and wasn't excluded
     });
   });
 
   describe('Token auto-mocking: Tokens are natural boundaries', () => {
-    it('should auto-mock token injections without declaring them as boundaries', async () => {
-      // ARRANGE: Don't declare 'Repository' or 'SOME_VALUE_TOKEN' as boundaries
+    it('should auto-mock token injections without declaring them as exclusions', async () => {
+      // ARRANGE: Don't declare 'Repository' or 'SOME_VALUE_TOKEN' as exclusions
       const { unit, unitRef } = await TestBed.sociable(UserService)
-        .boundaries([ApiService]) // Only this is a boundary
+        .collaborate()
+        .exclude([ApiService]) // Only this is excluded
         .mock<Repository>('Repository') // Mock token for verification
         .impl((stub) => ({
           find: stub().mockResolvedValue([]),
@@ -147,13 +152,14 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
       expect(mockRepo.create).toHaveBeenCalled();
       expect(typeof mockRepo.create).toBe('function');
 
-      // This proves tokens are automatically mocked regardless of boundaries
+      // This proves tokens are automatically mocked regardless of exclusions
     });
 
-    it('should auto-mock SOME_VALUE_TOKEN without boundaries declaration', async () => {
+    it('should auto-mock SOME_VALUE_TOKEN without exclusion declaration', async () => {
       // ARRANGE: SOME_VALUE_TOKEN is injected in UserService and UserDigestService
       const { unit } = await TestBed.sociable(UserService)
-        .boundaries([ApiService]) // Don't declare SOME_VALUE_TOKEN
+        .collaborate()
+        .exclude([ApiService]) // Don't declare SOME_VALUE_TOKEN
         .mock<string[]>('SOME_VALUE_TOKEN')
         .final(['mocked', 'token', 'value'])
         .mock<Repository>('Repository')
@@ -171,9 +177,9 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
     });
   });
 
-  // NOTE: Fail-fast in boundaries mode is NOT tested here because auto-expose handles
-  // all class dependencies automatically. In boundaries mode, fail-fast rarely triggers
-  // since non-boundary classes are auto-exposed. The fail-fast safety net is primarily
+  // NOTE: Fail-fast in collaborate mode is NOT tested here because auto-expose handles
+  // all class dependencies automatically. In collaborate mode, fail-fast rarely triggers
+  // since non-excluded classes are auto-exposed. The fail-fast safety net is primarily
   // valuable in expose mode (tested below).
 
   describe('Fail-fast with expose mode', () => {
@@ -199,7 +205,7 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
     });
   });
 
-  describe('Comparing boundaries vs expose for same test', () => {
+  describe('Comparing collaborate vs expose for same test', () => {
     const validUser: User = { name: 'Test', email: 'test@example.com' };
 
     it('EXPOSE MODE: Tedious - must whitelist every dependency', async () => {
@@ -228,9 +234,10 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
       expect(mockRepo.create).toHaveBeenCalled();
     });
 
-    it('BOUNDARIES MODE: Simple - just declare what to mock', async () => {
+    it('COLLABORATE MODE: Simple - just exclude what to mock', async () => {
       const { unit, unitRef } = await TestBed.sociable(UserService)
-        .boundaries([ApiService]) // Just mock expensive service
+        .collaborate()
+        .exclude([ApiService]) // Just exclude expensive service
         .mock<Repository>('Repository')
         .impl((stub) => ({
           find: stub().mockResolvedValue([]),
@@ -246,6 +253,6 @@ describe('Boundaries and Fail-Fast - Real World E2E', () => {
       expect(mockRepo.create).toHaveBeenCalled();
     });
 
-    // Same test result, but boundaries mode is MUCH simpler configuration
+    // Same test result, but collaborate mode is MUCH simpler configuration
   });
 });

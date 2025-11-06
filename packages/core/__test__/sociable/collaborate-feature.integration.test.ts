@@ -217,6 +217,26 @@ describe('Collaborate Feature - Internal Resolution Mechanics', () => {
       );
     });
 
+    it('should throw error when calling .expose() after .collaborate()', () => {
+      const unitBuilder = new SociableTestBedBuilderImpl(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // Set collaborate mode first
+      unitBuilder.collaborate();
+
+      // Try to call expose - should throw
+      expect(() => unitBuilder.expose(UserApiService)).toThrow(
+        /Cannot use \.expose\(\) after \.collaborate\(\)/
+      );
+      expect(() => unitBuilder.expose(UserApiService)).toThrow(
+        /opposite testing strategies/
+      );
+    });
+
     it('should throw error when calling .exclude() without .collaborate() first', () => {
       const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),

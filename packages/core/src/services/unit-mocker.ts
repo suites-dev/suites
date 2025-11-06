@@ -21,13 +21,13 @@ export interface MockedUnit<TClass> {
  * @since 4.0.0
  */
 export interface ResolverOptions {
-  /** The current testing mode: expose (whitelist) or boundaries (blacklist) */
-  mode: 'expose' | 'boundaries' | null;
-  /** Array of classes to treat as boundaries (mocked in boundaries mode) */
+  /** The current testing mode: expose (whitelist) or collaborate (blacklist) */
+  mode: 'expose' | 'collaborate' | null;
+  /** Array of classes to exclude from collaboration (mocked in collaborate mode) */
   boundaryClasses: Type[];
   /** Whether to throw errors for unconfigured dependencies (default: true) */
   failFastEnabled: boolean;
-  /** Whether to auto-expose non-boundary dependencies (true in boundaries mode) */
+  /** Whether to auto-expose non-excluded dependencies (true in collaborate mode) */
   autoExposeEnabled: boolean;
 }
 

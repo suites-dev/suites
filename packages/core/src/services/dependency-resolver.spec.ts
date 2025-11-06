@@ -10,9 +10,9 @@ import type { Type } from '@suites/types.common';
  *
  * Resolution Priority Order (from JSDoc):
  * 1. Explicit mocks (.mock().impl() or .mock().final())
- * 2. Boundaries (in boundaries mode)
- * 3. Tokens/Primitives (always mocked, except leaf classes in boundaries mode)
- * 4. Auto-expose (in boundaries mode)
+ * 2. Boundaries (in collaborate mode)
+ * 3. Tokens/Primitives (always mocked, except leaf classes in collaborate mode)
+ * 4. Auto-expose (in collaborate mode)
  * 5. Explicit expose (in expose mode)
  * 6. Fail-fast or auto-mock
  */
@@ -150,7 +150,7 @@ describe('DependencyResolver - Unit Tests', () => {
       expect(mockFn).not.toHaveBeenCalled(); // Should not create new mock
     });
 
-    it('should return explicit mock even when class is in boundaries array', () => {
+    it('should return explicit mock even when class is in exclusion array', () => {
       const explicitMock = { explicit: true };
       const container = new DependencyContainer([[{ identifier: ServiceA, metadata: undefined }, explicitMock]]);
 
@@ -161,7 +161,7 @@ describe('DependencyResolver - Unit Tests', () => {
         container,
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -171,8 +171,8 @@ describe('DependencyResolver - Unit Tests', () => {
     });
   });
 
-  describe('resolveOrMock() - Priority 2: Boundaries', () => {
-    it('should mock class that is in boundaries array (boundaries mode)', () => {
+  describe('resolveOrMock() - Priority 2: Exclusions', () => {
+    it('should mock class that is in exclusion array (collaborate mode)', () => {
       const registries = new Map([[ServiceA, createEmptyRegistry()]]);
       const adapter = createAdapter(registries);
       const resolver = new DependencyResolver(
@@ -180,7 +180,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -212,7 +212,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock('TOKEN');
@@ -221,9 +221,9 @@ describe('DependencyResolver - Unit Tests', () => {
       expect(result).toEqual({ mock: true });
     });
 
-    it('should mock leaf class if explicitly in boundaries array (Priority 2 beats Priority 3)', () => {
+    it('should mock leaf class if explicitly in exclusion array (Priority 2 beats Priority 3)', () => {
       // LeafService has no dependencies, so it would normally be auto-exposed at Priority 3
-      // But since it's explicitly in boundaries array, it should be mocked at Priority 2
+      // But since it's explicitly in exclusion array, it should be mocked at Priority 2
       const registries = new Map<Type, InjectableRegistry>([[LeafService, createEmptyRegistry()]]);
       const adapter = createAdapter(registries);
       const resolver = new DependencyResolver(
@@ -231,7 +231,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [LeafService], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [LeafService], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(LeafService);
@@ -255,7 +255,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock('DATABASE_TOKEN');
@@ -272,7 +272,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const symbol = Symbol('CACHE');
@@ -299,7 +299,7 @@ describe('DependencyResolver - Unit Tests', () => {
       expect(mockFn).not.toHaveBeenCalled(); // Should instantiate, not mock
     });
 
-    it('should auto-expose leaf class in boundaries mode (CRITICAL PATH)', () => {
+    it('should auto-expose leaf class in collaborate mode (CRITICAL PATH)', () => {
       const registries = new Map([[LeafService, createEmptyRegistry()]]);
       const adapter = createAdapter(registries);
       const resolver = new DependencyResolver(
@@ -307,7 +307,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(LeafService);
@@ -338,8 +338,8 @@ describe('DependencyResolver - Unit Tests', () => {
     });
   });
 
-  describe('resolveOrMock() - Priority 4: Auto-Expose in Boundaries Mode', () => {
-    it('should auto-expose non-boundary classes in boundaries mode', () => {
+  describe('resolveOrMock() - Priority 4: Auto-Expose in Collaborate Mode', () => {
+    it('should auto-expose non-excluded classes in collaborate mode', () => {
       const registries = new Map<Type, InjectableRegistry>([
         [ServiceA, createRegistryForServiceA()],
         [ServiceB, createRegistryWithDependency(ServiceA)],
@@ -351,7 +351,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceB);
@@ -381,7 +381,7 @@ describe('DependencyResolver - Unit Tests', () => {
       expect(() => resolver.resolveOrMock(ServiceA)).toThrow(DependencyNotConfiguredError);
     });
 
-    it('should NOT auto-expose classes that are in boundaries array', () => {
+    it('should NOT auto-expose classes that are in exclusion array', () => {
       const registries = new Map<Type, InjectableRegistry>([[ServiceA, createEmptyRegistry()]]);
       const adapter = createAdapter(registries);
       const resolver = new DependencyResolver(
@@ -389,7 +389,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -418,7 +418,7 @@ describe('DependencyResolver - Unit Tests', () => {
       expect(mockFn).not.toHaveBeenCalled();
     });
 
-    it('should use auto-expose in boundaries mode even if class is in expose list', () => {
+    it('should use auto-expose in collaborate mode even if class is in expose list', () => {
       const registries = new Map<Type, InjectableRegistry>([
         [ServiceA, createRegistryForServiceA()],
         [LeafService, createEmptyRegistry()],
@@ -429,7 +429,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -482,7 +482,7 @@ describe('DependencyResolver - Unit Tests', () => {
       }
     });
 
-    it('should include mode in error (boundaries mode)', () => {
+    it('should include mode in error (collaborate mode)', () => {
       const registries = new Map([[ServiceA, createEmptyRegistry()]]);
       const adapter = createAdapter(registries);
       const resolver = new DependencyResolver(
@@ -491,14 +491,14 @@ describe('DependencyResolver - Unit Tests', () => {
         adapter,
         mockFn,
         {
-          mode: 'boundaries',
+          mode: 'collaborate',
           boundaryClasses: [ServiceA], // ServiceA is boundary, so it's mocked
           failFastEnabled: false,
           autoExposeEnabled: true,
         }
       );
 
-      // This path is actually hard to trigger in boundaries mode due to auto-expose
+      // This path is actually hard to trigger in collaborate mode due to auto-expose
       // But we're testing that the mode is passed correctly
       const result = resolver.resolveOrMock(ServiceA);
       expect(result).toEqual({ mock: true }); // Gets mocked at Priority 2
@@ -757,7 +757,7 @@ describe('DependencyResolver - Unit Tests', () => {
       expect(resolver.getAutoExposedClasses()).toEqual([]);
     });
 
-    it('should return array of auto-exposed classes in boundaries mode', () => {
+    it('should return array of auto-exposed classes in collaborate mode', () => {
       const registries = new Map<Type, InjectableRegistry>([
         [ServiceA as Type, createRegistryForServiceA()],
         [ServiceB as Type, createRegistryWithDependency(ServiceA)],
@@ -769,7 +769,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       resolver.resolveOrMock(ServiceB);
@@ -907,7 +907,7 @@ describe('DependencyResolver - Unit Tests', () => {
       expect(result.serviceA).toBeInstanceOf(ServiceA);
     });
 
-    it('should respect explicit mock over auto-expose in boundaries mode', () => {
+    it('should respect explicit mock over auto-expose in collaborate mode', () => {
       const explicitMock = { explicit: true };
       const container = new DependencyContainer([[{ identifier: ServiceA, metadata: undefined }, explicitMock]]);
 
@@ -918,7 +918,7 @@ describe('DependencyResolver - Unit Tests', () => {
         container,
         adapter,
         mockFn,
-        { mode: 'boundaries', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceA);

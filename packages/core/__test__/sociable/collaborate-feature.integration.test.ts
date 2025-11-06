@@ -196,6 +196,59 @@ describe('Collaborate Feature - Internal Resolution Mechanics', () => {
     });
   });
 
+  describe('Mode mutual exclusivity and validation', () => {
+    it('should throw error when calling .collaborate() after .expose()', () => {
+      const unitBuilder = new SociableTestBedBuilderImpl(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // Set expose mode first
+      unitBuilder.expose(UserApiService);
+
+      // Try to call collaborate - should throw
+      expect(() => unitBuilder.collaborate()).toThrow(
+        /Cannot use \.collaborate\(\) after \.expose\(\)/
+      );
+      expect(() => unitBuilder.collaborate()).toThrow(
+        /opposite testing strategies/
+      );
+    });
+
+    it('should throw error when calling .exclude() without .collaborate() first', () => {
+      const unitBuilder = new SociableTestBedBuilderImpl(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // Try to call exclude without collaborate - should throw
+      expect(() => (unitBuilder as any).exclude([UserApiService])).toThrow(
+        /Cannot use \.exclude\(\) without calling \.collaborate\(\) first/
+      );
+    });
+
+    it('should throw error when calling .exclude() in expose mode', () => {
+      const unitBuilder = new SociableTestBedBuilderImpl(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // Set expose mode
+      unitBuilder.expose(UserApiService);
+
+      // Try to call exclude - should throw
+      expect(() => (unitBuilder as any).exclude([UserDal])).toThrow(
+        /Cannot use \.exclude\(\) without calling \.collaborate\(\) first/
+      );
+    });
+  });
+
   describe('Fail-fast behavior', () => {
     // Note: Specific fail-fast scenarios with collaborate mode are tested in e2e tests
     // where we have full NestJS DI and real service registries
@@ -240,8 +293,8 @@ describe('Collaborate Feature - Internal Resolution Mechanics', () => {
       );
     });
 
-    // Note: Collaborate mode error message formatting is tested via e2e tests
-    // with full DI context where auto-expose can properly trigger fail-fast
+    // Note: Collaborate mode error message formatting is tested in dependency-resolver.spec.ts
+    // as it's difficult to trigger fail-fast in collaborate mode with FakeAdapter (auto-expose handles everything)
 
     it('should format error message for null mode when fail-fast triggers', async () => {
       const unitBuilder = new SociableTestBedBuilderImpl(

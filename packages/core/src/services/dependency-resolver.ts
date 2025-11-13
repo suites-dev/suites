@@ -85,14 +85,14 @@ export class DependencyResolver {
     if (
       this.options.mode === 'collaborate' &&
       typeof identifier === 'function' &&
-      this.options.boundaryClasses.includes(identifier)
+      this.options.excludedClasses.includes(identifier)
     ) {
       const mock = this.mockFunction();
       this.dependencyMap.set(identifier, mock, metadata as never);
       return mock;
     }
 
-    // Priority 3: Tokens and primitives are ALWAYS mocked (natural boundaries)
+    // Priority 3: Tokens and primitives are ALWAYS auto-mocked
     if (this.isLeafOrPrimitive(identifier)) {
       // Special case: exposed leaf classes in expose mode
       if (typeof identifier === 'function' && this.classesToExpose.includes(identifier)) {
@@ -132,7 +132,7 @@ export class DependencyResolver {
         name,
         this.options.mode,
         this.classesToExpose,
-        this.options.boundaryClasses
+        this.options.excludedClasses
       );
     }
 
@@ -195,7 +195,7 @@ export class DependencyResolver {
   }
 
   /**
-   * Returns information about auto-exposed classes (used in boundaries mode).
+   * Returns information about auto-exposed classes (used in collaborate mode).
    *
    * @returns Array of classes that were auto-exposed
    * @since 4.0.0

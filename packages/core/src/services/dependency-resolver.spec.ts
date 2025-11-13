@@ -59,7 +59,7 @@ describe('DependencyResolver - Unit Tests', () => {
     it('should store options immutably', () => {
       const options = {
         mode: null,
-        boundaryClasses: [],
+        excludedClasses: [],
         failFastEnabled: true,
         autoExposeEnabled: false,
       };
@@ -79,7 +79,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       expect(resolver.isLeafOrPrimitive('TOKEN_STRING')).toBe(true);
@@ -93,7 +93,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const sym = Symbol('TEST_SYMBOL');
@@ -108,7 +108,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       expect(resolver.isLeafOrPrimitive(LeafService)).toBe(true);
@@ -122,7 +122,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       expect(resolver.isLeafOrPrimitive(ServiceB)).toBe(false);
@@ -141,7 +141,7 @@ describe('DependencyResolver - Unit Tests', () => {
         container,
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -161,7 +161,7 @@ describe('DependencyResolver - Unit Tests', () => {
         container,
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -180,7 +180,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -189,7 +189,7 @@ describe('DependencyResolver - Unit Tests', () => {
       expect(mockFn).toHaveBeenCalled();
     });
 
-    it('should NOT apply boundaries check in expose mode', () => {
+    it('should NOT apply exclusion check in expose mode', () => {
       const registries = new Map([[ServiceA, createRegistryWithDependency(ServiceB)]]);
       const adapter = createAdapter(registries);
       const resolver = new DependencyResolver(
@@ -197,14 +197,14 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [ServiceA], failFastEnabled: true, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [ServiceA], failFastEnabled: true, autoExposeEnabled: false }
       );
 
-      // ServiceA in boundaries but mode is 'expose' - should fail-fast, not use boundary
+      // ServiceA in excludedClasses but mode is 'expose' - should fail-fast, not use exclusion
       expect(() => resolver.resolveOrMock(ServiceA)).toThrow(DependencyNotConfiguredError);
     });
 
-    it('should NOT apply boundaries check for non-function identifiers (tokens)', () => {
+    it('should NOT apply exclusion check for non-function identifiers (tokens)', () => {
       const registries = new Map();
       const adapter = createAdapter(registries);
       const resolver = new DependencyResolver(
@@ -212,7 +212,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock('TOKEN');
@@ -231,12 +231,12 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [LeafService], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [LeafService], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(LeafService);
 
-      // Should be mocked at Priority 2 (boundaries), not auto-exposed at Priority 3
+      // Should be mocked at Priority 2 (exclusions), not auto-exposed at Priority 3
       expect(result).toEqual({ mock: true });
       expect(mockFn).toHaveBeenCalled();
 
@@ -255,7 +255,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock('DATABASE_TOKEN');
@@ -272,7 +272,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const symbol = Symbol('CACHE');
@@ -290,7 +290,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.resolveOrMock(LeafService);
@@ -307,7 +307,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(LeafService);
@@ -328,7 +328,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.resolveOrMock(LeafService);
@@ -351,7 +351,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceB);
@@ -374,7 +374,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: true, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: true, autoExposeEnabled: false }
       );
 
       // ServiceA has dependencies, not exposed, no auto-expose → should throw
@@ -389,7 +389,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [ServiceA], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -409,7 +409,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -425,11 +425,11 @@ describe('DependencyResolver - Unit Tests', () => {
       ]);
       const adapter = createAdapter(registries);
       const resolver = new DependencyResolver(
-        [ServiceA], // In expose list but mode is boundaries
+        [ServiceA], // In expose list but mode is collaborate
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -452,7 +452,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: true, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: true, autoExposeEnabled: false }
       );
 
       expect(() => resolver.resolveOrMock(ServiceA)).toThrow(DependencyNotConfiguredError);
@@ -469,7 +469,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: true, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: true, autoExposeEnabled: false }
       );
 
       try {
@@ -492,7 +492,7 @@ describe('DependencyResolver - Unit Tests', () => {
         mockFn,
         {
           mode: 'collaborate',
-          boundaryClasses: [ServiceA], // ServiceA is boundary, so it's mocked
+          excludedClasses: [ServiceA], // ServiceA is excluded, so it's mocked
           failFastEnabled: false,
           autoExposeEnabled: true,
         }
@@ -515,7 +515,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: true, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: true, autoExposeEnabled: false }
       );
 
       try {
@@ -535,7 +535,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: true, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: true, autoExposeEnabled: false }
       );
 
       try {
@@ -553,7 +553,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: true, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: true, autoExposeEnabled: false }
       );
 
       try {
@@ -574,7 +574,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -591,7 +591,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.resolveOrMock('SOME_TOKEN');
@@ -608,7 +608,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const symbol = Symbol('FALLBACK_SYMBOL');
@@ -629,7 +629,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       // First call
@@ -656,7 +656,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result1 = resolver.instantiateClass(ServiceA);
@@ -677,7 +677,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       resolver.instantiateClass(ServiceB);
@@ -711,7 +711,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.instantiateClass(ServiceWithProp) as ServiceWithProp;
@@ -732,7 +732,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.instantiateClass(ServiceB) as ServiceB;
@@ -751,7 +751,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       expect(resolver.getAutoExposedClasses()).toEqual([]);
@@ -769,7 +769,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       resolver.resolveOrMock(ServiceB);
@@ -791,7 +791,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       resolver.resolveOrMock(ServiceA);
@@ -815,7 +815,7 @@ describe('DependencyResolver - Unit Tests', () => {
         container,
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       resolver.resolveOrMock(ServiceA);
@@ -837,7 +837,7 @@ describe('DependencyResolver - Unit Tests', () => {
         container,
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       resolver.resolveOrMock(ServiceA);
@@ -859,7 +859,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       resolver.resolveOrMock(ServiceB);
@@ -879,7 +879,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: null, boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: null, excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.resolveOrMock('TOKEN', metadata);
@@ -898,7 +898,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.resolveOrMock(ServiceB) as ServiceB;
@@ -918,7 +918,7 @@ describe('DependencyResolver - Unit Tests', () => {
         container,
         adapter,
         mockFn,
-        { mode: 'collaborate', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: true }
+        { mode: 'collaborate', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: true }
       );
 
       const result = resolver.resolveOrMock(ServiceA);
@@ -947,7 +947,7 @@ describe('DependencyResolver - Unit Tests', () => {
         new DependencyContainer([]),
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       const result = resolver.instantiateClass(ServiceA);
@@ -978,7 +978,7 @@ describe('DependencyResolver - Unit Tests', () => {
         container,
         adapter,
         mockFn,
-        { mode: 'expose', boundaryClasses: [], failFastEnabled: false, autoExposeEnabled: false }
+        { mode: 'expose', excludedClasses: [], failFastEnabled: false, autoExposeEnabled: false }
       );
 
       // Priority 1: Explicit mock

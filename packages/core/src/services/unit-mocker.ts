@@ -24,7 +24,7 @@ export interface ResolverOptions {
   /** The current testing mode: expose (whitelist) or collaborate (blacklist) */
   mode: 'expose' | 'collaborate' | null;
   /** Array of classes to exclude from collaboration (mocked in collaborate mode) */
-  boundaryClasses: Type[];
+  excludedClasses: Type[];
   /** Whether to throw errors for unconfigured dependencies (default: true) */
   failFastEnabled: boolean;
   /** Whether to auto-expose non-excluded dependencies (true in collaborate mode) */

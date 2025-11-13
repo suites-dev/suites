@@ -20,7 +20,7 @@ import {
  * Goal: Verify that collaborate mode works as intended:
  * - Most dependencies are real (business logic executes)
  * - Only expensive/external services are excluded (mocked)
- * - Tokens are auto-mocked (natural boundaries - don't need exclusion declaration)
+ * - Tokens are auto-mocked (automatically mocked - don't need exclusion declaration)
  */
 describe('Collaborate and Fail-Fast - Real World E2E', () => {
   describe('Real-world collaborate usage: Exclude only expensive services', () => {
@@ -130,7 +130,7 @@ describe('Collaborate and Fail-Fast - Real World E2E', () => {
     });
   });
 
-  describe('Token auto-mocking: Tokens are natural boundaries', () => {
+  describe('Token auto-mocking: Tokens are automatically mocked', () => {
     it('should auto-mock token injections without declaring them as exclusions', async () => {
       // ARRANGE: Don't declare 'Repository' or 'SOME_VALUE_TOKEN' as exclusions
       const { unit, unitRef } = await TestBed.sociable(UserService)

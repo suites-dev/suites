@@ -84,7 +84,7 @@ export interface SociableTestBedBuilderInExposeMode<TClass> extends TestBedBuild
  * - All dependencies collaborate (are real) by default
  * - Only excluded dependencies are mocked
  * - Leaf classes (no dependencies) are auto-exposed
- * - Token injections are always auto-mocked (natural boundaries)
+ * - Token injections are always auto-mocked (automatically mocked)
  *
  * **Auto-expose behavior:**
  * Any class dependency NOT in the exclude array is automatically made real.
@@ -222,7 +222,7 @@ export interface SociableTestBedBuilder<TClass> {
    * **Collaborate Mode Behavior:**
    * - All dependencies collaborate (are real) by default
    * - Use `.exclude()` to blacklist specific dependencies (they will be mocked)
-   * - Token injections are always auto-mocked (natural boundaries)
+   * - Token injections are always auto-mocked (automatically mocked)
    * - Use `.mock()` for custom mock implementations
    *
    * **Use this when:**
@@ -355,7 +355,7 @@ export class SociableTestBedBuilderImpl<TClass> extends TestBedBuilder<TClass> i
    * In collaborate mode:
    * - All class dependencies are real by default
    * - Use `.exclude()` to blacklist specific classes (they will be mocked)
-   * - Token injections are always auto-mocked (natural boundaries)
+   * - Token injections are always auto-mocked (automatically mocked)
    * - Use `.mock()` for custom mock implementations
    *
    * Note: Token injections (e.g., @Inject('TOKEN')) are automatically mocked regardless of mode.
@@ -470,7 +470,7 @@ export class SociableTestBedBuilderImpl<TClass> extends TestBedBuilder<TClass> i
 
   /**
    * Compiles the test bed configuration and creates the unit test environment.
-   * This method processes all configured mocks, exposed dependencies, and boundaries,
+   * This method processes all configured mocks, exposed dependencies, and exclusions,
    * then instantiates the unit under test with its dependency graph.
    *
    * @returns Promise resolving to the compiled unit test bed
@@ -509,7 +509,7 @@ export class SociableTestBedBuilderImpl<TClass> extends TestBedBuilder<TClass> i
         new DependencyContainer([...identifiersToMocks, ...identifiersToFinal]),
         {
           mode: this.mode,
-          boundaryClasses: [...this.excludedClasses], // Immutable copy (excludedClasses = boundaries in collaborate mode)
+          excludedClasses: [...this.excludedClasses], // Immutable copy of excluded classes in collaborate mode
           failFastEnabled: this.failFastEnabled,
           autoExposeEnabled: this.mode === 'collaborate',
         }

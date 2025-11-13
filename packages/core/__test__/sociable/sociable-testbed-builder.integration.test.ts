@@ -154,7 +154,7 @@ describe('Social TestBed Builder Integration Tests', () => {
 
   it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
     await unitBuilder
-      .expose(UserApiService) // Must call expose or boundaries before mock
+      .expose(UserApiService) // Must call expose or collaborate/exclude before mock
       .mock('non-existing-dep')
       .impl(() => ({}))
       .compile();
@@ -166,7 +166,7 @@ describe('Social TestBed Builder Integration Tests', () => {
 
   it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
     await unitBuilder
-      .expose(UserApiService) // Must call expose or boundaries before mock
+      .expose(UserApiService) // Must call expose or collaborate/exclude before mock
       .mock(UserDal)
       .impl(() => ({}))
       .compile();

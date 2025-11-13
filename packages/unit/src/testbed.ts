@@ -47,7 +47,7 @@ export class TestBed {
    *
    * Supports two mutually exclusive testing strategies:
    * - **Expose mode**: Whitelist specific dependencies to be real (default mocks everything)
-   * - **Boundaries mode**: Blacklist specific dependencies to be mocked (default makes everything real)
+   * - **Collaborate mode**: Blacklist specific dependencies to be mocked (default makes everything real)
    *
    * v4.0.0: Fail-fast is enabled by default to prevent "lying tests" where unconfigured
    * dependencies return undefined silently. Use `.disableFailFast()` for gradual migration.
@@ -66,9 +66,10 @@ export class TestBed {
    *   .compile();
    *
    * @example
-   * // Boundaries mode - mock expensive/flaky class dependencies
+   * // Collaborate mode - exclude expensive/flaky class dependencies
    * const { unit } = await TestBed.sociable(MyService)
-   *   .boundaries([RecommendationEngine, CacheService])
+   *   .collaborate()
+   *   .exclude([RecommendationEngine, CacheService])
    *   .compile();
    *
    * @see https://suites.dev/docs/api-reference/testbed-sociable

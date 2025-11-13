@@ -107,7 +107,7 @@ describe('Unit Mocker Unit Spec', () => {
         beforeAll(async () => {
           result = await underTest.constructUnit(DummyClass, [], mocksContainer, {
             mode: null,
-            boundaryClasses: [],
+            excludedClasses: [],
             failFastEnabled: false, // Unit tests should have fail-fast disabled
             autoExposeEnabled: false,
           });

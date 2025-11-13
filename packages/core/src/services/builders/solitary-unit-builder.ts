@@ -44,7 +44,7 @@ export class SolitaryTestBedBuilder<TClass>
       new DependencyContainer([...identifiersToMocksImpls, ...identifiersToFinal]),
       {
         mode: null,
-        boundaryClasses: [],
+        excludedClasses: [],
         // Solitary tests mock everything, no fail-fast needed
         failFastEnabled: false,
         autoExposeEnabled: false,

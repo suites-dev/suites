@@ -11,9 +11,9 @@ export class DependencyNotConfiguredError extends Error {
 
   constructor(
     public readonly identifier: string,
-    public readonly mode: 'expose' | 'boundaries' | null,
+    public readonly mode: 'expose' | 'collaborate' | null,
     public readonly configuredExposes: readonly Type[],
-    public readonly configuredBoundaries: readonly Type[]
+    public readonly configuredExclusions: readonly Type[]
   ) {
     super(`Dependency '${identifier}' was not configured`);
     // Maintains proper stack trace for where our error was thrown (only available on V8)

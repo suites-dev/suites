@@ -112,9 +112,6 @@ importers:
       '@suites/types.di':
         specifier: workspace:^3.0.0
         version: link:../types/di
-      '@suites/types.doubles':
-        specifier: workspace:^3.0.0
-        version: link:../types/doubles
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0
@@ -142,7 +139,7 @@ importers:
         specifier: 6.0.1
         version: 6.0.1
       reflect-metadata:
-        specifier: 0.2.2
+        specifier: <1.0.0
         version: 0.2.2
 
   packages/di/nestjs:
@@ -229,11 +226,7 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../common
 
-  packages/types/doubles:
-    dependencies:
-      '@suites/types.common':
-        specifier: workspace:^3.0.0
-        version: link:../common
+  packages/types/doubles: {}
 
   packages/unit:
     dependencies:

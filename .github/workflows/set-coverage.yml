@@ -18,26 +18,31 @@ jobs:
         project: ['doubles.jest', 'doubles.sinon', 'core.unit', 'doubles.vitest', 'di.nestjs', 'di.inversify', 'unit']
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
-          node-version: '18.x'
+          node-version: '22.x'
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Create Coverage Directory
         run: mkdir -p ${{ github.workspace }}/coverage
 
       - name: Test
-        run: yarn lerna exec yarn test --scope @suites/${{ matrix.project }}
+        run: pnpm lerna exec pnpm test --scope @suites/${{ matrix.project }}
         env:
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
           JEST_JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
@@ -47,7 +52,7 @@ jobs:
           COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 
       - name: Tests Results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         if: always()
         with:
           reporter: 'jest-junit'
@@ -56,7 +61,7 @@ jobs:
           fail-on-error: false
 
       - name: Upload Report to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           name: codecov-umbrella
           flags: ${{ matrix.project }}

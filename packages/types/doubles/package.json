@@ -20,13 +20,13 @@
     }
   ],
   "scripts": {
-    "prebuild": "yarn rimraf dist",
-    "build": "yarn tsc -p tsconfig.build.json",
+    "prebuild": "pnpm rimraf dist",
+    "build": "pnpm tsc -p tsconfig.build.json",
     "test": "jest --passWithNoTests",
-    "lint": "yarn eslint 'index.ts'"
+    "lint": "pnpm eslint 'index.ts'"
   },
   "dependencies": {
-    "@suites/types.common": "^3.0.0"
+    "@suites/types.common": "workspace:^3.0.0"
   },
   "files": [
     "index.d.ts"
@@ -35,5 +35,6 @@
     "access": "public",
     "provenance": true
   },
+  "packageManager": "pnpm@8.15.9",
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

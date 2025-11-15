@@ -54,24 +54,25 @@
     "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
   },
   "scripts": {
-    "prebuild": "yarn rimraf dist",
+    "prebuild": "pnpm rimraf dist",
     "build": "sh ./build.sh",
     "test": "jest --coverage --verbose",
-    "lint": "yarn eslint '{src,test}/**/*.ts'"
+    "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
   "files": [
     "dist",
     "README.md"
   ],
   "dependencies": {
-    "@suites/core.unit": "^3.0.1",
-    "@suites/types.common": "^3.0.0",
-    "@suites/types.di": "^3.0.0",
-    "@suites/types.doubles": "^3.0.0"
+    "@suites/core.unit": "workspace:^3.0.1",
+    "@suites/types.common": "workspace:^3.0.0",
+    "@suites/types.di": "workspace:^3.0.0",
+    "@suites/types.doubles": "workspace:^3.0.0"
   },
   "publishConfig": {
     "access": "public",
     "provenance": true
   },
+  "packageManager": "pnpm@8.15.9",
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

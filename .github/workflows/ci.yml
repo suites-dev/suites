@@ -1,5 +1,5 @@
 name: Continuous Integration
-on: [pull_request]
+on: pull_request
 
 permissions:
   id-token: write
@@ -17,58 +17,65 @@ jobs:
         node-version: [16.x, 18.x, 20.x, 22.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
 
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Remove Vitest If Needed
         if: ${{ matrix.node-version == '16.x'  }}
         run: rm -rf packages/doubles/vitest
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         if: ${{ matrix.node-version != '16.x' }}
-        run: yarn build
+        run: pnpm build
 
-      - name: Build
+      - name: Build (Node 16.x)
         if: ${{ matrix.node-version == '16.x' }}
-        run: yarn build --ignore @suites/doubles.vitest
+        run: pnpm lerna run build --stream --ignore @suites/doubles.vitest
 
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22.x'
 
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: yarn lint
-
-      - name: Validate Packages
-        run: yarn manypkg check
+        run: pnpm lint
 
   test:
     name: Test
@@ -78,26 +85,29 @@ jobs:
         project: ['doubles.jest', 'doubles.sinon', 'core.unit', 'doubles.vitest', 'di.nestjs', 'di.inversify', 'unit']
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.x'
+        uses: actions/setup-node@v6
 
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Create Coverage Directory
         run: mkdir -p ${{ github.workspace }}/coverage
 
       - name: Test
-        run: yarn lerna exec yarn test --scope @suites/${{ matrix.project }}
+        run: pnpm lerna exec pnpm test --scope @suites/${{ matrix.project }}
         env:
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
           JEST_JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports

@@ -1,65 +1,106 @@
-name: Suites e2e
+name: E2E Tests
 env:
   CI: true
 
 on:
+  pull_request:
+    branches:
+      - next
+      - master
   workflow_dispatch:
     inputs:
       target_branch:
         description: 'E2E Target Branch'
         required: true
+        type: string
+        default: 'next'
 
 permissions:
   contents: write
-  pull-requests: write
   id-token: write
-  checks: write
-  statuses: write
 
 jobs:
-  status-pending:
-    name: Update PR Status
+  version-preview:
+    name: Version Preview
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      id-token: write
-      checks: write
-      statuses: write
-    steps:
-      - name: Find Pull Request
-        uses: juliangruber/find-pull-request-action@v1
-        id: pull-request
-        with:
-          branch: ${{ inputs.target_branch }}
-
-      - name: Update PR e2e Status to Pending
-        run: |
-          curl \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
-          -d '{"state":"pending","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"Running..","context":"Suites e2e"}'
-
-  e2e:
-    name: Build and Test
-    needs: [status-pending]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
-        node-version: [16.x, 18.x, 20.x]
-        exclude:
-          - e2e-project: 'vitest/inversify'
-            node-version: '16.x'
-          - e2e-project: 'vitest/nestjs'
-            node-version: '16.x'
+    outputs:
+      versions: ${{ steps.capture.outputs.versions }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.target_branch }}
+          ref: ${{ github.event.pull_request.head.ref || inputs.target_branch }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Config Git
+        run: |
+          git config --global user.email "e2e@suites.dev"
+          git config --global user.name "Suites e2e"
+
+      - name: Version Packages (Preview)
+        run: |
+          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+          npx lerna version --yes \
+          --conventional-commits \
+          --conventional-prerelease \
+          --preid e2e \
+          --no-changelog \
+          --allow-branch "$BRANCH_NAME" \
+          --no-git-tag-version \
+          --no-push \
+          --force-publish \
+          --no-commit-hooks
+
+      - name: Capture Versions
+        id: capture
+        run: |
+          echo "## 📦 E2E Version Preview" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "These versions will be tested in the e2e workflow:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          lerna ls --json | jq -r '.[] | "- **\(.name)** → `v\(.version)`"' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🧪 Testing Matrix" >> $GITHUB_STEP_SUMMARY
+          echo "- **Projects**: 6 (jest/nestjs, sinon/nestjs, vitest/nestjs, jest/inversify, sinon/inversify, vitest/inversify)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Node versions**: 3 (20.x, 22.x, 24.x)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total jobs**: 18 (54 with matrix expansion)" >> $GITHUB_STEP_SUMMARY
+
+          # Save versions for artifacts
+          lerna ls --json > versions.json
+
+      - name: Upload Version Info
+        uses: actions/upload-artifact@v4
+        with:
+          name: version-preview
+          path: versions.json
+
+  e2e:
+    name: E2E (${{ matrix.e2e-project }}, Node ${{ matrix.node-version }})
+    needs: [version-preview]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
+        node-version: [18.x, 20.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.ref || inputs.target_branch }}
 
       - name: Remove Vitest If Needed
         if: ${{ matrix.node-version == '16.x' }}
@@ -71,12 +112,17 @@ jobs:
           git commit -am "remove vitest temp"
 
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Run Verdaccio Docker
         run: |
@@ -86,10 +132,10 @@ jobs:
           verdaccio/verdaccio
 
       - name: Build
-        run: yarn build
+        run: pnpm build
 
       - name: Setup Registry
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: http://localhost:4873
@@ -117,30 +163,33 @@ jobs:
 
       - name: Version Packages
         run: |
-          lerna version --yes \
+          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+          npx lerna version --yes \
+          --conventional-commits \
+          --conventional-prerelease \
+          --preid e2e \
           --no-changelog \
-          --allow-branch ${{ inputs.target_branch }} \
+          --allow-branch "$BRANCH_NAME" \
           --no-git-tag-version \
           --no-push \
           --force-publish \
-          --no-commit-hooks \
-          --conventional-commits
+          --no-commit-hooks
 
       - name: Commit Packages Versions
         run: |
           git add .
           git commit -am "bump versions"
 
-      - name: Publish Packages
+      - name: Publish Packages to Verdaccio
         run: |
-          yarn lerna publish from-package --yes \
+          pnpm lerna publish from-package --yes \
           --no-git-tag-version \
           --no-push \
           --no-git-reset \
           --exact \
           --dist-tag e2e
 
-      - name: Setup and Test
+      - name: Parse E2E Project
         run: |
           IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
           echo "FRAMEWORK=$framework" >> $GITHUB_ENV
@@ -150,10 +199,11 @@ jobs:
         run: |
           rm -rf packages
           rm -rf node_modules
-          rm yarn.lock
+          rm pnpm-lock.yaml
           rm package.json
+          rm -f .npmrc
 
-      - name: Install Dependencies
+      - name: Install Dependencies from Verdaccio
         run: |
           cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
           npm install --no-cache --no-package-lock
@@ -163,41 +213,3 @@ jobs:
         run: |
           cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
           npm test
-
-  update-status:
-    name: Update PR Status
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      id-token: write
-      checks: write
-      statuses: write
-    needs: [status-pending, e2e]
-    if: always()
-    steps:
-      - name: Find Pull Request
-        uses: juliangruber/find-pull-request-action@v1
-        id: pull-request
-        with:
-          branch: ${{ inputs.target_branch }}
-
-      - name: Update PR e2e Status (Failed)
-        if: needs.e2e.result == 'failure'
-        run: |
-          curl \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
-          -d '{"state":"failure","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"❌ Failed","context":"Suites e2e"}'
-
-      - name: Update PR e2e Status (Success)
-        if: needs.e2e.result == 'success'
-        run: |
-          curl \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ github.repository }}/statuses/${{ steps.pull-request.outputs.head-sha }} \
-          -d '{"state":"success","target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}","description":"✅ Passed Successfully","context":"Suites e2e"}'

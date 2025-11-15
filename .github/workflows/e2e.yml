@@ -95,12 +95,7 @@ jobs:
       fail-fast: false
       matrix:
         e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
-        node-version: [16.x, 18.x, 20.x]
-        exclude:
-          - e2e-project: 'vitest/inversify'
-            node-version: '16.x'
-          - e2e-project: 'vitest/nestjs'
-            node-version: '16.x'
+        node-version: [18.x, 20.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v5

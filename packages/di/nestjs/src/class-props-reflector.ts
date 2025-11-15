@@ -2,8 +2,8 @@ import type { ClassInjectable, InjectableReflectedType } from '@suites/types.di'
 import { UndefinedDependencyError } from '@suites/types.di';
 import type { Type } from '@suites/types.common';
 import { PROPERTY_DEPS_METADATA } from '@nestjs/common/constants';
-import type { MetadataReflector, ReflectedProperty } from './types';
-import type { PropertyReflectionStrategy } from './property-reflection-strategies.static';
+import type { MetadataReflector, ReflectedProperty } from './types.js';
+import type { PropertyReflectionStrategy } from './property-reflection-strategies.static.js';
 
 export type ClassPropsReflector = ReturnType<typeof ClassPropsReflector>;
 

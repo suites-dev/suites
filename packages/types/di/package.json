@@ -1,10 +1,25 @@
 {
   "name": "@suites/types.di",
   "private": false,
-  "version": "3.0.0",
+  "version": "4.0.0-alpha.0",
   "license": "Apache-2.0",
-  "types": "typings.d.ts",
-  "main": "dist/index.js",
+  "type": "commonjs",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git",
@@ -21,13 +36,13 @@
     }
   ],
   "engines": {
-    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+    "node": ">= 20"
   },
   "scripts": {
-    "prebuild": "yarn rimraf dist",
-    "build": "yarn tsc -p tsconfig.build.json",
+    "prebuild": "pnpm rimraf dist",
+    "build": "bash build.sh",
     "test": "jest --passWithNoTests",
-    "lint": "yarn eslint '{src,test}/**/*.ts'"
+    "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
   "files": [
     "dist",
@@ -35,11 +50,12 @@
     "typings.d.ts"
   ],
   "dependencies": {
-    "@suites/types.common": "^3.0.0"
+    "@suites/types.common": "workspace:^4.0.0-alpha.0"
   },
   "publishConfig": {
     "access": "public",
     "provenance": true
   },
+  "packageManager": "pnpm@10.14.0",
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

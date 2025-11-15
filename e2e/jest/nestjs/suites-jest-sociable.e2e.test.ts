@@ -17,6 +17,7 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
 
   beforeAll(async () => {
     const { unitRef: ref, unit } = await TestBed.sociable(UserService)
+      .failFast({ enabled: false }) // v3.x behavior - ApiService and UserVerificationService auto-mocked
       .expose(UserApiService)
       .expose(UserDal)
       .expose(DatabaseService)
@@ -53,9 +54,9 @@ describe('Suites Jest / NestJS E2E Test Ctor', () => {
     });
 
     it('should throw an error indicating the dependencies cannot be retrieved as they were exposed in the testbed', () => {
-      expect(() => unitRef.get(DatabaseService)).toThrowError();
-      expect(() => unitRef.get(UserDal)).toThrowError();
-      expect(() => unitRef.get(UserApiService)).toThrowError();
+      expect(() => unitRef.get(DatabaseService)).toThrow();
+      expect(() => unitRef.get(UserDal)).toThrow();
+      expect(() => unitRef.get(UserApiService)).toThrow();
     });
 
     describe('creating a user with UserService', () => {

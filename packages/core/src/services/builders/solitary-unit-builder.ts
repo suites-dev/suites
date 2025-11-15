@@ -1,11 +1,11 @@
 import type { DoublesAdapter } from '@suites/types.doubles';
 import type { Type } from '@suites/types.common';
-import { UnitReference } from '../unit-reference';
-import type { UnitMocker } from '../unit-mocker';
-import type { IdentifierToMockOrFinal, IdentifierToMockImplWithCb } from '../dependency-container';
-import { DependencyContainer } from '../dependency-container';
-import type { UnitTestBed } from '../../types';
-import { TestBedBuilder } from './testbed-builder';
+import { UnitReference } from '../unit-reference.js';
+import type { UnitMocker } from '../unit-mocker.js';
+import type { IdentifierToMockOrFinal, IdentifierToMockImplWithCb } from '../dependency-container.js';
+import { DependencyContainer } from '../dependency-container.js';
+import type { UnitTestBed } from '../../types.js';
+import { TestBedBuilder } from './testbed-builder.js';
 
 export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {}
 
@@ -41,7 +41,14 @@ export class SolitaryTestBedBuilder<TClass>
     const { container, instance, resolution } = await this.unitMocker.constructUnit<TClass>(
       this.targetClass,
       [],
-      new DependencyContainer([...identifiersToMocksImpls, ...identifiersToFinal])
+      new DependencyContainer([...identifiersToMocksImpls, ...identifiersToFinal]),
+      {
+        mode: null,
+        excludedClasses: [],
+        // Solitary tests mock everything, no fail-fast needed
+        failFastEnabled: false,
+        autoExposeEnabled: false,
+      }
     );
 
     if (resolution.notFound.length > 0) {

@@ -1,7 +1,7 @@
 import type { DeepPartial } from '@suites/types.common';
 import type { ArgsType, Stub } from '@suites/types.doubles';
-import type { UnitReference } from './services/unit-reference';
-import type { TestBedBuilder } from './services/builders/testbed-builder';
+import type { UnitReference } from './services/unit-reference.js';
+import type { TestBedBuilder } from './services/builders/testbed-builder.js';
 
 /**
  * Represents the testing environment for a specific class, encapsulating both the instance
@@ -26,7 +26,7 @@ export interface UnitTestBed<TClass> {
    * A reference to the mocked dependencies of the class. This object allows tests to manipulate,
    * access, and verify the interactions with the class's dependencies, crucial for thorough testing.
    * @since 3.0.0
-   * @see https://suites.dev/docs/api-reference
+   * @see https://suites.dev/docs/api-reference/unit-reference
    * @property {UnitReference} unitRef The reference to the mocked dependencies of the class.
    */
   unitRef: UnitReference;

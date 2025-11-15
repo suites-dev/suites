@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { DeepPartial } from '@suites/types.common';
 import type { Mock } from '@vitest/spy';
-import type { Mocked } from './types';
+import type { Mocked } from './types.js';
 
 type ProxiedProperty = string | number | symbol;
 
@@ -43,6 +43,7 @@ const handler = <T>() => ({
 
       if (property !== 'calls') {
         // @ts-ignore
+        // eslint-disable-next-line no-undef
         obj[property] = new Proxy<Mock<T>>(vi.fn(), handler());
         // @ts-ignore private property
         obj[property as never]._isMockObject = true;

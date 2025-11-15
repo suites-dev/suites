@@ -14,7 +14,7 @@ import {
   DatabaseService,
 } from './assets/injectable-registry.fixture';
 import type { UnitReference } from '../../src';
-import { SociableTestBedBuilder, UnitMocker } from '../../src';
+import { SociableTestBedBuilderImpl, UnitMocker } from '../../src';
 import Mock = jest.Mock;
 
 describe('Social TestBed Builder Integration Tests', () => {
@@ -22,10 +22,10 @@ describe('Social TestBed Builder Integration Tests', () => {
   let userServiceAsIfItWasUnderTest: UserService;
   let unitRef: UnitReference;
 
-  const loggerMock = { warn: jest.fn() } as unknown as jest.Mocked<Console>;
+  const loggerMock = mock<Console>();
 
   beforeAll(async () => {
-    unitBuilder = new SociableTestBedBuilder(
+    unitBuilder = new SociableTestBedBuilderImpl(
       Promise.resolve({
         mock: mock,
         stub: jest.fn,
@@ -36,6 +36,7 @@ describe('Social TestBed Builder Integration Tests', () => {
     );
 
     const testBed = await unitBuilder
+      .failFast({ enabled: false }) // v3.x compatibility - not all deps configured
       .expose(UserApiService)
       .expose(UserDal)
       .expose(HttpClient)
@@ -57,12 +58,18 @@ describe('Social TestBed Builder Integration Tests', () => {
   });
 
   it('should have log a warning message about http client cannot be exposed because it is not a direct dependency', () => {
+    // Warning #1 is now from failFast({ enabled: false })
     expect(loggerMock.warn).toHaveBeenNthCalledWith(
       1,
+      expect.stringContaining('Disabling fail-fast is not recommended')
+    );
+    // Warnings #2 and #3 are about unreachable config
+    expect(loggerMock.warn).toHaveBeenNthCalledWith(
+      2,
       expect.stringContaining('Suites Warning: Unreachable Mock Configuration Detected')
     );
     expect(loggerMock.warn).toHaveBeenNthCalledWith(
-      2,
+      3,
       expect.stringContaining('Suites Warning: Unreachable Exposed Dependency Detected')
     );
   });
@@ -147,6 +154,7 @@ describe('Social TestBed Builder Integration Tests', () => {
 
   it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
     await unitBuilder
+      .expose(UserApiService) // Must call expose or collaborate/exclude before mock
       .mock('non-existing-dep')
       .impl(() => ({}))
       .compile();
@@ -158,6 +166,7 @@ describe('Social TestBed Builder Integration Tests', () => {
 
   it('should trigger the logger warning when the HttpClient is attempted to be mocked', async () => {
     await unitBuilder
+      .expose(UserApiService) // Must call expose or collaborate/exclude before mock
       .mock(UserDal)
       .impl(() => ({}))
       .compile();

@@ -3,15 +3,17 @@
   "compilerOptions": {
     "rootDir": "src",
     "baseUrl": "./",
-    "outDir": "dist",
-    "target": "es6",
-    "skipLibCheck": true
+    "target": "es2020",
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true
   },
   "exclude": [
     "index.ts",
     "node_modules",
     "test",
     "**/*.spec.ts",
-    "jest.config.ts"
+    "jest.config.ts",
+    "dist"
   ]
 }

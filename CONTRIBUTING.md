@@ -29,7 +29,7 @@ involvement is key to driving this vision forward and improving Suites.
 ## Prerequisites
 
 - **Node.js**: The project requires Node.js version 16.0.0 or higher.
-- **Yarn**: Suites uses Yarn for dependency management. Ensure Yarn is installed on your system.
+- **pnpm**: Suites uses pnpm for dependency management. Ensure pnpm is installed on your system.
 
 ## Getting Started
 
@@ -41,7 +41,7 @@ involvement is key to driving this vision forward and improving Suites.
     ```
 2. **Install Dependencies**:
     ```bash
-    yarn --frozen-lockfile
+    pnpm install --frozen-lockfile
     ```
 
 ### Running Tests
@@ -49,7 +49,7 @@ involvement is key to driving this vision forward and improving Suites.
 Ensure everything is functioning as expected by running the test suite:
 
 ```bash
-yarn test
+pnpm test
 ```
 
 ## Contribution Process
@@ -73,8 +73,8 @@ Contribute code that is clean, maintainable, and efficient, adhering to Suites's
 ### Tests and Quality Assurance
 
 - Accompany new code with relevant unit or integration tests.
-- Aim for high test coverage – verify with `yarn run coverage`.
-- Pass all linting checks using `yarn lint`.
+- Aim for high test coverage – verify with `pnpm run coverage`.
+- Pass all linting checks using `pnpm lint`.
 
 ### Documentation
 

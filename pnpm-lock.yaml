@@ -226,7 +226,11 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../common
 
-  packages/types/doubles: {}
+  packages/types/doubles:
+    dependencies:
+      '@suites/types.common':
+        specifier: workspace:^3.0.0
+        version: link:../common
 
   packages/unit:
     dependencies:

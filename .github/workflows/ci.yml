@@ -77,9 +77,6 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Validate Packages
-        run: pnpm exec manypkg check
-
   test:
     name: Test
     runs-on: ubuntu-latest

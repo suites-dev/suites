@@ -11,15 +11,15 @@ import {
 } from './assets/injectable-registry.fixture';
 import { SociableTestBedBuilderImpl, UnitMocker } from '../../src';
 
-describe('Boundaries Feature - Internal Resolution Mechanics', () => {
+describe('Collaborate Feature - Internal Resolution Mechanics', () => {
   const loggerMock = mock<Console>();
 
   beforeEach(() => {
     loggerMock.warn.mockClear();
   });
 
-  describe('Resolution: Explicit mock (Priority 1) beats boundary (Priority 2)', () => {
-    it('should use explicit mock when dependency is both in boundaries and mocked', async () => {
+  describe('Resolution: Explicit mock (Priority 1) beats exclusion (Priority 2)', () => {
+    it('should use explicit mock when dependency is both excluded and mocked', async () => {
       const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
@@ -27,9 +27,10 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         loggerMock
       );
 
-      // UserApiService is in boundaries AND explicitly mocked
+      // UserApiService is excluded AND explicitly mocked
       const { unit, unitRef } = await unitBuilder
-        .boundaries([
+        .collaborate()
+        .exclude([
           UserApiService,
           UserDal,
           DatabaseService,
@@ -47,7 +48,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
       // ACT: Call UserService method which uses UserApiService
       const result = await unit.getUserInfo('test-user');
 
-      // ASSERT: UserService used our explicit mock (not boundary auto-mock)
+      // ASSERT: UserService used our explicit mock (not exclusion auto-mock)
       expect(result).toBe('custom-implementation');
 
       // ASSERT: Mock was called through UserService
@@ -56,8 +57,8 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
   });
 
-  describe('boundaries() no-arg overload', () => {
-    it('should accept no arguments (same as empty array)', async () => {
+  describe('collaborate() with no exclusions', () => {
+    it('should work without calling exclude (all dependencies real)', async () => {
       const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
@@ -65,10 +66,10 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         loggerMock
       );
 
-      // Call boundaries() without args - should work
-      const builder = unitBuilder.boundaries();
+      // Call collaborate() without exclude - all dependencies should be real
+      const builder = unitBuilder.collaborate();
 
-      // Should return boundaries mode builder
+      // Should return collaborate mode builder
       expect(builder).toBeDefined();
 
       // For FakeAdapter compatibility, mock everything to avoid instantiation
@@ -88,8 +89,8 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
   });
 
-  describe('CRITICAL: Retrieval rules in boundaries mode', () => {
-    it('should ALLOW retrieving boundary classes (mocked) but NOT auto-exposed classes (real)', async () => {
+  describe('CRITICAL: Retrieval rules in collaborate mode', () => {
+    it('should ALLOW retrieving excluded classes (mocked) but NOT auto-exposed classes (real)', async () => {
       const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
@@ -98,8 +99,9 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
       );
 
       const { unitRef } = await unitBuilder
-        .boundaries([UserDal, DatabaseService, ApiService, UserDigestService])
-        // UserApiService NOT in boundaries → auto-exposed (REAL)
+        .collaborate()
+        .exclude([UserDal, DatabaseService, ApiService, UserDigestService])
+        // UserApiService NOT excluded → auto-exposed (REAL)
         .mock('Repository')
         .impl((stubFn) => ({
           find: stubFn().mockResolvedValue([]),
@@ -109,7 +111,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         .final(['test'])
         .compile();
 
-      // UserDal is in boundaries → MOCKED → CAN retrieve
+      // UserDal is excluded → MOCKED → CAN retrieve
       const userDalMock = unitRef.get(UserDal);
       expect(userDalMock).toBeDefined();
       expect(typeof userDalMock.createUser).toBe('function');
@@ -120,13 +122,13 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
       }).toThrow(/marked as an exposed dependency/);
 
       // This is CORRECT:
-      // - Boundaries = mocked = retrievable
+      // - Excluded = mocked = retrievable
       // - Auto-exposed = real = not retrievable
     });
   });
 
-  describe('Resolution: Boundaries mode enables auto-expose', () => {
-    it('should compile with boundaries mode', async () => {
+  describe('Resolution: Collaborate mode enables auto-expose', () => {
+    it('should compile with collaborate mode', async () => {
       const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
@@ -134,9 +136,10 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         loggerMock
       );
 
-      // All deps as boundaries for FakeAdapter compatibility
+      // All deps excluded for FakeAdapter compatibility
       const { unit } = await unitBuilder
-        .boundaries([
+        .collaborate()
+        .exclude([
           UserApiService,
           UserDal,
           DatabaseService,
@@ -149,7 +152,7 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
       expect(unit).toBeInstanceOf(UserService);
     });
 
-    it('should auto-expose leaf classes that are not in boundaries', async () => {
+    it('should auto-expose leaf classes that are not excluded', async () => {
       const unitBuilder = new SociableTestBedBuilderImpl(
         Promise.resolve({ mock, stub: jest.fn }),
         new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
@@ -157,12 +160,13 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
         loggerMock
       );
 
-      // UserVerificationService and TestLogger are leaf classes - NOT in boundaries array
-      // They should be auto-exposed (made real) in boundaries mode
+      // UserVerificationService and TestLogger are leaf classes - NOT excluded
+      // They should be auto-exposed (made real) in collaborate mode
       const testUser = { name: 'Test', email: 'test@example.com' };
 
       const { unit } = await unitBuilder
-        .boundaries([
+        .collaborate()
+        .exclude([
           UserApiService,
           DatabaseService,
           ApiService,
@@ -192,8 +196,81 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
     });
   });
 
+  describe('Mode mutual exclusivity and validation', () => {
+    it('should throw error when calling .collaborate() after .expose()', () => {
+      const unitBuilder = new SociableTestBedBuilderImpl(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // Set expose mode first
+      unitBuilder.expose(UserApiService);
+
+      // Try to call collaborate - should throw
+      expect(() => unitBuilder.collaborate()).toThrow(
+        /Cannot use \.collaborate\(\) after \.expose\(\)/
+      );
+      expect(() => unitBuilder.collaborate()).toThrow(
+        /opposite testing strategies/
+      );
+    });
+
+    it('should throw error when calling .expose() after .collaborate()', () => {
+      const unitBuilder = new SociableTestBedBuilderImpl(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // Set collaborate mode first
+      unitBuilder.collaborate();
+
+      // Try to call expose - should throw
+      expect(() => unitBuilder.expose(UserApiService)).toThrow(
+        /Cannot use \.expose\(\) after \.collaborate\(\)/
+      );
+      expect(() => unitBuilder.expose(UserApiService)).toThrow(
+        /opposite testing strategies/
+      );
+    });
+
+    it('should throw error when calling .exclude() without .collaborate() first', () => {
+      const unitBuilder = new SociableTestBedBuilderImpl(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // Try to call exclude without collaborate - should throw
+      expect(() => (unitBuilder as any).exclude([UserApiService])).toThrow(
+        /Cannot use \.exclude\(\) without calling \.collaborate\(\) first/
+      );
+    });
+
+    it('should throw error when calling .exclude() in expose mode', () => {
+      const unitBuilder = new SociableTestBedBuilderImpl(
+        Promise.resolve({ mock, stub: jest.fn }),
+        new UnitMocker(Promise.resolve(mock), Promise.resolve(FakeAdapter)),
+        UserService,
+        loggerMock
+      );
+
+      // Set expose mode
+      unitBuilder.expose(UserApiService);
+
+      // Try to call exclude - should throw
+      expect(() => (unitBuilder as any).exclude([UserDal])).toThrow(
+        /Cannot use \.exclude\(\) without calling \.collaborate\(\) first/
+      );
+    });
+  });
+
   describe('Fail-fast behavior', () => {
-    // Note: Specific fail-fast scenarios with boundaries are tested in e2e tests
+    // Note: Specific fail-fast scenarios with collaborate mode are tested in e2e tests
     // where we have full NestJS DI and real service registries
 
     it('should fail-fast for unconfigured dependency in expose mode', async () => {
@@ -236,8 +313,8 @@ describe('Boundaries Feature - Internal Resolution Mechanics', () => {
       );
     });
 
-    // Note: Boundaries mode error message formatting is tested via e2e tests
-    // with full DI context where auto-expose can properly trigger fail-fast
+    // Note: Collaborate mode error message formatting is tested in dependency-resolver.spec.ts
+    // as it's difficult to trigger fail-fast in collaborate mode with FakeAdapter (auto-expose handles everything)
 
     it('should format error message for null mode when fail-fast triggers', async () => {
       const unitBuilder = new SociableTestBedBuilderImpl(

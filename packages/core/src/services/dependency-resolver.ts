@@ -14,17 +14,17 @@ import { DependencyNotConfiguredError } from '../errors/dependency-not-configure
 
 /**
  * Resolves and instantiates dependencies for unit tests, handling both real and mocked instances.
- * Supports two modes: expose (whitelist real deps) and boundaries (blacklist mocked deps).
+ * Supports two modes: expose (whitelist real deps) and collaborate (blacklist excluded deps).
  *
  * Resolution priority:
  * 1. Explicit mocks (.mock().impl() or .mock().final())
- * 2. Boundaries (in boundaries mode)
- * 3. Tokens/Primitives (always mocked, except leaf classes in boundaries mode are auto-exposed)
- * 4. Auto-expose (in boundaries mode)
+ * 2. Exclusions (in collaborate mode)
+ * 3. Tokens/Primitives (always mocked, except leaf classes in collaborate mode are auto-exposed)
+ * 4. Auto-expose (in collaborate mode)
  * 5. Explicit expose (in expose mode)
  * 6. Fail-fast or auto-mock
  *
- * Note: Leaf classes (classes with no dependencies) are auto-exposed in boundaries mode.
+ * Note: Leaf classes (classes with no dependencies) are auto-exposed in collaborate mode.
  *
  * @since 3.0.0
  */
@@ -81,25 +81,25 @@ export class DependencyResolver {
       return existingMock;
     }
 
-    // Priority 2: Check if it's a boundary (in boundaries mode)
+    // Priority 2: Check if it's excluded (in collaborate mode)
     if (
-      this.options.mode === 'boundaries' &&
+      this.options.mode === 'collaborate' &&
       typeof identifier === 'function' &&
-      this.options.boundaryClasses.includes(identifier)
+      this.options.excludedClasses.includes(identifier)
     ) {
       const mock = this.mockFunction();
       this.dependencyMap.set(identifier, mock, metadata as never);
       return mock;
     }
 
-    // Priority 3: Tokens and primitives are ALWAYS mocked (natural boundaries)
+    // Priority 3: Tokens and primitives are ALWAYS auto-mocked
     if (this.isLeafOrPrimitive(identifier)) {
       // Special case: exposed leaf classes in expose mode
       if (typeof identifier === 'function' && this.classesToExpose.includes(identifier)) {
         return this.instantiateClass(identifier, metadata);
       }
 
-      // Special case: leaf classes in boundaries mode should be auto-exposed
+      // Special case: leaf classes in collaborate mode should be auto-exposed
       if (typeof identifier === 'function' && this.options.autoExposeEnabled) {
         this.autoExposedClasses.add(identifier as Type);
         return this.instantiateClass(identifier as Type, metadata);
@@ -110,7 +110,7 @@ export class DependencyResolver {
       return mock;
     }
 
-    // Priority 4: Auto-expose in boundaries mode (everything real except boundaries)
+    // Priority 4: Auto-expose in collaborate mode (everything real except exclusions)
     if (this.options.autoExposeEnabled && typeof identifier === 'function') {
       // Track that this class was auto-exposed
       this.autoExposedClasses.add(identifier as Type);
@@ -132,7 +132,7 @@ export class DependencyResolver {
         name,
         this.options.mode,
         this.classesToExpose,
-        this.options.boundaryClasses
+        this.options.excludedClasses
       );
     }
 
@@ -195,7 +195,7 @@ export class DependencyResolver {
   }
 
   /**
-   * Returns information about auto-exposed classes (used in boundaries mode).
+   * Returns information about auto-exposed classes (used in collaborate mode).
    *
    * @returns Array of classes that were auto-exposed
    * @since 4.0.0

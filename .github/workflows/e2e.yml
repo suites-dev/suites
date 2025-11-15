@@ -82,7 +82,7 @@ jobs:
           lerna ls --json > versions.json
 
       - name: Upload Version Info
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: version-preview
           path: versions.json

@@ -25,6 +25,9 @@
     "test": "jest --passWithNoTests",
     "lint": "yarn eslint 'index.ts'"
   },
+  "dependencies": {
+    "@suites/types.common": "^3.0.0"
+  },
   "files": [
     "index.d.ts"
   ],

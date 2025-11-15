@@ -37,6 +37,6 @@
     "access": "public",
     "provenance": true
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@8.15.9",
   "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
 }

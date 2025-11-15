@@ -37,7 +37,7 @@
     "titleTemplate": "{title}",
     "uniqueOutputName": "true"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@8.15.9",
   "resolutions": {
     "ajv": "^6.12.6",
     "eslint": "9.8.0",

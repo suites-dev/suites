@@ -54,11 +54,11 @@ verdaccio/verdaccio
 sleep 3
 
 # Clean up and build
-execute_with_emoji "🧪" "Cleaning up" yarn lerna run prebuild
+execute_with_emoji "🧪" "Cleaning up" pnpm lerna run prebuild
 
 echo "🚧" "Building Packages"
 
-yarn build --stream
+pnpm build --stream
 
 npm config set registry http://localhost:4873
 
@@ -73,7 +73,7 @@ git commit -m "remove provenance [temp e2e]"
 
 echo "Versioning packages"
 
-yarn lerna version prerelease --yes \
+pnpm lerna version prerelease --yes \
   --no-changelog \
   --allow-branch "$(git branch --show-current)" \
   --no-git-tag-version \
@@ -86,7 +86,7 @@ git commit -m "version packages [temp e2e]"
 
 echo "Publishing packages"
 
-yarn lerna publish from-package --yes \
+pnpm lerna publish from-package --yes \
   --no-git-tag-version \
   --no-push \
   --registry http://localhost:4873 \
@@ -99,7 +99,7 @@ yarn lerna publish from-package --yes \
 
 echo "Cleaning sources"
 git rm -rf packages
-git rm -rf yarn.lock
+git rm -rf pnpm-lock.yaml
 git rm -rf package.json
 
 # Test Matrix

@@ -54,7 +54,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.14.0
+          version: 8.15.9
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -130,10 +130,11 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
 
           # Generate changelog using conventional-changelog-cli via lerna exec
+          # Process output to remove lerna stream prefixes and format as markdown
           npx lerna exec --concurrency 1 --stream -- \
             'conventional-changelog --preset angular --release-count 1 \
-            --commit-path $PWD --pkg $PWD/package.json' \
-            >> $GITHUB_STEP_SUMMARY 2>&1 || echo "No changelog entries generated" >> $GITHUB_STEP_SUMMARY
+            --commit-path $PWD --pkg $PWD/package.json' 2>/dev/null | \
+            sed 's/^[^:]*: //' >> $GITHUB_STEP_SUMMARY || echo "No changelog entries generated" >> $GITHUB_STEP_SUMMARY
 
       - name: Show Conventional Commit Analysis
         run: |

@@ -1,4 +1,3 @@
-/.yarn/**            linguist-vendored
-/.yarn/releases/*    binary
-/.yarn/plugins/**/*  binary
+# pnpm files
+pnpm-lock.yaml      linguist-vendored
 /.pnp.*              binary linguist-generated

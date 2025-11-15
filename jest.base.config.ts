@@ -1,6 +1,4 @@
-import { Config } from '@jest/types';
-
-const config: (coverageDir?: string) => Config.InitialOptions = (coverageDir?: string) => ({
+const config = (coverageDir?: string) => ({
   preset: 'ts-jest',
   roots: ['<rootDir>'],
   rootDir: '.',
@@ -12,7 +10,7 @@ const config: (coverageDir?: string) => Config.InitialOptions = (coverageDir?: s
       {
         isolatedModules: true,
       },
-    ],
+    ] as any,
   },
   coveragePathIgnorePatterns: ['/node_modules/', 'spec-assets.ts', '/__test__/'],
   testPathIgnorePatterns: ['/node_modules/', '/e2e/'],
@@ -26,7 +24,7 @@ const config: (coverageDir?: string) => Config.InitialOptions = (coverageDir?: s
         file: process.env.COVERAGE_FILE || 'coverage-report.xml',
       },
     ],
-  ],
+  ] as any,
   reporters: ['default', 'jest-junit'],
   testResultsProcessor: 'jest-junit',
 });

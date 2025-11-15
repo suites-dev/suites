@@ -20,23 +20,7 @@ on:
           - 'alpha'
           - 'beta'
         required: true
-        default: 'dev'
-      release_branch:
-        description: 'Release Branch'
-        type: choice
-        options:
-          - 'next'
-          - 'master'
-        required: true
         default: 'next'
-      strategy:
-        description: 'Release Strategy'
-        type: choice
-        options:
-          - 'from-git'
-          - 'from-package'
-        required: true
-        default: 'from-package'
       target_branch:
         description: 'Target branch to release from'
         type: choice
@@ -45,152 +29,88 @@ on:
           - 'master'
         required: true
         default: 'next'
+
 jobs:
   e2e:
-    name: Build and Test
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
-        node-version: [16.x, 18.x, 20.x, 22.x]
-        exclude:
-          - e2e-project: 'vitest/inversify'
-            node-version: '16.x'
-          - e2e-project: 'vitest/nestjs'
-            node-version: '16.x'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.release_branch }}
-
-      - name: Remove Vitest If Needed
-        if: ${{ matrix.node-version == '16.x' }}
-        run: |
-          rm -rf packages/doubles/vitest
-          git config --global user.email "e2e@suites.dev"
-          git config --global user.name "Suites CI"
-          git add .
-          git commit -am "remove vitest temp"
-
-      - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Yarn
-        run: yarn --frozen-lockfile
-
-      - name: Run Verdaccio Docker
-        run: |
-          docker run -d --name verdaccio \
-          -p 4873:4873 \
-          -v ${{ github.workspace }}/e2e/config.yaml:/verdaccio/conf/config.yaml \
-          verdaccio/verdaccio
-
-      - name: Build
-        run: yarn build
-
-      - name: Setup Registry
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          registry-url: http://localhost:4873
-          scope: '@suites'
-          always-auth: false
-
-      - name: Install jq
-        run: sudo apt-get install jq
-
-      - name: Remove provenance from package.json files
-        run: |
-          find packages -name 'package.json' | while read filename; do
-            jq 'del(.publishConfig.provenance)' "$filename" > temp.json && mv temp.json "$filename"
-          done
-
-      - name: Config Git
-        run: |
-          git config --global user.email "e2e@suites.dev"
-          git config --global user.name "Suites e2e"
-
-      - name: Commit Provenance Change
-        run: |
-          git add .
-          git commit -am "remove provenance"
-
-      - name: Version Packages
-        run: |
-          lerna version --yes \
-          --no-changelog \
-          --allow-branch ${{ inputs.release_branch }} \
-          --no-git-tag-version \
-          --no-push \
-          --force-publish \
-          --no-commit-hooks \
-          --conventional-commits
-
-      - name: Commit Packages Versions
-        run: |
-          git add .
-          git commit -am "bump versions"
-
-      - name: Publish Packages
-        run: |
-          yarn lerna publish from-package --yes \
-          --no-git-tag-version \
-          --no-push \
-          --no-git-reset \
-          --exact \
-          --dist-tag e2e
-
-      - name: Setup and Test
-        run: |
-          IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
-          echo "FRAMEWORK=$framework" >> $GITHUB_ENV
-          echo "LIBRARY=$library" >> $GITHUB_ENV
-
-      - name: Clean Source
-        run: |
-          rm -rf packages
-          rm -rf node_modules
-          rm yarn.lock
-          rm package.json
-
-      - name: Install Dependencies
-        run: |
-          cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
-          npm install --no-cache --no-package-lock
-          npm install --dev --no-package-lock @types/node@${{ matrix.node-version }}
-
-      - name: Execute Test
-        run: |
-          cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
-          npm test
+    name: E2E Release Simulation
+    uses: ./.github/workflows/e2e-release.yml
+    with:
+      target_branch: ${{ github.event.inputs.target_branch }}
+    permissions:
+      contents: write
+      id-token: write
 
   publish:
-    name: Publish Packages
+    name: Publish to NPM
     needs: [e2e]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.event.inputs.target_branch }}
+          fetch-depth: 0
 
-      - name: Setup Registry
-        uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v6
         with:
+          node-version: '22.x'
           registry-url: https://registry.npmjs.org/
           scope: '@suites'
           always-auth: true
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: npx lerna run build
+        run: pnpm lerna run build
+
+      - name: Capture Versions for Report
+        run: |
+          echo "## 📦 Publishing to NPM" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Registry:** \`https://registry.npmjs.org/\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Dist Tag:** \`${{ github.event.inputs.dist_tag }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.event.inputs.target_branch }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Packages:" >> $GITHUB_STEP_SUMMARY
+          lerna ls --json | jq -r '.[] | "- **\(.name)** → `v\(.version)`"' >> $GITHUB_STEP_SUMMARY
 
       - name: Publish Packages
-        run: npx lerna publish ${{ github.event.inputs.strategy }} --yes --dist-tag ${{ github.event.inputs.dist_tag }}
+        run: |
+          npx lerna publish from-package --yes \
+            --dist-tag ${{ github.event.inputs.dist_tag }} \
+            --no-git-reset
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Generate Success Summary
+        if: success()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## ✅ Publish Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All packages have been successfully published to npm!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Installation command:**" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "npm install @suites/unit@${{ github.event.inputs.dist_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate Failure Summary
+        if: failure()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## ❌ Publish Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The publish step failed. Check the logs above for details." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Common issues:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Version already exists in npm registry" >> $GITHUB_STEP_SUMMARY
+          echo "- Authentication token is invalid or expired" >> $GITHUB_STEP_SUMMARY
+          echo "- Network connectivity issues" >> $GITHUB_STEP_SUMMARY

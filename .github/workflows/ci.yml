@@ -47,7 +47,7 @@ jobs:
 
       - name: Build (Node 16.x)
         if: ${{ matrix.node-version == '16.x' }}
-        run: pnpm build --filter=!@suites/doubles.vitest
+        run: pnpm lerna run build --stream --ignore @suites/doubles.vitest
 
   lint:
     name: Lint
@@ -78,7 +78,7 @@ jobs:
         run: pnpm lint
 
       - name: Validate Packages
-        run: pnpm manypkg check
+        run: pnpm exec manypkg check
 
   test:
     name: Test

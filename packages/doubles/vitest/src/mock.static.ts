@@ -61,6 +61,45 @@ const handler = <T>() => ({
   },
 });
 
+/**
+ * Creates a fully mocked instance with auto-generated Vitest stub methods.
+ *
+ * This function creates a type-safe mock where all methods are automatically replaced
+ * with `vi.fn()` instances. Properties are lazily created on first access using
+ * JavaScript Proxy, providing intelligent auto-mocking without manual setup.
+ *
+ * @template T The type of the object to mock
+ * @param mockImplementation Optional partial implementation to pre-configure specific methods or properties
+ * @returns A fully mocked instance where all methods are `vi.fn()` stubs with full Vitest API support
+ *
+ * @remarks
+ * - All methods automatically become Vitest mocks on first access
+ * - Supports nested object mocking
+ * - Type-safe with full IntelliSense support
+ * - Use this for standalone mocks outside of DI containers
+ * - For DI-managed dependencies, prefer `TestBed.solitary()` or `TestBed.sociable()`
+ *
+ * @example
+ * // Basic usage - mock an interface
+ * import { mock } from '@suites/unit';
+ *
+ * interface PaymentGateway {
+ *   charge(amount: number): Promise<{ status: string }>;
+ *   refund(transactionId: string): Promise<boolean>;
+ * }
+ *
+ * const gateway = mock<PaymentGateway>();
+ * gateway.charge.mockResolvedValue({ status: 'success' });
+ * gateway.refund.mockResolvedValue(true);
+ *
+ * const userService = mock<UserService>();
+ * userService.findUser.mockResolvedValue({ id: '1', name: 'John' });
+ *
+ * @since 3.0.0
+ * @see {@link https://vitest.dev/api/vi.html#vi-fn Vitest Mock Functions}
+ * @see {@link https://suites.dev/docs/api-reference/mock Mock API Reference}
+ * @see {@link TestBed.solitary} for mocking DI-managed dependencies
+ */
 export const mock = <T>(mockImplementation: DeepPartial<T> = {} as DeepPartial<T>): Mocked<T> => {
   // @ts-ignore private property
   mockImplementation!._isMockObject = true;

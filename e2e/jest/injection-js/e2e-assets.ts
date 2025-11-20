@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Injectable, Inject, Optional, Self, SkipSelf, Host } from 'injection-js';
+import { Host, Inject, Injectable, Optional, Self, SkipSelf } from 'injection-js';
 
 @Injectable()
 export class TestClassOne {

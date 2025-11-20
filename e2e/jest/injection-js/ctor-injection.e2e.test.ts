@@ -78,7 +78,7 @@ describe('Suites Jest / injection-js E2E Test Ctor', () => {
 
   describe('when getting a dependency by API_URL token', () => {
     test('then should return the mocked string value', () => {
-      const apiUrl: string = unitRef.get(API_URL);
+      const apiUrl = unitRef.get<string>(API_URL);
       expect(apiUrl).toBe('https://api.example.com');
     });
   });
@@ -218,7 +218,7 @@ describe('Suites Jest / injection-js Metadata Decorators E2E', () => {
       const serviceA = unitRef.get('SERVICE_A'); // @Inject + @Optional
       const serviceB = unitRef.get('SERVICE_B'); // @Inject + @Self
       const serviceC: Mocked<TestClassFive> = unitRef.get(SymbolToken); // @Inject + @SkipSelf
-      const apiUrl: string = unitRef.get(API_URL); // @Inject + @Host
+      const apiUrl = unitRef.get<string>(API_URL); // @Inject + @Host
 
       expect(serviceA).toEqual({ value: 'service-a' });
       expect(serviceB).toEqual({ value: 'service-b' });

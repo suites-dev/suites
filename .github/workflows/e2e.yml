@@ -74,7 +74,7 @@ jobs:
           lerna ls --json | jq -r '.[] | "- **\(.name)** → `v\(.version)`"' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🧪 Testing Matrix" >> $GITHUB_STEP_SUMMARY
-          echo "- **Projects**: 6 (jest/nestjs, sinon/nestjs, vitest/nestjs, jest/inversify, sinon/inversify, vitest/inversify)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Projects**: 7 (jest/nestjs, sinon/nestjs, vitest/nestjs, jest/inversify, sinon/inversify, vitest/inversify, jest/injection-js)" >> $GITHUB_STEP_SUMMARY
           echo "- **Node versions**: 3 (20.x, 22.x, 24.x)" >> $GITHUB_STEP_SUMMARY
           echo "- **Total jobs**: 18 (54 with matrix expansion)" >> $GITHUB_STEP_SUMMARY
 
@@ -94,7 +94,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
+        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify', 'jest/injection-js']
         node-version: [18.x, 20.x]
     steps:
       - name: Checkout

@@ -27,7 +27,7 @@ jobs:
       versions: ${{ steps.capture.outputs.versions }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.ref || inputs.target_branch }}
           fetch-depth: 0
@@ -98,7 +98,7 @@ jobs:
         node-version: [18.x, 20.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.ref || inputs.target_branch }}
 

@@ -1,0 +1,69 @@
+{
+  "name": "@suites/di.injectionjs",
+  "private": false,
+  "version": "3.0.1",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/di/injection-js"
+  },
+  "homepage": "https://suites.dev",
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites/issues"
+  },
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "scripts": {
+    "postinstall": "node postinstall.js",
+    "prebuild": "pnpm rimraf dist",
+    "build": "pnpm tsc -p tsconfig.build.json",
+    "test": "jest --coverage --verbose",
+    "lint": "pnpm eslint '{src,test}/**/*.ts'"
+  },
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "dependencies": {
+    "@suites/types.common": "workspace:^3.0.0",
+    "@suites/types.di": "workspace:^3.0.0"
+  },
+  "peerDependencies": {
+    "injection-js": ">= 2.0",
+    "reflect-metadata": "^0.1.0 || ^0.2.0"
+  },
+  "devDependencies": {
+    "injection-js": "^2.4.0",
+    "reflect-metadata": "^0.2.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "packageManager": "pnpm@8.15.9"
+}

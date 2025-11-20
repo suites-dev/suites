@@ -39,8 +39,8 @@ export function DependenciesAdapter(
 ): DependencyInjectionAdapter {
   function inspect(targetClass: Type): InjectableRegistry {
     const ctorInjectables = classCtorReflector.reflectInjectables(targetClass);
-    const propsInjectables = classPropsReflector.reflectInjectables(targetClass);
-    const allInjectables = [...ctorInjectables, ...propsInjectables];
+    // const propsInjectables = classPropsReflector.reflectInjectables(targetClass);
+    const allInjectables = [...ctorInjectables]; // ...propsInjectables
 
     return {
       resolve(identifier: InjectableIdentifier): ClassInjectable | undefined {

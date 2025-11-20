@@ -39,7 +39,6 @@
     }
   ],
   "scripts": {
-    "postinstall": "node postinstall.js",
     "prebuild": "pnpm rimraf dist",
     "build": "pnpm tsc -p tsconfig.build.json",
     "test": "jest --coverage --verbose",

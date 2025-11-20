@@ -9,7 +9,7 @@
   "types": "./dist/cjs/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/esm/index.d.ts",
+      "types": "./types.d.ts",
       "import": {
         "types": "./dist/esm/index.d.ts",
         "default": "./dist/esm/index.js"
@@ -45,6 +45,7 @@
     "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
   "files": [
+    "types.d.ts",
     "README.md",
     "dist"
   ],

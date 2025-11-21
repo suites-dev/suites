@@ -40,7 +40,7 @@
   ],
   "scripts": {
     "prebuild": "pnpm rimraf dist",
-    "build": "pnpm tsc -p tsconfig.build.json",
+    "build": "sh build.sh",
     "test": "jest --coverage --verbose",
     "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },

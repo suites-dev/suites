@@ -27,6 +27,7 @@ export const SuitesDIAdapters = {
   nestjs: '@suites/di.nestjs',
   inversify: '@suites/di.inversify',
   tsyringe: '@suites/di.tsyringe',
+  injectionjs: '@suites/di.injectionjs',
 } as const;
 
 export function testBedBuilderFactory<TClass>(

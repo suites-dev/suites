@@ -14,9 +14,6 @@ by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
   <a href="https://codecov.io/gh/suites-dev/suites">
     <img src="https://img.shields.io/codecov/c/github/suites-dev/suites/master.svg?style=flat-square" alt="Codecov Coverage" />
   </a>
-  <a href="https://github.com/suites-dev/suites/actions/workflows/e2e.yml">
-    <img src="https://github.com/suites-dev/suites/actions/workflows/e2e.yml/badge.svg?branch=master" alt="e2e" />
-  </a>
   <a href="https://opensource.org/licenses/Apache-2.0">
     <img src="https://img.shields.io/badge/license-Apache_2.0-blue.svg" alt="license" />
   </a>

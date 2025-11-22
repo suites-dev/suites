@@ -51,7 +51,6 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
           identifier: Database,
           value: Database,
           type: 'PARAM',
-          metadata: undefined,
         });
       });
 
@@ -100,13 +99,12 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         expect(deps[2].identifier).toBe(Logger);
       });
 
-      it('should include token in metadata', () => {
+      it('should resolve by token identifier', () => {
         const apiUrlDep = injectablesRegistry.resolve(API_URL);
 
         expect(apiUrlDep).toBeDefined();
-        if (apiUrlDep && 'metadata' in apiUrlDep) {
-          expect(apiUrlDep.metadata).toEqual({ token: API_URL });
-        }
+        expect(apiUrlDep?.identifier).toBe(API_URL);
+        expect(apiUrlDep?.type).toBe('PARAM');
       });
     });
 
@@ -117,18 +115,17 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         injectablesRegistry = dependenciesAdapter.inspect(NotificationService);
       });
 
-      it('should detect optional parameter', () => {
+      it('should detect optional parameter without metadata', () => {
         const deps = injectablesRegistry.list();
 
         expect(deps).toHaveLength(2);
         expect(deps[0].identifier).toBe(Logger);
-        if ('metadata' in deps[0]) {
-          expect(deps[0].metadata).toBeUndefined();
-        }
+        expect(deps[0]).not.toHaveProperty('metadata');
 
         // Second parameter has @Optional() decorator
         expect(deps[1].identifier).toBe(Cache);
-        // Note: @Optional() decorator is intentionally not extracted to metadata
+        expect(deps[1]).not.toHaveProperty('metadata');
+        // Note: @Optional() decorator is intentionally ignored
         // as it's a production DI resolution hint that doesn't affect Suites'
         // flat virtual test container. All dependencies are auto-mocked by default.
       });
@@ -237,13 +234,11 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         expect(deps[1].identifier).toBe(Logger);
       });
 
-      it('should not include @Self() in metadata', () => {
+      it('should not include metadata for @Self() decorator', () => {
         const deps = injectablesRegistry.list();
 
         // First param has @Self() but it should be ignored
-        if ('metadata' in deps[0]) {
-          expect(deps[0].metadata).toBeUndefined();
-        }
+        expect(deps[0]).not.toHaveProperty('metadata');
       });
     });
 
@@ -262,13 +257,11 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         expect(deps[1].identifier).toBe(Logger);
       });
 
-      it('should not include @SkipSelf() in metadata', () => {
+      it('should not include metadata for @SkipSelf() decorator', () => {
         const deps = injectablesRegistry.list();
 
         // First param has @SkipSelf() but it should be ignored
-        if ('metadata' in deps[0]) {
-          expect(deps[0].metadata).toBeUndefined();
-        }
+        expect(deps[0]).not.toHaveProperty('metadata');
       });
     });
 
@@ -287,13 +280,11 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         expect(deps[1].identifier).toBe(Logger);
       });
 
-      it('should not include @Host() in metadata', () => {
+      it('should not include metadata for @Host() decorator', () => {
         const deps = injectablesRegistry.list();
 
         // First param has @Host() but it should be ignored
-        if ('metadata' in deps[0]) {
-          expect(deps[0].metadata).toBeUndefined();
-        }
+        expect(deps[0]).not.toHaveProperty('metadata');
       });
     });
 
@@ -314,29 +305,20 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         expect(deps[2].identifier).toBe('SERVICE_C'); // @Inject('SERVICE_C') @Host()
       });
 
-      it('should only include token in metadata, not resolution modifiers', () => {
+      it('should use token as identifier, not in metadata', () => {
         const deps = injectablesRegistry.list();
 
         // First param: @Inject(CUSTOM_TOKEN) @Optional()
-        if ('metadata' in deps[0]) {
-          expect(deps[0].metadata).toEqual({ token: CUSTOM_TOKEN });
-          // @Optional() should NOT be in metadata
-          expect((deps[0].metadata as any).optional).toBeUndefined();
-        }
+        expect(deps[0].identifier).toBe(CUSTOM_TOKEN);
+        expect(deps[0]).not.toHaveProperty('metadata');
 
         // Second param: @Inject(API_URL) @Self()
-        if ('metadata' in deps[1]) {
-          expect(deps[1].metadata).toEqual({ token: API_URL });
-          // @Self() should NOT be in metadata
-          expect((deps[1].metadata as any).self).toBeUndefined();
-        }
+        expect(deps[1].identifier).toBe(API_URL);
+        expect(deps[1]).not.toHaveProperty('metadata');
 
         // Third param: @Inject('SERVICE_C') @Host()
-        if ('metadata' in deps[2]) {
-          expect(deps[2].metadata).toEqual({ token: 'SERVICE_C' });
-          // @Host() should NOT be in metadata
-          expect((deps[2].metadata as any).host).toBeUndefined();
-        }
+        expect(deps[2].identifier).toBe('SERVICE_C');
+        expect(deps[2]).not.toHaveProperty('metadata');
       });
     });
 
@@ -355,72 +337,54 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         expect(deps[1].identifier).toBe(Logger); // regular type
       });
 
-      it('should include only token in metadata, not optional flag', () => {
+      it('should use token as identifier without metadata', () => {
         const deps = injectablesRegistry.list();
 
         // First param has both @Inject(API_URL) and @Optional()
-        if ('metadata' in deps[0]) {
-          expect(deps[0].metadata).toEqual({ token: API_URL });
-          // @Optional() should NOT be in metadata
-          expect((deps[0].metadata as any).optional).toBeUndefined();
-        }
+        expect(deps[0].identifier).toBe(API_URL);
+        expect(deps[0]).not.toHaveProperty('metadata');
 
         // Second param is just a regular type (no decorators)
-        if ('metadata' in deps[1]) {
-          expect(deps[1].metadata).toBeUndefined();
-        }
+        expect(deps[1].identifier).toBe(Logger);
+        expect(deps[1]).not.toHaveProperty('metadata');
       });
     });
   });
 
   describe('edge cases', () => {
-    describe('metadata field structure', () => {
-      it('should not have metadata for Type-based dependencies', () => {
+    describe('no metadata field', () => {
+      it('should not have metadata field for any dependencies', () => {
         const injectablesRegistry = dependenciesAdapter.inspect(UserService);
         const deps = injectablesRegistry.list();
 
         deps.forEach((dep) => {
-          if ('metadata' in dep) {
-            expect(dep.metadata).toBeUndefined();
-          }
+          expect(dep).not.toHaveProperty('metadata');
         });
       });
 
-      it('should have metadata only for token-based dependencies', () => {
+      it('should use token directly as identifier, not in metadata', () => {
         const injectablesRegistry = dependenciesAdapter.inspect(PaymentService);
         const deps = injectablesRegistry.list();
 
         // First param is Type-based (Database)
-        if ('metadata' in deps[0]) {
-          expect(deps[0].metadata).toBeUndefined();
-        }
+        expect(deps[0].identifier).toBe(Database);
+        expect(deps[0]).not.toHaveProperty('metadata');
 
         // Second param is token-based (@Inject(API_URL))
-        if ('metadata' in deps[1]) {
-          expect(deps[1].metadata).toEqual({ token: API_URL });
-        }
+        expect(deps[1].identifier).toBe(API_URL);
+        expect(deps[1]).not.toHaveProperty('metadata');
 
         // Third param is Type-based (Logger)
-        if ('metadata' in deps[2]) {
-          expect(deps[2].metadata).toBeUndefined();
-        }
+        expect(deps[2].identifier).toBe(Logger);
+        expect(deps[2]).not.toHaveProperty('metadata');
       });
 
-      it('should not include any resolution modifier fields in metadata', () => {
+      it('should never include metadata field even with multiple decorators', () => {
         const injectablesRegistry = dependenciesAdapter.inspect(ServiceWithCombinedDecorators);
         const deps = injectablesRegistry.list();
 
         deps.forEach((dep) => {
-          if ('metadata' in dep && dep.metadata) {
-            // Ensure no resolution modifier fields exist
-            expect((dep.metadata as any).optional).toBeUndefined();
-            expect((dep.metadata as any).self).toBeUndefined();
-            expect((dep.metadata as any).skipSelf).toBeUndefined();
-            expect((dep.metadata as any).host).toBeUndefined();
-
-            // Only token should exist
-            expect(Object.keys(dep.metadata)).toEqual(['token']);
-          }
+          expect(dep).not.toHaveProperty('metadata');
         });
       });
     });

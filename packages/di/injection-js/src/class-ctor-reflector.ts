@@ -6,18 +6,6 @@ import { UndefinedDependency, UndefinedDependencyError } from '@suites/types.di'
 export type ClassCtorReflector = ReturnType<typeof ClassCtorReflector>;
 
 /**
- * Identifier metadata for injection-js adapter.
- * Only includes the token from @Inject(token) decorator.
- *
- * Note: @Optional(), @Self(), @SkipSelf(), @Host() decorators are ignored
- * as they are production DI resolution hints that don't affect the flat
- * virtual test container used in Suites.
- */
-interface InjectionJsParameterMetadata {
-  token?: unknown;
-}
-
-/**
  * Creates a constructor reflector that extracts injection-js metadata
  * from decorated classes using reflect-metadata.
  *
@@ -27,6 +15,9 @@ export function ClassCtorReflector() {
   /**
    * Reflects on a target class constructor to extract dependency information.
    * Uses injection-js metadata conventions: 'design:paramtypes' and 'parameters'.
+   *
+   * Note: Resolution modifiers like @Optional(), @Self(), @SkipSelf(), @Host() are ignored
+   * as they are production DI resolution hints that don't affect Suites' flat virtual test container.
    *
    * @param targetClass - The class to reflect on
    * @returns Array of ClassInjectable objects representing constructor parameters
@@ -51,14 +42,16 @@ export function ClassCtorReflector() {
       const paramType = paramTypes[index];
       const paramDecorators = parametersMetadata[index] || [];
 
-      // Extract metadata from ALL decorators (both Type and decorator instances)
-      const metadata = extractMetadata(paramDecorators);
+      // Extract token from @Inject(token) decorator
+      const token = extractToken(paramDecorators);
 
       // Find the Type in decorators (for cases where @Inject() specifies a different type)
-      const decoratorType = paramDecorators.find((item: any) => typeof item === 'function' && !item.ngMetadataName);
+      const decoratorType = paramDecorators.find(
+        (item: any) => typeof item === 'function' && !item.ngMetadataName
+      );
 
       // Determine the identifier (from @Inject() token, decorator type, or param type)
-      const identifier = metadata.token || decoratorType || paramType;
+      const identifier = token || decoratorType || paramType;
 
       if (!identifier) {
         throw new UndefinedDependencyError(
@@ -73,29 +66,21 @@ the parameter type. Make sure parameters are decorated with @Inject() or have va
         identifier,
         value: paramType || UndefinedDependency,
         type: 'PARAM',
-        metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
-      } as ClassInjectable;
+      } satisfies ClassInjectable;
     });
   }
 
   /**
-   * Extracts token from injection-js parameter decorators.
-   * Only extracts @Inject(token) - other decorators like @Optional(), @Self(),
-   * @SkipSelf(), @Host() are ignored as they don't affect the virtual test container.
+   * Extracts token from @Inject(token) decorator.
+   * Other decorators like @Optional(), @Self(), @SkipSelf(), @Host() are ignored.
    */
-  function extractMetadata(decorators: any[]): InjectionJsParameterMetadata {
-    const metadata: InjectionJsParameterMetadata = {};
-
+  function extractToken(decorators: any[]): unknown | undefined {
     for (const decorator of decorators) {
-      if (!decorator) continue;
-
-      // Handle @Inject(token)
-      if (decorator.token !== undefined) {
-        metadata.token = decorator.token;
+      if (decorator && decorator.token !== undefined) {
+        return decorator.token;
       }
     }
-
-    return metadata;
+    return undefined;
   }
 
   return { reflectInjectables };

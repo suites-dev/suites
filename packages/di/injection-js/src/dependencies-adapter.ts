@@ -1,15 +1,13 @@
 import type { Type } from '@suites/types.common';
 import type {
-  DependencyInjectionAdapter,
   ClassInjectable,
-  InjectableRegistry,
+  DependencyInjectionAdapter,
   InjectableIdentifier,
+  InjectableRegistry,
 } from '@suites/types.di';
-import type { ClassPropsReflector } from './class-props-reflector';
 import type { ClassCtorReflector } from './class-ctor-reflector';
 
 export type DependenciesAdapter = (
-  classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
 ) => DependencyInjectionAdapter;
 
@@ -18,38 +16,42 @@ export type DependenciesAdapter = (
  * This adapter inspects decorated classes to extract their dependencies using TypeScript metadata
  * and injection-js decorator information.
  *
+ * **Note on Property Injection:**
+ * injection-js supports property injection via the `inject()` function:
+ * ```typescript
+ * class Service {
+ *   http = inject(Http);
+ * }
+ * ```
+ * However, this is a runtime mechanism that doesn't emit reflection metadata.
+ * Suites relies on static analysis of decorator metadata to build the virtual test container,
+ * so property injection is not compatible with Suites' approach. Only constructor injection
+ * is supported.
+ *
  * @since 3.0.1
- * @param classPropsReflector - Reflector for class properties (currently returns empty array)
  * @param classCtorReflector - Reflector for class constructor parameters
  * @returns DependencyInjectionAdapter implementation for injection-js
  *
  * @example
  * import { DependenciesAdapter } from './dependencies-adapter';
- * import { ClassPropsReflector } from './class-props-reflector';
  * import { ClassCtorReflector } from './class-ctor-reflector';
  *
- * const adapter = DependenciesAdapter(
- *   ClassPropsReflector(),
- *   ClassCtorReflector()
- * );
+ * const adapter = DependenciesAdapter(ClassCtorReflector());
  */
 export function DependenciesAdapter(
-  classPropsReflector: ClassPropsReflector,
   classCtorReflector: ClassCtorReflector
 ): DependencyInjectionAdapter {
   function inspect(targetClass: Type): InjectableRegistry {
-    const ctorInjectables = classCtorReflector.reflectInjectables(targetClass);
-    // const propsInjectables = classPropsReflector.reflectInjectables(targetClass);
-    const allInjectables = [...ctorInjectables]; // ...propsInjectables
+    const injectables = classCtorReflector.reflectInjectables(targetClass);
 
     return {
       resolve(identifier: InjectableIdentifier): ClassInjectable | undefined {
-        return allInjectables.find(
+        return injectables.find(
           ({ identifier: injectableIdentifier }) => injectableIdentifier === identifier
         );
       },
       list(): ClassInjectable[] {
-        return allInjectables;
+        return injectables;
       },
     };
   }

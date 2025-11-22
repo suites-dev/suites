@@ -2,9 +2,20 @@ import 'reflect-metadata';
 import type { Type } from '@suites/types.common';
 import type { ClassInjectable } from '@suites/types.di';
 import { UndefinedDependency, UndefinedDependencyError } from '@suites/types.di';
-import type { InjectionJsParameterMetadata } from './types';
 
 export type ClassCtorReflector = ReturnType<typeof ClassCtorReflector>;
+
+/**
+ * Identifier metadata for injection-js adapter.
+ * Only includes the token from @Inject(token) decorator.
+ *
+ * Note: @Optional(), @Self(), @SkipSelf(), @Host() decorators are ignored
+ * as they are production DI resolution hints that don't affect the flat
+ * virtual test container used in Suites.
+ */
+interface InjectionJsParameterMetadata {
+  token?: unknown;
+}
 
 /**
  * Creates a constructor reflector that extracts injection-js metadata
@@ -68,8 +79,9 @@ the parameter type. Make sure parameters are decorated with @Inject() or have va
   }
 
   /**
-   * Extracts metadata from injection-js parameter decorators.
-   * Handles @Inject(), @Optional(), @Self(), @SkipSelf(), @Host()
+   * Extracts token from injection-js parameter decorators.
+   * Only extracts @Inject(token) - other decorators like @Optional(), @Self(),
+   * @SkipSelf(), @Host() are ignored as they don't affect the virtual test container.
    */
   function extractMetadata(decorators: any[]): InjectionJsParameterMetadata {
     const metadata: InjectionJsParameterMetadata = {};
@@ -80,24 +92,6 @@ the parameter type. Make sure parameters are decorated with @Inject() or have va
       // Handle @Inject(token)
       if (decorator.token !== undefined) {
         metadata.token = decorator.token;
-      }
-
-      // Check decorator type by ngMetadataName (injection-js convention)
-      const decoratorName = decorator.ngMetadataName || decorator.constructor?.name || '';
-
-      switch (decoratorName) {
-        case 'Optional':
-          metadata.optional = true;
-          break;
-        case 'Self':
-          metadata.self = true;
-          break;
-        case 'SkipSelf':
-          metadata.skipSelf = true;
-          break;
-        case 'Host':
-          metadata.host = true;
-          break;
       }
     }
 

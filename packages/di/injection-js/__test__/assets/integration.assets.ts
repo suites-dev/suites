@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Injectable, Inject, Optional } from 'injection-js';
+import { Injectable, Inject, Optional, Self, SkipSelf, Host } from 'injection-js';
 
 // Test assets for injection-js adapter integration tests
 
@@ -25,7 +25,7 @@ export class Config {
   apiUrl = 'https://api.example.com';
 }
 
-// Custom injection token
+// Custom injection tokens
 export const API_URL = 'API_URL';
 export const CUSTOM_TOKEN = 'CUSTOM_TOKEN';
 
@@ -74,4 +74,52 @@ export class SingleDepService {
 // Class without @Injectable (should work but may have limited reflection)
 export class PlainService {
   constructor(public database: Database) {}
+}
+
+// Test classes for decorator behavior tests
+
+// Class with @Self() decorator
+@Injectable()
+export class ServiceWithSelf {
+  constructor(
+    @Self() public database: Database,
+    public logger: Logger
+  ) {}
+}
+
+// Class with @SkipSelf() decorator
+@Injectable()
+export class ServiceWithSkipSelf {
+  constructor(
+    @SkipSelf() public cache: Cache,
+    public logger: Logger
+  ) {}
+}
+
+// Class with @Host() decorator
+@Injectable()
+export class ServiceWithHost {
+  constructor(
+    @Host() public database: Database,
+    public logger: Logger
+  ) {}
+}
+
+// Class combining @Inject() with resolution modifiers
+@Injectable()
+export class ServiceWithCombinedDecorators {
+  constructor(
+    @Inject(CUSTOM_TOKEN) @Optional() public serviceA: any,
+    @Inject(API_URL) @Self() public serviceB: any,
+    @Inject('SERVICE_C') @Host() public serviceC: any
+  ) {}
+}
+
+// Class with @Optional() and @Inject() together
+@Injectable()
+export class ServiceWithOptionalAndInject {
+  constructor(
+    @Inject(API_URL) @Optional() public apiUrl?: string,
+    public logger?: Logger
+  ) {}
 }

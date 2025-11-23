@@ -36,13 +36,13 @@ describe('Suites Jest / injection-js E2E Test Ctor', () => {
         },
       }))
       .mock<Logger>('LOGGER')
-      .final({ log: () => 'baz-from-test' })
+      .impl((stubFn) => ({ log: stubFn().mockReturnValue('baz-from-test') }))
       .mock<string>(API_URL)
       .final('https://api.example.com')
       .mock<string>(CONSTANT_VALUE)
       .final('arbitrary-string')
       .mock<TestClassFive>(SymbolToken)
-      .final({ doSomething: () => 'mocked' })
+      .impl((stubFn) => ({ doSomething: stubFn().mockReturnValue('mocked') }))
       .compile();
 
     unitRef = ref;
@@ -94,9 +94,11 @@ describe('Suites Jest / injection-js E2E Test Ctor', () => {
   });
 
   describe('when using an optional dependency', () => {
-    test('then should handle undefined optional dependencies', () => {
+    test('then should auto-mock optional dependencies by default', () => {
       const result = unit.testOptional();
-      expect(result).toBe('no-optional');
+      // Optional dependencies are auto-mocked like any other dependency
+      // To test the "absent" scenario, use .mock(Bar).final(undefined)
+      expect(result).toBe('has-optional');
     });
   });
 
@@ -178,16 +180,16 @@ describe('Suites Jest / injection-js Metadata Decorators E2E', () => {
   });
 
   describe('when using @Host() decorator', () => {
-    it('should extract and preserve @Host() metadata', async () => {
+    it('should ignore @Host() and auto-mock dependencies', async () => {
       const { unit, unitRef } = await TestBed.solitary(TestClassWithHost)
         .mock<Logger>('LOGGER')
-        .final({ log: () => 'test-log' })
+        .impl((stubFn) => ({ log: stubFn().mockReturnValue('test-log') }))
         .compile();
 
       expect(unit).toBeInstanceOf(TestClassWithHost);
       expect(unit.test()).toBe('host-test');
 
-      // Verify dependencies are mocked
+      // Verify dependencies are mocked (resolution decorators are ignored)
       const testClassFive: Mocked<TestClassFive> = unitRef.get(TestClassFive);
       const logger: Mocked<Logger> = unitRef.get('LOGGER');
 
@@ -199,14 +201,14 @@ describe('Suites Jest / injection-js Metadata Decorators E2E', () => {
   });
 
   describe('when combining multiple metadata decorators', () => {
-    it('should extract and preserve all combined metadata', async () => {
+    it('should ignore resolution modifiers and auto-mock all dependencies', async () => {
       const { unit, unitRef } = await TestBed.solitary(TestClassWithCombinedMetadata)
         .mock('SERVICE_A')
-        .final({ value: 'service-a' })
+        .impl((stubFn) => ({ value: stubFn().mockReturnValue('service-a') }))
         .mock('SERVICE_B')
-        .final({ value: 'service-b' })
+        .impl((stubFn) => ({ value: stubFn().mockReturnValue('service-b') }))
         .mock<TestClassFive>(SymbolToken)
-        .final({ doSomething: () => 'service-c' })
+        .impl((stubFn) => ({ doSomething: stubFn().mockReturnValue('service-c') }))
         .mock<string>(API_URL)
         .final('https://api.test.com')
         .compile();
@@ -214,14 +216,14 @@ describe('Suites Jest / injection-js Metadata Decorators E2E', () => {
       expect(unit).toBeInstanceOf(TestClassWithCombinedMetadata);
       expect(unit.test()).toBe('combined-metadata-test');
 
-      // Verify all dependencies with different metadata combinations
-      const serviceA = unitRef.get('SERVICE_A'); // @Inject + @Optional
-      const serviceB = unitRef.get('SERVICE_B'); // @Inject + @Self
-      const serviceC: Mocked<TestClassFive> = unitRef.get(SymbolToken); // @Inject + @SkipSelf
-      const apiUrl = unitRef.get<string>(API_URL); // @Inject + @Host
+      // Verify all dependencies - resolution decorators (@Optional, @Self, @SkipSelf, @Host) are ignored
+      const serviceA = unitRef.get('SERVICE_A');
+      const serviceB = unitRef.get('SERVICE_B');
+      const serviceC: Mocked<TestClassFive> = unitRef.get(SymbolToken);
+      const apiUrl = unitRef.get<string>(API_URL);
 
-      expect(serviceA).toEqual({ value: 'service-a' });
-      expect(serviceB).toEqual({ value: 'service-b' });
+      expect(serviceA.value()).toBe('service-a');
+      expect(serviceB.value()).toBe('service-b');
       expect(serviceC.doSomething()).toBe('service-c');
       expect(apiUrl).toBe('https://api.test.com');
     });

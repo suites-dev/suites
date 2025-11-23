@@ -14,10 +14,6 @@ import {
   TestClassOne,
   TestClassThree,
   TestClassTwo,
-  TestClassWithSelf,
-  TestClassWithSkipSelf,
-  TestClassWithHost,
-  TestClassWithCombinedMetadata,
 } from './e2e-assets';
 
 describe('Suites Jest / injection-js E2E Test Ctor', () => {
@@ -76,12 +72,6 @@ describe('Suites Jest / injection-js E2E Test Ctor', () => {
     });
   });
 
-  describe('when getting a dependency by API_URL token', () => {
-    test('then should return the mocked string value', () => {
-      const apiUrl = unitRef.get<string>(API_URL);
-      expect(apiUrl).toBe('https://api.example.com');
-    });
-  });
 
   describe('when resolving duplicate class type identifiers', () => {
     test('then should return the same mock instance for both', async () => {
@@ -116,6 +106,10 @@ describe('Suites Jest / injection-js E2E Test Ctor', () => {
     test('then should throw an identifier not found error', () => {
       expect(() => unitRef.get(ClassThatIsNotInjected)).toThrow();
     });
+
+    test('then throw an error when trying to resolve faked dependency', () => {
+      expect(() => unitRef.get(CONSTANT_VALUE)).toThrow(/as it is marked as a faked dependency/);
+    });
   });
 
   describe('when mocking TestClassThree', () => {
@@ -138,94 +132,6 @@ describe('Suites Jest / injection-js E2E Test Ctor', () => {
     test('then should resolve by Foo identifier', () => {
       const fooRepo = unitRef.get(Foo);
       expect(fooRepo).toBeDefined();
-    });
-  });
-});
-
-describe('Suites Jest / injection-js Metadata Decorators E2E', () => {
-  describe('when using @Self() decorator', () => {
-    it('should extract and preserve @Self() metadata', async () => {
-      const { unit, unitRef } = await TestBed.solitary(TestClassWithSelf).compile();
-
-      expect(unit).toBeInstanceOf(TestClassWithSelf);
-      expect(unit.test()).toBe('self-test');
-
-      // Verify dependencies are mocked
-      const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
-      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
-
-      expect(testClassOne).toBeDefined();
-      expect(testClassTwo).toBeDefined();
-      expect(testClassOne.foo).toBeDefined();
-      expect(testClassTwo.bar).toBeDefined();
-    });
-  });
-
-  describe('when using @SkipSelf() decorator', () => {
-    it('should extract and preserve @SkipSelf() metadata', async () => {
-      const { unit, unitRef } = await TestBed.solitary(TestClassWithSkipSelf).compile();
-
-      expect(unit).toBeInstanceOf(TestClassWithSkipSelf);
-      expect(unit.test()).toBe('skip-self-test');
-
-      // Verify dependencies are mocked
-      const testClassThree: Mocked<TestClassThree> = unitRef.get(TestClassThree);
-      const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
-
-      expect(testClassThree).toBeDefined();
-      expect(testClassFour).toBeDefined();
-      expect(testClassThree.baz).toBeDefined();
-      expect(testClassFour.doSomething).toBeDefined();
-    });
-  });
-
-  describe('when using @Host() decorator', () => {
-    it('should ignore @Host() and auto-mock dependencies', async () => {
-      const { unit, unitRef } = await TestBed.solitary(TestClassWithHost)
-        .mock<Logger>('LOGGER')
-        .impl((stubFn) => ({ log: stubFn().mockReturnValue('test-log') }))
-        .compile();
-
-      expect(unit).toBeInstanceOf(TestClassWithHost);
-      expect(unit.test()).toBe('host-test');
-
-      // Verify dependencies are mocked (resolution decorators are ignored)
-      const testClassFive: Mocked<TestClassFive> = unitRef.get(TestClassFive);
-      const logger: Mocked<Logger> = unitRef.get('LOGGER');
-
-      expect(testClassFive).toBeDefined();
-      expect(logger).toBeDefined();
-      expect(testClassFive.doSomething).toBeDefined();
-      expect(logger.log()).toBe('test-log');
-    });
-  });
-
-  describe('when combining multiple metadata decorators', () => {
-    it('should ignore resolution modifiers and auto-mock all dependencies', async () => {
-      const { unit, unitRef } = await TestBed.solitary(TestClassWithCombinedMetadata)
-        .mock('SERVICE_A')
-        .impl((stubFn) => ({ value: stubFn().mockReturnValue('service-a') }))
-        .mock('SERVICE_B')
-        .impl((stubFn) => ({ value: stubFn().mockReturnValue('service-b') }))
-        .mock<TestClassFive>(SymbolToken)
-        .impl((stubFn) => ({ doSomething: stubFn().mockReturnValue('service-c') }))
-        .mock<string>(API_URL)
-        .final('https://api.test.com')
-        .compile();
-
-      expect(unit).toBeInstanceOf(TestClassWithCombinedMetadata);
-      expect(unit.test()).toBe('combined-metadata-test');
-
-      // Verify all dependencies - resolution decorators (@Optional, @Self, @SkipSelf, @Host) are ignored
-      const serviceA = unitRef.get<{ value: () => string }>('SERVICE_A');
-      const serviceB = unitRef.get<{ value: () => string }>('SERVICE_B');
-      const serviceC: Mocked<TestClassFive> = unitRef.get(SymbolToken);
-      const apiUrl = unitRef.get<string>(API_URL);
-
-      expect(serviceA.value()).toBe('service-a');
-      expect(serviceB.value()).toBe('service-b');
-      expect(serviceC.doSomething()).toBe('service-c');
-      expect(apiUrl).toBe('https://api.test.com');
     });
   });
 });

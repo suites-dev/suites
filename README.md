@@ -11,27 +11,20 @@ by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
 </p>
 
 <div align="center">
-  <a href="https://codecov.io/gh/suites-dev/suites">
-    <img src="https://img.shields.io/codecov/c/github/suites-dev/suites/master.svg?style=flat-square" alt="Codecov Coverage" />
-  </a>
-  <a href="https://opensource.org/licenses/Apache-2.0">
-    <img src="https://img.shields.io/badge/license-Apache_2.0-blue.svg" alt="license" />
-  </a>
-  <a href="https://npmjs.org/package/@suites/unit">
-    <img src="https://img.shields.io/npm/dm/@suites/unit.svg?label=%40suites%2Funit" alt="npm downloads" />
-  </a>
-  <a href="https://npmjs.org/package/@automock/jest">
-    <img src="https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest" alt="npm downloads" />
-  </a>
-  <a href="https://buymeacoffee.com/omermoradd">
-    <img src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee" alt="Buy Me A Coffee" />
-  </a>
+  <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-Apache_2.0-blue.svg" alt="license" /></a>
+  <a href="https://github.com/suites-dev/suites/blob/master/CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" /></a>
+  <a href="https://npmjs.org/package/@suites/unit"><img src="https://img.shields.io/npm/dm/@suites/unit.svg?label=%40suites%2Funit" alt="npm downloads" /></a>
+  <a href="https://npmjs.org/package/@automock/jest"><img src="https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest" alt="npm downloads" /></a>
+  <a href="https://buymeacoffee.com/omermoradd"><img src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee" alt="Buy Me A Coffee" /></a>
 </div>
 
 <h3 align="center">
-  <a href="https://suites.dev">Docs</a> •
-  <a href="https://suites.dev/docs/get-started/quickstart">Getting Started</a> •
-  <a href="https://suites.dev/docs/get-started/why-suites">Why Suites</a> •
+  <a href="https://suites.dev">Docs</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="https://suites.dev/docs/get-started/quickstart">Getting Started</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="https://suites.dev/docs/get-started/why-suites">Why Suites</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
   <a href="https://suites.dev/docs/guides">Guides</a>
 </h3>
 
@@ -44,23 +37,19 @@ by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
 
 ### 👩‍💻 Declarative
 
-Suites' declarative API creates fully-typed, isolated test environments with a single declaration. Suites auto-generates all mocks and wires
-dependencies automatically. No manual setup, no type casts, no boilerplate.
+Suites' declarative API creates fully-typed, isolated test environments with a single declaration. Suites auto-generates all mocks and wires dependencies automatically. No manual setup, no type casts, no boilerplate.
 
 ### ✅ Type-Safe Refactoring
 
-Generate type-safe mocks bound to implementations, enabling confident refactors. Change constructors, add dependencies,
-rename methods - TypeScript catches breaking changes at compile time with no silent failures or manual mock updates.
+Generate type-safe mocks bound to implementations, enabling confident refactors. Change constructors, add dependencies, rename methods - TypeScript catches breaking changes at compile time with no silent failures or manual mock updates.
 
 ### 🧩 Standardized Testing Across Teams
 
-Stop relearning testing styles on every project. Suites enforces a single canonical API that works across NestJS,
-InversifyJS (and more dependency injection frameworks to come), so every team ships tests with the same pattern.
+Stop relearning testing styles on every project. Suites enforces a single canonical API that works across NestJS, InversifyJS (and more dependency injection frameworks to come), so every team ships tests with the same pattern.
 
 ### ✨ AI Ready
 
-One canonical pattern teaches LLM agents the entire API. Coding agents like Claude Code and Cursor write correct tests in
-a single pass with 95% less context consumption compared to manual mocking patterns.
+One canonical pattern teaches LLM agents the entire API. Coding agents like Claude Code and Cursor write correct tests in a single pass with 95% less context consumption compared to manual mocking patterns.
 
 ## Examples
 
@@ -100,7 +89,7 @@ describe('User Service', () => {
 }
 ```
 
-### Hoe it Works
+### How It Works
 
 The test setup uses `TestBed.solitary()` to create an isolated testing environment:
 

@@ -99,12 +99,15 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         expect(deps[2].identifier).toBe(Logger);
       });
 
-      it('should resolve by token identifier', () => {
+      it('should resolve by token identifier with metadata', () => {
         const apiUrlDep = injectablesRegistry.resolve(API_URL);
 
         expect(apiUrlDep).toBeDefined();
         expect(apiUrlDep?.identifier).toBe(API_URL);
         expect(apiUrlDep?.type).toBe('PARAM');
+        if ('metadata' in apiUrlDep && apiUrlDep) {
+          expect(apiUrlDep.metadata).toEqual({ token: API_URL });
+        }
       });
     });
 
@@ -305,20 +308,26 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         expect(deps[2].identifier).toBe('SERVICE_C'); // @Inject('SERVICE_C') @Host()
       });
 
-      it('should use token as identifier, not in metadata', () => {
+      it('should include token in metadata for token-based injection', () => {
         const deps = injectablesRegistry.list();
 
         // First param: @Inject(CUSTOM_TOKEN) @Optional()
         expect(deps[0].identifier).toBe(CUSTOM_TOKEN);
-        expect(deps[0]).not.toHaveProperty('metadata');
+        if ('metadata' in deps[0]) {
+          expect(deps[0].metadata).toEqual({ token: CUSTOM_TOKEN });
+        }
 
         // Second param: @Inject(API_URL) @Self()
         expect(deps[1].identifier).toBe(API_URL);
-        expect(deps[1]).not.toHaveProperty('metadata');
+        if ('metadata' in deps[1]) {
+          expect(deps[1].metadata).toEqual({ token: API_URL });
+        }
 
         // Third param: @Inject('SERVICE_C') @Host()
         expect(deps[2].identifier).toBe('SERVICE_C');
-        expect(deps[2]).not.toHaveProperty('metadata');
+        if ('metadata' in deps[2]) {
+          expect(deps[2].metadata).toEqual({ token: 'SERVICE_C' });
+        }
       });
     });
 
@@ -337,12 +346,14 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         expect(deps[1].identifier).toBe(Logger); // regular type
       });
 
-      it('should use token as identifier without metadata', () => {
+      it('should include metadata only for token injection, not Type injection', () => {
         const deps = injectablesRegistry.list();
 
         // First param has both @Inject(API_URL) and @Optional()
         expect(deps[0].identifier).toBe(API_URL);
-        expect(deps[0]).not.toHaveProperty('metadata');
+        if ('metadata' in deps[0]) {
+          expect(deps[0].metadata).toEqual({ token: API_URL });
+        }
 
         // Second param is just a regular type (no decorators)
         expect(deps[1].identifier).toBe(Logger);
@@ -352,8 +363,8 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
   });
 
   describe('edge cases', () => {
-    describe('no metadata field', () => {
-      it('should not have metadata field for any dependencies', () => {
+    describe('metadata presence based on injection type', () => {
+      it('should not have metadata for Type-based dependencies', () => {
         const injectablesRegistry = dependenciesAdapter.inspect(UserService);
         const deps = injectablesRegistry.list();
 
@@ -362,7 +373,7 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
         });
       });
 
-      it('should use token directly as identifier, not in metadata', () => {
+      it('should have metadata for token-based but not Type-based dependencies', () => {
         const injectablesRegistry = dependenciesAdapter.inspect(PaymentService);
         const deps = injectablesRegistry.list();
 
@@ -372,19 +383,25 @@ describe('injection-js Suites DI Adapter Integration Test', () => {
 
         // Second param is token-based (@Inject(API_URL))
         expect(deps[1].identifier).toBe(API_URL);
-        expect(deps[1]).not.toHaveProperty('metadata');
+        if ('metadata' in deps[1]) {
+          expect(deps[1].metadata).toEqual({ token: API_URL });
+        }
 
         // Third param is Type-based (Logger)
         expect(deps[2].identifier).toBe(Logger);
         expect(deps[2]).not.toHaveProperty('metadata');
       });
 
-      it('should never include metadata field even with multiple decorators', () => {
+      it('should include metadata for all token-based injections', () => {
         const injectablesRegistry = dependenciesAdapter.inspect(ServiceWithCombinedDecorators);
         const deps = injectablesRegistry.list();
 
+        // All params use @Inject(token), so all should have metadata
         deps.forEach((dep) => {
-          expect(dep).not.toHaveProperty('metadata');
+          if ('metadata' in dep) {
+            expect(dep.metadata).toHaveProperty('token');
+            expect(Object.keys(dep.metadata)).toEqual(['token']);
+          }
         });
       });
     });

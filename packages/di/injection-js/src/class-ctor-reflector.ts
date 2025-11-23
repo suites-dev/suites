@@ -62,10 +62,15 @@ the parameter type. Make sure parameters are decorated with @Inject() or have va
         );
       }
 
+      // Include metadata only for token-based injection
+      // This tells Suites core this is a token injection, not a primitive needing .final()
+      const hasToken = token !== undefined;
+
       return {
         identifier,
         value: paramType || UndefinedDependency,
         type: 'PARAM',
+        ...(hasToken && { metadata: { token } }),
       } satisfies ClassInjectable;
     });
   }

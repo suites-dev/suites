@@ -1,171 +1,130 @@
-# @suites/di.injection-js
+# @suites/di.injectionjs
 
-**Unit Testing for injection-js - Automatic mocking adapter for testing injection-js applications**
+**Testing adapter that enables Suites unit testing for injection-js applications**
 
-[![npm version](https://badge.fury.io/js/%40suites%2Fdi.injection-js.svg)](https://badge.fury.io/js/%40suites%2Fdi.injection-js)
+[![npm version](https://badge.fury.io/js/%40suites%2Fdi.injectionjs.svg)](https://badge.fury.io/js/%40suites%2Fdi.injectionjs)
+[![npm downloads](https://img.shields.io/npm/dm/%40suites%2Fdi.injectionjs.svg?style=flat-square)](https://www.npmjs.com/package/@suites/di.injectionjs)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## Overview
+## What is @suites/di.injectionjs?
 
-**Unit testing adapter for [injection-js](https://github.com/mgechev/injection-js) applications**. `@suites/di.injection-js` enables unit testing of injection-js services with automatic mock generation, making it simple to write isolated unit tests for your injection-js applications.
+The injection-js adapter enables [Suites](https://suites.dev) to work with injection-js's Angular-style dependency
+injection system. It automatically analyzes your services decorated with `@Injectable()` and `@Inject()`, creates test
+doubles for all dependencies, and lets you write isolated unit tests without manual mock setup.
 
-This adapter integrates injection-js's `@Injectable()` decorator system with [Suites](https://suites.dev) unit testing framework, automatically creating test doubles for all dependencies. Perfect for unit testing Angular-style dependency injection outside of Angular, this adapter eliminates manual mock setup and lets you focus on testing your injection-js services.
+Perfect for testing Angular-style dependency injection outside of Angular. Works seamlessly with constructor injection,
+property injection, and custom injection tokens.
 
-## Why Unit Test injection-js with Suites?
-
-- **Automatic Mocking** - Unit test injection-js services without manually creating mocks
-- **Zero Setup** - Start unit testing immediately with existing `@Injectable()` decorators
-- **Type Safety** - Full TypeScript support for unit testing injection-js applications
-- **Isolation** - True unit tests with complete dependency isolation
-- **Developer Experience** - Intuitive API designed specifically for testing injection-js services
-
-## Installation
-
-```bash
-npm install --save-dev @suites/di.injection-js injection-js reflect-metadata
-```
-
-## Key Features for Unit Testing injection-js
-
-- 🎯 **Automatic Mock Generation** - All injection-js dependencies are automatically mocked in unit tests
-- 🔍 **Type-Safe Unit Tests** - Full TypeScript type inference for mocks and injection-js dependencies
-- 📦 **Type-Based Injection** - Unit test with actual class types as identifiers (not strings)
-- 🎨 **Token Support** - Unit test injection-js `@Inject()` decorators for string/symbol tokens
-- ⚡ **Zero Configuration** - Start unit testing injection-js applications immediately
-
-## Quick Start - Unit Testing injection-js Services
+## Quick Start
 
 ```typescript
 import 'reflect-metadata';
-import { Injectable } from 'injection-js';
-import { TestBed } from '@suites/unit';
+import { Injectable, Inject, InjectionToken } from 'injection-js';
+import { TestBed, type Mocked } from '@suites/unit';
+
+const CONFIG_TOKEN = new InjectionToken<AppConfig>('config');
 
 @Injectable()
-class UserService {
-  constructor(private database: Database) {}
+export class UserService {
+  constructor(
+    private database: Database,
+    @Inject(CONFIG_TOKEN) private config: AppConfig
+  ) {}
 
   getUser(id: string) {
+    const apiUrl = this.config.apiUrl;
     return this.database.findUser(id);
   }
 }
 
-// Unit test example for injection-js service
-describe('UserService Unit Tests', () => {
-  it('should get user from database', async () => {
-    // Create isolated unit test with automatic mocks
+describe('UserService', () => {
+  let userService: UserService;
+  let database: Mocked<Database>;
+  let config: Mocked<AppConfig>;
+
+  beforeAll(async () => {
     const { unit, unitRef } = await TestBed.solitary(UserService).compile();
+    userService = unit;
+    database = unitRef.get(Database);
+    config = unitRef.get(CONFIG_TOKEN);
+  });
 
-    const mockDatabase = unitRef.get(Database);
-    mockDatabase.findUser.mockReturnValue({ id: '1', name: 'John' });
+  it('should get user from database', () => {
+    config.apiUrl = 'https://api.example.com';
+    database.findUser.mockReturnValue({ id: '1', name: 'John' });
 
-    const user = unit.getUser('1');
+    const user = userService.getUser('1');
 
     expect(user.name).toBe('John');
+    expect(database.findUser).toHaveBeenCalledWith('1');
   });
 });
 ```
 
-## Unit Testing injection-js Applications
+## Installation
 
-### Testing Services with Dependencies
-
-Unit test injection-js services with automatically mocked dependencies:
-
-```typescript
-import { Injectable } from 'injection-js';
-import { TestBed } from '@suites/unit';
-
-@Injectable()
-class AuthService {
-  constructor(
-    private userService: UserService,
-    private tokenService: TokenService
-  ) {}
-
-  login(username: string, password: string) {
-    const user = this.userService.authenticate(username, password);
-    return this.tokenService.generate(user);
-  }
-}
-
-// Unit test with automatic mocks
-describe('AuthService Unit Tests', () => {
-  it('should generate token for authenticated user', async () => {
-    const { unit, unitRef } = await TestBed.solitary(AuthService).compile();
-
-    // Get automatically generated mocks
-    const mockUserService = unitRef.get(UserService);
-    const mockTokenService = unitRef.get(TokenService);
-
-    mockUserService.authenticate.mockReturnValue({ id: '1', name: 'John' });
-    mockTokenService.generate.mockReturnValue('token-123');
-
-    const token = unit.login('john', 'password');
-
-    expect(token).toBe('token-123');
-    expect(mockUserService.authenticate).toHaveBeenCalledWith('john', 'password');
-  });
-});
+```bash
+npm install --save-dev @suites/unit @suites/di.injectionjs @suites/doubles.jest
 ```
 
-### Testing with injection-js Tokens
+Or with Vitest:
 
-Unit test injection-js services that use `@Inject()` decorators with string or symbol tokens:
-
-```typescript
-import { Injectable, Inject, InjectionToken } from 'injection-js';
-import { TestBed } from '@suites/unit';
-
-const CONFIG_TOKEN = new InjectionToken<Config>('config');
-
-@Injectable()
-class ConfigService {
-  constructor(@Inject(CONFIG_TOKEN) private config: Config) {}
-
-  getApiUrl() {
-    return this.config.apiUrl;
-  }
-}
-
-// Unit test with token injection
-describe('ConfigService Unit Tests', () => {
-  it('should return API URL from config', async () => {
-    const { unit, unitRef } = await TestBed.solitary(ConfigService).compile();
-
-    const mockConfig = unitRef.get(CONFIG_TOKEN);
-    mockConfig.apiUrl = 'https://api.example.com';
-
-    expect(unit.getApiUrl()).toBe('https://api.example.com');
-  });
-});
+```bash
+npm install --save-dev @suites/unit @suites/di.injectionjs @suites/doubles.vitest
 ```
 
-## Requirements
+**Peer dependencies:** Requires `injection-js` (>= 2.0) and `reflect-metadata`.
 
-Enable decorator metadata in your `tsconfig.json` for unit testing injection-js:
+👉 [Complete installation guide](https://suites.dev/docs/get-started/installation)
 
-```json
-{
-  "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
-  }
-}
-```
+## Key Features
+
+- **Angular-Style DI** - Works with Angular's dependency injection patterns outside Angular
+- **InjectionToken Support** - Full support for `@Inject()` decorators with injection tokens
+- **Type-Based Injection** - Uses actual class types as identifiers (not strings)
+- **ForwardRef Compatible** - Works with forward references for circular dependencies
+- **Property Injection** - Supports both constructor and property-based injection
+- **Type-Safe** - Full TypeScript support with proper type inference
+- **Zero Configuration** - Drop-in testing solution for existing injection-js applications
+
+## injection-js-Specific Patterns
+
+This adapter understands injection-js patterns including:
+
+- `@Injectable()` class decorators
+- `@Inject(token)` for custom providers
+- `InjectionToken` for type-safe tokens
+- `forwardRef(() => Type)` for circular dependencies
+- Property injection with `@Inject()` decorators
+- Type-based and token-based injection
 
 ## Documentation
 
-- 📘 [Suites Documentation](https://suites.dev/docs) - Complete guide to unit testing with Suites
-- 🔧 [injection-js Documentation](https://github.com/mgechev/injection-js) - Learn about injection-js DI system
-- 🚀 [Getting Started Guide](https://suites.dev/docs/getting-started) - Start unit testing in minutes
+- [Suites Documentation](https://suites.dev/docs) - Complete testing guide and patterns
+- [injection-js Documentation](https://github.com/mgechev/injection-js) - Framework reference
+- [Getting Started](https://suites.dev/docs/get-started/quickstart) - 5-minute quickstart
+- [Adapter Architecture](https://suites.dev/docs/fundamentals/adapters) - How adapters work
 
-## Other Suites Unit Testing Adapters
+## Other DI Adapters
 
-Suites supports unit testing for multiple DI frameworks through adapters:
+Suites supports multiple dependency injection frameworks through adapters:
 
-- `@suites/di.nestjs` - Unit testing for NestJS applications
-- `@suites/di.inversify` - Unit testing for InversifyJS applications
-- `@suites/di.injection-js` - Unit testing for injection-js applications (this package)
+- **[@suites/di.nestjs](https://www.npmjs.com/package/@suites/di.nestjs)** - Testing adapter for NestJS applications
+- **[@suites/di.inversify](https://www.npmjs.com/package/@suites/di.inversify)** - Testing adapter for InversifyJS applications
+- **@suites/di.injectionjs** - Testing adapter for `injection-js` applications (this package)
+
+All adapters provide the same consistent testing API while handling framework-specific dependency injection patterns.
+
+## Support & Community
+
+- [GitHub Discussions](https://github.com/suites-dev/suites/discussions) - Ask questions and share ideas
+- [Issue Tracker](https://github.com/suites-dev/suites/issues) - Report bugs or request features
+- [Documentation](https://suites.dev/docs) - Comprehensive guides and examples
+- [Examples](https://github.com/suites-dev/suites/tree/master/examples) - Real-world usage examples
+
+## Contributing
+
+We welcome contributions! See our [contribution guidelines](https://github.com/suites-dev/suites/blob/master/CONTRIBUTING.md) and [Code of Conduct](https://github.com/suites-dev/suites/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 

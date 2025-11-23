@@ -217,8 +217,8 @@ describe('Suites Jest / injection-js Metadata Decorators E2E', () => {
       expect(unit.test()).toBe('combined-metadata-test');
 
       // Verify all dependencies - resolution decorators (@Optional, @Self, @SkipSelf, @Host) are ignored
-      const serviceA = unitRef.get('SERVICE_A');
-      const serviceB = unitRef.get('SERVICE_B');
+      const serviceA = unitRef.get<{ value: () => string }>('SERVICE_A');
+      const serviceB = unitRef.get<{ value: () => string }>('SERVICE_B');
       const serviceC: Mocked<TestClassFive> = unitRef.get(SymbolToken);
       const apiUrl = unitRef.get<string>(API_URL);
 

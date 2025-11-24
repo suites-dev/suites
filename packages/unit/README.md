@@ -1,134 +1,103 @@
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
+  <img width="150" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
 </p>
 
-<h1 align="center">Suites (formerly Automock)</h1>
+<h1 align="center">Suites</h1>
 
-**Suites is a progressive, flexible testing meta-framework aimed at elevating the software testing experience within
-backend systems working with dependency injection (DI) frameworks**.
+<p align="center">
+A unit-testing framework for TypeScript backends using inversion of control and dependency injection
+<br />
 
-Suites provides a unified testing experience that combines best practices, industry standards, and a wide range of
-testing tools to help developers create robust, maintainable, and scalable test suites, thereby ensuring the development
-of high-quality software.
 
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/suites-dev/suites/master.svg?style=flat-square)](https://codecov.io/gh/suites-dev/suites)
-[![e2e](https://github.com/suites-dev/suites/actions/workflows/e2e.yml/badge.svg?branch=master)](https://github.com/suites-dev/suites/actions)
-[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
-![npm downloads](https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest)
+[![npm version](https://img.shields.io/npm/v/@suites/unit.svg?style=flat-square)](https://www.npmjs.com/package/@suites/unit)
+[![npm downloads](https://img.shields.io/npm/dm/@suites/unit.svg?style=flat-square)](https://www.npmjs.com/package/@suites/unit)
+[![License](https://img.shields.io/npm/l/@suites/unit.svg?style=flat-square)](https://github.com/suites-dev/suites/blob/master/LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg?style=flat-square)](https://www.typescriptlang.org/)
 
-[↗️ Visit Documentation](https://suites.dev/docs)
+[Documentation](https://suites.dev/docs) • [GitHub](https://github.com/suites-dev/suites)
 
-## Core Features
+</p>
 
-🚀 **Zero-Setup Mocking** - Automatically generate mock objects, eliminate manual setup, reduce boilerplate code.
+Testing classes with dependency injection usually means writing manual mocks for every constructor parameter. Change a dependency? Update every mock. Refactor a method? Hope your untyped mocks still work. Suites automates this away.
 
-🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects.
+## What is Suites?
 
-📄 **Consistent Tests Structure** - Test suites will follow a consistent syntax and structure, making them easier to
-read and maintain.
+Suites is a **unit testing framework** that provides:
 
-📈 **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster.
+- **Declarative API** - Call `TestBed.solitary(YourClass)` and get a fully-typed test environment with mocks already generated and wired
+- **Type-Safe Refactoring** - Add or remove constructor dependencies without touching your tests. TypeScript catches mismatches immediately
+- **Framework Agnostic** - Write tests once, use the same pattern across NestJS services, InversifyJS modules, or plain TypeScript classes
+- **AI Ready** - The consistent pattern makes it trivial for coding agents to generate correct tests without extensive context
 
-🌐 **Community & Support** - Join a growing community of developers.
-
-## :computer: Quick Example
-
-Suites suggest an alternative approach to writing unit tests for classes instead of using the traditional mocking
-libraries and dependency injection frameworks.
-
-Take a look at the following example:
-
-Consider the following `UserService` and `Database` classes:
+Works with [NestJS](https://nestjs.com) (official), [InversifyJS](https://inversify.io) (official), [Jest](https://jestjs.io), [Vitest](https://vitest.dev), and [Sinon](https://sinonjs.org).
 
 ```typescript
-export class Database {
-  async getUsers(): Promise<User[]> { ... }
-}
+import { TestBed, type Mocked } from '@suites/unit';
 
-export class UserService {
-  constructor(private database: Database) {}
-
-  async getAllUsers(): Promise<User[]> {
-    return this.database.getUsers();
-  }
-}
-```
-
-Let's create a unit test for this class:
-
-```typescript
-import { TestBed, Mocked } from '@suites/unit';
-import { Database, UserService } from './user.service'; 
-
-describe('User Service Unit Spec', () => {
-  let userService: UserService; // 🧪 Declare the unit under test
-  let database: Mocked<Database>; // 🎭 Declare a mocked dependency
+describe('UserService', () => {
+  let userService: UserService;
+  let userRepository: Mocked<UserRepository>;
 
   beforeAll(async () => {
-    // 🚀 Create an isolated test env for the unit (under test) + auto generated mock objects
     const { unit, unitRef } = await TestBed.solitary(UserService).compile();
-
     userService = unit;
-
-    // 🔍 Retreive a dependency (mock) from the unit reference
-    database = unitRef.get(Database);
+    userRepository = unitRef.get(UserRepository);
   });
 
-  // ✅ Test test test
-  test('should return users from the database', async () => {
-    const mockUsers: User[] = [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }];
-    database.getUsers.mockResolvedValue(mockUsers);
-
-    const users = await userService.getAllUsers();
-
-    expect(database.getUsers).toHaveBeenCalled();
-    expect(users).toEqual(mockUsers);
+  it('should return user name', async () => {
+    userRepository.getUserById.mockResolvedValue({ id: 1, name: 'John Doe' });
+    const result = await userService.getUserName(1);
+    expect(result).toBe('John Doe');
   });
 });
 ```
 
-With the use of the `TestBed`, an instance of the `UserService` class can be created with mock objects automatically
-generated for its dependencies. During the test, we have direct access to the automatically generated mock object for
-the `Database` dependency (database).
+## Getting Started
 
-<p align="right"><a href="https://suites.dev/docs/overview/quickstart">↗️ Quickstart Guide</a></p>
+**Fastest way to get started:**
 
-## :package: Installation
+[**5-Minute Quickstart Guide**](https://suites.dev/docs/get-started/quickstart)
 
-First, install Suites' unit package:
+**Explore comprehensive guides and examples:**
+
+[View Documentation](https://suites.dev/docs) | [See Examples](https://github.com/suites-dev/suites/tree/master/examples) | [Learn Suites Patterns](https://suites.dev/docs/guides)
+
+## Installation
 
 ```bash
-$ npm i -D @suites/unit
+npm i -D @suites/unit
 ```
 
-Then, to fully integrate Suites into your mocking and dependency injection frameworks, install the corresponding
-adapters for your project. For example, to use Suites with Jest and NestJS you would run (alongside the unit package):
+You'll also need to install adapters for your DI framework and testing library. For example, NestJS with Jest:
 
 ```bash
-$ npm i -D @suites/doubles.jest @suites/di.nestjs
-````
+npm i -D @suites/doubles.jest @suites/di.nestjs
+```
 
-Suites will automatically detect the installed adapters and configure itself accordingly.
+[**Complete installation and setup guide**](https://suites.dev/docs/get-started/installation)
 
-### Supported DI Frameworks
+## Community
 
-| DI Framework | Package Name           |
-|--------------|------------------------|
-| NestJS       | `@suites/di.nestjs`    |
-| Inversify    | `@suites/di.inversify` |
-| TSyringe     | Soon!                  |
+Join the Suites community on [GitHub Discussions](https://github.com/suites-dev/suites/discussions).
 
-### Supported Mocking Libraries
+## Support
 
-| DI Framework | Package Name             |
-|--------------|--------------------------|
-| Jest         | `@suites/doubles.jest`   |
-| Sinon        | `@suites/doubles.sinon`  |
-| Vitest       | `@suites/doubles.vitest` |
-| Bun          | Soon!                    |
-| Deno         | Soon!                    |
+### Ask a question about Suites
 
+[**Start a discussion**](https://github.com/suites-dev/suites/discussions/new?category=q-a)
 
-## :scroll: License
+### Create a bug report
+
+[**Report a bug**](https://github.com/suites-dev/suites/issues/new?template=bug_report.md)
+
+### Request a feature
+
+[**Submit feature request**](https://github.com/suites-dev/suites/issues/new?template=feature_request.md)
+
+## Contributing
+
+We welcome contributions! See our [contribution guidelines](https://github.com/suites-dev/suites/blob/master/CONTRIBUTING.md) and [Code of Conduct](https://github.com/suites-dev/suites/blob/master/CODE_OF_CONDUCT.md).
+
+## License
 
 Distributed under the Apache (Apache-2.0) License. See `LICENSE` for more information.

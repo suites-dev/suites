@@ -6,7 +6,7 @@ const config: Config = {
   id: 'di.injection-js',
   displayName: 'di.injection-js',
   collectCoverageFrom: ['src/**/*.ts'],
-  coveragePathIgnorePatterns: ['index.ts', '__test__/assets/integration.assets.ts'],
+  coveragePathIgnorePatterns: ['index.ts', 'test/assets/integration.assets.ts'],
 };
 
 export default config;

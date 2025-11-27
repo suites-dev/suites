@@ -1,7 +1,9 @@
 import 'reflect-metadata';
 import type { Type } from '@suites/types.common';
-import type { ClassInjectable } from '@suites/types.di';
+import type { ClassInjectable, InjectableIdentifier } from '@suites/types.di';
 import { UndefinedDependency, UndefinedDependencyError } from '@suites/types.di';
+import type { ParameterDecorator } from './types';
+import { isInjectDecorator } from './types';
 
 export type ClassCtorReflector = ReturnType<typeof ClassCtorReflector>;
 
@@ -40,20 +42,26 @@ export function ClassCtorReflector() {
 
     return Array.from({ length: paramCount }, (_, index) => {
       const paramType = paramTypes[index];
-      const paramDecorators = parametersMetadata[index] || [];
+      const paramDecorators: ParameterDecorator[] = parametersMetadata[index] || [];
 
       // Extract token from @Inject(token) decorator
       const token = extractToken(paramDecorators);
 
       // Find the Type in decorators (for cases where @Inject() specifies a different type)
-      const decoratorType = paramDecorators.find(
-        (item: any) => typeof item === 'function' && !item.ngMetadataName
-      );
+      const decoratorType: Type | undefined = paramDecorators.find(
+        (item) => typeof item === 'function' && !(item as any).ngMetadataName
+      ) as Type | undefined;
 
       // Determine the identifier (from @Inject() token, decorator type, or param type)
-      const identifier = token || decoratorType || paramType;
+      let identifier: InjectableIdentifier;
 
-      if (!identifier) {
+      if (token) {
+        identifier = token;
+      } else if (decoratorType) {
+        identifier = decoratorType;
+      } else if (paramType) {
+        identifier = paramType;
+      } else {
         throw new UndefinedDependencyError(
           `Suites encountered an error while attempting to detect a token or type for the
 dependency at index [${index}] in the class '${targetClass.name}'.
@@ -73,11 +81,15 @@ the parameter type. Make sure parameters are decorated with @Inject() or have va
   /**
    * Extracts token from @Inject(token) decorator.
    * Other decorators like @Optional(), @Self(), @SkipSelf(), @Host() are ignored.
+   *
+   * @returns The token if found (string, symbol, or Type), otherwise undefined
    */
-  function extractToken(decorators: any[]): unknown | undefined {
+  function extractToken(decorators: ParameterDecorator[]): InjectableIdentifier | undefined {
     for (const decorator of decorators) {
-      if (decorator && decorator.token !== undefined) {
-        return decorator.token;
+      if (isInjectDecorator(decorator)) {
+        // injection-js allows any value as token, but InjectableIdentifier accepts Type | string | symbol
+        // We trust that users follow the correct pattern
+        return decorator.token as InjectableIdentifier;
       }
     }
     return undefined;

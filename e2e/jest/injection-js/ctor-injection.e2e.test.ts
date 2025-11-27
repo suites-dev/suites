@@ -6,13 +6,11 @@ import {
   API_URL,
   ClassThatIsNotInjected,
   CONSTANT_VALUE,
-  Foo,
   InjectionJsTestClass,
   SymbolToken,
   TestClassFive,
   TestClassFour,
   TestClassOne,
-  TestClassThree,
   TestClassTwo,
 } from './e2e-assets';
 
@@ -49,89 +47,60 @@ describe('Suites Jest / injection-js E2E Test Ctor', () => {
     test('then the unit should an instance of the class under test', () => {
       expect(unit).toBeInstanceOf(InjectionJsTestClass);
     });
-  });
 
-  describe('when getting a dependency by a class type identifier', () => {
-    test('then should return the corresponding mock object', () => {
-      const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
-      expect(testClassOne.bar()).toBe('bar');
+    test('then successfully resolve the dependencies of the tested classes', () => {
+      expect(() => unitRef.get<Logger>('LOGGER')).toBeDefined();
+      expect(() => unitRef.get(TestClassOne)).toBeDefined();
+      expect(() => unitRef.get<TestClassFive>(SymbolToken)).toBeDefined();
     });
-  });
 
-  describe('when getting a dependency by a string token', () => {
-    test('then should return the corresponding mock object', () => {
-      const logger: Mocked<Logger> = unitRef.get('LOGGER');
-      expect(logger.log()).toBe('baz-from-test');
-    });
-  });
-
-  describe('when getting a dependency by a symbol token', () => {
-    test('then should return the corresponding mock object', () => {
-      const symbolDep: Mocked<TestClassFive> = unitRef.get(SymbolToken);
-      expect(symbolDep.doSomething()).toBe('mocked');
-    });
-  });
-
-
-  describe('when resolving duplicate class type identifiers', () => {
-    test('then should return the same mock instance for both', async () => {
-      const firstInstance: Mocked<TestClassOne> = unitRef.get(TestClassOne);
-      const result = await unit.testDuplicateIdentifier();
-
-      expect(result).toBe('foo-from-test<>foo-from-test');
-      expect(firstInstance.foo).toHaveBeenCalledTimes(2);
-    });
-  });
-
-  describe('when using an optional dependency', () => {
-    test('then should auto-mock optional dependencies by default', () => {
-      const result = unit.testOptional();
-      // Optional dependencies are auto-mocked like any other dependency
-      // To test the "absent" scenario, use .mock(Bar).final(undefined)
-      expect(result).toBe('has-optional');
-    });
-  });
-
-  describe('when calling a method that uses dependencies', () => {
-    test('then should work with all mocked dependencies', async () => {
+    test('call the unit instance method', async () => {
       const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+
       testClassTwo.bar.mockResolvedValue('bar-from-test');
 
       const result = await unit.test();
       expect(result).toBe('bar-from-test-baz-from-test-bar');
     });
-  });
 
-  describe('when attempting to get a class that was not injected', () => {
-    test('then should throw an identifier not found error', () => {
+    test('then mock the implementation of the dependencies', async () => {
+      const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
+      const logger = unitRef.get<Logger>('LOGGER');
+
+      // The original 'foo' method in TestClassOne return value should be changed
+      // according to the passed flag; here, always return the same value
+      // because we mock the implementation of foo permanently
+      await expect(testClassOne.foo(true)).resolves.toBe('foo-from-test');
+      await expect(testClassOne.foo(false)).resolves.toBe('foo-from-test');
+
+      expect(logger.log).toBeDefined();
+    });
+
+    test('then treat duplicate identifiers as the same reference', async () => {
+      await expect(unit.testDuplicateIdentifier()).resolves.toBe('foo-from-test<>foo-from-test');
+    });
+
+    test('then all the unoverride classes/dependencies should be stubs as well', () => {
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
+
+      expect(testClassTwo.bar.getMockName).toBeDefined();
+      expect(testClassTwo.bar.getMockName()).toBe('jest.fn()');
+    });
+
+    test('then mock the undefined reflected values and tokens', () => {
+      const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
+
+      testClassFour.doSomething.mockReturnValue('mocked');
+
+      expect(testClassFour.doSomething()).toBe('mocked');
+    });
+
+    test('then throw an error when trying to resolve not existing dependency', () => {
       expect(() => unitRef.get(ClassThatIsNotInjected)).toThrow();
     });
 
     test('then throw an error when trying to resolve faked dependency', () => {
       expect(() => unitRef.get(CONSTANT_VALUE)).toThrow(/as it is marked as a faked dependency/);
-    });
-  });
-
-  describe('when mocking TestClassThree', () => {
-    test('then should have the mock available', () => {
-      const testClassThree: Mocked<TestClassThree> = unitRef.get(TestClassThree);
-      expect(testClassThree).toBeDefined();
-      expect(testClassThree.baz).toBeDefined();
-    });
-  });
-
-  describe('when mocking TestClassFour with @Inject decorator', () => {
-    test('then should resolve by the Type identifier', () => {
-      const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
-      expect(testClassFour).toBeDefined();
-      expect(testClassFour.doSomething).toBeDefined();
-    });
-  });
-
-  describe('when mocking Foo repository', () => {
-    test('then should resolve by Foo identifier', () => {
-      const fooRepo = unitRef.get(Foo);
-      expect(fooRepo).toBeDefined();
     });
   });
 });

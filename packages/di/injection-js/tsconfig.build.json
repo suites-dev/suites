@@ -13,7 +13,7 @@
   "exclude": [
     "index.ts",
     "node_modules",
-    "__test__",
+    "test",
     "**/*.spec.ts",
     "jest.config.ts"
   ]

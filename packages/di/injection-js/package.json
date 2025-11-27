@@ -1,5 +1,6 @@
 {
   "name": "@suites/di.injectionjs",
+  "description": "injection-js adapter for Suites - enables automatic mock generation and dependency injection testing with injection-js containers",
   "private": false,
   "version": "3.0.1",
   "license": "Apache-2.0",
@@ -7,6 +8,17 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/cjs/index.d.ts",
+  "keywords": [
+    "suites",
+    "injection-js",
+    "dependency-injection",
+    "di",
+    "testing",
+    "mocking",
+    "unit-testing",
+    "test-doubles",
+    "typescript"
+  ],
   "exports": {
     ".": {
       "types": "./types.d.ts",

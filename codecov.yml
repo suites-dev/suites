@@ -6,3 +6,9 @@ coverage:
     patch:
       default:
         target: 90%
+
+ignore:
+  - "**/types.ts"           # Type definition files
+  - "**/*.d.ts"             # TypeScript declaration files
+  - "**/index.ts"           # Barrel exports
+  - "**/*.md"               # Documentation files

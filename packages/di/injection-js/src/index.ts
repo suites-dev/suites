@@ -7,5 +7,5 @@ const InjectionJSDIAdapter: DependencyInjectionAdapter = DependenciesAdapter(
   ClassCtorReflector()
 );
 
-export { IdentifierMetadata } from './types';
+export { IdentifierMetadata } from './interfaces';
 export const adapter = InjectionJSDIAdapter;

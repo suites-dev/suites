@@ -2,11 +2,18 @@ import 'reflect-metadata';
 import type { Type } from '@suites/types.common';
 import type { ClassInjectable, InjectableIdentifier } from '@suites/types.di';
 import { UndefinedDependency, UndefinedDependencyError } from '@suites/types.di';
-import type { ParameterDecorator } from './types';
-import { isInjectDecorator } from './types';
+import type { InjectDecorator } from './interfaces';
 
 export type ClassCtorReflector = ReturnType<typeof ClassCtorReflector>;
 
+function isInjectDecorator(decorator: unknown): decorator is InjectDecorator {
+  return (
+    typeof decorator === 'object' &&
+    decorator !== null &&
+    'token' in decorator &&
+    decorator.token !== undefined
+  );
+}
 /**
  * Creates a constructor reflector that extracts injection-js metadata
  * from decorated classes using reflect-metadata.

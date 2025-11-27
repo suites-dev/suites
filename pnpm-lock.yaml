@@ -116,6 +116,22 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../types/doubles
 
+  packages/di/injection-js:
+    dependencies:
+      '@suites/types.common':
+        specifier: workspace:^3.0.0
+        version: link:../../types/common
+      '@suites/types.di':
+        specifier: workspace:^3.0.0
+        version: link:../../types/di
+    devDependencies:
+      injection-js:
+        specifier: ^2.4.0
+        version: 2.6.1
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+
   packages/di/inversify:
     dependencies:
       '@suites/types.common':
@@ -4444,6 +4460,12 @@ packages:
       validate-npm-package-name: 5.0.1
     transitivePeerDependencies:
       - bluebird
+    dev: true
+
+  /injection-js@2.6.1:
+    resolution: {integrity: sha512-dbR5bdhi7TWDoCye9cByZqeg/gAfamm8Vu3G1KZOTYkOif8WkuM8CD0oeDPtZYMzT5YH76JAFB7bkmyY9OJi2A==}
+    dependencies:
+      tslib: 2.8.1
     dev: true
 
   /inquirer@8.2.7(@types/node@20.19.25):

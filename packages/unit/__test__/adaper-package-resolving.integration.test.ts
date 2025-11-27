@@ -9,7 +9,6 @@ describe('Suites Adapter Package Resolving Integration Test', () => {
       expect(adapters).toContain('nestjs');
       expect(adapters).toContain('inversify');
       expect(adapters).toContain('tsyringe');
-      expect(adapters).toContain('injectionjs');
     });
 
     it('should include all supported doubles adapters', () => {

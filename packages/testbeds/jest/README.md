@@ -1,9 +1,24 @@
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
+  <img width="160" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
 </p>
 
+<h1 align="center">Automock (now Suites)</h1>
 
-<h1 align="center">Automock</h1>
+> ## ⚠️ IMPORTANT NOTICE
+> **Automock has been renamed to [Suites](https://suites.dev).**
+>
+> **New users:** Please refer to **[@suites/unit](https://www.npmjs.com/package/@suites/unit)** instead of Automock.
+>
+> **Existing users:** Automock continues to work and remains fully supported.  
+> We recommend migrating to Suites for improved features, active development, and long-term maintenance.
+>
+> **Deprecation plan:** A formal deprecation timeline will only be announced once  
+> **[@suites/codemod](https://www.npmjs.com/package/@suites/codemod)** is stable, enabling automatic migration.
+>
+> **[Migration Guide](https://suites.dev/docs/migration-guides/from-automock)** | 
+> **[Suites Documentation](https://suites.dev/)**
+> 
+---
 
 **Automock optimizes the unit testing process by providing a virtual, isolated environment and automated mock
 generation, enabling developers to create efficient test suites and enhance their overall testing experience.**
@@ -11,7 +26,7 @@ generation, enabling developers to create efficient test suites and enhance thei
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)
 [![ci](https://github.com/automock/automock/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
 
-[↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference)
+[↗️ Legacy Documentation](https://github.com/suites-dev/suites/tree/master/docs/automock)
 
 ## Core Features
 
@@ -74,7 +89,7 @@ Let's create a unit test for this class:
 
 ```typescript
 import { TestBed } from '@automock/jest';
-import { Database, UserService } from './user.service'; 
+import { Database, UserService } from './user.service';
 
 describe('User Service Unit Spec', () => {
   let userService: UserService;
@@ -113,8 +128,6 @@ is an array of advantages to this change:**
 
 * **Isolation:** Each test runs independently with mock implementations automatically provided, creating a
   streamlined and interference-free testing environment.
-
-<p align="right"><a href="https://automock.dev/docs/getting-started/examples">↗️ For a full Step-by-Step example</a></p>
 
 ## :scroll: License
 

@@ -6,16 +6,22 @@
   "keywords": [
     "mocking",
     "jest",
-    "dependency-injection"
+    "dependency-injection",
+    "unit-testing",
+    "test-doubles",
+    "automock",
+    "suites",
+    "migration",
+    "legacy"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/automock/automock.git",
-    "directory": "packages/testbeds/jest"
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/testbeds/sinon"
   },
-  "homepage": "https://automock.dev",
+  "homepage": "https://suites.dev",
   "bugs": {
-    "url": "https://github.com/automock/automock/issues"
+    "url": "https://github.com/suites-dev/suites/issues"
   },
   "contributors": [
     {
@@ -23,6 +29,9 @@
       "email": "omer.moradd@gmail.com"
     }
   ],
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
   "scripts": {
     "prebuild": "yarn rimraf dist",
     "build": "yarn tsc -p tsconfig.build.json",
@@ -33,9 +42,6 @@
     "dist",
     "README.md"
   ],
-  "engines": {
-    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
-  },
   "dependencies": {
     "@automock/core": "^2.1.0",
     "@automock/types": "^2.0.1"

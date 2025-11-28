@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1](https://github.com/suites-dev/suites/compare/@automock/sinon@2.1.0...@automock/sinon@2.1.1) (2025-11-28)
+
+### Documentation
+
+- **sinon:** add deprecation notice and migration info ([c8bf15f](https://github.com/suites-dev/suites/commit/c8bf15f6661fbdce3adee2a638ab9fea0268ffd2))
+
 # [2.1.0](https://github.com/automock/automock/compare/@automock/sinon@2.0.0...@automock/sinon@2.1.0) (2023-12-09)
 
 ### Features

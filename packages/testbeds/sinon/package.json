@@ -4,18 +4,24 @@
   "license": "MIT",
   "main": "dist/index.js",
   "keywords": [
-    "mock",
+    "mocking",
     "sinon",
-    "dependency-injection"
+    "dependency-injection",
+    "unit-testing",
+    "test-doubles",
+    "automock",
+    "suites",
+    "migration",
+    "legacy"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/automock/automock.git",
+    "url": "https://github.com/suites-dev/suites.git",
     "directory": "packages/testbeds/sinon"
   },
-  "homepage": "https://automock.dev",
+  "homepage": "https://suites.dev",
   "bugs": {
-    "url": "https://github.com/automock/automock/issues"
+    "url": "https://github.com/suites-dev/suites/issues"
   },
   "contributors": [
     {

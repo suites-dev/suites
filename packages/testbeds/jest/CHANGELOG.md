@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1](https://github.com/suites-dev/suites/compare/@automock/jest@2.1.0...@automock/jest@2.1.1) (2025-11-28)
+
+### Documentation
+
+- **jest:** add deprecation notice and migration info ([0c728ef](https://github.com/suites-dev/suites/commit/0c728ef2c5a6289fb217a0de463eb819474fb241))
+
 # [2.1.0](https://github.com/automock/automock/compare/@automock/jest@2.0.0...@automock/jest@2.1.0) (2023-12-09)
 
 ### Features

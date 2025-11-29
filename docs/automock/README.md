@@ -1,20 +1,22 @@
 # Automock Documentation Archive
 
-This directory contains the archived documentation for Automock, which has been deprecated and transformed into [Suites](https://suites.dev).
+> **⚠️ Archived:** Automock development stopped at version 2.1.0. Starting from version 3.0.0, the project continues as [Suites](https://suites.dev).
 
-These files are kept for historical reference and to help users who are migrating from Automock to Suites.
+## Automock 2.x → Suites 3.x
 
-## Migration
+Automock has renamed to Suites, maintaining the core philosophy while adding new features and improvements.
+**Automock 2.x** receives critical bug fixes only, while **Suites 3.x** is the actively developed version with all new
+features and enhancements.
 
-If you're looking to migrate from Automock to Suites, please refer to the official migration guide on the [Suites documentation website](https://suites.dev/docs/overview/migrating-from-automock/).
+## Documentation
 
-## Structure
+**The complete Automock documentation has been moved to the [Suites Wiki](https://github.com/suites-dev/suites/wiki).**
 
-This archive contains the essential documentation from the original Automock project, organized in a similar structure to the original documentation site:
+## Migration to Suites (version 3)
 
-- `overview/` - Core concepts and getting started guides
-- `developer-guide/` - More advanced usage patterns and techniques
+See the [Migration Guide](https://suites.dev/docs/migration-guides/from-automock) for step-by-step instructions.
 
-## Support
+**Automated migration** via `@suites/codemod` is planned for Q1 2026.
 
-For any issues or questions, please use the [Suites GitHub repository](https://github.com/suites-dev/suites) to open issues or discussions.
+### ⚠️ Deprecation timeline
+A formal deprecation date for Automock v2 will be announced once the codemod tool is stable to ensure a smooth automated migration path.

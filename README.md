@@ -1,3 +1,14 @@
+> [!WARNING]
+> # Automock 2.x → Suites 3.x
+>
+> Automock development stopped at version **2.1.0**. Starting from version **3.0.0**, the project continues as **Suites**, the actively developed successor with new features and improvements.
+>
+> **Automock 2.x** will receive critical bug fixes only. All new development, features, and enhancements are now released as **Suites 3.x**.
+>
+> Migrate to Suites (version 3) to access the latest features and continued support. Automated migration via `@suites/codemod` is planned for Q1 2026.
+>
+> **Deprecation Timeline:** A formal deprecation date for Automock v2 will be announced once `@suites/codemod` is stable to ensure a smooth automated migration path for all users.
+
 <p align="center">
   <img width="200" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
 </p>

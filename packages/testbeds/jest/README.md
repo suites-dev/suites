@@ -1,13 +1,22 @@
 > [!WARNING]
-> # Automock 2.x → Suites 3.x
+> ## Automock is Now Suites
 >
-> Automock development stopped at version **2.1.0**. Starting from version **3.0.0**, the project continues as **Suites**, the actively developed successor with new features and improvements.
+> Automock has stopped at **version 2.1.0** and the project has been renamed to **Suites**, a more mature, actively 
+> developed unit testing framework that extends and improves Automock's original design.
 >
-> **Automock 2.x** will receive critical bug fixes only. All new development, features, and enhancements are now released as **Suites 3.x**.
+> ### Deprecation Timeline
+> **Automock will be fully deprecated on June 30, 2026.**
+> Until then, it will receive **critical fixes only**.
+> All new features, improvements, and enhancements are released exclusively under **Suites 3.x**.
 >
-> Migrate to Suites (version 3) to access the latest features and continued support. Automated migration via `@suites/codemod` is planned for Q1 2026.
+> ### Migration
+> The migration from Automock v2 to Suites v3 is **lightweight, automated**, using the official codemod:
 >
-> **Deprecation Timeline:** A formal deprecation date for Automock v2 will be announced once `@suites/codemod` is stable to ensure a smooth automated migration path for all users.
+> **https://github.com/suites-dev/codemod**
+>
+> ## Recommendation
+> - **New users:** Install Suites instead of Automock.
+> - **Existing users:** Plan your migration to Suites to ensure continued updates and full support.
 
 <p align="center">
   <img width="160" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
@@ -29,7 +38,7 @@ generation, enabling developers to create efficient test suites and enhance thei
 
 🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects.
 
-📄 **Consistent Tests Structure** - Test suites will follow a consistent syntax and structure, making them easier to 
+📄 **Consistent Tests Structure** - Test suites will follow a consistent syntax and structure, making them easier to
 read and maintain.
 
 📈 **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster.

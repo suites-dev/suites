@@ -1,0 +1,116 @@
+name: Publish Packages
+env:
+  CI: true
+
+permissions:
+  id-token: write
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      dist_tag:
+        description: 'Distribution Tag'
+        type: choice
+        options:
+          - 'next'
+          - 'latest'
+          - 'rc'
+          - 'dev'
+          - 'alpha'
+          - 'beta'
+        required: true
+        default: 'next'
+      target_branch:
+        description: 'Target branch to release from'
+        type: choice
+        options:
+          - 'next'
+          - 'master'
+        required: true
+        default: 'next'
+
+jobs:
+  e2e:
+    name: E2E Release Simulation
+    uses: ./.github/workflows/e2e-release.yml
+    with:
+      target_branch: ${{ github.event.inputs.target_branch }}
+    permissions:
+      contents: write
+      id-token: write
+
+  publish:
+    name: Publish to NPM
+    needs: [e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+          registry-url: https://registry.npmjs.org/
+          scope: '@suites'
+          always-auth: true
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm lerna run build
+
+      - name: Capture Versions for Report
+        run: |
+          echo "## 📦 Publishing to NPM" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Registry:** \`https://registry.npmjs.org/\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Dist Tag:** \`${{ github.event.inputs.dist_tag }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.event.inputs.target_branch }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Packages:" >> $GITHUB_STEP_SUMMARY
+          lerna ls --json | jq -r '.[] | "- **\(.name)** → `v\(.version)`"' >> $GITHUB_STEP_SUMMARY
+
+      - name: Publish Packages
+        run: |
+          npx lerna publish from-package --yes \
+            --dist-tag ${{ github.event.inputs.dist_tag }} \
+            --no-git-reset
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Generate Success Summary
+        if: success()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## ✅ Publish Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All packages have been successfully published to npm!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Installation command:**" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "npm install @suites/unit@${{ github.event.inputs.dist_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate Failure Summary
+        if: failure()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## ❌ Publish Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The publish step failed. Check the logs above for details." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Common issues:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Version already exists in npm registry" >> $GITHUB_STEP_SUMMARY
+          echo "- Authentication token is invalid or expired" >> $GITHUB_STEP_SUMMARY
+          echo "- Network connectivity issues" >> $GITHUB_STEP_SUMMARY

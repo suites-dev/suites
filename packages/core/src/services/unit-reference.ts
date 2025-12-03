@@ -1,185 +1,97 @@
-import { StubbedInstance, Type } from '@automock/types';
-import {
-  ConstantValue,
-  IdentifierMetadata,
-  InjectableIdentifier,
-  IdentifierNotFoundError,
-} from '@automock/common';
-import { MocksContainer } from './mocks-container';
+import isEqual from 'lodash.isequal';
+import type { StubbedInstance } from '@suites/types.doubles';
+import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
+import type { Type } from '@suites/types.common';
+import { DependencyResolutionError } from '@suites/types.common';
+import type { DependencyContainer, IdentifierToFinal } from './dependency-container';
+import { referenceDependencyNotFoundError, stringifyIdentifier } from './functions.static';
+import { normalizeIdentifier } from '../normalize-identifier.static';
 
-/**
- * Provides a reference to mock objects that have been mocked for testing
- * purposes within the test environment.
- *
- * @see https://automock.dev/api-reference/api/unitreference-api
- */
 export interface UnitReference {
-  /**
-   * Retrieves a reference to the mocked object of a dependency corresponding to its type identifier.
-   *
-   * @since 2.0.0
-   * @template TDependency The type of the dependency being retrieved.
-   * @param type The type representing the dependency.
-   * @returns The mocked object corresponding to the provided type identifier.
-   */
   get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;
-
-  /**
-   * Retrieves a reference to the mocked object of a dependency corresponding to its type identifier
-   * and metadata object.
-   *
-   * @since 2.1.0
-   * @template TDependency The type of the dependency being retrieved.
-   * @param type The type representing the dependency.
-   * @param identifierMetadata A metadata object that corresponds to the type identifier.
-   * @returns StubbedInstance<TDependency> The mocked object corresponding to the provided
-   * symbol-based token.
-   */
   get<TDependency>(
     type: Type<TDependency>,
     identifierMetadata: IdentifierMetadata
   ): StubbedInstance<TDependency>;
-
-  /**
-   * Retrieves a reference to the mocked object of a dependency corresponding to a string-based token.
-   *
-   * @since 2.0.0
-   * @template TDependency The type of the dependency being retrieved.
-   * @param token The string-based token representing the dependency.
-   * @returns The mocked object corresponding to the provided string-based token.
-   */
   get<TDependency>(token: string): StubbedInstance<TDependency>;
-
-  /**
-   * Retrieves a reference to the mocked object of a dependency corresponding to a string-based
-   * token and an identifier metadata object.
-   *
-   * @since 2.1.0
-   * @template TDependency The type of the dependency being retrieved.
-   * @param token The symbol-based token representing the dependency.
-   * @param identifierMetadata An accompanying metadata object for the token identifier.
-   * @returns StubbedInstance<TDependency> The mocked object corresponding to the provided
-   * symbol-based token.
-   */
   get<TDependency>(
     token: string,
     identifierMetadata: IdentifierMetadata
   ): StubbedInstance<TDependency>;
-
-  /**
-   * Retrieves a reference to the mocked object of a dependency corresponding to a symbol-based token.
-   *
-   * @since 2.0.0
-   * @template TDependency The type of the dependency being retrieved.
-   * @param token The symbol-based token representing the dependency.
-   * @returns The mocked object corresponding to the provided symbol-based token.
-   */
   get<TDependency>(token: symbol): StubbedInstance<TDependency>;
-
-  /**
-   * Retrieves a reference to the mocked object of a dependency corresponding to a symbol-based
-   * token and an identifier metadata object.
-   *
-   * @since 2.1.0
-   * @template TDependency The type of the dependency being retrieved.
-   * @param token The symbol-based token representing the dependency.
-   * @param identifierMetadata An accompanying metadata object for the token identifier.
-   * @returns StubbedInstance<TDependency> The mocked object corresponding to the provided symbol-based token.
-   */
   get<TDependency>(
     token: symbol,
     identifierMetadata: IdentifierMetadata
   ): StubbedInstance<TDependency>;
-
-  /**
-   * Retrieves a constant value corresponding to a string-based token.
-   *
-   * @since 2.0.0
-   * @template TValue The type of the constant value being retrieved.
-   * @param token The string-based token representing the constant value.
-   * @returns The constant value corresponding to the provided string-based token.
-   */
-  get<TValue extends ConstantValue>(token: string): TValue;
-
-  /**
-   * Retrieves a constant value corresponding to a symbol-based token.
-   *
-   * @since 2.0.0
-   * @template TValue The type of the constant value being retrieved.
-   * @param token The symbol-based token representing the constant value.
-   * @returns The constant value corresponding to the provided symbol-based token.
-   */
-  get<TValue extends ConstantValue>(token: symbol): TValue;
-
-  /**
-   * Retrieves a mocked object or a constant value of a dependency using its type, string, or symbol token.
-   *
-   * This method provides flexibility in retrieving dependencies by allowing various identifier types.
-   * Depending on the identifier and the setup, it can return either a mocked object or a constant value.
-   *
-   * @since 2.1.0
-   * @template TDependency The type of the dependency being retrieved.
-   * @template TValue The type of the constant value that might be returned.
-   * @param identifier The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
-   * @param identifierMetadata A corresponding metadata object for the token identifier.
-   * @returns StubbedInstance<TDependency> The mocked instance corresponding to the provided identifier and metadata if exists.
-   */
   get<TDependency>(
     identifier: Type<TDependency> | string | symbol,
     identifierMetadata?: IdentifierMetadata
   ): StubbedInstance<TDependency>;
-
-  /**
-   * Retrieves a mocked object or a constant value of a dependency using its type, string, or symbol token.
-   *
-   * This method provides flexibility in retrieving dependencies by allowing various identifier types.
-   * Depending on the identifier and the setup, it can return either a mocked object or a constant value.
-   *
-   * @since 2.0.0
-   * @template TDependency The type of the dependency being retrieved.
-   * @template TValue The type of the constant value that might be returned.
-   * @param identifier The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
-   * @returns The mocked instance or constant value corresponding to the provided identifier.
-   */
-  get<TDependency, TValue extends ConstantValue>(
-    identifier: Type<TDependency> | string | symbol
-  ): StubbedInstance<TDependency> | TValue;
+  get<TDependency>(
+    identifier: InjectableIdentifier<TDependency>,
+    identifierMetadata?: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
 }
 
 export class UnitReference {
-  public constructor(private readonly mocksContainer: MocksContainer) {}
+  public constructor(
+    private readonly mocksContainer: DependencyContainer,
+    private readonly exposedInstances: InjectableIdentifier[],
+    private readonly fakedDependencies: IdentifierToFinal[]
+  ) {}
 
+  public get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;
   public get<TDependency>(
-    identifier: InjectableIdentifier,
-    metadata?: IdentifierMetadata
-  ): StubbedInstance<TDependency> | ConstantValue {
-    const dependency = this.mocksContainer.resolve<TDependency>(identifier, metadata);
+    type: Type<TDependency>,
+    identifierMetadata: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+  public get<TDependency>(token: string): StubbedInstance<TDependency>;
+  public get<TDependency>(
+    token: string,
+    identifierMetadata: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+  public get<TDependency>(token: symbol): StubbedInstance<TDependency>;
+  public get<TDependency>(
+    token: symbol,
+    identifierMetadata: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+  public get<TDependency>(
+    identifier: Type<TDependency> | string | symbol,
+    identifierMetadata?: IdentifierMetadata
+  ): StubbedInstance<TDependency>;
+  public get<TDependency>(
+    identifier: InjectableIdentifier<TDependency>,
+    identifierMetadata?: IdentifierMetadata
+  ): StubbedInstance<TDependency> {
+    const injectableIdentifier = normalizeIdentifier(identifier, identifierMetadata as never);
 
-    if (!dependency) {
-      const message = referenceDependencyNotFoundError(identifier, metadata);
-      throw new IdentifierNotFoundError(message);
+    if (
+      this.fakedDependencies
+        .map(([identifier]) => identifier)
+        .some((id) => isEqual(id, injectableIdentifier))
+    ) {
+      const identifierString = stringifyIdentifier(identifier, identifierMetadata);
+
+      throw new DependencyResolutionError(`The dependency associated with the specified identifier ${identifierString} could not be retrieved from the
+current testing context, as it is marked as a faked dependency.
+Faked dependencies are not intended for direct retrieval and should be accessed through the appropriate
+testing context or container. Refer to the docs for further information: https://suites.dev/docs`);
     }
 
-    return dependency;
+    if (typeof identifier === 'function' && this.exposedInstances.includes(identifier)) {
+      throw new DependencyResolutionError(`The dependency associated with the specified identifier '${identifier.name}' could not be retrieved from the
+current testing context, as it is marked as an exposed dependency.
+Exposed dependencies are not intended for direct retrieval and should be accessed through the appropriate
+testing context or container. Refer to the docs for further information: https://suites.dev/docs`);
+    }
+
+    const dependency = this.mocksContainer.resolve<TDependency>(identifier, identifierMetadata);
+
+    if (!dependency) {
+      const message = referenceDependencyNotFoundError(identifier, identifierMetadata);
+      throw new DependencyResolutionError(message);
+    }
+
+    return dependency as StubbedInstance<TDependency>;
   }
-}
-
-function referenceDependencyNotFoundError(
-  identifier: Type | string | symbol,
-  metadata: IdentifierMetadata | undefined
-): string {
-  const identifierName =
-    typeof identifier === 'string' || typeof identifier === 'symbol'
-      ? String(identifier)
-      : identifier.name;
-  const metadataMsg = metadata ? `, with metadata ${JSON.stringify(metadata)}` : '';
-  const details = `'${identifierName}'${metadataMsg}`;
-
-  return `The dependency associated with the specified token or identifier (${details}) could not be located within
-the current testing context. This issue pertains to the usage of the UnitReference API.
-Please ensure accurate spelling and correspondence between the provided token or identifier and the corresponding
-injection configuration. If you are utilizing a custom token, it is essential to confirm its proper registration
-within the DI container.
-
-Refer to the docs for further information: https://automock.dev/docs`;
 }

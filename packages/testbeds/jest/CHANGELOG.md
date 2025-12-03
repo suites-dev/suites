@@ -9,7 +9,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - **jest:** update readme file [skip ci] ([8bdfc65](https://github.com/suites-dev/suites/commit/8bdfc65f2f901d18e591fc636d5728cf0e422579))
 
-
 ## [2.1.1](https://github.com/suites-dev/suites/compare/@automock/jest@2.1.0...@automock/jest@2.1.1) (2025-11-28)
 
 ### Documentation

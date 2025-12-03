@@ -10,145 +10,238 @@
 > **Deprecation Timeline:** A formal deprecation date for Automock v2 will be announced once `@suites/codemod` is stable to ensure a smooth automated migration path for all users.
 
 <p align="center">
-  <img width="200" src="https://raw.githubusercontent.com/automock/automock/master/logo.png" alt="Logo" />
+  <img width="150" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
 </p>
 
-<h1 align="center">Automock</h1>
+<h1 align="center">Suites</h1>
 
 <p align="center">
-<strong>Automock streamlines the unit testing process by auto-generating mock objects for class dependencies within dependency
-injection environments. With compatibility across various DI and testing frameworks, you can focus on
-crafting test cases instead of manual mock configurations, enhancing your unit testing journey.</strong>
+A unit testing framework for TypeScript backends working with inversion of control and dependency injection
+<br />
+by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
 </p>
 
-[![npm downloads](https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest)](https://npmjs.org/package/@automock/jest "View this project on npm")
-[![npm downloads](https://img.shields.io/npm/dm/@automock/sinon.svg?label=%40automock%2Fsinon)](https://npmjs.org/package/@automock/sinon "View this project on npm")
-[![Codecov Coverage](https://img.shields.io/codecov/c/github/automock/automock/master.svg?style=flat-square)](https://codecov.io/gh/automock/automock)
-[![ci](https://github.com/automock/automock/actions/workflows/set-coverage.yml/badge.svg?branch=master)](https://github.com/automock/automock/actions)
+<div align="center">
+  <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-Apache_2.0-blue.svg" alt="license" /></a>
+  <a href="https://github.com/suites-dev/suites/blob/master/CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" /></a>
+  <a href="https://npmjs.org/package/@suites/unit"><img src="https://img.shields.io/npm/dm/@suites/unit.svg?label=%40suites%2Funit" alt="npm downloads" /></a>
+  <a href="https://npmjs.org/package/@automock/jest"><img src="https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest" alt="npm downloads" /></a>
+  <a href="https://buymeacoffee.com/omermoradd"><img src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee" alt="Buy Me A Coffee" /></a>
+</div>
 
-[↗️ Documentation](https://automock.dev/docs) &nbsp;&nbsp; [↗️ API Reference](https://automock.dev/api-reference)
+<h3 align="center">
+  <a href="https://suites.dev">Docs</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="https://suites.dev/docs/get-started/quickstart">Getting Started</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="https://suites.dev/docs/get-started/why-suites">Why Suites</a>
+  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+  <a href="https://suites.dev/docs/guides">Guides</a>
+</h3>
 
-## Core Features
+<p align="center">
+<strong>Dependency Injection Frameworks:</strong> <a href="https://nestjs.com">NestJS</a> (<a href="https://docs.nestjs.com/recipes/suites">official</a>), <a href="https://inversify.io/">InversifyJS</a> (<a href="https://inversify.io/docs/ecosystem/suites/">official</a>)</a><br/>
+<strong>Testing Libraries:</strong> <a href="https://jestjs.io">Jest</a>, <a href="https://vitest.dev">Vitest</a>, <a href="https://sinonjs.org">Sinon</a>
+</p>
 
-🚀 **Zero-Setup Mocking** - Automatically generate mock objects, eliminate manual setup, reduce boilerplate code.
+## Features
 
-🔍 **Type-Safe Mocks** - Leverage TypeScript's power with mocks that retain the same type as real objects.
+### 👩‍💻 Declarative
 
-🔄 **Consistent Test Architecture** - Tests will follow a consistent syntax and structure, making them easier to read and maintain.
+Suites' declarative API creates fully-typed, isolated test environments with a single declaration. Suites auto-generates all mocks and wires dependencies automatically.
 
-📈 **Optimized Performance** - By bypassing the actual DI container, unit tests run significantly faster.
+### ✅ Type-Safe Refactoring
 
-🌐 **Community & Support** - Join a growing community of developers.
+Generate type-safe mocks bound to implementations, enabling confident refactors. Change constructors, add dependencies, rename methods - TypeScript catches breaking changes at compile time with no silent failures or manual mock updates.
 
-<br />
+### 🧩 Standardized Testing Across Teams
 
-## Quick Example
+Suites enforces a single canonical API that works across NestJS, InversifyJS (and more dependency injection frameworks to come), so every team ships tests with the same pattern.
 
-Take a look at the following example (using Jest, but the same applies for Sinon):
+### ✨ AI Ready
 
-Consider the following `UserService` class:
+One canonical pattern teaches LLM agents the entire API. Coding agents like Claude Code and Cursor write correct tests in a single pass with much less context consumption compared to manual mocking patterns.
+
+## Examples
+
+### Solitary Mode
+
+**Solitary mode** tests a single unit in complete isolation - all dependencies are automatically mocked. Use this when
+you want to test your unit's logic without any real dependencies.
+
+[Learn more about Solitary Tests](https://suites.dev/docs/guides/solitary)
+
 ```typescript
-export class Database {
-  async getUsers(): Promise<User[]> { ... }
-}
+import { TestBed, type Mocked } from '@suites/unit';
 
-export class UserService {
-  constructor(private database: Database) {}
+describe('User Service', () => {
+  let userService: UserService; // Class under test
+  let userApi: Mocked<UserApi>; // Mock instance
+  let database: Mocked<Database>; // Mock instance
 
-  async getAllUsers(): Promise<User[]> {
-    return this.database.getUsers();
-  }
-}
-```
+  beforeAll(async () => {
+    // Create the test environment with automatic mocking
+    const testBed = await TestBed.solitary(UserService).compile();
 
-Let's create a unit test for this class using Automock:
-```typescript
-import { TestBed } from '@automock/jest';
-import { Database, UserService } from './user.service'; 
-
-describe('User Service Unit Spec', () => {
-  let userService: UserService; // << Declare the "unit under test"
-  let database: jest.Mocked<Database>; // Declare a mocked dependency
-
-  beforeAll(() => {
-    const { unit, unitRef } = TestBed.create(UserService).compile(); // << Automock's stuff
-
-    userService = unit;
-    database = unitRef.get(Database); // << Retreive a dependency from the unit/class 
+    userService = testBed.unit;
+    // Retrieve the mock instances
+    userApi = testBed.unitRef.get(UserApi);
+    database = testBed.unitRef.get(Database);
   });
 
-  // All dependencies are mocked before the test is written 🚀
-  test('should return users from the database', async () => {
-    const mockUsers: User[] = [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }];
-    database.getUsers.mockResolvedValue(mockUsers);
+  it('should generate a random user and save to the database', async () => {
+    const mockUser = { id: 1, name: 'John' } as User;
+    userApi.getRandom.mockResolvedValue(mockUser);
 
-    const users = await userService.getAllUsers();
+    await userService.generateRandomUser();
 
-    expect(database.getUsers).toHaveBeenCalled();
-    expect(users).toEqual(mockUsers);
+    expect(database.saveUser).toHaveBeenCalledWith(mockUser);
   });
-});
+}
 ```
 
-With the use of the `TestBed`, an instance of the `UserService` class can be created with mock objects automatically
-generated for its dependencies. During the test, we have direct access to the automatically generated mock object for
-the `Database` dependency (database). By stubbing the `getUsers()` method of the database mock object, we can define
-its behavior and make sure it resolves with a specific set of mock users.
+### How It Works
 
-**Automock improves upon the existing unit testing procedures of DI frameworks by creating a virtual DI container. There
-is an array of advantages to this change:**
+The test setup uses `TestBed.solitary()` to create an isolated testing environment:
 
-* **Speed:** By simulating the actual DI container in the testing environment, Automock speeds up execution times.
+1. **TestBed analyzes the class** - Reads `UserService` constructor to find `UserApi` and `Database` dependencies
+2. **Automatic mocks are created** - Generates mock instances of `UserApi` and `Database` with all methods as stubs
+3. **Dependencies are injected** - Wires the mocks into `UserService` constructor automatically
+4. **Type-safe access** - Use `unitRef.get()` to retrieve mocks with full TypeScript support
 
-* **Efficiency:** Developers are therefore able to focus on writing the test logic instead of grappling with the
-  complexities of test setup.
+No manual mock creation needed. `TestBed` handles dependency discovery, mock generation, and wiring automatically.
 
-* **Isolation:** Each test runs independently with mock implementations automatically provided, creating a
-  streamlined and interference-free testing environment.
+### Automatic Mocking of Dependencies
 
+When using `TestBed.solitary()`, all dependencies are automatically mocked. Each method becomes a stub with no predefined responses. Configure stub responses in tests as needed.
 
-<p align="right"><a href="https://automock.dev/docs/getting-started/examples">↗️ For a full Step-by-Step example</a></p>
+```typescript
+// These stubs start with no return values
+userApi.getRandom  // Returns undefined by default
+database.saveUser  // Returns undefined by default
 
-## :package: Installation
+// Configure them in your tests
+userApi.getRandom.mockResolvedValue({ id: 1, name: 'John' });
+database.saveUser.mockResolvedValue(42);
+```
 
-To fully integrate Automock into your testing and dependency injection framework, **you'll need to install two packages:
-Automock package for your chosen testing framework, and the corresponding adapter for your DI framework.**
+### Sociable Mode
 
-1. Install the corresponding package for your testing framework:
+**Sociable mode** tests how components work together. You choose which dependencies to keep real (using `.expose()`) while external I/O remains mocked. Use this when you want to test integration between multiple units.
+
+[Learn more about Sociable Tests](https://suites.dev/docs/guides/sociable)
+
+```typescript
+import { TestBed, type Mocked } from '@suites/unit';
+
+describe('User Service', () => {
+  let userService: UserService; // Class under test
+  let database: Mocked<Database>; // Mock instance
+
+  beforeAll(async () => {
+    // Create test environment with real UserApi
+    const testBed = await TestBed.sociable(UserService)
+      .expose(UserApi) // Use real UserApi implementation
+      .compile();
+
+    userService = testBed.unit;
+    database = testBed.unitRef.get(Database);
+  });
+
+  it('should generate a random user and save to the database', async () => {
+    await userService.generateRandomUser();
+
+    expect(database.saveUser).toHaveBeenCalled();
+  });
+}
+```
+
+## Prerequisites
+
+Before installing Suites, ensure your project meets these requirements:
+
+- **Dependency Injection Framework**: NestJS, InversifyJS, or plain TypeScript classes with constructor injection
+- **Testing Library**: Jest, Vitest, or Sinon
+
+## Installation
+
+First, install Suites' unit package:
 
 ```bash
-$ npm i -D @automock/jest
+npm i -D @suites/unit
+# or
+yarn add -D @suites/unit
+# or
+pnpm add -D @suites/unit
 ```
 
-For **Sinon**:
+Then, install **ONE** adapter for your DI framework and **ONE** adapter for your testing library:
 
+**DI Framework Adapters:**
+- **NestJS** - `@suites/di.nestjs`
+- **InversifyJS** - `@suites/di.inversify`
+
+**Testing Library Adapters:**
+- **Jest** - `@suites/doubles.jest`
+- **Vitest** - `@suites/doubles.vitest`
+- **Sinon** - `@suites/doubles.sinon`
+
+**Example for NestJS + Jest:**
 ```bash
-$ npm i -D @automock/sinon
+npm i -D @suites/doubles.jest @suites/di.nestjs
+# or
+yarn add -D @suites/doubles.jest @suites/di.nestjs
+# or
+pnpm add -D @suites/doubles.jest @suites/di.nestjs
 ```
 
-2. And for your DI framework, install the appropriate Automock adapter (as a dev dependency):
+> **Note:** If you're using NestJS or Inversify, you'll also need to install `reflect-metadata` as a runtime dependency (not a dev dependency):
+> ```bash
+> npm i reflect-metadata
+> ```
 
-| DI Framework | Package Name                   |
-|--------------|--------------------------------|
-| NestJS       | `@automock/adapters.nestjs`    |
-| Inversify    | `@automock/adapters.inversify` |
+For complete installation instructions, see the [Installation Guide](https://suites.dev/docs/get-started/installation).
 
-No further configuration is required.
+## Configuration
 
-## :arrows_counterclockwise: Migrating from v1.x to v2.0
+### Type Definitions
 
-The NestJS adapter came pre-bundled in v1.x. In v2.0, you'll need to install it manually:
+Create a `global.d.ts` file in your project root (or in your test directory) to enable proper TypeScript support:
 
-```bash
-$ npm i -D @automock/adapters.nestjs
+```typescript
+/// <reference types='@suites/doubles.jest/unit' />
+/// <reference types='@suites/di.nestjs/metadata' />
 ```
 
-> For a detailed list of changes read Automock's [v2.0 Release Notes](https://github.com/automock/automock/releases/tag/v2.0.0).
+Replace `@suites/doubles.jest` and `@suites/di.nestjs` with your chosen adapters.
 
-That's about it. :smile_cat:
+For detailed configuration instructions, see the [Installation Guide](https://suites.dev/docs/get-started/installation).
 
-<p align="right"><a href="https://automock.dev/docs/migrating">↗️ Migration guide</a></p>
+### Contributing
 
-## :scroll: License
+We welcome contributions to Suites! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for more information.
 
-Distributed under the MIT License. See `LICENSE` for more information.
+## Share Your Suites Experience!
+
+**Are you using Suites in your projects?** We've created a [community discussion](https://github.com/suites-dev/suites/discussions/categories/q-a) where teams and companies can share how they're using Suites in production.
+
+👉 **[Join the discussion](https://github.com/suites-dev/suites/discussions/categories/q-a)** and tell us more :)
+
+Your contributions help others discover best practices and see real-world applications of Suites!
+
+## Migrating from Automock
+
+If you're currently using Automock, we've created a comprehensive migration guide to help you transition to Suites. The
+guide covers all the changes and improvements, making the upgrade process smooth and straightforward.
+
+[↗️ Migrating from Automock Guide](https://suites.dev/docs/migration-guides/from-automock)
+
+Your support helps us continue improving Suites and developing new features!
+
+## Support the Project
+
+<a href="https://buymeacoffee.com/omermoradd" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
+## 📜 License
+
+Suites is licensed under the [Apache License, Version 2.0](LICENSE).

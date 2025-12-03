@@ -24,6 +24,22 @@
 
 <h1 align="center">Automock (now Suites)</h1>
 
+> ## ⚠️ IMPORTANT NOTICE
+> **Automock has been renamed to [Suites](https://suites.dev).**
+>
+> **New users:** Please refer to **[@suites/unit](https://www.npmjs.com/package/@suites/unit)** instead of Automock.
+>
+> **Existing users:** Automock continues to work and remains fully supported.  
+> We recommend migrating to Suites for improved features, active development, and long-term maintenance.
+>
+> **Deprecation plan:** A formal deprecation timeline will only be announced once  
+> **[@suites/codemod](https://www.npmjs.com/package/@suites/codemod)** is stable, enabling automatic migration.
+>
+> **[Migration Guide](https://suites.dev/docs/migration-guides/from-automock)** |
+> **[Suites Documentation](https://suites.dev/)**
+>
+---
+
 **Automock optimizes the unit testing process by providing a virtual, isolated environment and automated mock
 generation, enabling developers to create efficient test suites and enhance their overall testing experience.**
 

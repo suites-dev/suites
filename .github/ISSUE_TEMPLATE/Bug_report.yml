@@ -9,7 +9,7 @@ body:
 
         If you are not sure that your issue is a bug, you could:
 
-        - search in the [documentation](https://automock.dev/docs) website
+        - search in the [documentation](https://suites.dev/docs) website
         - use [StackOverflow using the tag `automock`](https://stackoverflow.com/questions/tagged/automock)
 
         **NOTE:** No need to answer questions that you know that aren't relevant.
@@ -60,10 +60,10 @@ body:
 
   - type: input
     attributes:
-      label: "Automock version"
+      label: "Suites version"
       description: |
-        Which version of Automock are you using?
-        Whether you use `@automock/jest` or `@automock/sinon`
+        Which version of Suites are you using?
+        Whether you use `@suites/jest` or `@suites/sinon`
       placeholder: "2.0.0"
 
   - type: input

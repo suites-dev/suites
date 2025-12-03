@@ -1,54 +1,48 @@
 import 'reflect-metadata';
 
-import { UnitReference } from '@automock/core';
-import { TestBed } from '@automock/sinon';
+import type { UnitReference, Mocked } from '@suites/unit';
+import { TestBed } from '@suites/unit';
+import type { Logger, Bar } from './e2e-assets';
+import { SymbolToken } from './e2e-assets';
 import {
   ClassThatIsNotInjected,
-  Foo,
-  Logger,
   InversifyJSTestClass,
-  SymbolToken,
-  SymbolTokenSecond,
   TestClassFive,
   TestClassFour,
   TestClassOne,
-  TestClassThree,
   TestClassTwo,
-  Bar,
 } from './e2e-assets';
-import { SinonStubbedInstance } from 'sinon';
 import { expect } from 'chai';
 import { before } from 'mocha';
 import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
-import sinon = require('sinon');
+import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 
-describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
+describe('Suites Jest / InversifyJS E2E Test Ctor', () => {
   let unit: InversifyJSTestClass;
   let unitRef: UnitReference;
 
-  before(() => {
-    const { unitRef: ref, unit: underTest } = TestBed.create<InversifyJSTestClass>(
+  before(async () => {
+    const { unitRef: ref, unit: underTest } = await TestBed.solitary<InversifyJSTestClass>(
       InversifyJSTestClass
     )
       .mock(TestClassOne)
-      .using({
-        foo: sinon.stub().resolves('foo-from-test'),
+      .impl((stubFn) => ({
+        foo: stubFn().resolves('foo-from-test'),
         bar(): string {
           return 'bar';
         },
-      })
+      }))
       .mock<Logger>('LOGGER')
-      .using({ log: () => 'baz-from-test' })
+      .final({ log: () => 'baz-from-test' })
       .mock('UNDEFINED')
-      .using({ method: () => 456 })
+      .final({ method: () => 456 })
       .mock<Bar>('BarToken', { name: 'someTarget' })
-      .using({})
+      .final({})
       .mock<string>('CONSTANT_VALUE')
-      .using('arbitrary-string')
+      .final('arbitrary-string')
       .mock<TestClassFive>(SymbolToken)
-      .using({ doSomething: () => 'mocked' })
+      .final({ doSomething: () => 'mocked' })
       .compile();
 
     unitRef = ref;
@@ -61,21 +55,12 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     it('then successfully resolve the dependencies of the tested classes', () => {
-      expect(() => unitRef.get<{ log: () => void }>('LOGGER')).not.to.be.undefined;
-      expect(() => unitRef.get('UNDEFINED')).not.to.be.undefined;
-      expect(() => unitRef.get('UNDEFINED_SECOND')).not.to.be.undefined;
-      expect(() => unitRef.get(TestClassFour, { canThrow: true })).not.to.be.undefined;
-      expect(() => unitRef.get(TestClassThree)).not.to.be.undefined;
-      expect(() => unitRef.get(Foo)).not.to.be.undefined;
       expect(() => unitRef.get(TestClassTwo)).not.to.be.undefined;
-      expect(() => unitRef.get('CONSTANT_VALUE')).not.to.be.undefined;
       expect(() => unitRef.get(TestClassOne)).not.to.be.undefined;
-      expect(() => unitRef.get(SymbolToken)).not.to.be.undefined;
-      expect(() => unitRef.get(SymbolTokenSecond)).not.to.be.undefined;
     });
 
     it('call the unit instance method', async () => {
-      const testClassTwo: SinonStubbedInstance<TestClassTwo> = unitRef.get(TestClassTwo);
+      const testClassTwo: Mocked<TestClassTwo> = unitRef.get(TestClassTwo);
 
       testClassTwo.bar.resolves('context');
 
@@ -90,16 +75,13 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     it('then mock the implementation of the dependencies', async () => {
-      const testClassOne: SinonStubbedInstance<TestClassOne> = unitRef.get(TestClassOne);
-      const logger = unitRef.get<Logger>('LOGGER');
+      const testClassOne: Mocked<TestClassOne> = unitRef.get(TestClassOne);
 
       // The original 'foo' method in TestClassOne return value should be changed
       // according to the passed flag; here, always return the same value
       // because we mock the implementation of foo permanently
       await expect(testClassOne.foo(true)).to.eventually.equal('foo-from-test');
       await expect(testClassOne.foo(false)).to.eventually.equal('foo-from-test');
-
-      expect(logger.log).not.to.be.undefined;
     });
 
     it('then treat duplicate identifiers as the same reference', async () => {
@@ -109,15 +91,11 @@ describe('Automock Jest / InversifyJS E2E Test Ctor', () => {
     });
 
     it('then mock the undefined reflected values and tokens', () => {
-      const testClassFour: SinonStubbedInstance<TestClassFour> = unitRef.get(TestClassFour);
-      const undefinedValue: SinonStubbedInstance<{ method: () => number }> = unitRef.get<{
-        method: () => number;
-      }>('UNDEFINED');
+      const testClassFour: Mocked<TestClassFour> = unitRef.get(TestClassFour);
 
       testClassFour.doSomething.returns('mocked');
 
       expect(testClassFour.doSomething()).to.equal('mocked');
-      expect(undefinedValue.method()).to.equal(456);
     });
 
     it('then throw an error when trying to resolve not existing dependency', () => {

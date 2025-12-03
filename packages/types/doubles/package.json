@@ -1,0 +1,40 @@
+{
+  "name": "@suites/types.doubles",
+  "private": false,
+  "version": "3.0.0",
+  "license": "Apache-2.0",
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/types/doubles"
+  },
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites/issues"
+  },
+  "homepage": "https://suites.dev",
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "scripts": {
+    "prebuild": "pnpm rimraf dist",
+    "build": "pnpm tsc -p tsconfig.build.json",
+    "test": "jest --passWithNoTests",
+    "lint": "pnpm eslint 'index.ts'"
+  },
+  "dependencies": {
+    "@suites/types.common": "workspace:^3.0.0"
+  },
+  "files": [
+    "index.d.ts"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "packageManager": "pnpm@8.15.9",
+  "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
+}

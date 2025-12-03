@@ -1,5 +1,19 @@
 {
-  "name": "automock-e2e",
+  "name": "suites-e2e",
   "private": true,
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "scripts": {
+    "lint": "eslint '**/*.ts' --ignore-pattern 'node_modules'"
+  },
+  "devDependencies": {
+    "eslint": "9.8.0",
+    "@eslint/js": "9.8.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "globals": "^15.0.0",
+    "typescript": "~5.2.2"
+  },
+  "engines": {
+    "node": ">= 20"
+  }
 }

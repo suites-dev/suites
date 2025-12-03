@@ -1,13 +1,13 @@
 # compiled output
 dist
 node_modules
+temp
 
 # Logs
 logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
 lerna-debug.log*
 
 # OS
@@ -40,3 +40,10 @@ lerna-debug.log*
 junit.xml
 .gitconfig
 test-reports
+coverage-report.xml
+lcov-report
+lcov.info
+
+
+# pnpm
+.pnpm-store/

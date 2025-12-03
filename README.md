@@ -5,7 +5,7 @@
 <h1 align="center">Suites</h1>
 
 <p align="center">
-A unit-testing framework for TypeScript backends working with inversion of control and dependency injection
+A unit testing framework for TypeScript backends working with inversion of control and dependency injection
 <br />
 by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
 </p>

@@ -1,10 +1,12 @@
 name: Continuous Integration
-on: [pull_request]
+on: pull_request
 
 permissions:
   id-token: write
   contents: read
+  actions: read
   checks: write
+  pull-requests: write
 
 jobs:
   build:
@@ -12,95 +14,123 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x]
+        node-version: [16.x, 18.x, 20.x, 22.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Use Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Remove Vitest If Needed
+        if: ${{ matrix.node-version == '16.x'  }}
+        run: rm -rf packages/doubles/vitest
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build
+        if: ${{ matrix.node-version != '16.x' }}
+        run: pnpm build
+
+      - name: Build (Node 16.x)
+        if: ${{ matrix.node-version == '16.x' }}
+        run: pnpm lerna run build --stream --ignore @suites/doubles.vitest
 
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: yarn lint
-
-      - name: Validate Packages
-        run: yarn manypkg check
+        run: pnpm lint
 
   test:
     name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ['jest', 'sinon', 'core', 'adapters.nestjs', 'adapters.inversify']
+        project: ['doubles.jest', 'doubles.sinon', 'core.unit', 'doubles.vitest', 'di.nestjs', 'di.inversify', 'unit']
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18.17.0'
+        uses: actions/setup-node@v6
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Yarn
-        run: yarn --frozen-lockfile
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create Coverage Directory
+        run: mkdir -p ${{ github.workspace }}/coverage
 
       - name: Test
-        run: yarn jest --selectProjects ${{ matrix.project }} --coverage --verbose
+        run: pnpm lerna exec pnpm test --scope @suites/${{ matrix.project }}
         env:
-          COVERAGE_REPORT_BASE_FILE_NAME: ${{ matrix.project }}
           JEST_JUNIT_OUTPUT_NAME: ${{ matrix.project }}.xml
+          JEST_JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
+          JUNIT_OUTPUT_NAME: ${{ matrix.project }}
+          JUNIT_OUTPUT_DIR: ${{ github.workspace }}/test-reports
+          COVERAGE_DIR: ${{ github.workspace }}/coverage
+          COVERAGE_FILE: coverage-${{ matrix.project }}.xml
 
       - name: Tests Results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v2
         if: always()
         with:
-          reporter: 'jest-junit'
           name: Tests Results (${{ matrix.project }})
-          path: test-reports/${{ matrix.project }}.xml
+          path: ${{ github.workspace }}/test-reports/${{ matrix.project }}.xml
+          reporter: jest-junit
           fail-on-error: false
 
       - name: Upload Report to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
           name: codecov-umbrella
-          flags: jest,sinon,adapters.nestjs,core
+          flags: ${{ matrix.project }}
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          directory: coverage
+          files: ${{ github.workspace }}/coverage/coverage-${{ matrix.project }}.xml
           verbose: true

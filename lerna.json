@@ -1,4 +1,5 @@
 {
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "independent",
   "command": {
     "publish": {
@@ -19,15 +20,11 @@
       "conventionalCommits": true
     }
   },
-  "workspaces": [
-    "packages/*",
-    "packages/adapters/*",
-    "packages/testbeds/*"
-  ],
-  "npmClient": "yarn",
+  "npmClient": "pnpm",
   "packages": [
     "packages/*",
-    "packages/adapters/*",
-    "packages/testbeds/*"
+    "packages/di/*",
+    "packages/doubles/*",
+    "packages/types/*"
   ]
 }

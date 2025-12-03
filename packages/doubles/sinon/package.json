@@ -1,0 +1,62 @@
+{
+  "name": "@suites/doubles.sinon",
+  "version": "3.0.1",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "keywords": [
+    "mocking",
+    "mock",
+    "sinon",
+    "dependency-injection",
+    "testing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/doubles/sinon"
+  },
+  "homepage": "https://suites.dev",
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites/issues"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
+  "scripts": {
+    "prebuild": "pnpm rimraf dist",
+    "postinstall": "node postinstall.js",
+    "build": "pnpm tsc -p tsconfig.build.json",
+    "test": "jest --coverage --verbose",
+    "lint": "pnpm eslint '{src,test}/**/*.ts'"
+  },
+  "files": [
+    "unit.d.ts",
+    "dist",
+    "postinstall.js"
+  ],
+  "peerDependencies": {
+    "@types/sinon": "*",
+    "sinon": "*"
+  },
+  "dependencies": {
+    "@suites/core.unit": "workspace:^3.0.1",
+    "@suites/types.common": "workspace:^3.0.0",
+    "@suites/types.doubles": "workspace:^3.0.0"
+  },
+  "devDependencies": {
+    "@types/sinon": "^10.0.20",
+    "sinon": "^16.1.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "packageManager": "pnpm@8.15.9",
+  "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
+}

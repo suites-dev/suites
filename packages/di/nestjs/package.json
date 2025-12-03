@@ -1,0 +1,55 @@
+{
+  "name": "@suites/di.nestjs",
+  "private": false,
+  "version": "3.0.1",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suites-dev/suites.git",
+    "directory": "packages/di/nestjs"
+  },
+  "homepage": "https://suites.dev",
+  "bugs": {
+    "url": "https://github.com/suites-dev/suites/issues"
+  },
+  "engines": {
+    "node": "^16.10.0 || ^18.12.0 || >=20.0.0"
+  },
+  "contributors": [
+    {
+      "name": "Omer Morad",
+      "email": "omer.moradd@gmail.com"
+    }
+  ],
+  "scripts": {
+    "postinstall": "node postinstall.js",
+    "prebuild": "pnpm rimraf dist",
+    "build": "pnpm tsc -p tsconfig.build.json",
+    "test": "jest --coverage --verbose",
+    "lint": "pnpm eslint '{src,test}/**/*.ts'"
+  },
+  "files": [
+    "postinstall.js",
+    "dist"
+  ],
+  "dependencies": {
+    "@suites/types.common": "workspace:^3.0.0",
+    "@suites/types.di": "workspace:^3.0.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": ">= 8.0",
+    "reflect-metadata": "<1.0.0"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^10.4.20",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "packageManager": "pnpm@8.15.9",
+  "gitHead": "62e9e59e0a68b670ec5578400ce28c9f0f9f0eac"
+}

@@ -2,13 +2,14 @@ import { Config } from '@jest/types';
 import baseConfig from './jest.base.config';
 
 const config: Config.InitialOptions = {
-  ...baseConfig,
+  ...baseConfig(process.env.COVERAGE_DIR),
   projects: [
+    '<rootDir>/packages/unit',
     '<rootDir>/packages/core',
-    '<rootDir>/packages/adapters/nestjs',
-    '<rootDir>/packages/adapters/inversify',
-    '<rootDir>/packages/testbeds/jest',
-    '<rootDir>/packages/testbeds/sinon',
+    '<rootDir>/packages/di/nestjs',
+    '<rootDir>/packages/di/inversify',
+    '<rootDir>/packages/doubles/jest',
+    '<rootDir>/packages/doubles/sinon',
   ],
 };
 

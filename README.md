@@ -37,7 +37,7 @@ by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
 
 ### 👩‍💻 Declarative
 
-Suites' declarative API creates fully-typed, isolated test environments with a single declaration. Suites auto-generates all mocks and wires dependencies automatically. No manual setup, no type casts, no boilerplate.
+Suites' declarative API creates fully-typed, isolated test environments with a single declaration. Suites auto-generates all mocks and wires dependencies automatically.
 
 ### ✅ Type-Safe Refactoring
 
@@ -45,11 +45,11 @@ Generate type-safe mocks bound to implementations, enabling confident refactors.
 
 ### 🧩 Standardized Testing Across Teams
 
-Stop relearning testing styles on every project. Suites enforces a single canonical API that works across NestJS, InversifyJS (and more dependency injection frameworks to come), so every team ships tests with the same pattern.
+Suites enforces a single canonical API that works across NestJS, InversifyJS (and more dependency injection frameworks to come), so every team ships tests with the same pattern.
 
 ### ✨ AI Ready
 
-One canonical pattern teaches LLM agents the entire API. Coding agents like Claude Code and Cursor write correct tests in a single pass with 95% less context consumption compared to manual mocking patterns.
+One canonical pattern teaches LLM agents the entire API. Coding agents like Claude Code and Cursor write correct tests in a single pass with much less context consumption compared to manual mocking patterns.
 
 ## Examples
 

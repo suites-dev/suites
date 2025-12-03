@@ -32,6 +32,9 @@ by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
 <strong>Dependency Injection Frameworks:</strong> <a href="https://nestjs.com">NestJS</a> (<a href="https://docs.nestjs.com/recipes/suites">official</a>), <a href="https://inversify.io/">InversifyJS</a> (<a href="https://inversify.io/docs/ecosystem/suites/">official</a>)</a><br/>
 <strong>Testing Libraries:</strong> <a href="https://jestjs.io">Jest</a>, <a href="https://vitest.dev">Vitest</a>, <a href="https://sinonjs.org">Sinon</a>
 </p>
+<p align="center">
+Using Suites? <a href="https://github.com/suites-dev/suites/discussions/655">Share your experience</a>, and help us shape the future of Suites
+</p>
 
 ## Features
 

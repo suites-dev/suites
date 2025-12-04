@@ -1,0 +1,33 @@
+{
+  "name": "suites-sinon-inversify",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@suites/di.inversify": "e2e",
+    "@suites/doubles.sinon": "e2e",
+    "@suites/unit": "e2e",
+    "inversify": "6.0.1",
+    "reflect-metadata": "^0.2.0"
+  },
+  "scripts": {
+    "test": "tsc --noEmit && ts-mocha -n loader=ts-node/esm **/*.e2e.test.ts",
+    "lint": "eslint '**/*.ts'"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/chai-as-promised": "^7.1.8",
+    "@types/sinon": "*",
+    "@types/mocha": "10.0.0",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "10.0.0",
+    "sinon": "*",
+    "ts-mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.x"
+  },
+  "engines": {
+    "node": ">= 20"
+  }
+}

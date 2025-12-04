@@ -1,0 +1,34 @@
+{
+  "name": "suites-sinon-nestjs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "@suites/di.nestjs": "e2e",
+    "@suites/doubles.sinon": "e2e",
+    "@suites/unit": "e2e",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/core": "^11.1.6",
+    "reflect-metadata": "^0.2.0"
+  },
+  "scripts": {
+    "test": "tsc --noEmit && mocha --require ts-node/register **/*.e2e.test.ts",
+    "lint": "eslint '**/*.ts'"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/chai-as-promised": "^7.1.8",
+    "@types/sinon": "*",
+    "@types/mocha": "10.0.0",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "10.0.0",
+    "sinon": "*",
+    "ts-mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.x"
+  },
+  "engines": {
+    "node": ">= 20"
+  }
+}

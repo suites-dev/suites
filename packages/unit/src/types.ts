@@ -200,7 +200,8 @@ export interface UnitReference extends UnitReferenceCore {
 /**
  * A factory interface for creating UnitTestBed instances for testing classes.
  *
- * @see https://suites.dev/docs
+ * @see {@link https://suites.dev/docs/api-reference/testbed-solitary TestBed Solitary}
+ * @see {@link https://suites.dev/docs/api-reference/testbed-sociable TestBed Sociable}
  * @since 3.0.0
  * @example
  * import { TestBed } from '@suites/unit';
@@ -278,9 +279,9 @@ export interface UnitTestBed<TClass> {
 /**
  * Interface to define overrides for mocking dependencies in a test environment.
  *
+ * @see {@link https://suites.dev/docs/api-reference/mock-configuration Mock Configuration}
  * @template TDependency The type of the dependency to be mocked.
  * @template TClass The type of the class under test.
- * @see https://suites.dev/docs
  */
 export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDependency, TClass> {
   /**
@@ -289,6 +290,7 @@ export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDep
    * Use this when you need fine-grained control over method behavior with stub functions.
    * The stub function is automatically provided for creating mocked methods.
    *
+   * @see {@link https://suites.dev/docs/api-reference/mock-configuration Mock Configuration}
    * @since 3.0.0
    * @param mockImplementation Function that receives a stub creator and returns the mock
    * @returns TestBedBuilder for chaining
@@ -309,13 +311,14 @@ export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDep
    * Use this when you want to directly provide the mock implementation without stubs,
    * useful for simple mocks or when providing constant values.
    *
+   * @see {@link https://suites.dev/docs/api-reference/mock-configuration Mock Configuration}
    * @since 3.0.0
    * @param finalImplementation The mock implementation object
    * @returns TestBedBuilder for chaining
    *
    * @example
    * await TestBed.solitary(MyService)
-   *   .mock(ConfigService)
+   *   .mock('CONFIG')
    *   .final({ apiUrl: 'http://test.api', timeout: 5000 })
    *   .compile();
    */
@@ -425,11 +428,6 @@ export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
    *
    * @since 3.0.0
    * @returns Promise resolving to UnitTestBed with unit and unitRef
-   *
-   * @example
-   * const { unit, unitRef } = await TestBed.solitary(MyService)
-   *   .mock(Logger).impl((stub) => ({ log: stub() }))
-   *   .compile();
    */
   compile(): Promise<UnitTestBed<TClass>>;
 }

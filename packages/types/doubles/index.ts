@@ -33,12 +33,12 @@ export interface StubbedMember<T> {
  * @template TClass The type of the class or object being stubbed
  *
  * @remarks
- * This is an internal implementation type. Users should import `Mocked<T>` from
+ * This is an internal implementation type. The `Mocked<T>` type should be imported from
  * `@suites/unit` instead, which provides the same functionality with proper
  * adapter augmentation support.
  *
  * @example
- * // ❌ Don't use StubbedInstance directly
+ * // ❌ DO NOT use StubbedInstance directly
  * import { StubbedInstance } from '@suites/types.doubles';
  *
  * // ✅ Use Mocked instead

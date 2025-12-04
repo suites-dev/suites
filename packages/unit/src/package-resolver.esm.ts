@@ -1,6 +1,7 @@
 /**
- * An esm version of this class is available in the `package-resolver.esm.ts` file.
- * Since node auto resolves to esm if it sees the import keyword, we have to use a separate file for the ESM version.
+ * This is a ESM version of the PackageResolver class.
+ * It will be used in the ESM version of the Suites library.
+ * We have to use a separate file because node auto resolves to esm if it sees the import keyword.
  * @module
  */
 
@@ -33,8 +34,19 @@ export class PackageResolver<TAdapter extends DependencyInjectionAdapter | Doubl
   }
 
   private packageIsAvailable(path: string): boolean {
+    // In special cases like Vitest, we need to use the require function to resolve the path.
+    // @ts-ignore - import.meta.resolve exists in ESM
+    if (typeof import.meta.resolve !== 'function' && typeof require === 'function') {
+      try {
+        require.resolve(path);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
     try {
-      require.resolve(path);
+      // @ts-ignore - import.meta.resolve exists in ESM
+      import.meta.resolve(path);
       return true;
     } catch {
       return false;

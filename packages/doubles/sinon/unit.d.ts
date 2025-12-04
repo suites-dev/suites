@@ -17,7 +17,6 @@ import type { ArgsType } from '@suites/types.doubles';
  * - Augmented types: SinonMocked<T>, sinon.stub (from this adapter)
  * - User imports from @suites/unit and transparently gets Sinon types
  */
-
 declare module '@suites/unit' {
   /**
    * Represents a stub function typically used in testing to replace other functions or methods.
@@ -39,7 +38,7 @@ declare module '@suites/unit' {
    * @template TType The type of the object being mocked
    *
    * @remarks
-   * Users should import `Mocked` from `@suites/unit`, NOT from this package.
+   * This type should be imported from `@suites/unit`, NOT from this package.
    * TypeScript automatically resolves to this Sinon-specific type when the
    * Sinon adapter is installed.
    *
@@ -47,7 +46,7 @@ declare module '@suites/unit' {
    * // ✅ Correct - import from @suites/unit
    * import { Mocked } from '@suites/unit';
    *
-   * // ❌ Wrong - don't import from adapter package
+   * // ❌ Wrong - do not import from adapter package
    * import { Mocked } from '@suites/doubles.sinon';
    *
    * @since 3.0.0
@@ -62,7 +61,7 @@ declare module '@suites/core.unit' {
    * Provides access to all mocked dependencies of the unit under test.
    *
    * UnitReference is your gateway to retrieve and configure mocked dependencies after
-   * TestBed compilation. It allows you to set up stub behaviors, verify interactions,
+   * TestBed compilation. It allows to set up stub behaviors, verify interactions,
    * and access any dependency that was automatically mocked by TestBed.
    *
    * @remarks

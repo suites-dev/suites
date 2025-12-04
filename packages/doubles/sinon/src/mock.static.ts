@@ -72,10 +72,7 @@ const handler = <T>() => ({
  * @remarks
  * - All methods automatically become Sinon stubs on first access
  * - Supports nested object mocking
- * - Type-safe with full IntelliSense support
- * - Use this for standalone mocks outside of DI containers
- * - For DI-managed dependencies, prefer `TestBed.solitary()` or `TestBed.sociable()`
- *
+
  * @example
  * // Basic usage - mock an interface
  * import { mock } from '@suites/unit';
@@ -95,7 +92,6 @@ const handler = <T>() => ({
  * @since 3.0.0
  * @see {@link https://sinonjs.org/releases/latest/stubs/ Sinon Stubs}
  * @see {@link https://suites.dev/docs/api-reference/mock Mock API Reference}
- * @see {@link TestBed.solitary} for mocking DI-managed dependencies
  */
 export const mock = <T>(mockImplementation: DeepPartial<T> = {} as DeepPartial<T>): Mocked<T> => {
   return overrideMockImp<T>(mockImplementation);

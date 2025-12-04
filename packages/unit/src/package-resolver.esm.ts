@@ -35,7 +35,6 @@ export class PackageResolver<TAdapter extends DependencyInjectionAdapter | Doubl
 
   private packageIsAvailable(path: string): boolean {
     // In special cases like Vitest, we need to use the require function to resolve the path.
-    // @ts-expect-error - import.meta.resolve exists in ESM
     if (typeof import.meta.resolve !== 'function' && typeof require === 'function') {
       try {
         require.resolve(path);
@@ -45,7 +44,6 @@ export class PackageResolver<TAdapter extends DependencyInjectionAdapter | Doubl
       }
     }
     try {
-      // @ts-expect-error - import.meta.resolve exists in ESM
       import.meta.resolve(path);
       return true;
     } catch {

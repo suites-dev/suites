@@ -43,19 +43,6 @@ export type SuitesErrorCode = (typeof SuitesErrorCode)[keyof typeof SuitesErrorC
  * making it easier to handle specific errors in application code.
  *
  * @since 3.0.0
- * @see https://suites.dev/docs
- *
- * @example
- * import { SuitesError, SuitesErrorCode } from '@suites/types.common';
- *
- * try {
- *   // Test code that might throw
- * } catch (error) {
- *   if (error instanceof SuitesError) {
- *     console.log('Error code:', error.code);
- *     // Handle Suites-specific error
- *   }
- * }
  */
 export class SuitesError extends Error {
   public constructor(
@@ -76,13 +63,6 @@ export class SuitesError extends Error {
  *
  * @since 3.0.0
  * @see https://suites.dev/docs
- *
- * @example
- * // Fix by mocking the dependency
- * const { unit, unitRef } = await TestBed.solitary(MyService)
- *   .mock(MyDependency)
- *   .impl(() => ({ method: jest.fn() }))
- *   .compile();
  */
 export class DependencyResolutionError extends SuitesError {
   public constructor(message: string) {

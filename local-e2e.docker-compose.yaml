@@ -1,0 +1,15 @@
+name: suites-local-e2e
+services:
+  verdaccio:
+    image: verdaccio/verdaccio
+    ports:
+      - '4873:4873'
+    volumes:
+      - ./e2e/config.yaml:/verdaccio/conf/config.yaml
+
+  executor:
+    image: node:24-alpine
+    working_dir: /e2e
+    volumes:
+      - ./e2e:/e2e
+    command: ['tail', '-f', '/dev/null']

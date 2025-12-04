@@ -22,7 +22,7 @@
     "lint": "pnpm lerna run lint --parallel",
     "prepare": "husky",
     "test": "pnpm lerna exec pnpm test",
-    "e2e": "sh local-e2e.sh"
+    "e2e": "ts-node local-e2e.ts"
   },
   "lint-staged": {
     "*.ts": [

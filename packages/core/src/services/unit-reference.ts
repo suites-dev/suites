@@ -1,4 +1,4 @@
-import isEqual from 'lodash.isequal';
+import { isDeepStrictEqual } from 'node:util';
 import type { StubbedInstance } from '@suites/types.doubles';
 import type { IdentifierMetadata, InjectableIdentifier } from '@suites/types.di';
 import type { Type } from '@suites/types.common';
@@ -68,7 +68,7 @@ export class UnitReference {
     if (
       this.fakedDependencies
         .map(([identifier]) => identifier)
-        .some((id) => isEqual(id, injectableIdentifier))
+        .some((id) => isDeepStrictEqual(id, injectableIdentifier))
     ) {
       const identifierString = stringifyIdentifier(identifier, identifierMetadata);
 

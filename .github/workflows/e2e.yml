@@ -103,9 +103,7 @@ jobs:
             'sinon/inversify',
             'vitest/inversify',
             'esm/jest/nestjs',
-            'esm/jest/inversify',
             'esm/sinon/nestjs',
-            'esm/sinon/inversify',
           ]
         node-version: [18.x, 20.x]
     steps:

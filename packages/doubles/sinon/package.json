@@ -2,7 +2,26 @@
   "name": "@suites/doubles.sinon",
   "version": "3.0.1",
   "license": "Apache-2.0",
-  "main": "dist/index.js",
+  "type": "commonjs",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./unit": {
+      "types": "./unit.d.ts"
+    }
+  },
   "keywords": [
     "mocking",
     "mock",
@@ -31,7 +50,7 @@
   "scripts": {
     "prebuild": "pnpm rimraf dist",
     "postinstall": "node postinstall.js",
-    "build": "pnpm tsc -p tsconfig.build.json",
+    "build": "sh ./build.sh",
     "test": "jest --coverage --verbose",
     "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },
@@ -47,6 +66,7 @@
   "dependencies": {
     "@suites/core.unit": "workspace:^3.0.1",
     "@suites/types.common": "workspace:^3.0.0",
+    "@suites/types.di": "workspace:^3.0.0",
     "@suites/types.doubles": "workspace:^3.0.0"
   },
   "devDependencies": {

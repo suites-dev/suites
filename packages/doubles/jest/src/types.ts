@@ -23,13 +23,13 @@ type MockedProperty<T> = T extends (...args: any[]) => any ? MockFunction<T> : M
  * import type { Mocked } from '@suites/unit';
  * import { TestBed } from '@suites/unit';
  *
- * interface UserRepository {
- *   findById(id: string): Promise<User>;
- *   save(user: User): Promise<void>;
+ * class UserRepository {
+ *   public findById(id: string): Promise<User> { ... }
+ *   public save(user: User): Promise<void> { ... }
  * }
  *
  * const { unit, unitRef } = await TestBed.solitary(UserService).compile();
- * const mockRepo: Mocked<UserRepository> = unitRef.get(UserRepository);
+ * const mockRepo = unitRef.get(UserRepository);
  *
  * // Full Jest API available
  * mockRepo.findById.mockResolvedValue({ id: '1', name: 'Alice' });

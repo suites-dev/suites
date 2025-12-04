@@ -40,15 +40,15 @@ declare module '@suites/unit' {
    * @template T The type of the object being mocked
    *
    * @remarks
-   * Users should import `Mocked` from `@suites/unit`, NOT from this package.
-   * TypeScript automatically resolves to this Jest-specific type when the
-   * Jest adapter is installed.
+   * This type should be imported from `@suites/unit`, NOT from this package.
+   * TypeScript automatically resolves to this Sinon-specific type when the
+   * Sinon adapter is installed.
    *
    * @example
    * // ✅ Correct - import from @suites/unit
    * import { Mocked } from '@suites/unit';
    *
-   * // ❌ Wrong - don't import from adapter package
+   * // ❌ Wrong - do not import from adapter package
    * import { Mocked } from '@suites/doubles.jest';
    *
    * @since 3.0.0
@@ -63,7 +63,7 @@ declare module '@suites/core.unit' {
    * Provides access to all mocked dependencies of the unit under test.
    *
    * UnitReference is your gateway to retrieve and configure mocked dependencies after
-   * TestBed compilation. It allows you to set up mock behaviors, verify interactions,
+   * TestBed compilation. It allows to set up mock behaviors, verify interactions,
    * and access any dependency that was automatically mocked by TestBed.
    *
    * @remarks

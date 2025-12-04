@@ -38,21 +38,13 @@ Using Suites? <a href="https://github.com/suites-dev/suites/discussions/655">Sha
 
 ## Features
 
-### 👩‍💻 Declarative
+- **Declarative** - Provides a declarative API for defining fully-typed, isolated test environments from a single specification, including automatic mock generation and dependency wiring based on constructor metadata.
 
-Suites' declarative API creates fully-typed, isolated test environments with a single declaration. Suites auto-generates all mocks and wires dependencies automatically.
+- **Type-Safe Refactoring** - Binds mocks to concrete TypeScript implementations so that changes to constructors, injected dependencies, and method signatures are validated at compile time, enabling confident refactors with less failing tests.
 
-### ✅ Type-Safe Refactoring
+- **Standardized Testing Across Teams** - Exposes a uniform testing surface across NestJS, InversifyJS, and other DI setups, enabling consistent test structure and patterns regardless of the underlying framework.
 
-Generate type-safe mocks bound to implementations, enabling confident refactors. Change constructors, add dependencies, rename methods - TypeScript catches breaking changes at compile time with no silent failures or manual mock updates.
-
-### 🧩 Standardized Testing Across Teams
-
-Suites enforces a single canonical API that works across NestJS, InversifyJS (and more dependency injection frameworks to come), so every team ships tests with the same pattern.
-
-### ✨ AI Ready
-
-One canonical pattern teaches LLM agents the entire API. Coding agents like Claude Code and Cursor write correct tests in a single pass with much less context consumption compared to manual mocking patterns.
+- **AI Ready** - Provides a concise and strict test API that minimizes context requirements for LLM-based coding agents, enabling higher-quality generated tests, clearer and more actionable error messages that guide automatic self-correction, and a higher likelihood of completing test authoring in a single pass.
 
 ## Examples
 

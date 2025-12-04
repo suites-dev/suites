@@ -1,3 +1,6 @@
+const path = require('path');
+const packagesDir = path.join(__dirname, 'packages');
+
 const config = (coverageDir?: string) => ({
   preset: 'ts-jest',
   roots: ['<rootDir>'],
@@ -13,15 +16,15 @@ const config = (coverageDir?: string) => ({
     ] as any,
   },
   moduleNameMapper: {
-    '^@suites/core.unit(.*)$': '<rootDir>/../../packages/core/src$1',
-    '^@suites/types.common(.*)$': '<rootDir>/../../packages/types/common/src$1',
-    '^@suites/types.di(.*)$': '<rootDir>/../../packages/types/di/src$1',
-    '^@suites/types.doubles(.*)$': '<rootDir>/../../packages/types/doubles/src$1',
-    '^@suites/di.nestjs(.*)$': '<rootDir>/../../packages/di/nestjs/src$1',
-    '^@suites/di.inversify(.*)$': '<rootDir>/../../packages/di/inversify/src$1',
-    '^@suites/doubles.jest(.*)$': '<rootDir>/../../packages/doubles/jest/src$1',
-    '^@suites/doubles.sinon(.*)$': '<rootDir>/../../packages/doubles/sinon/src$1',
-    '^@suites/doubles.vitest(.*)$': '<rootDir>/../../packages/doubles/vitest/src$1',
+    '^@suites/core.unit(.*)$': path.join(packagesDir, 'core/src$1'),
+    '^@suites/types.common(.*)$': path.join(packagesDir, 'types/common/src$1'),
+    '^@suites/types.di(.*)$': path.join(packagesDir, 'types/di/src$1'),
+    '^@suites/types.doubles(.*)$': path.join(packagesDir, 'types/doubles/src$1'),
+    '^@suites/di.nestjs(.*)$': path.join(packagesDir, 'di/nestjs/src$1'),
+    '^@suites/di.inversify(.*)$': path.join(packagesDir, 'di/inversify/src$1'),
+    '^@suites/doubles.jest(.*)$': path.join(packagesDir, 'doubles/jest/src$1'),
+    '^@suites/doubles.sinon(.*)$': path.join(packagesDir, 'doubles/sinon/src$1'),
+    '^@suites/doubles.vitest(.*)$': path.join(packagesDir, 'doubles/vitest/src$1'),
   },
   coveragePathIgnorePatterns: ['/node_modules/', 'spec-assets.ts', '/__test__/'],
   testPathIgnorePatterns: ['/node_modules/', '/e2e/'],

@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.build.json",
+  "exclude": [
+    "typings.d.ts",
+    "index.ts",
+    "node_modules",
+    "__test__",
+    "**/*.spec.ts",
+    "jest.config.ts",
+    "dist",
+    "src/**/*.esm.ts"
+  ]
+}

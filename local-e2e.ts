@@ -76,9 +76,6 @@ async function main(): Promise<void> {
 
       const e2es = [
         'esm/jest/nestjs',
-        'esm/sinon/nestjs',
-        'sinon/nestjs',
-        'sinon/inversify',
         'jest/nestjs',
         'jest/inversify',
         'vitest/nestjs',

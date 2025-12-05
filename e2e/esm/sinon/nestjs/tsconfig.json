@@ -1,9 +1,0 @@
-{
-  "extends": "../tsconfig.json",
-  "ts-node": {
-    "transpileOnly": true,
-    "esm": true
-  },
-  "include": ["*.ts"],
-  "exclude": ["node_modules"]
-}

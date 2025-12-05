@@ -197,7 +197,7 @@ function execInNodeContainer(
   options: ExecOptions = {}
 ): Promise<number> {
   return exec(
-    'docker-compose',
+    'docker compose',
     ['-f', COMPOSE_FILE, 'exec', NODE_CONTAINER, command, ...args],
     options
   );

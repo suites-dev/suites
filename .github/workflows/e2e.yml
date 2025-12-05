@@ -101,6 +101,7 @@ jobs:
             'jest/inversify',
             'vitest/inversify',
             'esm/jest/nestjs',
+            'esm/vitest/nestjs',
           ]
         node-version: [18.x, 20.x]
     steps:

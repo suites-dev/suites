@@ -28,8 +28,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
-        node-version: [20.x, 22.x, 24.x]
+        e2e-project:
+          [
+            'jest/nestjs',
+            'vitest/nestjs',
+            'jest/inversify',
+            'vitest/inversify',
+            'esm/jest/nestjs',
+            'esm/vitest/nestjs',
+          ]
+        node-version: [18.x, 20.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -125,9 +133,16 @@ jobs:
 
       - name: Parse E2E Project
         run: |
-          IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
-          echo "FRAMEWORK=$framework" >> $GITHUB_ENV
-          echo "LIBRARY=$library" >> $GITHUB_ENV
+          project="${{ matrix.e2e-project }}"
+          if [[ "$project" == esm/* ]]; then
+            IFS='/' read -r _ library framework <<< "$project"
+            echo "FRAMEWORK=$framework" >> $GITHUB_ENV
+            echo "LIBRARY=esm/$library" >> $GITHUB_ENV
+          else
+            IFS='/' read -r library framework <<< "$project"
+            echo "FRAMEWORK=$framework" >> $GITHUB_ENV
+            echo "LIBRARY=$library" >> $GITHUB_ENV
+          fi
 
       - name: Clean Source
         run: |

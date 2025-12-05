@@ -3,6 +3,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
+    "moduleResolution": "nodenext",
     "experimentalDecorators": true,
     "allowJs": true
   },

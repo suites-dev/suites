@@ -3,7 +3,22 @@
   "private": false,
   "version": "3.0.1",
   "license": "Apache-2.0",
-  "main": "dist/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git",
@@ -25,7 +40,7 @@
   "scripts": {
     "postinstall": "node postinstall.js",
     "prebuild": "pnpm rimraf dist",
-    "build": "pnpm tsc -p tsconfig.build.json",
+    "build": "sh ./build.sh",
     "test": "jest --coverage --verbose",
     "lint": "pnpm eslint '{src,test}/**/*.ts'"
   },

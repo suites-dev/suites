@@ -1,0 +1,29 @@
+name: suites-local-e2e
+services:
+  verdaccio:
+    image: verdaccio/verdaccio
+    ports:
+      - '4873:4873'
+    volumes:
+      - ./e2e/config.yaml:/verdaccio/conf/config.yaml
+      - verdaccio-storage:/verdaccio/storage
+    networks:
+      - e2e-network
+
+  executor:
+    image: node:24-alpine
+    working_dir: /e2e
+    volumes:
+      - ./e2e:/e2e
+    command: ['tail', '-f', '/dev/null']
+    networks:
+      - e2e-network
+    depends_on:
+      - verdaccio
+
+networks:
+  e2e-network:
+    driver: bridge
+
+volumes:
+  verdaccio-storage:

@@ -4,7 +4,8 @@
     "rootDir": "src",
     "baseUrl": ".",
     "outDir": "dist",
-    "target": "es6",
+    "module": "esnext",
+    "target": "esnext",
     "skipLibCheck": true
   },
   "include": [

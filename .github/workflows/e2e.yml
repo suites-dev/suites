@@ -97,13 +97,10 @@ jobs:
         e2e-project:
           [
             'jest/nestjs',
-            'sinon/nestjs',
             'vitest/nestjs',
             'jest/inversify',
-            'sinon/inversify',
             'vitest/inversify',
             'esm/jest/nestjs',
-            'esm/sinon/nestjs',
           ]
         node-version: [18.x, 20.x]
     steps:

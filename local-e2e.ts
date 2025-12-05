@@ -208,7 +208,7 @@ function execInNodeContainer(
  */
 async function resetNodeContainer(): Promise<void> {
   console.log('🔄 Resetting node container...');
-  await exec('docker-compose', ['-f', COMPOSE_FILE, 'restart', NODE_CONTAINER, '--timeout=0']);
+  await exec('docker compose', ['-f', COMPOSE_FILE, 'restart', NODE_CONTAINER, '--timeout=0']);
   await execInNodeContainer('npm', ['config', 'set', 'registry', VERDACCIO_URL]);
   console.log('🔄 Node container reset ✅');
 }
@@ -266,7 +266,7 @@ async function verifyDocker(): Promise<void> {
 async function cleanDockerCompose(): Promise<void> {
   console.log('🧹 Cleaning up Docker Compose services...');
   try {
-    await exec('docker-compose', ['-f', COMPOSE_FILE, 'down', '-v'], { silent: true });
+    await exec('docker compose', ['-f', COMPOSE_FILE, 'down', '-v'], { silent: true });
   } catch {
     // Ignore errors during cleanup
   }
@@ -289,6 +289,6 @@ async function listPackageJsons(directory: string): Promise<string[]> {
 async function startDockerCompose(): Promise<void> {
   await cleanDockerCompose();
   console.log('🐳 Starting Docker Compose services...');
-  await exec('docker-compose', ['-f', COMPOSE_FILE, 'up', '-d', '--wait']);
+  await exec('docker compose', ['-f', COMPOSE_FILE, 'up', '-d', '--wait']);
   console.log('🐳 Docker Compose services are ready ✅');
 }

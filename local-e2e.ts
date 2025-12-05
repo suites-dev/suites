@@ -15,45 +15,46 @@ main().catch((error) => {
 });
 
 async function main(): Promise<void> {
-  await withDockerCompose(async () => {
-    console.log('🧪 Cleaning up...');
-    await exec('pnpm', ['lerna', 'run', 'prebuild']);
+  console.log('🧪 Cleaning up...');
+  await exec('pnpm', ['lerna', 'run', 'prebuild']);
 
-    console.log('🚧 Building Packages...');
-    await exec('pnpm', ['build', '--stream']);
+  console.log('🚧 Building Packages...');
+  await exec('pnpm', ['build', '--stream']);
 
-    await withGitSnapshot(async () => {
-      console.log('Removing provenance from package.json');
+  await withGitSnapshot(async () => {
+    console.log('Removing provenance from package.json');
 
-      for (const file of await listPackageJsons('packages')) {
-        await removeProvenance(file);
-      }
+    for (const file of await listPackageJsons('packages')) {
+      await removeProvenance(file);
+    }
 
-      await exec('git', ['add', '.']);
-      await exec('git', ['commit', '-m="remove provenance [temp e2e]"']);
+    await exec('git', ['add', '.']);
+    await exec('git', ['commit', '-m="remove provenance [temp e2e]"']);
 
-      console.log('Versioning packages...');
+    console.log('Versioning packages...');
 
-      const currentBranch = (await execCapture('git', ['branch', '--show-current'])).trim();
+    const currentBranch = (await execCapture('git', ['branch', '--show-current'])).trim();
 
-      await exec('pnpm', [
-        'lerna',
-        'version',
-        'prerelease',
-        '--yes',
-        '--no-changelog',
-        '--allow-branch',
-        currentBranch,
-        '--no-git-tag-version',
-        '--no-push',
-        '--force-publish',
-        '--no-commit-hooks',
-      ]);
+    await exec('pnpm', [
+      'lerna',
+      'version',
+      'prerelease',
+      '--yes',
+      '--no-changelog',
+      '--allow-branch',
+      currentBranch,
+      '--no-git-tag-version',
+      '--no-push',
+      '--force-publish',
+      '--no-commit-hooks',
+    ]);
 
-      await exec('git', ['add', '.']);
-      await exec('git', ['commit', '-m="version packages [temp e2e]"']);
+    await exec('git', ['add', '.']);
+    await exec('git', ['commit', '-m="version packages [temp e2e]"']);
 
-      console.log('Publishing packages');
+    console.log('🐳 Starting Verdaccio...');
+    await withDockerCompose(async () => {
+      console.log('📦 Publishing packages to Verdaccio...');
 
       await exec('pnpm', [
         'lerna',
@@ -72,26 +73,24 @@ async function main(): Promise<void> {
         '--dist-tag',
         'e2e',
       ]);
+
+      const e2es = [
+        'esm/jest/nestjs',
+        'esm/sinon/nestjs',
+        'sinon/nestjs',
+        'sinon/inversify',
+        'jest/nestjs',
+        'jest/inversify',
+        'vitest/nestjs',
+        'vitest/inversify',
+      ];
+
+      for (const e2e of e2es) {
+        await setupAndTest(`/e2e/${e2e}`);
+      }
+
+      console.log('🎉 Testing complete!');
     });
-
-    const e2es = [
-      'esm/jest/nestjs',
-      'esm/jest/inversify',
-      'esm/sinon/nestjs',
-      'esm/sinon/inversify',
-      'sinon/nestjs',
-      'sinon/inversify',
-      'jest/nestjs',
-      'jest/inversify',
-      'vitest/nestjs',
-      'vitest/inversify',
-    ];
-
-    for (const e2e of e2es) {
-      await setupAndTest(`/e2e/${e2e}`);
-    }
-
-    console.log('🎉 Testing complete!');
   });
 }
 

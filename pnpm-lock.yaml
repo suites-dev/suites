@@ -172,6 +172,9 @@ importers:
       '@suites/types.common':
         specifier: workspace:^3.0.0
         version: link:../../types/common
+      '@suites/types.di':
+        specifier: workspace:^3.0.0
+        version: link:../../types/di
       '@suites/types.doubles':
         specifier: workspace:^3.0.0
         version: link:../../types/doubles
@@ -188,6 +191,9 @@ importers:
       '@suites/types.common':
         specifier: workspace:^3.0.0
         version: link:../../types/common
+      '@suites/types.di':
+        specifier: workspace:^3.0.0
+        version: link:../../types/di
       '@suites/types.doubles':
         specifier: workspace:^3.0.0
         version: link:../../types/doubles
@@ -207,6 +213,9 @@ importers:
       '@suites/types.common':
         specifier: workspace:^3.0.0
         version: link:../../types/common
+      '@suites/types.di':
+        specifier: workspace:^3.0.0
+        version: link:../../types/di
       '@suites/types.doubles':
         specifier: workspace:^3.0.0
         version: link:../../types/doubles

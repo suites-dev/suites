@@ -12,7 +12,7 @@ const config: Config = {
     'test-adapter.ts',
     'testbed.ts',
     'types.ts',
-    'package-resolver.esm.ts',
+    'resolve.esm.ts',
   ],
 };
 

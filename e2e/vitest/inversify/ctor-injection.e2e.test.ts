@@ -2,8 +2,9 @@ import 'reflect-metadata';
 import { beforeAll, describe, test, expect } from 'vitest';
 import type { UnitReference, Mocked } from '@suites/unit';
 import { TestBed } from '@suites/unit';
-import type { Logger, Bar } from './e2e-assets';
 import {
+  type Logger,
+  type Bar,
   ClassThatIsNotInjected,
   InversifyJSTestClass,
   SymbolToken,

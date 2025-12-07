@@ -1,16 +1,8 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "experimentalDecorators": true,
-    "allowJs": true
+    "experimentalDecorators": true
   },
-  "include": [
-    "*e2e.test.ts",
-    "global.d.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["*e2e.test.ts", "global.d.ts"],
+  "exclude": ["node_modules"]
 }

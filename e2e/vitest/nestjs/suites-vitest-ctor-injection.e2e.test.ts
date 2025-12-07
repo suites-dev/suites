@@ -1,8 +1,8 @@
 import { beforeAll, describe, test, expect } from 'vitest';
 import type { Mocked, UnitReference } from '@suites/unit';
 import { TestBed } from '@suites/unit';
-import type { Logger } from './e2e-assets';
 import {
+  type Logger,
   ClassThatIsNotInjected,
   NestJSTestClass,
   SymbolToken,

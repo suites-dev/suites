@@ -1,5 +1,6 @@
 import type { DependencyInjectionAdapter } from '@suites/types.di';
-import { PackageResolver } from '../src/package-resolver';
+import { createPackageResolver } from '../src/package-resolver';
+import type { PackageResolver } from '../src/package-resolver.base';
 import { SuitesDIAdapters, SuitesDoublesAdapters } from '../src/testbed-builder';
 
 describe('Suites Adapter Package Resolving Integration Test', () => {
@@ -23,7 +24,7 @@ describe('Suites Adapter Package Resolving Integration Test', () => {
 
   describe('Resolving an adapter with default export', () => {
     beforeAll(() => {
-      packageResolver = new PackageResolver({ test: __dirname + '/assets/test-adapter' });
+      packageResolver = createPackageResolver({ test: __dirname + '/assets/test-adapter' });
     });
 
     it('should successfully resolve the adapter package', async () => {
@@ -34,7 +35,7 @@ describe('Suites Adapter Package Resolving Integration Test', () => {
 
   describe('Resolving an adapter with no default export', () => {
     beforeAll(() => {
-      packageResolver = new PackageResolver({ test: __dirname + '/assets/invalid-adapter' });
+      packageResolver = createPackageResolver({ test: __dirname + '/assets/invalid-adapter' });
     });
 
     it('should failed resolving the adapter package and throw an error', async () => {

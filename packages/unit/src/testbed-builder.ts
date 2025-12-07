@@ -4,7 +4,7 @@ import { SuitesError, SuitesErrorCode } from '@suites/types.common';
 import type { DependencyInjectionAdapter } from '@suites/types.di';
 import type { TestBedBuilder } from '@suites/core.unit';
 import { UnitMocker } from '@suites/core.unit';
-import { PackageResolver } from './package-resolver';
+import { createPackageResolver } from './package-resolver';
 import type { DoublesAdapter } from '@suites/types.doubles';
 
 export class AdapterNotFoundError extends SuitesError {
@@ -36,7 +36,7 @@ export function testBedBuilderFactory<TClass>(
 ): { create: <TBuilder>(testbedBuilderType: Type<TestBedBuilder<TClass>>) => TBuilder } {
   return {
     create: <TBuilder>(testbedBuilderType: Type<TestBedBuilder<TClass>>): TBuilder => {
-      const diPackageResolver = new PackageResolver<DependencyInjectionAdapter>(diAdapters);
+      const diPackageResolver = createPackageResolver<DependencyInjectionAdapter>(diAdapters);
 
       const diAdapter = diPackageResolver
         .resolveCorrespondingAdapter()
@@ -48,7 +48,7 @@ correct Suites adapter package that is compatible with your dependency injection
 For more details, refer to our docs website: https://suites.dev/docs`);
         });
 
-      const doublesPackageResolver = new PackageResolver<DoublesAdapter>(doublesAdapters);
+      const doublesPackageResolver = createPackageResolver<DoublesAdapter>(doublesAdapters);
 
       const doublesAdapter = doublesPackageResolver
         .resolveCorrespondingAdapter()

@@ -1,6 +1,5 @@
 {
   "name": "suites-vitest-nestjs",
-  "type": "module",
   "private": true,
   "version": "0.0.0",
   "dependencies": {
@@ -20,10 +19,10 @@
     "vitest": "*"
   },
   "scripts": {
-    "test": "npx vitest --run && tsc --noEmit",
+    "test": "tsc --noEmit && vitest --run",
     "lint": "eslint '**/*.ts'"
   },
   "engines": {
-    "node": ">= 20"
+    "node": ">= 18"
   }
 }

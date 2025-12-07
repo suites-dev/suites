@@ -11,7 +11,7 @@
     "reflect-metadata": "^0.2.0"
   },
   "scripts": {
-    "test": "npx vitest --run && tsc --noEmit",
+    "test": "tsc --noEmit && vitest --run",
     "lint": "eslint '**/*.ts'"
   },
   "devDependencies": {
@@ -23,6 +23,6 @@
     "vitest": "*"
   },
   "engines": {
-    "node": ">= 20"
+    "node": ">= 18"
   }
 }

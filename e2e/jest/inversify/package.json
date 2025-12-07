@@ -1,5 +1,5 @@
 {
-  "name": "suites-jest-inverisfy",
+  "name": "suites-jest-inversify",
   "private": true,
   "version": "0.0.0",
   "dependencies": {
@@ -10,7 +10,7 @@
     "reflect-metadata": "^0.2.0"
   },
   "scripts": {
-    "test": "jest && tsc --noEmit",
+    "test": "tsc --noEmit && jest",
     "lint": "eslint '**/*.ts'"
   },
   "devDependencies": {
@@ -21,6 +21,6 @@
     "typescript": "^5.x"
   },
   "engines": {
-    "node": ">= 20"
+    "node": ">= 18"
   }
 }

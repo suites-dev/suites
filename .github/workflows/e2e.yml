@@ -94,22 +94,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        e2e-project: ['jest/nestjs', 'sinon/nestjs', 'vitest/nestjs', 'jest/inversify', 'sinon/inversify', 'vitest/inversify']
-        node-version: [18.x, 20.x]
+        e2e-project:
+          [
+            # NestJS
+            'jest/nestjs',
+            'vitest/nestjs',
+            'sinon/nestjs',
+            'esm/jest/nestjs',
+            'esm/vitest/nestjs',
+            # Inversify
+            'jest/inversify',
+            'vitest/inversify',
+            'sinon/inversify',
+          ]
+        node-version: [18.x, 20.x, 22.x, 24.x]
     steps:
       - name: Checkout
         uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.ref || inputs.target_branch }}
-
-      - name: Remove Vitest If Needed
-        if: ${{ matrix.node-version == '16.x' }}
-        run: |
-          rm -rf packages/doubles/vitest
-          git config --global user.email "e2e@suites.dev"
-          git config --global user.name "Suites CI"
-          git add .
-          git commit -am "remove vitest temp"
 
       - name: Setup Node ${{ matrix.node-version }}
         uses: actions/setup-node@v6
@@ -191,9 +194,16 @@ jobs:
 
       - name: Parse E2E Project
         run: |
-          IFS='/' read -r library framework <<< "${{ matrix.e2e-project }}"
-          echo "FRAMEWORK=$framework" >> $GITHUB_ENV
-          echo "LIBRARY=$library" >> $GITHUB_ENV
+          project="${{ matrix.e2e-project }}"
+          if [[ "$project" == esm/* ]]; then
+            IFS='/' read -r _ library framework <<< "$project"
+            echo "FRAMEWORK=$framework" >> $GITHUB_ENV
+            echo "LIBRARY=esm/$library" >> $GITHUB_ENV
+          else
+            IFS='/' read -r library framework <<< "$project"
+            echo "FRAMEWORK=$framework" >> $GITHUB_ENV
+            echo "LIBRARY=$library" >> $GITHUB_ENV
+          fi
 
       - name: Clean Source
         run: |
@@ -206,7 +216,7 @@ jobs:
       - name: Install Dependencies from Verdaccio
         run: |
           cd "$PWD/e2e/$LIBRARY/$FRAMEWORK"
-          npm install --no-cache --no-package-lock
+          npm install --force --no-package-lock
           npm install --dev --no-package-lock @types/node@${{ matrix.node-version }}
 
       - name: Execute Test

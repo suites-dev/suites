@@ -1,37 +1,35 @@
+/**
+ * CJS version of PackageResolver with require.resolve strategy.
+ * Pure IoC composition with factory function.
+ * @module
+ */
+
 import type { DependencyInjectionAdapter } from '@suites/types.di';
 import type { DoublesAdapter } from '@suites/types.doubles';
+import {
+  PackageResolver as BasePackageResolver,
+  type PackageResolverStrategy,
+} from './package-resolver.base';
 
-export class PackageResolver<TAdapter extends DependencyInjectionAdapter | DoublesAdapter> {
-  public constructor(private readonly adapters: Record<string, string>) {}
-
-  public async resolveCorrespondingAdapter(): Promise<TAdapter | never> {
-    const resolvers = Object.keys(this.adapters);
-
-    const adapterName = resolvers.find((resolverName: string) =>
-      this.packageIsAvailable(this.adapters[resolverName])
-    );
-
-    if (!adapterName) {
-      throw new Error('Adapter not found');
-    }
-
-    const adapter = await import(this.adapters[adapterName]);
-
-    if (!Object.prototype.hasOwnProperty.call(adapter, 'adapter')) {
-      throw new Error('Adapter has no export');
-    }
-
-    return import(this.adapters[adapterName]).then(
-      (module: Record<'adapter', TAdapter>) => module.adapter
-    );
-  }
-
-  private packageIsAvailable(path: string): boolean {
+/**
+ * CJS package resolution strategy using require.resolve
+ */
+function createCjsResolverStrategy(): PackageResolverStrategy {
+  return (path: string): boolean => {
     try {
       require.resolve(path);
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
-  }
+  };
+}
+
+/**
+ * Creates a PackageResolver instance with CJS resolution strategy
+ */
+export function createPackageResolver<TAdapter extends DependencyInjectionAdapter | DoublesAdapter>(
+  adapters: Record<string, string>
+): BasePackageResolver<TAdapter> {
+  return new BasePackageResolver<TAdapter>(adapters, createCjsResolverStrategy());
 }

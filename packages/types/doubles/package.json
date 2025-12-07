@@ -4,6 +4,17 @@
   "version": "3.0.0",
   "license": "Apache-2.0",
   "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": {
+        "types": "./index.d.ts"
+      },
+      "require": {
+        "types": "./index.d.ts"
+      }
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/suites-dev/suites.git",

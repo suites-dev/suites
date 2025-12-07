@@ -1,0 +1,28 @@
+{
+  "name": "suites-esm-jest-nestjs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "@suites/di.nestjs": "e2e",
+    "@suites/doubles.jest": "e2e",
+    "@suites/unit": "e2e",
+    "@nestjs/common": "^10.4.15",
+    "@nestjs/core": "^10.4.15",
+    "reflect-metadata": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.5.2",
+    "jest": "*",
+    "ts-jest": "*",
+    "ts-node": "*",
+    "typescript": "^5.x"
+  },
+  "scripts": {
+    "test": "tsc --noEmit && NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" NODE_NO_WARNINGS=1 jest",
+    "lint": "eslint '**/*.ts'"
+  },
+  "engines": {
+    "node": ">= 18"
+  }
+}

@@ -1,4 +1,5 @@
 export { TestBed } from './testbed';
+export type { StubbedInstance as Mocked } from '@suites/types.doubles';
 export type { UnitTestBed, TestBedBuilder } from './types';
 export type {
   UnitReference,

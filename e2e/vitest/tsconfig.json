@@ -1,14 +1,8 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "declaration": true,
-    "module": "esnext",
     "target": "esnext",
-    "lib": [
-      "esnext"
-    ],
-    "types": [
-      "vitest"
-    ]
+    "types": ["vitest"],
+    "allowJs": true
   }
 }

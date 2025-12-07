@@ -18,10 +18,10 @@
     "typescript": "^5.x"
   },
   "scripts": {
-    "test": "jest && tsc --noEmit",
+    "test": "tsc --noEmit && jest",
     "lint": "eslint '**/*.ts'"
   },
   "engines": {
-    "node": ">= 20"
+    "node": ">= 18"
   }
 }

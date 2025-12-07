@@ -2,9 +2,11 @@
   "extends": "../../../tsconfig.build.json",
   "compilerOptions": {
     "rootDir": "src",
-    "baseUrl": "../../common",
+    "baseUrl": ".",
     "outDir": "dist",
-    "target": "es6"
+    "module": "esnext",
+    "target": "esnext",
+    "skipLibCheck": true
   },
   "exclude": [
     "typings.d.ts",

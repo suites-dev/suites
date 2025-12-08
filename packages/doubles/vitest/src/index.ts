@@ -53,4 +53,4 @@ export { mock } from './mock.static';
  * @see {@link https://suites.dev/docs/api-reference/mock | Stub API Reference}
  * @see {@link mock} for mocking entire objects
  */
-export const stub = fn();
+export const stub = fn;

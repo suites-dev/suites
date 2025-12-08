@@ -50,4 +50,4 @@ export { mock } from './mock.static';
  * @see {@link https://suites.dev/docs/api-reference/mock | Stub API Reference}
  * @see {@link mock} for mocking entire objects
  */
-export const stub = jest.fn();
+export const stub = jest.fn;

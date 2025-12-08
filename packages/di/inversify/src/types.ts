@@ -7,7 +7,7 @@ import type { interfaces } from 'inversify';
  *
  * @template T The service identifier type
  * @since 3.0.0
- * @see {@link https://inversify.io/docs/fundamentals/metadata | InversifyJS Metadata}
+ * @see {@link https://inversify.io/docs/api/decorator/ | InversifyJS Metadata}
  */
 export interface InversifyInjectableMetadata<T extends interfaces.ServiceIdentifier<T> = never>
   extends interfaces.Metadata {
@@ -53,7 +53,7 @@ export const INVERSIFY_PRESERVED_KEYS: readonly string[] = ['inject', 'multi_inj
  * with string or symbol keys.
  *
  * @since 3.0.0
- * @see {@link https://inversify.io/docs/fundamentals/named-bindings | Named Bindings}
- * @see {@link https://inversify.io/docs/fundamentals/tagged-bindings | Tagged Bindings}
+ * @see {@link https://doc.inversify.cloud/en/named_bindings | Named Bindings}
+ * @see {@link https://doc.inversify.cloud/en/tagged_bindings | Tagged Bindings}
  */
 export type IdentifierMetadata = Record<string | symbol, unknown>;

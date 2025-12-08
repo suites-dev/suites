@@ -454,7 +454,7 @@ export const stub = jest.fn();
  * const { unit, unitRef } = await TestBed.sociable(MyService)
  *   .expose(DependencyOne)
  *   .mock(Logger)
- *   .impl({ log: jest.fn().mockReturnValue('overridden') })
+ *   .impl(stub => ({ log: stub().mockReturnValue('overridden') }))
  *   .compile();
  */
 ```

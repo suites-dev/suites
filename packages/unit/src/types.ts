@@ -45,7 +45,7 @@ export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCo
    * const { unit, unitRef } = await TestBed.sociable(MyService).expose(AnotherService).compile();
    * // MyService is now tested with AnotherService exposed and not fully mocked.
    * ```
-   * @see https://suites.dev/docs
+   * @see {@link https://suites.dev/docs/api-reference/testbed-sociable | TestBed.sociable() API Reference}
    */
   expose(dependency: Type): SociableTestBedBuilder<TClass>;
 }
@@ -64,7 +64,7 @@ export interface SolitaryTestBedBuilder<TClass> extends TestBedBuilder<TClass> {
  * adapter's unit.d.ts in your global.d.ts.
  *
  * @since 3.0.0
- * @see https://suites.dev/docs
+ * @see {@link https://suites.dev/docs/api-reference/unit-reference | UnitReference API Reference}
  *
  * @example
  * ```ts
@@ -166,18 +166,16 @@ export interface UnitReference extends UnitReferenceCore {
   ): StubbedInstance<TDependency>;
 
   /**
-   * Retrieves a mocked object or a constant value of a dependency impl its type, string, or symbol token.
+   * Retrieves a mocked dependency by its type, string, or symbol token with optional metadata.
    *
    * This method provides flexibility in retrieving dependencies by allowing various identifier types.
-   * Depending on the identifier and the setup, it can return either a mocked object or a constant value.
    *
    * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
-   * @template TValue The type of the constant value that might be returned.
    * @param identifier - The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
    * @param identifierMetadata - A corresponding metadata object for the token identifier.
    * @throws {@link IdentifierNotFoundError} If the dependency is not found.
-   * @returns The mocked instance corresponding to the provided identifier and metadata if exists.
+   * @returns The mocked instance corresponding to the provided identifier and metadata.
    */
   get<TDependency>(
     identifier: Type<TDependency> | string | symbol,
@@ -185,17 +183,15 @@ export interface UnitReference extends UnitReferenceCore {
   ): StubbedInstance<TDependency>;
 
   /**
-   * Retrieves a mocked object or a constant value of a dependency impl its type, string, or symbol token.
+   * Retrieves a mocked dependency by its type, string, or symbol token.
    *
    * This method provides flexibility in retrieving dependencies by allowing various identifier types.
-   * Depending on the identifier and the setup, it can return either a mocked object or a constant value.
    *
    * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
-   * @template TValue The type of the constant value that might be returned.
    * @param identifier - The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
    * @throws {@link IdentifierNotFoundError} If the dependency is not found.
-   * @returns The mocked instance or constant value corresponding to the provided identifier.
+   * @returns The mocked instance corresponding to the provided identifier.
    */
   get<TDependency>(identifier: Type<TDependency> | string | symbol): StubbedInstance<TDependency>;
 }
@@ -221,7 +217,7 @@ export interface TestBed {
    * It sets up the necessary dependencies and mocks, ensuring that the class under test is the primary
    * focus without interference from other components.
    *
-   * @see https://suites.dev/docs
+   * @see {@link https://suites.dev/docs/api-reference/testbed-solitary | TestBed.solitary() API Reference}
    * @since 3.0.0
    * @template TClass - The class to be tested.
    * @param targetClass - The class to be tested.
@@ -243,7 +239,7 @@ export interface TestBed {
    * This method returns a subset of the SociableTestBedBuilder's methods, focusing on exposing
    * specific dependencies that should be included in their real or partially mocked state.
    *
-   * @see https://suites.dev/docs
+   * @see {@link https://suites.dev/docs/api-reference/testbed-sociable | TestBed.sociable() API Reference}
    * @template TClass - The type of the target class.
    * @param targetClass - The target class to be tested.
    * @returns A subset of the SociableTestBedBuilder's methods
@@ -266,7 +262,8 @@ export interface TestBed {
  * Represents the outcome when a `TestBedBuilder` is compiled.
  *
  * @template TClass The class type being tested.
- * @see https://suites.dev/docs
+ * @since 3.0.0
+ * @see {@link https://suites.dev/docs/api-reference | API Reference}
  */
 export interface UnitTestBed<TClass> {
   /**
@@ -342,7 +339,8 @@ export interface MockOverride<TDependency, TClass> extends MockOverrideCore<TDep
  * Provides methods to configure and finalize the `TestBed`.
  *
  * @template TClass The class type being tested.
- * @see https://suites.dev/docs
+ * @since 3.0.0
+ * @see {@link https://suites.dev/docs/api-reference/mock-configuration | Mock Configuration}
  */
 export interface TestBedBuilder<TClass> extends TestBedBuilderCore<TClass> {
   /**

@@ -46,7 +46,7 @@ export { mock } from './mock.static';
  *
  * @since 3.0.0
  * @see {@link https://sinonjs.org/releases/latest/stubs/ Sinon Stubs}
- * @see {@link https://suites.dev/docs/api-reference/stub Stub API Reference}
+ * @see {@link https://suites.dev/docs/api-reference/mock Stub API Reference}
  * @see {@link mock} for mocking entire objects
  */
 export const stub = sinonStub();

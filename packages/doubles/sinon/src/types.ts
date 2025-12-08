@@ -48,6 +48,6 @@ export type Mocked<T> = {
  *
  * @since 3.0.0
  * @see {@link https://sinonjs.org/releases/latest/stubs/ Sinon Stubs}
- * @see {@link https://suites.dev/docs/api-reference/stub Stub Reference}
+ * @see {@link https://suites.dev/docs/api-reference/mock Stub Reference}
  */
 export type Stub<TArgs extends any[] = any[], TReturn = any> = SinonStub<TArgs, TReturn>;

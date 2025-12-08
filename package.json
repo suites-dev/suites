@@ -22,7 +22,8 @@
     "lint": "pnpm lerna run lint --parallel",
     "prepare": "husky",
     "test": "pnpm lerna exec pnpm test",
-    "e2e": "ts-node local-e2e.ts"
+    "e2e": "ts-node local-e2e.ts",
+    "validate-tsdoc-links": "ts-node scripts/validate-tsdoc-links.ts"
   },
   "lint-staged": {
     "*.ts": [
@@ -48,13 +49,14 @@
     "@eslint/js": "9.8.0",
     "@nestjs/common": "^10.4.20",
     "@types/jest": "29.5.12",
-    "@types/node": "^20.19.11",
+    "@types/node": "^22.0.0",
     "@types/sinon": "^10.0.20",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "axios": "1.8.2",
     "braces": "3.0.3",
     "eslint": "9.8.0",
+    "eslint-plugin-tsdoc": "^0.5.0",
     "follow-redirects": "1.15.11",
     "globals": "^16.3.0",
     "husky": "^8.0.3",

@@ -3,20 +3,13 @@
 import js from '@eslint/js';
 import typescript from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
+import tsdoc from 'eslint-plugin-tsdoc';
 import globals from 'globals';
 
 export default [
   js.configs.recommended,
   {
-    ignores: [
-      'node_modules/*',
-      'coverage/*',
-      'dist',
-      'dist/*',
-      '*.js',
-      '*.d.ts',
-      'index.ts'
-    ]
+    ignores: ['node_modules/*', 'coverage/*', 'dist', 'dist/*', '*.js', '*.d.ts', 'index.ts'],
   },
   {
     files: ['**/*.{js,ts}'],
@@ -25,17 +18,18 @@ export default [
       sourceType: 'module',
       parser: typescriptParser,
       parserOptions: {
-        project: true
+        project: true,
       },
       globals: {
         ...globals.node,
         ...globals.jest,
         ...globals.browser,
-        Console: 'readonly'
-      }
+        Console: 'readonly',
+      },
     },
     plugins: {
-      '@typescript-eslint': typescript
+      '@typescript-eslint': typescript,
+      tsdoc,
     },
     rules: {
       ...typescript.configs.recommended.rules,
@@ -53,9 +47,10 @@ export default [
         'error',
         {
           prefer: 'type-imports',
-          disallowTypeAnnotations: false
-        }
-      ]
-    }
-  }
+          disallowTypeAnnotations: false,
+        },
+      ],
+      'tsdoc/syntax': 'warn',
+    },
+  },
 ];

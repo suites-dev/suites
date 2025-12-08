@@ -10,9 +10,11 @@ export { Mocked, Stub } from './types';
  * @see https://suites.dev/docs/api-reference
  * @since 3.0.0
  * @example
+ * ```ts
  * import { adapter as mock } from '@suites/doubles.sinon';
  *
- * const mockedService = mock<MyService>(MyService);
+ * const mockedService = mock<MyService>();
+ * ```
  */
 export const adapter = { mock, stub: (): SinonStub => sinonStub() };
 
@@ -35,6 +37,7 @@ export { mock } from './mock.static';
  * - For mocking entire objects, use `mock<T>()` instead
  *
  * @example
+ * ```ts
  * // Basic usage - create a simple stub
  * import { stub } from '@suites/unit';
  *
@@ -43,10 +46,11 @@ export { mock } from './mock.static';
  *
  * const result = callback(); // returns 42
  * expect(callback.calledOnce).toBe(true);
+ * ```
  *
  * @since 3.0.0
- * @see {@link https://sinonjs.org/releases/latest/stubs/ Sinon Stubs}
- * @see {@link https://suites.dev/docs/api-reference/mock Stub API Reference}
+ * @see {@link https://sinonjs.org/releases/latest/stubs/ | Sinon Stubs}
+ * @see {@link https://suites.dev/docs/api-reference/mock | Stub API Reference}
  * @see {@link mock} for mocking entire objects
  */
 export const stub = sinonStub();

@@ -67,7 +67,7 @@ const handler = <T>() => ({
  * JavaScript Proxy, providing intelligent auto-mocking without manual setup.
  *
  * @template T The type of the object to mock
- * @param mockImplementation Optional partial implementation to pre-configure specific methods or properties
+ * @param mockImplementation - Optional partial implementation to pre-configure specific methods or properties
  * @returns A fully mocked instance where all methods are `jest.fn()` stubs with full Jest API support
  *
  * @remarks
@@ -75,6 +75,7 @@ const handler = <T>() => ({
  * - Supports nested object mocking
  *
  * @example
+ * ```ts
  * // Basic usage - mock an interface
  * import { mock } from '@suites/unit';
  *
@@ -86,10 +87,11 @@ const handler = <T>() => ({
  * const gateway = mock<PaymentGateway>();
  * gateway.charge.mockResolvedValue({ status: 'success' });
  * gateway.refund.mockResolvedValue(true);
+ * ```
  *
  * @since 3.0.0
- * @see {@link https://jestjs.io/docs/mock-function-api Jest Mock Functions}
- * @see {@link https://suites.dev/docs/api-reference/mock Mock API Reference}
+ * @see {@link https://jestjs.io/docs/mock-function-api | Jest Mock Functions}
+ * @see {@link https://suites.dev/docs/api-reference/mock | Mock API Reference}
  */
 export const mock = <T>(mockImplementation: DeepPartial<T> = {} as DeepPartial<T>): Mocked<T> => {
   // @ts-ignore private property

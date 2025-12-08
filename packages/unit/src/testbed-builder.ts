@@ -62,9 +62,9 @@ export const SuitesDIAdapters = {
  *
  * @internal This is used internally by TestBed.solitary() and TestBed.sociable()
  * @template TClass The type of the class to be tested
- * @param diAdapters Registry of DI framework adapters
- * @param doublesAdapters Registry of mocking library adapters
- * @param targetClass The class for which to create the test environment
+ * @param diAdapters - Registry of DI framework adapters
+ * @param doublesAdapters - Registry of mocking library adapters
+ * @param targetClass - The class for which to create the test environment
  * @returns Factory object with a create method for building TestBedBuilder instances
  * @since 3.0.0
  */

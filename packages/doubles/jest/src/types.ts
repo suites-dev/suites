@@ -20,6 +20,7 @@ type MockedProperty<T> = T extends (...args: any[]) => any ? MockFunction<T> : M
  * `mockResolvedValue`, `mockImplementation`, and assertion matchers.
  *
  * @example
+ * ```ts
  * import type { Mocked } from '@suites/unit';
  * import { TestBed } from '@suites/unit';
  *
@@ -34,10 +35,11 @@ type MockedProperty<T> = T extends (...args: any[]) => any ? MockFunction<T> : M
  * // Full Jest API available
  * mockRepo.findById.mockResolvedValue({ id: '1', name: 'Alice' });
  * expect(mockRepo.save).toHaveBeenCalledWith(expect.objectContaining({ name: 'Alice' }));
+ * ```
  *
  * @since 3.0.0
- * @see {@link https://jestjs.io/docs/mock-function-api Jest Mock API}
- * @see {@link https://suites.dev/docs/api-reference/types Type Reference}
+ * @see {@link https://jestjs.io/docs/mock-function-api | Jest Mock API}
+ * @see {@link https://suites.dev/docs/api-reference/types | Type Reference}
  */
 export type Mocked<T> = {
   [Key in keyof T]: MockedProperty<T[Key]>;
@@ -61,7 +63,7 @@ export type Mocked<T> = {
  *
  *
  * @since 3.0.0
- * @see {@link https://jestjs.io/docs/mock-function-api#jestfnimplementation Jest Function Mocks}
- * @see {@link https://suites.dev/docs/api-reference/mock Stub Reference}
+ * @see {@link https://jestjs.io/docs/mock-function-api#jestfnimplementation | Jest Function Mocks}
+ * @see {@link https://suites.dev/docs/api-reference/mock | Stub Reference}
  */
 export type Stub<TArgs extends any[] = any[]> = jest.Mock<any, TArgs>;

@@ -38,11 +38,13 @@ export interface StubbedMember<T> {
  * adapter augmentation support.
  *
  * @example
+ * ```ts
  * // ❌ DO NOT use StubbedInstance directly
  * import { StubbedInstance } from '@suites/types.doubles';
  *
  * // ✅ Use Mocked instead
  * import { Mocked } from '@suites/unit';
+ * ```
  *
  * @since 3.0.0
  * @internal

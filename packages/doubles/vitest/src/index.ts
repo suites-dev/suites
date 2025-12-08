@@ -10,9 +10,11 @@ import { fn } from '@vitest/spy';
  * @see https://suites.dev/docs/api-reference
  * @since 3.0.0
  * @example
+ * ```ts
  * import { adapter } from '@suites/doubles.vitest';
  *
- * const mockedService = adapter.mock<MyService>(MyService);
+ * const mockedService = adapter.mock<MyService>();
+ * ```
  */
 export const adapter = { mock, stub: (): Mock => fn() };
 
@@ -35,6 +37,7 @@ export { mock } from './mock.static';
  * - For mocking entire objects, use `mock<T>()` instead
  *
  * @example
+ * ```ts
  * // Basic usage - create a simple stub
  * import { stub } from '@suites/unit';
  *
@@ -43,10 +46,11 @@ export { mock } from './mock.static';
  *
  * const result = callback(); // returns 42
  * expect(callback).toHaveBeenCalledTimes(1);
+ * ```
  *
  * @since 3.0.0
- * @see {@link https://vitest.dev/api/vi.html#vi-fn Vitest Mock Functions}
- * @see {@link https://suites.dev/docs/api-reference/mock Stub API Reference}
+ * @see {@link https://vitest.dev/api/vi.html#vi-fn | Vitest Mock Functions}
+ * @see {@link https://suites.dev/docs/api-reference/mock | Stub API Reference}
  * @see {@link mock} for mocking entire objects
  */
 export const stub = fn();

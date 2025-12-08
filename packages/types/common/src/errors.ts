@@ -6,12 +6,14 @@
  * @see https://suites.dev/docs
  *
  * @example
+ * ```
  * import { SuitesErrorCode } from '@suites/types.common';
  *
  * // Check for specific error code
  * if (error.code === SuitesErrorCode.IDENTIFIER_NOT_FOUND) {
  *   // Handle identifier not found error
  * }
+ * ```
  */
 export const SuitesErrorCode = {
   /** Identifier not found in dependency container (ER010) */

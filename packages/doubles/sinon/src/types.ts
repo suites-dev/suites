@@ -22,8 +22,8 @@ type MockedProperty<T> = T extends (...args: any[]) => any ? MockFunction<T> : M
  * `resolves`, `rejects`, `throws`, and assertion capabilities.
  *
  * @since 3.0.0
- * @see {@link https://sinonjs.org/releases/latest/stubs/ Sinon Stubs}
- * @see {@link https://suites.dev/docs/api-reference/types Type Reference}
+ * @see {@link https://sinonjs.org/releases/latest/stubs/ | Sinon Stubs}
+ * @see {@link https://suites.dev/docs/api-reference/types | Type Reference}
  */
 export type Mocked<T> = {
   [Key in keyof T]: MockedProperty<T[Key]>;
@@ -47,7 +47,7 @@ export type Mocked<T> = {
  *
  *
  * @since 3.0.0
- * @see {@link https://sinonjs.org/releases/latest/stubs/ Sinon Stubs}
- * @see {@link https://suites.dev/docs/api-reference/mock Stub Reference}
+ * @see {@link https://sinonjs.org/releases/latest/stubs/ | Sinon Stubs}
+ * @see {@link https://suites.dev/docs/api-reference/mock | Stub Reference}
  */
 export type Stub<TArgs extends any[] = any[], TReturn = any> = SinonStub<TArgs, TReturn>;

@@ -18,7 +18,7 @@ export interface UnitTestBed<TClass> {
    * @since 3.0.0
    * @see https://suites.dev/docs/api-reference
    * @template TClass The type of the class under test.
-   * @property {TClass} unit The instance of the class under test.
+   * @property unit - The instance of the class under test.
    */
   unit: TClass;
 
@@ -27,7 +27,7 @@ export interface UnitTestBed<TClass> {
    * access, and verify the interactions with the class's dependencies, crucial for thorough testing.
    * @since 3.0.0
    * @see https://suites.dev/docs/api-reference
-   * @property {UnitReference} unitRef The reference to the mocked dependencies of the class.
+   * @property unitRef - The reference to the mocked dependencies of the class.
    */
   unitRef: UnitReference;
 }
@@ -48,10 +48,10 @@ export interface MockOverride<TDependency, TClass> {
    * how the mock should behave when interacted with during tests.
    *
    * @since 3.0.0
-   * @param mockImplementation A function that receives a stub function and returns a partial
+   * @param mockImplementation - A function that receives a stub function and returns a partial
    * implementation of the dependency. This setup allows testers to specify detailed behavior,
    * including how methods should respond when invoked.
-   * @returns {TestBedBuilder} A TestBedBuilder instance, facilitating a fluent interface that allows further
+   * @returns A TestBedBuilder instance, facilitating a fluent interface that allows further
    * configuration of the testing environment.
    */
   impl(
@@ -64,9 +64,9 @@ export interface MockOverride<TDependency, TClass> {
    * implementation in a controlled manner.
    *
    * @since 3.0.0
-   * @param finalImplementation The final implementation for the dependency, which may partially
+   * @param finalImplementation - The final implementation for the dependency, which may partially
    * or fully replace the mock. This allows for integration testing scenarios within a unit test framework.
-   * @returns {TestBedBuilder} A TestBedBuilder instance, allowing for further configuration or finalization of the
+   * @returns A TestBedBuilder instance, allowing for further configuration or finalization of the
    * test setup.
    */
   final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;

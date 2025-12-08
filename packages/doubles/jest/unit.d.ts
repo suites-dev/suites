@@ -45,15 +45,17 @@ declare module '@suites/unit' {
    * Jest adapter is installed.
    *
    * @example
+   * ```ts
    * // ✅ Correct - import from @suites/unit
    * import { Mocked } from '@suites/unit';
    *
    * // ❌ Wrong - do not import from adapter package
    * import { Mocked } from '@suites/doubles.jest';
+   * ```
    *
    * @since 3.0.0
-   * @see {@link https://jestjs.io/docs/jest-object#jestmockedtitem-t-deep Jest Mocked}
-   * @see {@link https://suites.dev/docs/api-reference/types Type Reference}
+   * @see {@link https://jestjs.io/docs/jest-object#jestmockedtitem-t-deep | Jest Mocked}
+   * @see {@link https://suites.dev/docs/api-reference/types | Type Reference}
    */
   export type Mocked<T> = JestMocked<T>;
 }
@@ -72,6 +74,7 @@ declare module '@suites/core.unit' {
    * - Use this to configure mock behavior and assertions after TestBed compilation
    *
    * @example
+   * ```ts
    * const { unit, unitRef } = await TestBed.solitary(UserService).compile();
    *
    * // Retrieve mocked dependencies
@@ -82,15 +85,19 @@ declare module '@suites/core.unit' {
    * // Configure mock behaviors
    * userRepo.findById.mockResolvedValue(testUser);
    * emailService.sendEmail.mockResolvedValue(true);
+   * ```
    *
    * @since 3.0.0
-   * @see {@link https://suites.dev/docs/api-reference/unitreference UnitReference Guide}
+   * @see {@link https://suites.dev/docs/api-reference/unitreference | UnitReference Guide}
    */
   export interface UnitReference {
     /**
      * Retrieves a mocked dependency by string token.
      * Used for token-based injection like `@Inject('CONFIG')`.
-     * @example unitRef.get<ConfigService>('CONFIG_SERVICE')
+     * @example
+     * ```ts
+     * unitRef.get<ConfigService>('CONFIG_SERVICE')
+     * ```
      */
     get<TDependency>(token: string): JestMocked<TDependency>;
 
@@ -106,7 +113,10 @@ declare module '@suites/core.unit' {
     /**
      * Retrieves a mocked dependency by symbol token.
      * Used when symbols are used as injection tokens for uniqueness.
-     * @example unitRef.get<Logger>(LoggerSymbol)
+     * @example
+     * ```ts
+     * unitRef.get<Logger>(LoggerSymbol)
+     * ```
      */
     get<TDependency>(token: symbol): JestMocked<TDependency>;
 
@@ -122,7 +132,10 @@ declare module '@suites/core.unit' {
     /**
      * Retrieves a mocked dependency by its class type.
      * The most common way to get mocked dependencies.
-     * @example const userRepo = unitRef.get(UserRepository)
+     * @example
+     * ```ts
+     * const userRepo = unitRef.get(UserRepository)
+     * ```
      */
     get<TDependency>(type: Type<TDependency>): JestMocked<TDependency>;
 
@@ -162,8 +175,8 @@ declare module '@suites/core.unit' {
      * The `stubFn` parameter provides Jest stub functions that you can configure,
      * and the resulting mock can be retrieved via `unitRef.get()` for further modifications.
      *
-     * @param mockImplementation Function that receives a stub factory and returns partial mock implementation
-     * @returns TestBedBuilder for method chaining
+     * @param mockImplementation - Function that receives a stub factory and returns partial mock implementation
+     * @returns A TestBedBuilder instance for method chaining
      *
      * @remarks
      * - Mocks are retrievable via `unitRef.get()` after compilation
@@ -171,6 +184,7 @@ declare module '@suites/core.unit' {
      * - Best for class-based dependencies where you need flexible control
      *
      * @example
+     * ```ts
      * const { unit, unitRef } = await TestBed.solitary(UserService)
      *   .mock(UserRepository)
      *   .impl(stubFn => ({
@@ -182,6 +196,7 @@ declare module '@suites/core.unit' {
      * // Later in test, modify behavior
      * const repo = unitRef.get(UserRepository);
      * repo.findById.mockResolvedValue(differentUser);
+     * ```
      *
      * @since 3.0.0
      */
@@ -198,8 +213,8 @@ declare module '@suites/core.unit' {
      * runtime modification. The mock cannot be retrieved or modified after compilation,
      * making it ideal for static configuration values.
      *
-     * @param finalImplementation The fixed value or partial implementation
-     * @returns TestBedBuilder for method chaining
+     * @param finalImplementation - The fixed value or partial implementation
+     * @returns A TestBedBuilder instance for method chaining
      *
      * @remarks
      * - Mock is NOT retrievable via `unitRef.get()`
@@ -208,18 +223,22 @@ declare module '@suites/core.unit' {
      * - Also works for token-injected classes that don't need modification
      *
      * @example
+     * ```ts
      * // Configuration object
      * const { unit } = await TestBed.solitary(DatabaseService)
      *   .mock('DATABASE_CONFIG')
      *   .final({ host: 'localhost', port: 5432 })
      *   .compile();
+     * ```
      *
      * @example
+     * ```ts
      * // Token-injected class with fixed behavior
      * const { unit } = await TestBed.solitary(UserService)
      *   .mock('LOGGER')
      *   .final({ log: () => {}, error: () => {} })
      *   .compile();
+     * ```
      *
      * @since 3.0.0
      */

@@ -22,8 +22,8 @@ type MockedProperty<T> = T extends (...args: any[]) => any ? MockFunction<T> : M
  * `mockResolvedValue`, `mockImplementation`, and assertion matchers.
  *
  * @since 3.0.0
- * @see {@link https://vitest.dev/api/vi.html#vi-fn Vitest Mock API}
- * @see {@link https://suites.dev/docs/api-reference/types Type Reference}
+ * @see {@link https://vitest.dev/api/vi.html#vi-fn | Vitest Mock API}
+ * @see {@link https://suites.dev/docs/api-reference/types | Type Reference}
  */
 export type Mocked<T> = MaybeMockedDeep<T> & {
   [K in keyof T]: MockedProperty<T[K]>;
@@ -47,7 +47,7 @@ export type Mocked<T> = MaybeMockedDeep<T> & {
  *
  *
  * @since 3.0.0
- * @see {@link https://vitest.dev/api/vi.html#vi-fn Vitest Function Mocks}
- * @see {@link https://suites.dev/docs/api-reference/mock Stub Reference}
+ * @see {@link https://vitest.dev/api/vi.html#vi-fn | Vitest Function Mocks}
+ * @see {@link https://suites.dev/docs/api-reference/mock | Stub Reference}
  */
 export type Stub<TArgs extends any[] = any[], TReturn = any> = Mock<TArgs, TReturn>;

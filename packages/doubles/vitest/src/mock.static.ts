@@ -69,7 +69,7 @@ const handler = <T>() => ({
  * JavaScript Proxy, providing intelligent auto-mocking without manual setup.
  *
  * @template T The type of the object to mock
- * @param mockImplementation Optional partial implementation to pre-configure specific methods or properties
+ * @param mockImplementation - Optional partial implementation to pre-configure specific methods or properties
  * @returns A fully mocked instance where all methods are `vi.fn()` stubs with full Vitest API support
  *
  * @remarks
@@ -77,6 +77,7 @@ const handler = <T>() => ({
  * - Supports nested object mocking
  *
  * @example
+ * ```ts
  * // Basic usage - mock an interface
  * import { mock } from '@suites/unit';
  *
@@ -91,10 +92,11 @@ const handler = <T>() => ({
  *
  * const userService = mock<UserService>();
  * userService.findUser.mockResolvedValue({ id: '1', name: 'John' });
+ * ```
  *
  * @since 3.0.0
- * @see {@link https://vitest.dev/api/vi.html#vi-fn Vitest Mock Functions}
- * @see {@link https://suites.dev/docs/api-reference/mock Mock API Reference}
+ * @see {@link https://vitest.dev/api/vi.html#vi-fn | Vitest Mock Functions}
+ * @see {@link https://suites.dev/docs/api-reference/mock | Mock API Reference}
  */
 export const mock = <T>(mockImplementation: DeepPartial<T> = {} as DeepPartial<T>): Mocked<T> => {
   // @ts-ignore private property

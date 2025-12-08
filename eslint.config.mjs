@@ -50,7 +50,7 @@ export default [
           disallowTypeAnnotations: false,
         },
       ],
-      'tsdoc/syntax': 'warn',
+      'tsdoc/syntax': 'error',
     },
   },
 ];

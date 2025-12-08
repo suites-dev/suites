@@ -17,7 +17,7 @@ import type { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/cor
  * generate type-safe mocks, and wire everything together without boilerplate.
  *
  * @since 3.0.0
- * @see {@link https://suites.dev/docs/api-reference/ TestBed Documentation}
+ * @see {@link https://suites.dev/docs/api-reference/ | TestBed Documentation}
  * @see {@link TestBed.solitary} for isolated testing
  * @see {@link TestBed.sociable} for integration testing
  */
@@ -32,7 +32,7 @@ export class TestBed {
    * - Achieve fast, deterministic tests
    *
    * @template TClass The type of the class under test
-   * @param targetClass The class constructor to test in isolation
+   * @param targetClass - The class constructor to test in isolation
    * @returns A builder for configuring mocks before compilation
    *
    * @remarks
@@ -41,6 +41,7 @@ export class TestBed {
    * For testing real interactions between components, use {@link TestBed.sociable}.
    *
    * @example
+   * ```ts
    * // Pre-configure mocks with .mock()
    * const { unit, unitRef } = await TestBed.solitary(UserService)
    *   .mock(UserRepository)
@@ -49,10 +50,11 @@ export class TestBed {
    *     save: stubFn().mockResolvedValue(void 0)
    *   }))
    *   .compile();
+   * ```
    *
-   * @since 3.0.0
-   * @see {@link https://suites.dev/docs/api-reference/testbed-solitary Solitary Testing Guide}
-   * @see {@link TestBed.sociable} for integration testing
+ * @since 3.0.0
+ * @see {@link https://suites.dev/docs/api-reference/testbed-solitary | Solitary Testing Guide}
+ * @see {@link TestBed.sociable} for integration testing
    */
   public static solitary<TClass = any>(targetClass: Type<TClass>): SolitaryTestBedBuilder<TClass> {
     return testBedBuilderFactory(SuitesDIAdapters, SuitesDoublesAdapters, targetClass).create(
@@ -71,10 +73,11 @@ export class TestBed {
    * - Keep external I/O dependencies mocked
    *
    * @template TClass The type of the class under test
-   * @param targetClass The class constructor to test with selective real dependencies
+   * @param targetClass - The class constructor to test with selective real dependencies
    * @returns A builder requiring `.expose()` to specify real implementations
    *
    * @example
+   * ```ts
    * // Cannot retrieve exposed dependencies
    * const { unit, unitRef } = await TestBed.sociable(OrderService)
    *   .expose(PriceCalculator)
@@ -82,10 +85,11 @@ export class TestBed {
    *
    * // This will throw - exposed dependencies are not available
    * // const calculator = unitRef.get(PriceCalculator); // ❌ Error
+   * ```
    *
-   * @since 3.0.0
-   * @see {@link https://suites.dev/docs/api-reference/testbed-sociable Sociable API Reference}
-   * @see {@link https://suites.dev/docs/guides/sociable Sociable Guide}
+ * @since 3.0.0
+ * @see {@link https://suites.dev/docs/api-reference/testbed-sociable | Sociable API Reference}
+ * @see {@link https://suites.dev/docs/guides/sociable | Sociable Guide}
    */
   public static sociable<TClass = any>(
     targetClass: Type<TClass>

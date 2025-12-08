@@ -35,7 +35,7 @@ const handler = <T>() => ({
         return undefined;
       }
 
-      // Vitest's internal equality checking does some wierd stuff to check for iterable equality
+      // Vitest's internal equality checking does some weird stuff to check for iterable equality
       if (property === Symbol.iterator) {
         // @ts-ignore
         return obj[property];

@@ -165,7 +165,7 @@ declare module '@suites/core.unit' {
    * @since 3.0.0
    * @template TDependency The type of the dependency to be mocked.
    * @template TClass The type of the class under test.
-   * @see https://suites.dev/api-reference/api/mockoverride-api
+   * @see {@link https://suites.dev/docs/api-reference/mock-configuration | Mock Configuration}
    */
   export interface MockOverride<TDependency, TClass> {
     /**

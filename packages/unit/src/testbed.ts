@@ -17,7 +17,7 @@ import type { SociableTestBedBuilder, SolitaryTestBedBuilder } from '@suites/cor
  * generate type-safe mocks, and wire everything together without boilerplate.
  *
  * @since 3.0.0
- * @see {@link https://suites.dev/docs/api-reference/testbed TestBed Documentation}
+ * @see {@link https://suites.dev/docs/api-reference/ TestBed Documentation}
  * @see {@link TestBed.solitary} for isolated testing
  * @see {@link TestBed.sociable} for integration testing
  */
@@ -85,7 +85,7 @@ export class TestBed {
    *
    * @since 3.0.0
    * @see {@link https://suites.dev/docs/api-reference/testbed-sociable Sociable API Reference}
-   * @see {@link https://suites.dev/docs/guides/testbed-sociable Sociable Guide}
+   * @see {@link https://suites.dev/docs/guides/sociable Sociable Guide}
    */
   public static sociable<TClass = any>(
     targetClass: Type<TClass>

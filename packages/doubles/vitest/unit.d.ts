@@ -41,8 +41,8 @@ declare module '@suites/unit' {
    *
    * @remarks
    * This type should be imported from `@suites/unit`, NOT from this package.
-   * TypeScript automatically resolves to this Sinon-specific type when the
-   * Sinon adapter is installed.
+   * TypeScript automatically resolves to this Vitest-specific type when the
+   * Vitest adapter is installed.
    *
    * @example
    * // ✅ Correct - import from @suites/unit

@@ -7,13 +7,13 @@ export { Mocked, Stub } from './types';
 /**
  * Adapter for a Sinon mocking library to be used with Suites framework.
  *
- * @see https://suites.dev/docs/api-reference
+ * @see {@link https://suites.dev/docs/api-reference/mock | Mock API Reference}
  * @since 3.0.0
  * @example
  * ```ts
- * import { adapter as mock } from '@suites/doubles.sinon';
+ * import { adapter } from '@suites/doubles.sinon';
  *
- * const mockedService = mock<MyService>();
+ * const mockedService = adapter.mock<MyService>();
  * ```
  */
 export const adapter = { mock, stub: (): SinonStub => sinonStub() };

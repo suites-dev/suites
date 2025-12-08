@@ -88,7 +88,7 @@ declare module '@suites/core.unit' {
    * ```
    *
    * @since 3.0.0
-   * @see {@link https://suites.dev/docs/api-reference/unitreference | UnitReference Guide}
+   * @see {@link https://suites.dev/docs/api-reference/unit-reference | UnitReference Guide}
    */
   export interface UnitReference {
     /**

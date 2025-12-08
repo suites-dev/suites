@@ -7,7 +7,7 @@ import { fn } from '@vitest/spy';
 /**
  * Adapter for a Vitest mocking library to be used with Suites framework.
  *
- * @see https://suites.dev/docs/api-reference
+ * @see {@link https://suites.dev/docs/api-reference/mock | Mock API Reference}
  * @since 3.0.0
  * @example
  * ```ts

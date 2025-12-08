@@ -14,7 +14,7 @@ import type { DoublesAdapter } from '@suites/types.doubles';
  * Install the appropriate adapter package to resolve this error.
  *
  * @since 3.0.0
- * @see https://suites.dev/docs
+ * @see {@link https://suites.dev/docs/get-started/installation | Installation Guide}
  */
 export class AdapterNotFoundError extends SuitesError {
   public constructor(message: string) {

@@ -88,7 +88,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param type - The type representing the dependency.
-   * @throws {@link IdentifierNotFoundError} If the dependency is not found.
+   * @throws {@link DependencyResolutionError} If the dependency is not found.
    * @returns The mocked object corresponding to the provided type identifier.
    */
   get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;
@@ -101,7 +101,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @template TDependency The type of the dependency being retrieved.
    * @param type - The type representing the dependency.
    * @param identifierMetadata - A metadata object that corresponds to the type identifier.
-   * @throws {@link IdentifierNotFoundError} If the dependency is not found.
+   * @throws {@link DependencyResolutionError} If the dependency is not found.
    * @returns The mocked object corresponding to the provided
    * symbol-based token.
    */
@@ -116,7 +116,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param token - The string-based token representing the dependency.
-   * @throws {@link IdentifierNotFoundError} If the dependency is not found.
+   * @throws {@link DependencyResolutionError} If the dependency is not found.
    * @returns The mocked object corresponding to the provided string-based token.
    */
   get<TDependency>(token: string): StubbedInstance<TDependency>;
@@ -129,7 +129,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @template TDependency The type of the dependency being retrieved.
    * @param token - The symbol-based token representing the dependency.
    * @param identifierMetadata - An accompanying metadata object for the token identifier.
-   * @throws {@link IdentifierNotFoundError} If the dependency is not found.
+   * @throws {@link DependencyResolutionError} If the dependency is not found.
    * @returns The mocked object corresponding to the provided
    * symbol-based token.
    */
@@ -144,7 +144,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param token - The symbol-based token representing the dependency.
-   * @throws {@link IdentifierNotFoundError} If the dependency is not found.
+   * @throws {@link DependencyResolutionError} If the dependency is not found.
    * @returns The mocked object corresponding to the provided symbol-based token.
    */
   get<TDependency>(token: symbol): StubbedInstance<TDependency>;
@@ -157,7 +157,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @template TDependency The type of the dependency being retrieved.
    * @param token - The symbol-based token representing the dependency.
    * @param identifierMetadata - An accompanying metadata object for the token identifier.
-   * @throws {@link IdentifierNotFoundError} If the dependency is not found.
+   * @throws {@link DependencyResolutionError} If the dependency is not found.
    * @returns The mocked object corresponding to the provided symbol-based token.
    */
   get<TDependency>(
@@ -174,7 +174,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @template TDependency The type of the dependency being retrieved.
    * @param identifier - The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
    * @param identifierMetadata - A corresponding metadata object for the token identifier.
-   * @throws {@link IdentifierNotFoundError} If the dependency is not found.
+   * @throws {@link DependencyResolutionError} If the dependency is not found.
    * @returns The mocked instance corresponding to the provided identifier and metadata.
    */
   get<TDependency>(
@@ -190,7 +190,7 @@ export interface UnitReference extends UnitReferenceCore {
    * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
    * @param identifier - The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
-   * @throws {@link IdentifierNotFoundError} If the dependency is not found.
+   * @throws {@link DependencyResolutionError} If the dependency is not found.
    * @returns The mocked instance corresponding to the provided identifier.
    */
   get<TDependency>(identifier: Type<TDependency> | string | symbol): StubbedInstance<TDependency>;

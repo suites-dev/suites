@@ -48,6 +48,6 @@ export type Mocked<T> = MaybeMockedDeep<T> & {
  *
  * @since 3.0.0
  * @see {@link https://vitest.dev/api/vi.html#vi-fn Vitest Function Mocks}
- * @see {@link https://suites.dev/docs/api-reference/stub Stub Reference}
+ * @see {@link https://suites.dev/docs/api-reference/mock Stub Reference}
  */
 export type Stub<TArgs extends any[] = any[], TReturn = any> = Mock<TArgs, TReturn>;

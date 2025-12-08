@@ -23,6 +23,5 @@ export function referenceDependencyNotFoundError(
 This error usually occurs when attempting to access a dependency that has not been mocked or exposed
 during the test setup. Please verify that '${details}' is correctly mocked or explicitly exposed in the
 TestBed configuration if it is essential for your tests.
-Review your testing setup to ensure all required dependencies are correctly included and configured.
-For detailed setup instructions and troubleshooting, please visit: https://suites.dev/docs.`;
+Review your testing setup to ensure all required dependencies are correctly included and configured.`;
 }

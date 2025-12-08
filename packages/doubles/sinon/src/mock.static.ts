@@ -35,7 +35,7 @@ const handler = <T>() => ({
         return undefined;
       }
 
-      // Sinon's internal equality checking does some wierd stuff to check for iterable equality
+      // Sinon's internal equality checking does some weird stuff to check for iterable equality
       if (property === Symbol.iterator) {
         // @ts-ignore
         return obj[property];

@@ -21,6 +21,24 @@ type MockedProperty<T> = T extends (...args: any[]) => any ? MockFunction<T> : M
  * All mocked methods support Sinon's stub API including `returns`,
  * `resolves`, `rejects`, `throws`, and assertion capabilities.
  *
+ * @example
+ * ```ts
+ * import type { Mocked } from '@suites/unit';
+ * import { TestBed } from '@suites/unit';
+ *
+ * class UserRepository {
+ *   public findById(id: string): Promise<User> { ... }
+ *   public save(user: User): Promise<void> { ... }
+ * }
+ *
+ * const { unit, unitRef } = await TestBed.solitary(UserService).compile();
+ * const mockRepo: Mocked<UserRepository> = unitRef.get(UserRepository);
+ *
+ * // Full Sinon API available
+ * mockRepo.findById.resolves({ id: '1', name: 'Alice' });
+ * expect(mockRepo.save.calledWith(sinon.match({ name: 'Alice' }))).toBe(true);
+ * ```
+ *
  * @since 3.0.0
  * @see {@link https://sinonjs.org/releases/latest/stubs/ | Sinon Stubs}
  * @see {@link https://suites.dev/docs/api-reference/types | Type Reference}

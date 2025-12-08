@@ -34,7 +34,7 @@ const handler = <T>() => ({
         return undefined;
       }
 
-      // Jest's internal equality checking does some wierd stuff to check for iterable equality
+      // Jest's internal equality checking does some weird stuff to check for iterable equality
       if (property === Symbol.iterator) {
         // @ts-ignore
         return obj[property];

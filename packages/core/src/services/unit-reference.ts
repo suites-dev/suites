@@ -7,32 +7,139 @@ import type { DependencyContainer, IdentifierToFinal } from './dependency-contai
 import { referenceDependencyNotFoundError, stringifyIdentifier } from './functions.static';
 import { normalizeIdentifier } from '../normalize-identifier.static';
 
+/**
+ * Provides access to mocked dependencies within a test environment.
+ *
+ * The `UnitReference` interface allows retrieving mocked instances of dependencies
+ * after `TestBed.compile()` has been called. This is essential for configuring
+ * mock behaviors and verifying interactions during tests.
+ *
+ * @since 3.0.0
+ * @see {@link https://suites.dev/docs/api-reference/unit-reference | UnitReference API Reference}
+ *
+ * @example
+ * ```ts
+ * const { unit, unitRef } = await TestBed.solitary(UserService).compile();
+ *
+ * // Retrieve mocked dependencies by class type
+ * const userRepo = unitRef.get(UserRepository);
+ * userRepo.findById.mockResolvedValue(testUser);
+ *
+ * // Retrieve by string token
+ * const config = unitRef.get<AppConfig>('APP_CONFIG');
+ *
+ * // Retrieve by symbol token
+ * const logger = unitRef.get<Logger>(LOGGER_TOKEN);
+ * ```
+ */
 export interface UnitReference {
+  /**
+   * Retrieves a mocked dependency by its class type.
+   *
+   * @template TDependency The type of the dependency being retrieved.
+   * @param type - The class constructor representing the dependency.
+   * @returns The mocked instance of the dependency.
+   * @throws {@link DependencyResolutionError} If the dependency is not found or is exposed/final.
+   */
   get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;
+
+  /**
+   * Retrieves a mocked dependency by its class type with additional metadata.
+   *
+   * @template TDependency The type of the dependency being retrieved.
+   * @param type - The class constructor representing the dependency.
+   * @param identifierMetadata - Additional metadata for identifying the dependency.
+   * @returns The mocked instance of the dependency.
+   * @throws {@link DependencyResolutionError} If the dependency is not found or is exposed/final.
+   */
   get<TDependency>(
     type: Type<TDependency>,
     identifierMetadata: IdentifierMetadata
   ): StubbedInstance<TDependency>;
+
+  /**
+   * Retrieves a mocked dependency by a string-based token.
+   *
+   * @template TDependency The type of the dependency being retrieved.
+   * @param token - The string token representing the dependency.
+   * @returns The mocked instance of the dependency.
+   * @throws {@link DependencyResolutionError} If the dependency is not found or is exposed/final.
+   */
   get<TDependency>(token: string): StubbedInstance<TDependency>;
+
+  /**
+   * Retrieves a mocked dependency by a string-based token with additional metadata.
+   *
+   * @template TDependency The type of the dependency being retrieved.
+   * @param token - The string token representing the dependency.
+   * @param identifierMetadata - Additional metadata for identifying the dependency.
+   * @returns The mocked instance of the dependency.
+   * @throws {@link DependencyResolutionError} If the dependency is not found or is exposed/final.
+   */
   get<TDependency>(
     token: string,
     identifierMetadata: IdentifierMetadata
   ): StubbedInstance<TDependency>;
+
+  /**
+   * Retrieves a mocked dependency by a symbol-based token.
+   *
+   * @template TDependency The type of the dependency being retrieved.
+   * @param token - The symbol token representing the dependency.
+   * @returns The mocked instance of the dependency.
+   * @throws {@link DependencyResolutionError} If the dependency is not found or is exposed/final.
+   */
   get<TDependency>(token: symbol): StubbedInstance<TDependency>;
+
+  /**
+   * Retrieves a mocked dependency by a symbol-based token with additional metadata.
+   *
+   * @template TDependency The type of the dependency being retrieved.
+   * @param token - The symbol token representing the dependency.
+   * @param identifierMetadata - Additional metadata for identifying the dependency.
+   * @returns The mocked instance of the dependency.
+   * @throws {@link DependencyResolutionError} If the dependency is not found or is exposed/final.
+   */
   get<TDependency>(
     token: symbol,
     identifierMetadata: IdentifierMetadata
   ): StubbedInstance<TDependency>;
+
+  /**
+   * Retrieves a mocked dependency using a flexible identifier.
+   *
+   * @template TDependency The type of the dependency being retrieved.
+   * @param identifier - The class type, string, or symbol representing the dependency.
+   * @param identifierMetadata - Optional metadata for identifying the dependency.
+   * @returns The mocked instance of the dependency.
+   * @throws {@link DependencyResolutionError} If the dependency is not found or is exposed/final.
+   */
   get<TDependency>(
     identifier: Type<TDependency> | string | symbol,
     identifierMetadata?: IdentifierMetadata
   ): StubbedInstance<TDependency>;
+
+  /**
+   * Retrieves a mocked dependency using an injectable identifier.
+   *
+   * @template TDependency The type of the dependency being retrieved.
+   * @param identifier - The injectable identifier representing the dependency.
+   * @param identifierMetadata - Optional metadata for identifying the dependency.
+   * @returns The mocked instance of the dependency.
+   * @throws {@link DependencyResolutionError} If the dependency is not found or is exposed/final.
+   */
   get<TDependency>(
     identifier: InjectableIdentifier<TDependency>,
     identifierMetadata?: IdentifierMetadata
   ): StubbedInstance<TDependency>;
 }
 
+/**
+ * Implementation of the UnitReference interface that provides access to mocked dependencies.
+ *
+ * @since 3.0.0
+ * @see {@link https://suites.dev/docs/api-reference/unit-reference | UnitReference API Reference}
+ */
 export class UnitReference {
   public constructor(
     private readonly mocksContainer: DependencyContainer,

@@ -5,6 +5,19 @@ import type { TestBedBuilder } from '@suites/core.unit';
 import type { Mocked as VitestMocked, Stub as VitestStub } from '.';
 import type { ArgsType } from '@suites/types.doubles';
 
+/**
+ * Vitest Adapter Type Augmentation
+ *
+ * This file bridges the abstract types from @suites/unit to Vitest-specific concrete implementations
+ * through TypeScript module augmentation. When this adapter is installed, these augmentations
+ * override the base abstract types with Vitest's testing framework capabilities.
+ *
+ * The augmentation boundary:
+ * - Base abstractions: StubbedInstance<T>, Stub<T> (from @suites/types.doubles)
+ * - Augmented types: VitestMocked<T>, vi.Mock (from this adapter)
+ * - User imports from @suites/unit and transparently gets Vitest types
+ */
+
 declare module '@suites/unit' {
   /**
    * Represents a stub function typically used in testing to replace other functions or methods.
@@ -19,48 +32,78 @@ declare module '@suites/unit' {
   export type Stub<TArgs extends any[]> = VitestStub<TArgs>;
 
   /**
-   * Represents a mocked instance of a given type, using Vitest's mocking framework.
-   * This is particularly useful for creating mocked instances of classes or objects in a testing environment.
+   * Vitest-specific mocked instance type where all methods are Vitest mocks.
+   *
+   * This augmentation overrides the base `Mocked<T>` type from `@suites/unit`
+   * with Vitest's concrete mock implementation when the Vitest adapter is installed.
+   *
+   * @template T The type of the object being mocked
+   *
+   * @remarks
+   * This type should be imported from `@suites/unit`, NOT from this package.
+   * TypeScript automatically resolves to this Vitest-specific type when the
+   * Vitest adapter is installed.
+   *
+   * @example
+   * ```ts
+   * // ✅ Correct - import from @suites/unit
+   * import { Mocked } from '@suites/unit';
+   *
+   * // ❌ Wrong - do not import from adapter package
+   * import { Mocked } from '@suites/doubles.vitest';
+   * ```
    *
    * @since 3.0.0
-   * @template T The type of the object being mocked.
-   * @see https://suites.dev/docs/api-reference
+   * @see {@link https://vitest.dev/api/vi.html#vi-mock | Vitest Mocked}
+   * @see {@link https://suites.dev/docs/api-reference/types | Type Reference}
    */
   export type Mocked<T> = VitestMocked<T>;
 }
 
 declare module '@suites/core.unit' {
   /**
-   * The UnitReference interface represents a reference to a unit object.
-   * It provides methods to retrieve mocked objects of dependencies based
-   * on their type or identifier. This extension integrates Vitest mocking capabilities,
-   * offering a flexible approach to access and manipulate mocked dependencies within unit tests.
+   * Provides access to all mocked dependencies of the unit under test.
+   *
+   * UnitReference is your gateway to retrieve and configure mocked dependencies after
+   * TestBed compilation. It allows to set up mock behaviors, verify interactions,
+   * and access any dependency that was automatically mocked by TestBed.
+   *
+   * @remarks
+   * - Only mocked dependencies can be retrieved (not exposed ones in sociable mode)
+   * - All retrieved mocks are fully typed with Vitest's mocking capabilities
+   * - Use this to configure mock behavior and assertions after TestBed compilation
+   *
+   * @example
+   * ```ts
+   * const { unit, unitRef } = await TestBed.solitary(UserService).compile();
+   *
+   * // Retrieve mocked dependencies
+   * const userRepo = unitRef.get(UserRepository);
+   * const emailService = unitRef.get(EmailService);
+   * const cache = unitRef.get<CacheService>('CACHE_SERVICE'); // Token-based
+   *
+   * // Configure mock behaviors
+   * userRepo.findById.mockResolvedValue(testUser);
+   * emailService.sendEmail.mockResolvedValue(true);
+   * ```
    *
    * @since 3.0.0
-   * @see https://suites.dev/docs/api-reference
+   * @see {@link https://suites.dev/docs/api-reference/unitreference | UnitReference Guide}
    */
   export interface UnitReference {
     /**
-     * Retrieves a mocked instance of a dependency based on a string token.
-     * This method allows fetching mocks based on unique identifiers, facilitating tests where dependencies are
-     * identified by strings.
-     *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The string-based token representing the dependency.
-     * @returns The mocked object corresponding to the provided string-based token.
-     * @since 3.0.0
+     * Retrieves a mocked dependency by string token.
+     * Used for token-based injection like `@Inject('CONFIG')`.
+     * @example
+     * ```ts
+     * unitRef.get<ConfigService>('CONFIG_SERVICE')
+     * ```
      */
     get<TDependency>(token: string): VitestMocked<TDependency>;
 
     /**
-     * Retrieves a mocked instance of a dependency based on a string token with additional identifier metadata.
-     * The metadata can be used to specify more detailed characteristics or requirements for the mock.
-     *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The string-based token representing the dependency.
-     * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @returns The mocked object corresponding to the provided string-based token and identifier metadata.
-     * @since 3.0.0
+     * Retrieves a mocked dependency by string token with metadata.
+     * Used for advanced DI scenarios with additional constraints.
      */
     get<TDependency>(
       token: string,
@@ -68,25 +111,18 @@ declare module '@suites/core.unit' {
     ): VitestMocked<TDependency>;
 
     /**
-     * Retrieves a mocked instance of a dependency based on a symbol-based token.
-     * Symbols are used as unique and immutable identifiers, suitable for cases where collisions in names are a concern.
-     *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The symbol-based token representing the dependency.
-     * @returns The mocked object corresponding to the provided symbol-based token.
-     * @since 3.0.0
+     * Retrieves a mocked dependency by symbol token.
+     * Used when symbols are used as injection tokens for uniqueness.
+     * @example
+     * ```ts
+     * unitRef.get<Logger>(LoggerSymbol)
+     * ```
      */
     get<TDependency>(token: symbol): VitestMocked<TDependency>;
 
     /**
-     * Retrieves a mocked instance of a dependency based on a symbol token with additional identifier metadata.
-     * Metadata provides further customization or configuration of the mocked instance.
-     *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The symbol-based token representing the dependency.
-     * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @returns The mocked object corresponding to the provided symbol-based token and identifier metadata.
-     * @since 3.0.0
+     * Retrieves a mocked dependency by symbol token with metadata.
+     * Used for advanced DI scenarios with symbol tokens.
      */
     get<TDependency>(
       token: symbol,
@@ -94,25 +130,18 @@ declare module '@suites/core.unit' {
     ): VitestMocked<TDependency>;
 
     /**
-     * Retrieves a mocked instance of a dependency based on its type.
-     * This approach is type-safe and ensures that the retrieved mock matches the expected dependency type.
-     *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param type The type representing the dependency.
-     * @returns The mocked object corresponding to the provided type identifier.
-     * @since 3.0.0
+     * Retrieves a mocked dependency by its class type.
+     * The most common way to get mocked dependencies.
+     * @example
+     * ```ts
+     * const userRepo = unitRef.get(UserRepository)
+     * ```
      */
     get<TDependency>(type: Type<TDependency>): VitestMocked<TDependency>;
 
     /**
-     * Retrieves a mocked instance of a dependency based on its type with additional identifier metadata.
-     * This allows for more precise and context-specific mocking based on both type and metadata.
-     *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param type The type representing the dependency.
-     * @param identifierMetadata An accompanying metadata object for the type identifier.
-     * @returns The mocked object corresponding to the provided type identifier and identifier metadata.
-     * @since 3.0.0
+     * Retrieves a mocked dependency by class type with metadata.
+     * Used for advanced DI scenarios with tagged/named dependencies.
      */
     get<TDependency>(
       type: Type<TDependency>,
@@ -120,16 +149,8 @@ declare module '@suites/core.unit' {
     ): VitestMocked<TDependency>;
 
     /**
-     * Retrieves a mocked instance of a dependency using a flexible identifier, which can be a type, string, or symbol.
-     * This method provides the ultimate flexibility in retrieving mocked dependencies, accommodating various
-     * identification strategies.
-     *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param identifier The identifier (type, string, or symbol) of the dependency.
-     * @param identifierMetadata Optional accompanying metadata object for the identifier.
-     * @returns The mocked instance corresponding to the provided identifier, along with any available identifier
-     * metadata.
-     * @since 3.0.0
+     * Flexible overload for retrieving mocked dependencies.
+     * Accepts class types, string tokens, or symbol tokens.
      */
     get<TDependency>(
       identifier: Type<TDependency> | string | symbol,
@@ -148,12 +169,35 @@ declare module '@suites/core.unit' {
    */
   export interface MockOverride<TDependency, TClass> {
     /**
-     * Specifies the mock implementation for a dependency. This is used to override the default behavior
-     * or setup-specific scenarios in tests.
+     * Configures mocks with stubs that can be retrieved and modified later.
      *
-     * @param mockImplementation The function that defines the mock behavior. It takes a function returning a
-     * Vitest Stub and should return a partial implementation of the dependency.
-     * @returns {TestBedBuilder} A TestBedBuilder instance for chaining further configuration, allowing for fluent API style.
+     * Use this when you need to change mock behavior after TestBed compilation.
+     * The `stubFn` parameter provides Vitest stub functions that you can configure,
+     * and the resulting mock can be retrieved via `unitRef.get()` for further modifications.
+     *
+     * @param mockImplementation - Function that receives a stub factory and returns partial mock implementation
+     * @returns A TestBedBuilder instance for method chaining
+     *
+     * @remarks
+     * - Mocks are retrievable via `unitRef.get()` after compilation
+     * - Allows runtime behavior modification during tests
+     * - Best for class-based dependencies where you need flexible control
+     *
+     * @example
+     * ```ts
+     * const { unit, unitRef } = await TestBed.solitary(UserService)
+     *   .mock(UserRepository)
+     *   .impl(stubFn => ({
+     *     findById: stubFn().mockResolvedValue(testUser),
+     *     save: stubFn().mockResolvedValue(void 0)
+     *   }))
+     *   .compile();
+     *
+     * // Later in test, modify behavior
+     * const repo = unitRef.get(UserRepository);
+     * repo.findById.mockResolvedValue(differentUser);
+     * ```
+     *
      * @since 3.0.0
      */
     impl(
@@ -163,12 +207,39 @@ declare module '@suites/core.unit' {
     ): TestBedBuilder<TClass>;
 
     /**
-     * Specifies the final, concrete implementation to use for a mocked dependency, effectively replacing any previous
-     * mock setups.
+     * Sets immutable final values or behaviors for a dependency.
      *
-     * @param {DeepPartial} finalImplementation The concrete implementation for the dependency, typically used when transitioning
-     * from mock to real objects.
-     * @returns {TestBedBuilder} A TestBedBuilder instance for chaining further configuration.
+     * Use this for token-injected configuration objects or classes where you don't need
+     * runtime modification. The mock cannot be retrieved or modified after compilation,
+     * making it ideal for static configuration values.
+     *
+     * @param finalImplementation - The fixed value or partial implementation
+     * @returns A TestBedBuilder instance for method chaining
+     *
+     * @remarks
+     * - Mock is NOT retrievable via `unitRef.get()`
+     * - Behavior is immutable after compilation
+     * - Perfect for token-injected config (e.g., `@Inject('DATABASE_CONFIG')`)
+     * - Also works for token-injected classes that don't need modification
+     *
+     * @example
+     * ```ts
+     * // Configuration object
+     * const { unit } = await TestBed.solitary(DatabaseService)
+     *   .mock('DATABASE_CONFIG')
+     *   .final({ host: 'localhost', port: 5432 })
+     *   .compile();
+     * ```
+     *
+     * @example
+     * ```ts
+     * // Token-injected class with fixed behavior
+     * const { unit } = await TestBed.solitary(UserService)
+     *   .mock('LOGGER')
+     *   .final({ log: () => {}, error: () => {} })
+     *   .compile();
+     * ```
+     *
      * @since 3.0.0
      */
     final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;

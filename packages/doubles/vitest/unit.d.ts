@@ -7,112 +7,91 @@ import type { ArgsType } from '@suites/types.doubles';
 
 declare module '@suites/unit' {
   /**
-   * Represents a stub function typically used in testing to replace other functions or methods.
-   * This type extends vi.Mock to leverage Vitest's built-in mocking capabilities.
+   * Represents a stub function that can be configured to return specific values
+   * and track how it was called during testing.
    *
+   * This is the base abstraction for test doubles that replace functions.
+   * Testing adapters augment this interface with their specific capabilities
+   * such as call tracking, return value configuration, and behavior verification.
+   *
+   * @template ReturnType The type that the stub function returns
+   * @template Args The tuple type of the function's arguments
    * @since 3.0.0
-   * @template T The return type of the stub function.
-   * @template TArgs The arguments type of the stub function.
-   * @alias vi.Mock
-   * @see https://suites.dev/docs/api-reference
    */
   export type Stub<TArgs extends any[]> = VitestStub<TArgs>;
 
   /**
-   * Represents a mocked instance of a given type, using Vitest's mocking framework.
-   * This is particularly useful for creating mocked instances of classes or objects in a testing environment.
+   * Represents a test double instance where all methods and properties are stubbed.
+   *
+   * This abstract type provides the foundation for creating test doubles in unit tests.
+   * When a testing adapter is installed, this type is automatically augmented with
+   * framework-specific capabilities through TypeScript module augmentation.
+   *
+   * @template T The type of the object being transformed into a test double
+   *
+   * @remarks
+   * This is a base abstraction that adapters enhance with concrete implementations.
+   * The actual runtime behavior depends on which testing adapter is installed.
    *
    * @since 3.0.0
-   * @template T The type of the object being mocked.
-   * @see https://suites.dev/docs/api-reference
+   * @see {@link https://suites.dev/docs/api-reference/types | Type Reference}
    */
   export type Mocked<T> = VitestMocked<T>;
 }
 
 declare module '@suites/core.unit' {
   /**
-   * The UnitReference interface represents a reference to a unit object.
-   * It provides methods to retrieve mocked objects of dependencies based
-   * on their type or identifier. This extension integrates Vitest mocking capabilities,
-   * offering a flexible approach to access and manipulate mocked dependencies within unit tests.
+   * Provides access to mocked dependencies in the test environment.
+   *
+   * The `unitRef` allows you to retrieve mocked instances of dependencies
+   * to configure their behavior or verify interactions. This is essential for
+   * controlling how mocked dependencies respond during tests.
+   *
+   * The return type of `.get()` is augmented by adapter packages to provide
+   * framework-specific mock types. Configure augmentation by referencing the
+   * adapter's unit.d.ts in your global.d.ts.
    *
    * @since 3.0.0
-   * @see https://suites.dev/docs/api-reference
+   * @see {@link https://suites.dev/docs/api-reference/unit-reference | UnitReference API Reference}
+   *
+   * @example
+   * ```ts
+   * import { TestBed } from '@suites/unit';
+   *
+   * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
+   *
+   * // Get a mocked dependency
+   * const mockLogger = unitRef.get(Logger);
+   * mockLogger.log.mockReturnValue('test');
+   *
+   * // Verify interactions
+   * unit.doSomething();
+   * expect(mockLogger.log).toHaveBeenCalled();
+   * ```
    */
   export interface UnitReference {
     /**
-     * Retrieves a mocked instance of a dependency based on a string token.
-     * This method allows fetching mocks based on unique identifiers, facilitating tests where dependencies are
-     * identified by strings.
+     * Retrieves a reference to the mocked object of a dependency corresponding to its type identifier.
      *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The string-based token representing the dependency.
-     * @returns The mocked object corresponding to the provided string-based token.
      * @since 3.0.0
-     */
-    get<TDependency>(token: string): VitestMocked<TDependency>;
-
-    /**
-     * Retrieves a mocked instance of a dependency based on a string token with additional identifier metadata.
-     * The metadata can be used to specify more detailed characteristics or requirements for the mock.
-     *
      * @template TDependency The type of the dependency being retrieved.
-     * @param token The string-based token representing the dependency.
-     * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @returns The mocked object corresponding to the provided string-based token and identifier metadata.
-     * @since 3.0.0
-     */
-    get<TDependency>(
-      token: string,
-      identifierMetadata: IdentifierMetadata
-    ): VitestMocked<TDependency>;
-
-    /**
-     * Retrieves a mocked instance of a dependency based on a symbol-based token.
-     * Symbols are used as unique and immutable identifiers, suitable for cases where collisions in names are a concern.
-     *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The symbol-based token representing the dependency.
-     * @returns The mocked object corresponding to the provided symbol-based token.
-     * @since 3.0.0
-     */
-    get<TDependency>(token: symbol): VitestMocked<TDependency>;
-
-    /**
-     * Retrieves a mocked instance of a dependency based on a symbol token with additional identifier metadata.
-     * Metadata provides further customization or configuration of the mocked instance.
-     *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param token The symbol-based token representing the dependency.
-     * @param identifierMetadata An accompanying metadata object for the token identifier.
-     * @returns The mocked object corresponding to the provided symbol-based token and identifier metadata.
-     * @since 3.0.0
-     */
-    get<TDependency>(
-      token: symbol,
-      identifierMetadata: IdentifierMetadata
-    ): VitestMocked<TDependency>;
-
-    /**
-     * Retrieves a mocked instance of a dependency based on its type.
-     * This approach is type-safe and ensures that the retrieved mock matches the expected dependency type.
-     *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param type The type representing the dependency.
+     * @param type - The type representing the dependency.
+     * @throws {@link DependencyResolutionError} If the dependency is not found.
      * @returns The mocked object corresponding to the provided type identifier.
-     * @since 3.0.0
      */
     get<TDependency>(type: Type<TDependency>): VitestMocked<TDependency>;
 
     /**
-     * Retrieves a mocked instance of a dependency based on its type with additional identifier metadata.
-     * This allows for more precise and context-specific mocking based on both type and metadata.
+     * Retrieves a reference to the mocked object of a dependency corresponding to its type identifier
+     * and metadata object.
      *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param type The type representing the dependency.
-     * @param identifierMetadata An accompanying metadata object for the type identifier.
-     * @returns The mocked object corresponding to the provided type identifier and identifier metadata.
      * @since 3.0.0
+     * @template TDependency The type of the dependency being retrieved.
+     * @param type - The type representing the dependency.
+     * @param identifierMetadata - A metadata object that corresponds to the type identifier.
+     * @throws {@link DependencyResolutionError} If the dependency is not found.
+     * @returns The mocked object corresponding to the provided
+     * symbol-based token.
      */
     get<TDependency>(
       type: Type<TDependency>,
@@ -120,16 +99,71 @@ declare module '@suites/core.unit' {
     ): VitestMocked<TDependency>;
 
     /**
-     * Retrieves a mocked instance of a dependency using a flexible identifier, which can be a type, string, or symbol.
-     * This method provides the ultimate flexibility in retrieving mocked dependencies, accommodating various
-     * identification strategies.
+     * Retrieves a reference to the mocked object of a dependency corresponding to a string-based token.
      *
-     * @template TDependency The type of the dependency being retrieved.
-     * @param identifier The identifier (type, string, or symbol) of the dependency.
-     * @param identifierMetadata Optional accompanying metadata object for the identifier.
-     * @returns The mocked instance corresponding to the provided identifier, along with any available identifier
-     * metadata.
      * @since 3.0.0
+     * @template TDependency The type of the dependency being retrieved.
+     * @param token - The string-based token representing the dependency.
+     * @throws {@link DependencyResolutionError} If the dependency is not found.
+     * @returns The mocked object corresponding to the provided string-based token.
+     */
+    get<TDependency>(token: string): VitestMocked<TDependency>;
+
+    /**
+     * Retrieves a reference to the mocked object of a dependency corresponding to a string-based
+     * token and an identifier metadata object.
+     *
+     * @since 3.0.0
+     * @template TDependency The type of the dependency being retrieved.
+     * @param token - The symbol-based token representing the dependency.
+     * @param identifierMetadata - An accompanying metadata object for the token identifier.
+     * @throws {@link DependencyResolutionError} If the dependency is not found.
+     * @returns The mocked object corresponding to the provided
+     * symbol-based token.
+     */
+    get<TDependency>(
+      token: string,
+      identifierMetadata: IdentifierMetadata
+    ): VitestMocked<TDependency>;
+
+    /**
+     * Retrieves a reference to the mocked object of a dependency corresponding to a symbol-based token.
+     *
+     * @since 3.0.0
+     * @template TDependency The type of the dependency being retrieved.
+     * @param token - The symbol-based token representing the dependency.
+     * @throws {@link DependencyResolutionError} If the dependency is not found.
+     * @returns The mocked object corresponding to the provided symbol-based token.
+     */
+    get<TDependency>(token: symbol): VitestMocked<TDependency>;
+
+    /**
+     * Retrieves a reference to the mocked object of a dependency corresponding to a symbol-based
+     * token and an identifier metadata object.
+     *
+     * @since 3.0.0
+     * @template TDependency The type of the dependency being retrieved.
+     * @param token - The symbol-based token representing the dependency.
+     * @param identifierMetadata - An accompanying metadata object for the token identifier.
+     * @throws {@link DependencyResolutionError} If the dependency is not found.
+     * @returns The mocked object corresponding to the provided symbol-based token.
+     */
+    get<TDependency>(
+      token: symbol,
+      identifierMetadata: IdentifierMetadata
+    ): VitestMocked<TDependency>;
+
+    /**
+     * Retrieves a mocked dependency by its type, string, or symbol token with optional metadata.
+     *
+     * This method provides flexibility in retrieving dependencies by allowing various identifier types.
+     *
+     * @since 3.0.0
+     * @template TDependency The type of the dependency being retrieved.
+     * @param identifier - The token representing the dependency. It can be of type `Type<TDependency>`, `string`, or `symbol`.
+     * @param identifierMetadata - A corresponding metadata object for the token identifier.
+     * @throws {@link DependencyResolutionError} If the dependency is not found.
+     * @returns The mocked instance corresponding to the provided identifier and metadata.
      */
     get<TDependency>(
       identifier: Type<TDependency> | string | symbol,
@@ -138,23 +172,31 @@ declare module '@suites/core.unit' {
   }
 
   /**
-   * Interface defining methods for configuring mock overrides in unit testing environments.
-   * This allows detailed setup of mock behavior for dependencies of the class under test.
+   * Interface to define overrides for mocking dependencies in a test environment.
    *
-   * @since 3.0.0
+   * @see {@link https://suites.dev/docs/api-reference/mock-configuration | Mock Configuration}
    * @template TDependency The type of the dependency to be mocked.
    * @template TClass The type of the class under test.
-   * @see https://suites.dev/api-reference/api/mockoverride-api
    */
   export interface MockOverride<TDependency, TClass> {
     /**
-     * Specifies the mock implementation for a dependency. This is used to override the default behavior
-     * or setup-specific scenarios in tests.
+     * Provides a mock implementation using stub functions for methods.
      *
-     * @param mockImplementation The function that defines the mock behavior. It takes a function returning a
-     * Vitest Stub and should return a partial implementation of the dependency.
-     * @returns {TestBedBuilder} A TestBedBuilder instance for chaining further configuration, allowing for fluent API style.
+     * Use this when you need fine-grained control over method behavior with stub functions.
+     * The stub function is automatically provided for creating mocked methods.
+     *
+     * @see {@link https://suites.dev/docs/api-reference/mock-configuration | Mock Configuration}
      * @since 3.0.0
+     * @param mockImplementation - Function that receives a stub creator and returns the mock
+     * @returns A TestBedBuilder instance for chaining
+     *
+     * @example
+     * ```ts
+     * await TestBed.solitary(MyService)
+     *   .mock(Logger)
+     *   .impl((stub) => ({ log: stub().mockReturnValue(undefined) }))
+     *   .compile();
+     * ```
      */
     impl(
       mockImplementation: (
@@ -163,13 +205,23 @@ declare module '@suites/core.unit' {
     ): TestBedBuilder<TClass>;
 
     /**
-     * Specifies the final, concrete implementation to use for a mocked dependency, effectively replacing any previous
-     * mock setups.
+     * Provides a final implementation with concrete values or functions.
      *
-     * @param {DeepPartial} finalImplementation The concrete implementation for the dependency, typically used when transitioning
-     * from mock to real objects.
-     * @returns {TestBedBuilder} A TestBedBuilder instance for chaining further configuration.
+     * Use this when you want to directly provide the mock implementation without stubs,
+     * useful for simple mocks or when providing constant values.
+     *
+     * @see {@link https://suites.dev/docs/api-reference/mock-configuration | Mock Configuration}
      * @since 3.0.0
+     * @param finalImplementation - The mock implementation object
+     * @returns A TestBedBuilder instance for chaining
+     *
+     * @example
+     * ```ts
+     * await TestBed.solitary(MyService)
+     *   .mock('CONFIG')
+     *   .final({ apiUrl: 'http://test.api', timeout: 5000 })
+     *   .compile();
+     * ```
      */
     final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
   }

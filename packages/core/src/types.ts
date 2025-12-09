@@ -10,24 +10,38 @@ import type { TestBedBuilder } from './services/builders/testbed-builder';
  *
  * @template TClass The type of the class being tested. This generic parameter ensures type safety
  * and consistency across the testing code.
+ * @since 3.0.0
+ * @see {@link https://suites.dev/docs/api-reference/testbed-solitary | TestBed.solitary() API Reference}
+ * @see {@link https://suites.dev/docs/api-reference/testbed-sociable | TestBed.sociable() API Reference}
+ *
+ * @example
+ * ```ts
+ * const { unit, unitRef } = await TestBed.solitary(UserService).compile();
+ *
+ * // Access the class under test
+ * const result = await unit.createUser({ name: 'John' });
+ *
+ * // Configure mock behavior
+ * const database = unitRef.get(Database);
+ * database.save.mockResolvedValue({ id: 1 });
+ * ```
  */
 export interface UnitTestBed<TClass> {
   /**
    * The instance of the class being tested. This property provides direct access to the class,
    * allowing tests to interact with it as needed.
+   *
    * @since 3.0.0
-   * @see https://suites.dev/docs/api-reference
-   * @template TClass The type of the class under test.
-   * @property {TClass} unit The instance of the class under test.
+   * @see {@link https://suites.dev/docs/api-reference/testbed-solitary | TestBed.solitary() API Reference}
    */
   unit: TClass;
 
   /**
    * A reference to the mocked dependencies of the class. This object allows tests to manipulate,
    * access, and verify the interactions with the class's dependencies, crucial for thorough testing.
+   *
    * @since 3.0.0
-   * @see https://suites.dev/docs/api-reference
-   * @property {UnitReference} unitRef The reference to the mocked dependencies of the class.
+   * @see {@link https://suites.dev/docs/api-reference/unit-reference | UnitReference API Reference}
    */
   unitRef: UnitReference;
 }
@@ -41,33 +55,35 @@ export interface UnitTestBed<TClass> {
  * the mocks are appropriately typed, enhancing the development experience with type safety.
  * @template TClass The type of the class under test. This provides context to the TestBedBuilder,
  * linking the mock setups directly with the class being tested.
+ * @since 3.0.0
+ * @see {@link https://suites.dev/docs/api-reference/mock-configuration | Mock Configuration}
  */
 export interface MockOverride<TDependency, TClass> {
   /**
-   * Defines a custom implementation for a mocked dependency. This method is used to set up
-   * how the mock should behave when interacted with during tests.
+   * Configures mocks with stubs that can be retrieved and modified later via `unitRef.get()`.
+   *
+   * Use this when you need to change mock behavior after TestBed compilation.
    *
    * @since 3.0.0
-   * @param mockImplementation A function that receives a stub function and returns a partial
-   * implementation of the dependency. This setup allows testers to specify detailed behavior,
-   * including how methods should respond when invoked.
-   * @returns {TestBedBuilder} A TestBedBuilder instance, facilitating a fluent interface that allows further
-   * configuration of the testing environment.
+   * @param mockImplementation - A function that receives a stub function and returns a partial
+   * implementation of the dependency.
+   * @returns A TestBedBuilder instance for method chaining.
+   * @see {@link https://suites.dev/docs/api-reference/mock-configuration | Mock Configuration}
    */
   impl(
     mockImplementation: (stubFn: Stub<any, ArgsType<TDependency>>) => DeepPartial<TDependency>
   ): TestBedBuilder<TClass>;
 
   /**
-   * Sets a final, concrete implementation for a mocked dependency, effectively replacing any
-   * previous setups for this mock. This method can be used to transition from a mock to a real
-   * implementation in a controlled manner.
+   * Sets immutable final values for a mocked dependency. The mock cannot be retrieved
+   * or modified after compilation.
+   *
+   * Use this for token-injected configuration objects or when you don't need runtime modification.
    *
    * @since 3.0.0
-   * @param finalImplementation The final implementation for the dependency, which may partially
-   * or fully replace the mock. This allows for integration testing scenarios within a unit test framework.
-   * @returns {TestBedBuilder} A TestBedBuilder instance, allowing for further configuration or finalization of the
-   * test setup.
+   * @param finalImplementation - The final implementation for the dependency.
+   * @returns A TestBedBuilder instance for method chaining.
+   * @see {@link https://suites.dev/docs/api-reference/mock-configuration | Mock Configuration}
    */
   final(finalImplementation: DeepPartial<TDependency>): TestBedBuilder<TClass>;
 }

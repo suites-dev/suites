@@ -18,9 +18,11 @@ This guide defines the JSDoc documentation standards for the Suites project. Fol
 ## Core Principles
 
 ### 1. Focus on "Why", Not Just "What"
+
 Document the purpose, benefits, and use cases. Code already shows "what" it does.
 
 **Good:**
+
 ```typescript
 /**
  * Initializes a solitary test environment builder for a specified class. In a solitary environment,
@@ -30,6 +32,7 @@ Document the purpose, benefits, and use cases. Code already shows "what" it does
 ```
 
 **Avoid:**
+
 ```typescript
 /**
  * Creates a solitary test bed builder.
@@ -37,15 +40,19 @@ Document the purpose, benefits, and use cases. Code already shows "what" it does
 ```
 
 ### 2. Include Practical Examples
+
 Every public API should have at least one runnable example with imports.
 
 ### 3. Link to Documentation
+
 Use `@see` tags to link to relevant documentation pages on suites.dev.
 
 ### 4. Version Tracking
+
 Always include `@since` tags to track when features were introduced.
 
 ### 5. Type Safety
+
 Document generic type parameters with clear explanations of what they represent.
 
 ---
@@ -86,6 +93,7 @@ export class ClassName {
 ```
 
 **Example from Suites:**
+
 ```typescript
 /**
  * @description
@@ -127,6 +135,7 @@ export interface InterfaceName<T> {
 ```
 
 **Example from Suites:**
+
 ```typescript
 /**
  * Represents the testing environment for a specific class, encapsulating both the instance
@@ -155,9 +164,9 @@ export interface UnitTestBed<TClass> {
  *
  * @since [version]
  * @template [T] [Description of generic parameter]
- * @param {Type} paramName [Description of parameter and its purpose]
- * @returns {ReturnType} [Description of what is returned]
- * @throws {ErrorType} [Description of when this error is thrown]
+ * @param paramName - [Description of parameter and its purpose]
+ * @returns [Description of what is returned]
+ * @throws {@link ErrorType} [Description of when this error is thrown]
  *
  * @example
  * import { Class } from '@suites/package';
@@ -174,6 +183,7 @@ public method<T>(param: Type): ReturnType {
 ```
 
 **Example from Suites:**
+
 ```typescript
 /**
  * @description
@@ -183,8 +193,8 @@ public method<T>(param: Type): ReturnType {
  *
  * @since 3.0.0
  * @template TClass The type of the class to be tested.
- * @param {Type<TClass>} targetClass The class for which the test environment is constructed.
- * @returns {SolitaryTestBedBuilder<TClass>} A builder to configure the solitary test environment.
+ * @param targetClass - The class for which the test environment is constructed.
+ * @returns A builder to configure the solitary test environment.
  * @see https://suites.dev/docs/developer-guide/unit-tests
  *
  * @example
@@ -220,6 +230,7 @@ export type TypeAlias<T> = /* ... */;
 ```
 
 **Good Example:**
+
 ```typescript
 /**
  * Base abstract type for mocked instances. Adapters can augment this with
@@ -232,6 +243,7 @@ export type Mocked<T> = StubbedInstance<T>;
 ```
 
 **Needs Improvement:**
+
 ```typescript
 /**
  * @since 3.0.0
@@ -240,6 +252,7 @@ export type InjectableIdentifier<TClass = unknown> = Type<TClass> | string | sym
 ```
 
 **Should Be:**
+
 ```typescript
 /**
  * Represents an identifier that can be used to inject dependencies in a DI container.
@@ -283,6 +296,7 @@ interface Example {
 ```
 
 **Example from Suites:**
+
 ```typescript
 interface UnitTestBed<TClass> {
   /**
@@ -331,6 +345,7 @@ export class CustomError extends Error {
 ```
 
 **Template Structure:**
+
 1. **When it's thrown** - Clear condition
 2. **Common scenarios** - Real-world cases
 3. **How to prevent** - Show the fix
@@ -359,6 +374,7 @@ export const constant = /* ... */;
 ```
 
 **Needs Improvement:**
+
 ```typescript
 /**
  * Represents a stub function
@@ -373,6 +389,7 @@ export const stub = jest.fn();
 ```
 
 **Should Be:**
+
 ```typescript
 /**
  * Creates a stub function for mocking method implementations in tests.
@@ -400,6 +417,7 @@ export const stub = jest.fn();
 ### Writing Descriptions
 
 #### DO:
+
 - Explain the purpose and benefits
 - Provide context about when to use
 - Mention important behaviors or side effects
@@ -408,6 +426,7 @@ export const stub = jest.fn();
 - Use active voice
 
 #### DON'T:
+
 - Simply restate the function name
 - Use vague descriptions like "handles X"
 - Omit important details
@@ -418,12 +437,14 @@ export const stub = jest.fn();
 ### Writing Examples
 
 #### Structure:
+
 1. **Import statements** - Show where the code comes from
 2. **Setup** - Any necessary preparation
 3. **Usage** - The actual example
 4. **Comments** - Explain non-obvious parts
 
 #### DO:
+
 ```typescript
 /**
  * @example
@@ -433,12 +454,13 @@ export const stub = jest.fn();
  * const { unit, unitRef } = await TestBed.sociable(MyService)
  *   .expose(DependencyOne)
  *   .mock(Logger)
- *   .impl({ log: jest.fn().mockReturnValue('overridden') })
+ *   .impl(stub => ({ log: stub().mockReturnValue('overridden') }))
  *   .compile();
  */
 ```
 
 #### DON'T:
+
 ```typescript
 /**
  * @example
@@ -451,12 +473,14 @@ export const stub = jest.fn();
 ### Using @see Links
 
 #### Link to:
+
 - Relevant documentation pages on suites.dev
 - Related API methods or interfaces
 - External library documentation when aliasing
 - Conceptual guides that provide context
 
 #### Format:
+
 ```typescript
 @see https://suites.dev/docs/api-reference/api/testbed-api
 @see https://suites.dev/docs/developer-guide/unit-tests
@@ -469,6 +493,7 @@ export const stub = jest.fn();
 Always explain what the generic parameter represents:
 
 **Good:**
+
 ```typescript
 /**
  * @template TClass The type of the class to be tested.
@@ -477,6 +502,7 @@ Always explain what the generic parameter represents:
 ```
 
 **More Detail When Needed:**
+
 ```typescript
 /**
  * @template TClass The type of the class being tested. This generic parameter ensures type safety
@@ -497,8 +523,8 @@ export interface UnitReference {
    *
    * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
-   * @param type The type representing the dependency.
-   * @throws {IdentifierNotFoundError} - If the dependency is not found.
+   * @param type - The type representing the dependency.
+   * @throws {@link IdentifierNotFoundError} If the dependency is not found.
    * @returns The mocked object corresponding to the provided type identifier.
    */
   get<TDependency>(type: Type<TDependency>): StubbedInstance<TDependency>;
@@ -508,8 +534,8 @@ export interface UnitReference {
    *
    * @since 3.0.0
    * @template TDependency The type of the dependency being retrieved.
-   * @param token The string-based token representing the dependency.
-   * @throws {IdentifierNotFoundError} - If the dependency is not found.
+   * @param token - The string-based token representing the dependency.
+   * @throws {@link IdentifierNotFoundError} If the dependency is not found.
    * @returns The mocked object corresponding to the provided string-based token.
    */
   get<TDependency>(token: string): StubbedInstance<TDependency>;
@@ -531,8 +557,8 @@ export interface UnitReference {
  *
  * @since 3.0.0
  * @template TClass The type of the class to be tested.
- * @param {Type<TClass>} targetClass The class for which the test environment is constructed.
- * @returns {SolitaryTestBedBuilder<TClass>} A builder to configure the solitary test environment.
+ * @param targetClass - The class for which the test environment is constructed.
+ * @returns A builder to configure the solitary test environment.
  * @see https://suites.dev/docs/developer-guide/unit-tests
  *
  * @example
@@ -545,6 +571,7 @@ public static solitary<TClass = any>(targetClass: Type<TClass>): SolitaryTestBed
 ```
 
 **Why this is excellent:**
+
 - ✅ Explains the "why" - purpose and benefits
 - ✅ Provides context about use case
 - ✅ Clear parameter documentation
@@ -571,6 +598,7 @@ export interface MockOverride<TDependency, TClass>
 ```
 
 **Why this is good:**
+
 - ✅ Explains purpose clearly
 - ✅ Describes benefits
 - ✅ Detailed generic parameter documentation
@@ -586,10 +614,10 @@ export interface MockOverride<TDependency, TClass>
  * how the mock should behave when interacted with during tests.
  *
  * @since 3.0.0
- * @param mockImplementation A function that receives a stub function and returns a partial
+ * @param mockImplementation - A function that receives a stub function and returns a partial
  * implementation of the dependency. This setup allows testers to specify detailed behavior,
  * including how methods should respond when invoked.
- * @returns {TestBedBuilder} A TestBedBuilder instance, facilitating a fluent interface that allows further
+ * @returns A TestBedBuilder instance, facilitating a fluent interface that allows further
  * configuration of the testing environment.
  */
 impl(
@@ -598,6 +626,7 @@ impl(
 ```
 
 **Why this is good:**
+
 - ✅ Explains what the method does
 - ✅ Provides detailed parameter explanation
 - ✅ Explains return value purpose (fluent interface)
@@ -615,7 +644,7 @@ impl(
  * [Why you would use this configuration]
  *
  * @since [version]
- * @param [paramName] [What this parameter controls]
+ * @param paramName - [What this parameter controls]
  * @returns [Next step in builder chain] [What you can do next]
  *
  * @example
@@ -632,7 +661,7 @@ impl(
  *
  * @since [version]
  * @template [T] [Generic parameter explanation]
- * @param [params] [Parameter descriptions]
+ * @param params - [Parameter descriptions]
  * @returns [What is returned and its state]
  *
  * @example

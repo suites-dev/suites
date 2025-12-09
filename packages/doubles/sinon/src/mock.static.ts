@@ -35,7 +35,7 @@ const handler = <T>() => ({
         return undefined;
       }
 
-      // Sinon's internal equality checking does some wierd stuff to check for iterable equality
+      // Sinon's internal equality checking does some weird stuff to check for iterable equality
       if (property === Symbol.iterator) {
         // @ts-ignore
         return obj[property];
@@ -58,6 +58,43 @@ const handler = <T>() => ({
   },
 });
 
+/**
+ * Creates a fully mocked instance with auto-generated Sinon stub methods.
+ *
+ * This function creates a type-safe mock where all methods are automatically replaced
+ * with `sinon.stub()` instances. Properties are lazily created on first access using
+ * JavaScript Proxy, providing intelligent auto-mocking without manual setup.
+ *
+ * @template T The type of the object to mock
+ * @param mockImplementation - Optional partial implementation to pre-configure specific methods or properties
+ * @returns A fully mocked instance where all methods are `sinon.stub()` stubs with full Sinon API support
+ *
+ * @remarks
+ * - All methods automatically become Sinon stubs on first access
+ * - Supports nested object mocking
+
+ * @example
+ * ```ts
+ * // Basic usage - mock an interface
+ * import { mock } from '@suites/unit';
+ *
+ * interface PaymentGateway {
+ *   charge(amount: number): Promise<{ status: string }>;
+ *   refund(transactionId: string): Promise<boolean>;
+ * }
+ *
+ * const gateway = mock<PaymentGateway>();
+ * gateway.charge.resolves({ status: 'success' });
+ * gateway.refund.resolves(true);
+ *
+ * const userService = mock<UserService>();
+ * userService.findUser.resolves({ id: '1', name: 'John' });
+ * ```
+ *
+ * @since 3.0.0
+ * @see {@link https://sinonjs.org/releases/latest/stubs/ | Sinon Stubs}
+ * @see {@link https://suites.dev/docs/api-reference/mock | Mock API Reference}
+ */
 export const mock = <T>(mockImplementation: DeepPartial<T> = {} as DeepPartial<T>): Mocked<T> => {
   return overrideMockImp<T>(mockImplementation);
 };

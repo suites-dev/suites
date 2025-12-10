@@ -110,22 +110,22 @@ importers:
   packages/core:
     dependencies:
       '@suites/types.common':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../types/common
       '@suites/types.di':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../types/di
       '@suites/types.doubles':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../types/doubles
 
   packages/di/inversify:
     dependencies:
       '@suites/types.common':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/common
       '@suites/types.di':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/di
     devDependencies:
       inversify:
@@ -138,10 +138,10 @@ importers:
   packages/di/nestjs:
     dependencies:
       '@suites/types.common':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/common
       '@suites/types.di':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/di
     devDependencies:
       '@nestjs/common':
@@ -157,16 +157,16 @@ importers:
   packages/doubles/jest:
     dependencies:
       '@suites/core.unit':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../../core
       '@suites/types.common':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/common
       '@suites/types.di':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/di
       '@suites/types.doubles':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/doubles
     devDependencies:
       jest:
@@ -176,16 +176,16 @@ importers:
   packages/doubles/sinon:
     dependencies:
       '@suites/core.unit':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../../core
       '@suites/types.common':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/common
       '@suites/types.di':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/di
       '@suites/types.doubles':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/doubles
     devDependencies:
       '@types/sinon':
@@ -198,16 +198,16 @@ importers:
   packages/doubles/vitest:
     dependencies:
       '@suites/core.unit':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../../core
       '@suites/types.common':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/common
       '@suites/types.di':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/di
       '@suites/types.doubles':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../types/doubles
     devDependencies:
       '@vitest/coverage-v8':
@@ -225,28 +225,28 @@ importers:
   packages/types/di:
     dependencies:
       '@suites/types.common':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../common
 
   packages/types/doubles:
     dependencies:
       '@suites/types.common':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../common
 
   packages/unit:
     dependencies:
       '@suites/core.unit':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../core
       '@suites/types.common':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../types/common
       '@suites/types.di':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../types/di
       '@suites/types.doubles':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../types/doubles
 
 packages:

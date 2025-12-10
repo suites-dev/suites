@@ -1,7 +1,7 @@
 {
   "name": "@suites/core.unit",
   "private": false,
-  "version": "3.0.1",
+  "version": "3.1.0",
   "license": "Apache-2.0",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -50,11 +50,10 @@
     "README.md"
   ],
   "dependencies": {
-    "@suites/types.common": "workspace:^3.0.0",
-    "@suites/types.di": "workspace:^3.0.0",
-    "@suites/types.doubles": "workspace:^3.0.0"
+    "@suites/types.common": "workspace:^3.1.0",
+    "@suites/types.di": "workspace:^3.1.0",
+    "@suites/types.doubles": "workspace:^3.1.0"
   },
-  "devDependencies": {},
   "publishConfig": {
     "access": "public",
     "provenance": true

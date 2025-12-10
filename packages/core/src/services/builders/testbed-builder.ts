@@ -65,13 +65,15 @@ export abstract class TestBedBuilder<TClass> implements TestBedBuilder<TClass> {
    * mocked dependencies, ready for testing.
    *
    * @since 3.0.0
-   * @returns {Promise<UnitTestBed<TClass>>} A Promise that resolves to the compiled `UnitTestBed` instance.
+   * @returns A Promise that resolves to the compiled `UnitTestBed` instance.
    * @template TClass The type of the class being tested.
    * @example
+   * ```ts
    * const unitTestBed = await testBedBuilder.compile();
    * const { unit, unitRef } = unitTestBed;
    * // unit is the instance of the class under test
    * // unitRef provides access to the mocked dependencies
+   * ```
    */
   public abstract compile(): Promise<UnitTestBed<TClass>>;
 }
@@ -88,11 +90,13 @@ export interface TestBedBuilder<TClass> {
    *
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
-   * @param {Type<TDependency>} type The type representing the dependency to be mocked.
+   * @param type - The type representing the dependency to be mocked.
    * @template TClass The type of the class being tested.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>(MyService);
+   * ```
    */
   mock<TDependency>(type: Type<TDependency>): MockOverride<TDependency, TClass>;
 
@@ -102,11 +106,13 @@ export interface TestBedBuilder<TClass> {
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
    * @template TClass The type of the class being tested.
-   * @param {Type<TDependency>} type The type representing the dependency to be mocked.
-   * @param {IdentifierMetadata} identifierMetadata Metadata object that corresponds to the type identifier.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @param type - The type representing the dependency to be mocked.
+   * @param identifierMetadata - Metadata object that corresponds to the type identifier.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>(MyService, metadata);
+   * ```
    */
   mock<TDependency>(
     type: Type<TDependency>,
@@ -119,10 +125,12 @@ export interface TestBedBuilder<TClass> {
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
    * @template TClass The type of the class being tested.
-   * @param {string} token The string-based token representing the dependency to be mocked.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @param token - The string-based token representing the dependency to be mocked.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>('MyService');
+   * ```
    */
   mock<TDependency>(token: string): MockOverride<TDependency, TClass>;
 
@@ -132,11 +140,13 @@ export interface TestBedBuilder<TClass> {
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
    * @template TClass The type of the class being tested.
-   * @param {string} token The string-based token representing the dependency to be mocked.
-   * @param {IdentifierMetadata} identifierMetadata Metadata object that corresponds to the string-based token.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @param token - The string-based token representing the dependency to be mocked.
+   * @param identifierMetadata - Metadata object that corresponds to the string-based token.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>('MyService', metadata);
+   * ```
    */
   mock<TDependency>(
     token: string,
@@ -149,10 +159,12 @@ export interface TestBedBuilder<TClass> {
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
    * @template TClass The type of the class being tested.
-   * @param {symbol} token The symbol-based token representing the dependency to be mocked.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @param token - The symbol-based token representing the dependency to be mocked.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>(MY_SERVICE_SYMBOL);
+   * ```
    */
   mock<TDependency>(token: symbol): MockOverride<TDependency, TClass>;
 
@@ -162,11 +174,13 @@ export interface TestBedBuilder<TClass> {
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
    * @template TClass The type of the class being tested.
-   * @param {symbol} token The symbol-based token representing the dependency to be mocked.
-   * @param {IdentifierMetadata} identifierMetadata Metadata object that corresponds to the symbol-based token.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @param token - The symbol-based token representing the dependency to be mocked.
+   * @param identifierMetadata - Metadata object that corresponds to the symbol-based token.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>(MY_SERVICE_SYMBOL, metadata);
+   * ```
    */
   mock<TDependency>(
     token: symbol,
@@ -180,15 +194,17 @@ export interface TestBedBuilder<TClass> {
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
    * @template TClass The type of the class being tested.
-   * @param {Type<TDependency> | string | symbol} identifier The type or token representing the dependency to be mocked.
-   * @param {IdentifierMetadata} [identifierMetadata] Optional metadata object for the identifier.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @param identifier - The type or token representing the dependency to be mocked.
+   * @param identifierMetadata - Optional metadata object for the identifier.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>(MyService);
    * // or
    * const mockOverride = testBedBuilder.mock<MyService>('MyService');
    * // or
    * const mockOverride = testBedBuilder.mock<MyService>(MY_SERVICE_SYMBOL, metadata);
+   * ```
    */
   mock<TDependency>(
     identifier: Type<TDependency> | string | symbol,
@@ -207,10 +223,12 @@ export interface TestBedBuilder<TClass> {
    *
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
-   * @param {type: TDependency} type The type representing the dependency to be mocked.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @param type - The type representing the dependency to be mocked.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>(MyService);
+   * ```
    */
   mock<TDependency>(type: new (...args: any[]) => TDependency): MockOverride<TDependency, TClass>;
 
@@ -219,10 +237,12 @@ export interface TestBedBuilder<TClass> {
    *
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
-   * @param {token: string} token The string-based token representing the dependency to be mocked.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @param token - The string-based token representing the dependency to be mocked.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>('MyService');
+   * ```
    */
   mock<TDependency>(token: string): MockOverride<TDependency, TClass>;
 
@@ -231,10 +251,12 @@ export interface TestBedBuilder<TClass> {
    *
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
-   * @param {token: symbol} token The symbol-based token representing the dependency to be mocked.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @param token - The symbol-based token representing the dependency to be mocked.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>(MY_SERVICE_SYMBOL);
+   * ```
    */
   mock<TDependency>(token: symbol): MockOverride<TDependency, TClass>;
 
@@ -243,15 +265,17 @@ export interface TestBedBuilder<TClass> {
    *
    * @since 3.0.0
    * @template TDependency The type of the dependency being mocked.
-   * @param {identifier: TDependency | string | symbol} identifier The type or token representing the dependency to be mocked.
-   * @param {IdentifierMetadata} [identifierMetadata] Optional metadata object for the identifier.
-   * @returns {MockOverride<TDependency, TClass>} An instance of MockOverride for further configuration.
+   * @param identifier - The type or token representing the dependency to be mocked.
+   * @param identifierMetadata - Optional metadata object for the identifier.
+   * @returns An instance of MockOverride for further configuration.
    * @example
+   * ```ts
    * const mockOverride = testBedBuilder.mock<MyService>(MyService);
    * // or
    * const mockOverride = testBedBuilder.mock<MyService>('MyService');
    * // or
    * const mockOverride = testBedBuilder.mock<MyService>(MY_SERVICE_SYMBOL, metadata);
+   * ```
    */
   mock<TDependency>(
     identifier: new (...args: any[]) => TDependency | string | symbol,

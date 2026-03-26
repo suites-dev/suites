@@ -129,7 +129,7 @@ jobs:
           fail-on-error: false
 
       - name: Upload Report to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           name: codecov-umbrella
           flags: ${{ matrix.project }}

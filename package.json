@@ -53,7 +53,7 @@
     "@types/sinon": "^10.0.20",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
-    "axios": "1.8.2",
+    "axios": "1.15.0",
     "braces": "3.0.3",
     "eslint": "9.8.0",
     "eslint-plugin-tsdoc": "^0.5.0",

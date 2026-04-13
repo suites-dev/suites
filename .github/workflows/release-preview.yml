@@ -52,7 +52,7 @@ jobs:
           node-version: '22.x'
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 8.15.9
 

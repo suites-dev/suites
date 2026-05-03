@@ -1,7 +1,7 @@
 import type { DependencyInjectionAdapter } from '@suites/types.di';
-import { createPackageResolver } from '../src/package-resolver';
-import type { PackageResolver } from '../src/package-resolver.base';
-import { SuitesDIAdapters, SuitesDoublesAdapters } from '../src/testbed-builder';
+import { createPackageResolver } from '../src/package-resolver.js';
+import type { PackageResolver } from '../src/package-resolver.base.js';
+import { SuitesDIAdapters, SuitesDoublesAdapters } from '../src/testbed-builder.js';
 
 describe('Suites Adapter Package Resolving Integration Test', () => {
   describe('DI Adapters Registry', () => {

@@ -16,6 +16,7 @@ const config = (coverageDir?: string) => ({
     ] as any,
   },
   moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
     '^@suites/core.unit(.*)$': path.join(packagesDir, 'core/src$1'),
     '^@suites/types.common(.*)$': path.join(packagesDir, 'types/common/src$1'),
     '^@suites/types.di(.*)$': path.join(packagesDir, 'types/di/src$1'),

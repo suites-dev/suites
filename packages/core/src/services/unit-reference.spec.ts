@@ -1,8 +1,8 @@
 import type { InjectableIdentifier } from '@suites/types.di';
 import type { ConstantValue } from '@suites/types.common';
 import type { StubbedInstance } from '@suites/types.doubles';
-import { UnitReference } from './unit-reference';
-import { DependencyContainer, type IdentifierToFinal } from './dependency-container';
+import { UnitReference } from './unit-reference.js';
+import { DependencyContainer, type IdentifierToFinal } from './dependency-container.js';
 
 class DependencyOne {}
 class DependencyOneStubbed {}

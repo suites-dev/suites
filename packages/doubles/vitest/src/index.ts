@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
-import { mock } from './mock.static';
-export { Mocked, Stub } from './types';
+import { mock } from './mock.static.js';
+export { Mocked, Stub } from './types.js';
 import type { Mock } from '@vitest/spy';
 import { fn } from '@vitest/spy';
 
@@ -18,7 +18,7 @@ import { fn } from '@vitest/spy';
  */
 export const adapter = { mock, stub: (): Mock => fn() };
 
-export { mock } from './mock.static';
+export { mock } from './mock.static.js';
 
 /**
  * Creates a standalone Vitest mock function for stubbing callbacks and functions.

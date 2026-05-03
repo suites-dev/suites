@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { mock } from './mock.static';
-import type { Mocked } from './types';
+import { mock } from './mock.static.js';
+import type { Mocked } from './types.js';
 
 interface ArbitraryMock {
   id: number;

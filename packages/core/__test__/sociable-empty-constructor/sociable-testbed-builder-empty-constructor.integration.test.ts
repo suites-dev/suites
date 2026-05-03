@@ -2,11 +2,11 @@ import {
   TestDependService,
   TestService,
   TestSociableService,
-} from './assets/injectable-registry.fixture';
-import { FakeAdapter } from './assets/integration.assets';
-import { mock } from '../mock.static';
-import type { UnitReference } from '../../src';
-import { SociableTestBedBuilder, UnitMocker } from '../../src';
+} from './assets/injectable-registry.fixture.js';
+import { FakeAdapter } from './assets/integration.assets.js';
+import { mock } from '../mock.static.js';
+import type { UnitReference } from '../../src.js';
+import { SociableTestBedBuilder, UnitMocker } from '../../src.js';
 
 describe('Social TestBed Builder (Empty Constructor) Integration Tests', () => {
   let unitBuilder: SociableTestBedBuilder<TestService>;

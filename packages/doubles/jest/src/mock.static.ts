@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { DeepPartial } from '@suites/types.common';
-import type { Mocked } from './types';
+import type { Mocked } from './types.js';
 
 type ProxiedProperty = string | number | symbol;
 

@@ -7,14 +7,14 @@ import type {
   WithMetadata,
 } from '@suites/types.di';
 import type { Type } from '@suites/types.common';
-import { normalizeIdentifier } from '../../../src/normalize-identifier.static';
+import { normalizeIdentifier } from '../../../src/normalize-identifier.static.js';
 import {
   TestService,
   TestDependService,
   TestSociableService,
   testServiceRegistry,
   emptyRegistry,
-} from './injectable-registry.fixture';
+} from './injectable-registry.fixture.js';
 
 const registryToClass: Map<Type, InjectableRegistry> = new Map<Type, InjectableRegistry>([
   [TestService, testServiceRegistry],

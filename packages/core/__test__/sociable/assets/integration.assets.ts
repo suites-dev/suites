@@ -7,7 +7,7 @@ import type {
   WithMetadata,
 } from '@suites/types.di';
 import type { Type } from '@suites/types.common';
-import { normalizeIdentifier } from '../../../src/normalize-identifier.static';
+import { normalizeIdentifier } from '../../../src/normalize-identifier.static.js';
 import {
   apiServiceRegistry,
   databaseServiceRegistry,
@@ -26,7 +26,7 @@ import {
   UserDal,
   UserService,
   httpClientRegistry,
-} from './injectable-registry.fixture';
+} from './injectable-registry.fixture.js';
 
 const registryToClass: Map<Type, InjectableRegistry> = new Map<Type, InjectableRegistry>([
   [HttpClient, emptyRegistry],

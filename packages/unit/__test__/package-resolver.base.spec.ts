@@ -1,5 +1,5 @@
 import type { DependencyInjectionAdapter } from '@suites/types.di';
-import { PackageResolver, type PackageResolverStrategy } from '../src/package-resolver.base';
+import { PackageResolver, type PackageResolverStrategy } from '../src/package-resolver.base.js';
 
 describe('PackageResolver Unit Spec', () => {
   describe('resolveCorrespondingAdapter', () => {

@@ -14,15 +14,15 @@ import {
   DependencyTwo,
   PropertiesBasedInjectionClass,
   SymbolToken,
-} from './assets/integration.assets';
+} from './assets/integration.assets.js';
 import {
   InjectableRegistry,
   IdentifierMetadata,
   InjectableIdentifier,
   UndefinedDependency,
 } from '@suites/types.di';
-import { InversifyInjectableIdentifierMetadata } from '../src/types';
-import { adapter } from '../src';
+import { InversifyInjectableIdentifierMetadata } from '../src/types.js';
+import { adapter } from '../src.js';
 
 describe('InversifyJS Suites DI Adapter Integration Test', () => {
   const dependenciesAdapter = adapter;

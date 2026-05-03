@@ -1,6 +1,6 @@
 import type { Type, ConstantValue } from '@suites/types.common';
 
-export * from './errors';
+export * from './errors.js';
 
 /**
  * @since 2.2.0

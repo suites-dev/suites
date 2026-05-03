@@ -1,4 +1,4 @@
-import { testBedBuilderFactory } from '../src/testbed-builder';
+import { testBedBuilderFactory } from '../src/testbed-builder.js';
 
 const initiationStub = jest.fn();
 

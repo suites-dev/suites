@@ -1,5 +1,5 @@
-import type { IdentifierToMockOrFinal } from './dependency-container';
-import { DependencyContainer } from './dependency-container';
+import type { IdentifierToMockOrFinal } from './dependency-container.js';
+import { DependencyContainer } from './dependency-container.js';
 
 class ArbitraryClassAsIdentifier {}
 class DummyIdentifier {}

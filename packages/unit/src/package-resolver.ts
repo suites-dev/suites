@@ -9,7 +9,7 @@ import type { DoublesAdapter } from '@suites/types.doubles';
 import {
   PackageResolver as BasePackageResolver,
   type PackageResolverStrategy,
-} from './package-resolver.base';
+} from './package-resolver.base.js';
 
 /**
  * CJS package resolution strategy using require.resolve

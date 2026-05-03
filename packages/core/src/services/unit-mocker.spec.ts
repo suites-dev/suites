@@ -1,9 +1,9 @@
 import type { ClassInjectable, InjectableRegistry, WithMetadata } from '@suites/types.di';
 import { UndefinedDependency } from '@suites/types.di';
-import type { MockedUnit } from './unit-mocker';
-import { UnitMocker } from './unit-mocker';
-import type { IdentifierToMockOrFinal } from './dependency-container';
-import { DependencyContainer } from './dependency-container';
+import type { MockedUnit } from './unit-mocker.js';
+import { UnitMocker } from './unit-mocker.js';
+import type { IdentifierToMockOrFinal } from './dependency-container.js';
+import { DependencyContainer } from './dependency-container.js';
 
 class ArbitraryClassOne {}
 class ArbitraryClassTwo {}

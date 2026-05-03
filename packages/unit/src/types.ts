@@ -40,7 +40,7 @@ export interface SociableTestBedBuilder<TClass> extends SociableTestBedBuilderCo
    * @example
    * ```ts
    * import { TestBed } from '@suites/unit';
-   * import { MyService, AnotherService } from './my-service';
+   * import { MyService, AnotherService } from './my-service.js';
    *
    * const { unit, unitRef } = await TestBed.sociable(MyService).expose(AnotherService).compile();
    * // MyService is now tested with AnotherService exposed and not fully mocked.
@@ -205,7 +205,7 @@ export interface UnitReference extends UnitReferenceCore {
  * @example
  * ```ts
  * import { TestBed } from '@suites/unit';
- * import { MyService } from './my-service';
+ * import { MyService } from './my-service.js';
  *
  * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
  * ```
@@ -225,7 +225,7 @@ export interface TestBed {
    * @example
    * ```ts
    * import { TestBed } from '@suites/unit';
-   * import { MyService } from './my-service';
+   * import { MyService } from './my-service.js';
    *
    * // MyService is now tested in isolation with all its dependencies mocked.
    * const { unit, unitRef } = await TestBed.solitary(MyService).compile();
@@ -248,8 +248,8 @@ export interface TestBed {
    * @example
    * ```ts
    * import { TestBed } from '@suites/unit';
-   * import { MyService } from './my-service';
-   * import { AnotherService } from './another-service';
+   * import { MyService } from './my-service.js';
+   * import { AnotherService } from './another-service.js';
    *
    * const { unit, unitRef } = await TestBed.sociable(MyService).expose(AnotherService).compile();
    * // MyService is now tested with AnotherService exposed and not fully mocked.

@@ -9,7 +9,7 @@ const overrideMockImp = <T>(obj: DeepPartial<T>): Mocked<T> => {
   const proxy = new Proxy<Mocked<T>>(obj as Mocked<T>, handler());
 
   for (const name of Object.keys(obj)) {
-    const descriptor = Object.getOwnPropertyDescriptor(proxy, name);
+    const descriptor = Object.getOwnPropertyDescriptor(obj, name);
     if (descriptor && !descriptor.writable && !descriptor.configurable) {
       continue;
     }

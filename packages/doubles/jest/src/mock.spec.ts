@@ -141,6 +141,27 @@ describe('Mocking Proxy Mechanism Unit Spec', () => {
     });
   });
 
+  describe('non-writable properties', () => {
+    test('should skip non-writable non-configurable properties during mock initialization', () => {
+      const impl = Object.create(null, {
+        locked: { value: 'frozen', writable: false, configurable: false, enumerable: true },
+      });
+      const mockObject = mock<{ locked: string }>(impl);
+      expect(mockObject.locked).toBe('frozen');
+    });
+
+    test('should not throw when proxy set is called on a non-writable non-configurable property', () => {
+      const impl = Object.create(null, {
+        locked: { value: 42, writable: false, configurable: false, enumerable: true },
+      });
+      const mockObject = mock<{ locked: number }>(impl);
+      expect(() => {
+        mockObject.locked = 42;
+      }).not.toThrow();
+      expect(mockObject.locked).toBe(42);
+    });
+  });
+
   describe('mocking a date objects', () => {
     test('should allow calling native date object methods', () => {
       const mockObject = mock({ date: new Date('2000-01-15') });

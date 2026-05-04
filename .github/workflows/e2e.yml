@@ -74,9 +74,9 @@ jobs:
           lerna ls --json | jq -r '.[] | "- **\(.name)** → `v\(.version)`"' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🧪 Testing Matrix" >> $GITHUB_STEP_SUMMARY
-          echo "- **Projects**: 6 (jest/nestjs, sinon/nestjs, vitest/nestjs, jest/inversify, sinon/inversify, vitest/inversify)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Node versions**: 3 (20.x, 22.x, 24.x)" >> $GITHUB_STEP_SUMMARY
-          echo "- **Total jobs**: 18 (54 with matrix expansion)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Projects**: 8 (jest/nestjs, sinon/nestjs, vitest/nestjs, esm/jest/nestjs, esm/vitest/nestjs, jest/inversify, sinon/inversify, vitest/inversify)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Node versions**: 4 (18.x, 20.x, 22.x, 24.x)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total jobs**: 29 (8x4 minus 3 vitest exclusions on Node 18)" >> $GITHUB_STEP_SUMMARY
 
           # Save versions for artifacts
           lerna ls --json > versions.json
@@ -108,6 +108,13 @@ jobs:
             'sinon/inversify',
           ]
         node-version: [18.x, 20.x, 22.x, 24.x]
+        exclude:
+          - e2e-project: 'vitest/nestjs'
+            node-version: 18.x
+          - e2e-project: 'esm/vitest/nestjs'
+            node-version: 18.x
+          - e2e-project: 'vitest/inversify'
+            node-version: 18.x
     steps:
       - name: Checkout
         uses: actions/checkout@v5

@@ -12,6 +12,7 @@ const config = (coverageDir?: string) => ({
       'ts-jest',
       {
         isolatedModules: true,
+        tsconfig: path.join(__dirname, 'tsconfig.test.json'),
       },
     ] as any,
   },

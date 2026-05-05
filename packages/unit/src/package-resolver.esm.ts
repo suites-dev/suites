@@ -6,7 +6,7 @@
 
 import type { DependencyInjectionAdapter } from '@suites/types.di';
 import type { DoublesAdapter } from '@suites/types.doubles';
-import { PackageResolver as BasePackageResolver } from './package-resolver.base';
+import { PackageResolver as BasePackageResolver } from './package-resolver.base.js';
 
 /**
  * ESM package resolution strategy using import.meta.resolve

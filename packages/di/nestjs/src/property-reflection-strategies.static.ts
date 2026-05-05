@@ -5,7 +5,7 @@ import type {
   InjectableFinalValue,
 } from '@suites/types.di';
 import { UndefinedDependency } from '@suites/types.di';
-import type { ForwardRefToken, NestInjectableIdentifier } from './types';
+import type { ForwardRefToken, NestInjectableIdentifier } from './types.js';
 
 export interface StrategyReturnType {
   identifier: InjectableIdentifier;

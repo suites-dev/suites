@@ -1,9 +1,9 @@
 import type { StubbedInstance } from '@suites/types.doubles';
-import { FakeAdapter } from './assets/integration.assets';
-import { mock } from '../mock.static';
-import type { Repository, User } from './assets/injectable-registry.fixture';
-import { Axios } from './assets/injectable-registry.fixture';
-import { HttpClient } from './assets/injectable-registry.fixture';
+import { FakeAdapter } from './assets/integration.assets.js';
+import { mock } from '../mock.static.js';
+import type { Repository, User } from './assets/injectable-registry.fixture.js';
+import { Axios } from './assets/injectable-registry.fixture.js';
+import { HttpClient } from './assets/injectable-registry.fixture.js';
 import {
   TestLogger,
   UserApiService,
@@ -12,9 +12,9 @@ import {
   UserVerificationService,
   ApiService,
   DatabaseService,
-} from './assets/injectable-registry.fixture';
-import type { UnitReference } from '../../src';
-import { SociableTestBedBuilder, UnitMocker } from '../../src';
+} from './assets/injectable-registry.fixture.js';
+import type { UnitReference } from '../../src.js';
+import { SociableTestBedBuilder, UnitMocker } from '../../src.js';
 import Mock = jest.Mock;
 
 describe('Social TestBed Builder Integration Tests', () => {

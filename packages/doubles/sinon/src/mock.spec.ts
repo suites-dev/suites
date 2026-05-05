@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { mock } from './mock.static';
-import type { Mocked } from './types';
+import { mock } from './mock.static.js';
+import type { Mocked } from './types.js';
 
 interface ArbitraryMock {
   id: number;
@@ -60,7 +60,7 @@ describe('Mocking Proxy Mechanism Unit Spec', () => {
       expect(mockObject.getNumber.callCount).toBe(1);
     });
 
-    test('should create jest.fn() without any invocation', () => {
+    test('should create sinon.stub() without any invocation', () => {
       const mockObject = mock<ArbitraryMock>();
       expect(mockObject.getNumber.callCount).toBe(0);
     });
@@ -138,6 +138,27 @@ describe('Mocking Proxy Mechanism Unit Spec', () => {
       await expect(promiseMockObj).rejects.toBeDefined();
       await expect(promiseMockObj).rejects.toBe(mockError);
       await expect(promiseMockObj).rejects.toHaveProperty('message', '17');
+    });
+  });
+
+  describe('non-writable properties', () => {
+    test('should skip non-writable non-configurable properties during mock initialization', () => {
+      const impl = Object.create(null, {
+        locked: { value: 'frozen', writable: false, configurable: false, enumerable: true },
+      });
+      const mockObject = mock<{ locked: string }>(impl);
+      expect(mockObject.locked).toBe('frozen');
+    });
+
+    test('should not throw when proxy set is called on a non-writable non-configurable property', () => {
+      const impl = Object.create(null, {
+        locked: { value: 42, writable: false, configurable: false, enumerable: true },
+      });
+      const mockObject = mock<{ locked: number }>(impl);
+      expect(() => {
+        mockObject.locked = 42;
+      }).not.toThrow();
+      expect(mockObject.locked).toBe(42);
     });
   });
 

@@ -31,18 +31,8 @@ on:
         default: 'next'
 
 jobs:
-  e2e:
-    name: E2E Release Simulation
-    uses: ./.github/workflows/e2e-release.yml
-    with:
-      target_branch: ${{ github.event.inputs.target_branch }}
-    permissions:
-      contents: write
-      id-token: write
-
   publish:
     name: Publish to NPM
-    needs: [e2e]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

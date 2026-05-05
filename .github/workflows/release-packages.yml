@@ -59,6 +59,7 @@ jobs:
         with:
           ref: ${{ github.event.inputs.target_branch }}
           fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Setup Node
         uses: actions/setup-node@v6

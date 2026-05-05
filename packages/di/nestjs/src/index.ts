@@ -11,11 +11,11 @@
  */
 import 'reflect-metadata';
 import type { DependencyInjectionAdapter } from '@suites/types.di';
-import { DependenciesAdapter } from './dependencies-adapter';
-import { ClassPropsReflector } from './class-props-reflector';
-import { ClassCtorReflector } from './class-ctor-reflector';
-import { ParamsTokensReflector } from './params-token-resolver';
-import { PropertyReflectionStrategies } from './property-reflection-strategies.static';
+import { DependenciesAdapter } from './dependencies-adapter.js';
+import { ClassPropsReflector } from './class-props-reflector.js';
+import { ClassCtorReflector } from './class-ctor-reflector.js';
+import { ParamsTokensReflector } from './params-token-resolver.js';
+import { PropertyReflectionStrategies } from './property-reflection-strategies.static.js';
 
 const NestJSDIAdapter: DependencyInjectionAdapter = ((
   classPropsReflector: ClassPropsReflector,
@@ -27,7 +27,7 @@ const NestJSDIAdapter: DependencyInjectionAdapter = ((
   ClassCtorReflector(Reflect, ParamsTokensReflector)
 );
 
-export { IdentifierMetadata } from './types';
+export { IdentifierMetadata } from './types.js';
 
 /**
  * NestJS dependency injection adapter for Suites.

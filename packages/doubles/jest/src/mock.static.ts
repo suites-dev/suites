@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { DeepPartial } from '@suites/types.common';
-import type { Mocked } from './types';
+import type { Mocked } from './types.js';
 
 type ProxiedProperty = string | number | symbol;
 
@@ -8,6 +8,11 @@ const overrideMockImp = <T>(obj: DeepPartial<T>): Mocked<T> => {
   const proxy = new Proxy<Mocked<T>>(obj as Mocked<T>, handler());
 
   for (const name of Object.keys(obj)) {
+    const descriptor = Object.getOwnPropertyDescriptor(obj, name);
+    if (descriptor && !descriptor.writable && !descriptor.configurable) {
+      continue;
+    }
+
     if (typeof obj[name as never] === 'object' && obj[name as never] !== null) {
       // @ts-ignore
       proxy[name] = overrideMockImp(obj[name as never]);
@@ -22,6 +27,10 @@ const overrideMockImp = <T>(obj: DeepPartial<T>): Mocked<T> => {
 
 const handler = <T>() => ({
   set: (obj: Mocked<T>, property: ProxiedProperty, value: T) => {
+    const descriptor = Object.getOwnPropertyDescriptor(obj, property);
+    if (descriptor && !descriptor.writable && !descriptor.configurable) {
+      return true;
+    }
     // @ts-ignore https://github.com/microsoft/TypeScript/issues/1863
     obj[property] = value;
     return true;

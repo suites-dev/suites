@@ -7,7 +7,7 @@ import {
   WithMetadata,
 } from '@suites/types.di';
 import { Type } from '@suites/types.common';
-import { normalizeIdentifier } from '../../../src/normalize-identifier.static';
+import { normalizeIdentifier } from '../../../src/normalize-identifier.static.js';
 
 interface Printer {
   print(): string;

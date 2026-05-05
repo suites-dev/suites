@@ -9,10 +9,10 @@ import {
   DependencyThree,
   DependencyTwo,
   PropsBasedMainClass,
-} from './assets/integration.assets';
+} from './assets/integration.assets.js';
 import { InjectableIdentifier, UndefinedDependency, WithoutMetadata } from '@suites/types.di';
 import { Type } from '@suites/types.common';
-import { adapter } from '../src';
+import { adapter } from '../src.js';
 
 describe('NestJS Suites DI Adapter Integration Test', () => {
   const dependencyInjectionAdapter = adapter;

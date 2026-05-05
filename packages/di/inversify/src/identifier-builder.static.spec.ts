@@ -1,5 +1,5 @@
 import { LazyServiceIdentifer } from 'inversify';
-import { IdentifierBuilder } from './identifier-builder.static';
+import { IdentifierBuilder } from './identifier-builder.static.js';
 
 class ArbitraryFakeClass {}
 

@@ -53,11 +53,9 @@
     "@types/sinon": "^10.0.20",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
-    "axios": "1.8.2",
     "braces": "3.0.3",
     "eslint": "9.8.0",
     "eslint-plugin-tsdoc": "^0.5.0",
-    "follow-redirects": "1.15.11",
     "globals": "^16.3.0",
     "husky": "^8.0.3",
     "inversify": "6.0.1",
@@ -76,6 +74,16 @@
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.1",
     "typescript": "~5.2.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "axios": ">=1.16.0",
+      "follow-redirects": ">=1.16.0",
+      "handlebars": ">=4.7.9",
+      "lodash": ">=4.18.0",
+      "postcss": ">=8.5.10",
+      "picomatch": ">=2.3.2"
+    }
   },
   "engines": {
     "node": "^16.10.0 || ^18.12.0 || >=20.0.0"

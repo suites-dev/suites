@@ -20,7 +20,7 @@
     "vitest": "^4.0.0"
   },
   "scripts": {
-    "test": "tsc --noEmit && tsc -p tsconfig.skipLibCheck.json --noEmit && vitest --run",
+    "test": "tsc --noEmit && vitest --run",
     "lint": "eslint '**/*.ts'"
   },
   "engines": {

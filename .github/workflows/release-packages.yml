@@ -8,6 +8,7 @@ on:
         options:
           - 'graduate'
           - 'prerelease'
+          - 'stable'
         required: true
         default: 'prerelease'
       target_branch:
@@ -103,6 +104,12 @@ jobs:
       - name: Graduate Version
         if: ${{ github.event.inputs.release_type == 'graduate' }}
         run: npx lerna version --conventional-graduate --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Stable Version
+        if: ${{ github.event.inputs.release_type == 'stable' }}
+        run: npx lerna version --conventional-commits --yes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

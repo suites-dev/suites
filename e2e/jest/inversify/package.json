@@ -10,7 +10,7 @@
     "reflect-metadata": "^0.2.0"
   },
   "scripts": {
-    "test": "tsc --noEmit && jest",
+    "test": "tsc --noEmit && tsc -p tsconfig.skipLibCheck.json --noEmit && jest",
     "lint": "eslint '**/*.ts'"
   },
   "devDependencies": {

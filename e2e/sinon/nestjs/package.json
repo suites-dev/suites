@@ -11,7 +11,7 @@
     "reflect-metadata": "^0.2.0"
   },
   "scripts": {
-    "test": "tsc --noEmit && ts-mocha **/*.e2e.test.ts",
+    "test": "tsc --noEmit && tsc -p tsconfig.skipLibCheck.json --noEmit && ts-mocha **/*.e2e.test.ts",
     "lint": "eslint '**/*.ts'"
   },
   "devDependencies": {

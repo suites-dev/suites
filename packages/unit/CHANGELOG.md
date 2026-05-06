@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/suites-dev/suites/compare/@suites/unit@3.1.0...@suites/unit@3.1.1) (2026-05-06)
+
+### Bug Fixes
+
+- **unit:** remove direct Mocked and Stub exports to fix TS2300 ([#1020](https://github.com/suites-dev/suites/issues/1020)) ([0367eb4](https://github.com/suites-dev/suites/commit/0367eb4b12bb9b3d601db35abf715e57edd05c02))
+
 # [3.1.0](https://github.com/suites-dev/suites/compare/@suites/unit@3.0.1...@suites/unit@3.1.0) (2026-05-05)
 
 ### Bug Fixes

@@ -76,6 +76,38 @@ npm i -D @suites/doubles.jest @suites/di.nestjs
 
 [**Complete installation and setup guide**](https://suites.dev/docs/get-started/installation)
 
+## Using Suites with AI coding agents
+
+Suites ships its own documentation for AI coding agents (Claude Code, Cursor, GitHub Copilot, others) bundled inside the npm package. The docs are version-matched to the version you install, so the agent always references the API you actually have, not stale patterns from its training data.
+
+After `npm install @suites/unit`, the docs sit at `node_modules/@suites/unit/dist/llm/knowledge/`. To wire them up, add these two files to the root of your project.
+
+**`AGENTS.md`** (most AI agents read this automatically):
+
+```md
+<!-- BEGIN:suites-agent-rules -->
+
+# Suites: read testing guidance before writing tests
+
+When writing or modifying tests in this project, first read the relevant doc
+in `node_modules/@suites/unit/dist/llm/knowledge/`. Start with `index.md`.
+
+These docs are version-matched to the installed `@suites/*` packages and
+override your training data.
+
+<!-- END:suites-agent-rules -->
+```
+
+**`CLAUDE.md`** (only if you use Claude Code):
+
+```md
+@AGENTS.md
+```
+
+The comment markers delimit the Suites-managed section. Future updates of this README replace only what's between them, so your own additions outside the markers are safe.
+
+This follows the same pattern Vercel adopted for Next.js 16.2 (see their [agent eval benchmark](https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals), where bundled docs drove pass rate from 53% to 100%).
+
 ## Community
 
 Join the Suites community on [GitHub Discussions](https://github.com/suites-dev/suites/discussions).

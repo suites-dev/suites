@@ -10,3 +10,5 @@ done
 find dist/esm -type f -name "*.esm.d.ts" | while read file; do
   mv "$file" "${file%.esm.d.ts}.d.ts"
 done
+
+node ./scripts/copy-llm.mjs

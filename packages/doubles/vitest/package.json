@@ -71,7 +71,7 @@
   "devDependencies": {
     "@vitest/coverage-v8": "^1.6.1",
     "@vitest/spy": "^1.6.1",
-    "vitest": "^1.6.1"
+    "vitest": "^4.1.0"
   },
   "publishConfig": {
     "access": "public",

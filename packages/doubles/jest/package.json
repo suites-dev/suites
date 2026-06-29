@@ -68,7 +68,7 @@
     "@suites/types.doubles": "workspace:^3.1.0"
   },
   "devDependencies": {
-    "jest": "^29.7.0"
+    "jest": "^30.4.2"
   },
   "publishConfig": {
     "access": "public",

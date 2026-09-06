@@ -2,12 +2,10 @@
   <img width="150" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
 </p>
 
-<h1 align="center">Suites</h1>
+<h1 align="center">Suites (Unit)</h1>
 
 <p align="center">
 A unit testing framework for TypeScript backends working with inversion of control and dependency injection
-<br />
-by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
 </p>
 
 <div align="center">
@@ -15,7 +13,6 @@ by <a href="https://github.com/omermorad"><strong>@omermorad</strong></a>
   <a href="https://github.com/suites-dev/suites/blob/master/CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" /></a>
   <a href="https://npmjs.org/package/@suites/unit"><img src="https://img.shields.io/npm/dm/@suites/unit.svg?label=%40suites%2Funit" alt="npm downloads" /></a>
   <a href="https://npmjs.org/package/@automock/jest"><img src="https://img.shields.io/npm/dm/@automock/jest.svg?label=%40automock%2Fjest" alt="npm downloads" /></a>
-  <a href="https://buymeacoffee.com/omermoradd"><img src="https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee" alt="Buy Me A Coffee" /></a>
 </div>
 
 <h3 align="center">

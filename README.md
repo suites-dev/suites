@@ -217,12 +217,6 @@ guide covers all the changes and improvements, making the upgrade process smooth
 
 [↗️ Migrating from Automock Guide](https://suites.dev/docs/migration-guides/from-automock)
 
-Your support helps us continue improving Suites and developing new features!
-
-## Support the Project
-
-<a href="https://buymeacoffee.com/omermoradd" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
-
-## 📜 License
+## License
 
 Suites is licensed under the [Apache License, Version 2.0](LICENSE).

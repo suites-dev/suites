@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="150" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
+  <img width="90" src="https://raw.githubusercontent.com/suites-dev/suites/master/logo.png" alt="Logo" />
 </p>
 
 <h1 align="center">Suites (Unit)</h1>

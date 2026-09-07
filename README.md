@@ -43,6 +43,12 @@ Using Suites? <a href="https://github.com/suites-dev/suites/discussions/655">Sha
 
 - **AI Ready** - Provides a concise and strict test API that minimizes context requirements for LLM-based coding agents, enabling higher-quality generated tests, clearer and more actionable error messages that guide automatic self-correction, and a higher likelihood of completing test authoring in a single pass.
 
+## AI Coding Agents
+
+Suites bundles version-matched documentation for AI coding agents (Claude Code, Cursor, Copilot, others) inside the `@suites/unit` npm package. After install, the docs sit at `node_modules/@suites/unit/dist/llm/knowledge/`. Drop a short `AGENTS.md` into your project root to point agents at them, and they will generate tests against the API you actually have rather than stale patterns from training data.
+
+See [Using Suites with AI coding agents](packages/unit/README.md#using-suites-with-ai-coding-agents) in the `@suites/unit` README for the two snippets to copy in.
+
 ## Examples
 
 ### Solitary Mode

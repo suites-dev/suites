@@ -17,7 +17,12 @@
         "types": "./dist/cjs/index.d.ts",
         "default": "./dist/cjs/index.js"
       }
-    }
+    },
+    "./llm": "./dist/llm/knowledge/index.md",
+    "./llm/*": "./dist/llm/*"
+  },
+  "bin": {
+    "suites": "./dist/cjs/cli.js"
   },
   "keywords": [
     "unit testing",
